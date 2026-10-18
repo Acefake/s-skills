@@ -1,0 +1,18 @@
+{
+  "name": "s-ui",
+  "version": "1.0.0",
+  "description": "s-ui 的 17 个中文技能：界面设计和动画。不含 Figma。",
+  "author": {
+    "name": "S",
+    "url": "https://github.com/Acefake"
+  },
+  "homepage": "https://github.com/Acefake/s-skills",
+  "repository": "https://github.com/Acefake/s-skills",
+  "keywords": [
+    "s-ui",
+    "chinese",
+    "design",
+    "animation"
+  ],
+  "license": "MIT AND Apache-2.0"
+}

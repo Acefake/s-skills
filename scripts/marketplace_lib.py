@@ -16,10 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGINS_DIR = ROOT / "plugins"
 LOCK_PATH = ROOT / "plugin-versions.lock.json"
 
-PLUGIN_ORDER = ("s",)
+PLUGIN_ORDER = ("s", "s-ui")
 
 EXPECTED_SKILL_COUNTS = {
     "s": 61,
+    "s-ui": 17,
 }
 
 MANIFEST_REL_PATHS = (
