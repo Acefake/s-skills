@@ -42,7 +42,7 @@ disable-model-invocation: true
 
 如果担心的是成本，就说清楚 token 花在了哪里、怎样少花一些。s 会在子智能体和审查组上多花 token。重新运行 `/设置s模型`，选一个更小的预算或更便宜的模型。设成 `auto` 或 `inherit-parent` 的角色会用聊天本身的模型运行，当聊天用的是 Auto 或更便宜的模型时，这样能省 token。更短的审查组列表会运行更少的子智能体，每个条目一个。把 `/poteto工作模式` 留给需要严谨的工作。
 
-这些 skill 的正文按通用说法写。派子智能体、指定模型、定时醒来，各软件能做到哪一步，看 [`poteto工作模式`](../poteto工作模式/SKILL.md) 文末的表。软件派不出子智能体，就在主对话里按顺序做。Custom Mode 和 `/loop` 是 Cursor 的功能，本插件不附带它们。别的软件没有等价命令时，每个新任务自己输入 `/poteto工作模式`，长时间的检查用一个后台盯梢的子智能体，或自己过一会儿再看。
+这些 skill 的正文按通用说法写。派子智能体、指定模型、定时醒来，各软件能做到哪一步，看 [`poteto工作模式`](../poteto工作模式/SKILL.md) 文末的表。软件派不出子智能体，就在主对话里按顺序做。Custom Mode 是 Cursor 的功能，本插件不附带它。定时醒来用 [`/定时循环`](../定时循环/SKILL.md)。别的软件没有内置叫醒命令时，按那份 skill 的说明来。每个新任务自己输入 `/poteto工作模式`。
 
 ## 用 `/poteto工作模式` 开始一个任务
 
@@ -54,7 +54,7 @@ disable-model-invocation: true
 - 在 Mac 上按 Option+Enter，在 Windows 上按 Alt+Enter，或者在 skill 条目上选 Use as Mode，会把它变成一个 Custom Mode。在用户退出这个模式之前，它每一轮都留在上下文里，而且不会掺和到随便聊聊的轮次里。
 - Cursor 的文档列出了 Agents Window 和命令行工具里的 Custom Mode。在其他地方，每开始一个新任务都用 `/poteto工作模式`。
 
-谈到 Cursor 的 Custom Mode 时，附上 [Cursor 的 skill 文档](https://cursor.com/docs/skills)的链接。在对话中途说 “new task”（新任务），会让这个模式去匹配一个新的 playbook。自己派子智能体时，用 poteto工作模式 文末表里「能写文件的通用类型」那一格。本插件没有附带 `poteto-agent`。
+谈到 Cursor 的 Custom Mode 时，附上 [Cursor 的 skill 文档](https://cursor.com/docs/skills)的链接。在对话中途说 “new task”（新任务），会让这个模式去匹配一个新的 playbook。自己派子智能体时，用 poteto工作模式 文末表里「能写文件的通用类型」那一格。Cursor 上这个类型是 [`s助手`](../s助手/SKILL.md)（`agents/s助手.md`）。别的软件用那一格里的内置类型，提示词要求先读 poteto工作模式。
 
 ## 挑一个 skill
 
@@ -77,8 +77,13 @@ disable-model-invocation: true
 | 让不同的模型审查一个 diff，并试着把它弄坏 | [`/多模型对抗审查`](../多模型对抗审查/SKILL.md) |
 | 当有一个便宜的本地测试时，先写测试再修 bug | [`/测试驱动修bug`](../测试驱动修bug/SKILL.md) |
 | 在 `.ts` 或 `.tsx` 的工作中应用 TypeScript 规则 | [`/TypeScript最佳实践`](../TypeScript最佳实践/SKILL.md) |
-| 在审查之前删掉注释，用一个没写过这些注释的审查者 | [`/清理代码注释`](../清理代码注释/SKILL.md) |
+| 在审查之前删掉注释，用一个没写过这些注释的审查者 | [`/清理代码注释`](../清理代码注释/SKILL.md)（它会派 [`/专挑注释`](../专挑注释/SKILL.md)） |
 | 把文字里的 AI 腔清理掉 | [`/清理AI腔`](../清理AI腔/SKILL.md) |
+| 把代码 diff 里的 AI 腔清掉 | [`/清理代码腔`](../清理代码腔/SKILL.md) |
+| 像用户一样操作命令行 | [`/操作命令行`](../操作命令行/SKILL.md) |
+| 像用户一样操作界面 | [`/操作界面`](../操作界面/SKILL.md) |
+| 写一份新的 SKILL.md | [`/编写skill`](../编写skill/SKILL.md) |
+| 按一个能判定的条件反复检查，直到完成 | [`/定时循环`](../定时循环/SKILL.md) |
 | 按标准写文档、RFC、README、PR 说明或提交信息 | [`/技术写作`](../技术写作/SKILL.md) |
 | 用平实的话再听一遍上一条回复 | [`/说人话重讲`](../说人话重讲/SKILL.md) |
 | 给智能体一种用脚本操作应用、证明行为的办法 | [`/创建验证skill`](../创建验证skill/SKILL.md) |
@@ -104,14 +109,14 @@ disable-model-invocation: true
 - `/回想最近工作` 跨越最近的多次对话重建上下文。`/补上对话进度` 只覆盖这次对话里、用户上一条消息之后的内容。要接着某一次具体的对话或某个分支做，是 Session pickup playbook 的事。
 - `/自定流程搞定` 设计一次严谨的运行。Orchestrate playbook 运行一个持续好几天、涉及很多个 PR 的项目。Autonomous run playbook 把一个任务一直推进到完成条件。
 
-不在 s 里的：
+容易找错名字的：
 
-- 去掉 AI 腔用 [`/清理AI腔`](../清理AI腔/SKILL.md)。本插件没有 `deslop`。
-- 像用户一样操作界面或命令行：本插件没有 `control-ui` 和 `control-cli`。有别的 skill 或项目自己的测试就用；没有就自己打开界面，或自己跑命令并读输出。
-- 编写 SKILL.md：Cursor 如果装了 `create-skill` 可以用。没有就自己写，YAML 里要有 `name` 和 `description`，再用 `/清理AI腔`。
-- `/loop` 是 Cursor 自带的定时命令，本插件不附带。没有它，用后台盯梢的子智能体，或自己过一会儿再看。
+- 去掉代码里的 AI 腔用 [`/清理代码腔`](../清理代码腔/SKILL.md)。去掉文字里的 AI 腔用 [`/清理AI腔`](../清理AI腔/SKILL.md)。两者不是同一件事。
+- 像用户一样操作界面用 [`/操作界面`](../操作界面/SKILL.md)，操作命令行用 [`/操作命令行`](../操作命令行/SKILL.md)。
+- 编写 SKILL.md 用 [`/编写skill`](../编写skill/SKILL.md)。Cursor 菜单里有内置 `/create-skill` 时，那份 skill 会交给内置命令。
+- 定时检查用 [`/定时循环`](../定时循环/SKILL.md)。Cursor 菜单里有 `/loop` 时交给它。别的软件没有内置叫醒命令，按那份 skill 的说明。
 - s 没有 `/orchestrate` skill。Orchestrate 是 `/poteto工作模式` 里的一个 playbook。如果斜杠菜单里出现了 `/orchestrate`，那是别的插件提供的。
-- `comment-sicko` 不是本插件里的 skill。`/清理代码注释` 在软件有这个子智能体类型时会用它，没有就自己删注释。
+- [`/专挑注释`](../专挑注释/SKILL.md) 是子智能体，由 `/清理代码注释` 派出。Cursor 的类型名是 `专挑注释`（`agents/专挑注释.md`）。
 
 ## Playbook 和原则
 
@@ -140,7 +145,7 @@ s 没有做计划的 skill。Cursor 的 Plan Mode 可以和它一起用。对于
 | 运行花的钱比预期多 | 见“安装设置”下面关于成本的那一段。 |
 | 某个 skill 没有自己加载 | 只有 `/设置s模型` 会根据用户的话自动加载。其他的在用户输入它们、或者 `/poteto工作模式` 运行它们时才加载，而 `/poteto工作模式` 不会运行每一个 skill。 |
 | 并行的智能体互相覆盖了 | 给每个智能体它自己的 worktree，或者把它们作为云端智能体运行，每个都有自己的机器。 |
-| 一次通宵运行有进展，但什么都没完成 | 定时检查需要一个能判定通过或失败的检查，而不是一段时长。Cursor 用 `/loop`。别的软件没有这个命令时，用后台盯梢的子智能体，或自己过一会儿再看。 |
+| 一次通宵运行有进展，但什么都没完成 | 定时检查需要一个能判定通过或失败的检查，而不是一段时长。用 `/定时循环`。别的软件没有内置叫醒命令时，按那份 skill 的说明。 |
 | 回复凭一次绿色的构建就声称成功 | 要求看真实的命令、流程、存储的值或性能剖析。这就是 prove-it-works（证明它真的能用）原则。 |
 
 对于跑偏的运行，[`references/prompting.md`](references/prompting.md) 里有一句话就能用的引导。[指南第 10 页](../../docs/guide/10-recipes-and-pitfalls.md)有更多的坑和值得照抄的做法。

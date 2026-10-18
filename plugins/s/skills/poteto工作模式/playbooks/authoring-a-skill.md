@@ -2,7 +2,7 @@
 
 **You own the skill's voice.**
 
-1. Write the SKILL.md. If the app has a built-in skill for that (Cursor calls it `create-skill`), use it. This plugin does not ship `create-skill`. Otherwise write the file yourself: YAML frontmatter with `name` and `description`, then the body, then run `/清理AI腔`.
+1. Write the SKILL.md with `/编写skill`, then run `/清理AI腔`. Cursor uses its built-in `/create-skill` when that command is in the menu. The skill says which.
 2. Validate the skill: frontmatter has `name` and `description`, referenced files exist, cross-skill links resolve.
 3. Test cases if structural. Skip if subjective.
 4. Run **Opening a PR**.

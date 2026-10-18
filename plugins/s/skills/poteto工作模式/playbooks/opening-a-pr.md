@@ -6,7 +6,7 @@ Invoked at the end of every other playbook.
 
 **Commits.** Commit liberally. Rebase into small, ordered commits before opening PRs. Each commit is a future PR: landable, ordered to tell the story. Amend when the fix belongs in a just-made commit. New commit when separable. Commit bodies don't restate the subject.
 
-**PRs.** Run `/清理AI腔` over the diff before commit and `/清理代码注释` before review. This plugin does not ship `deslop`. Write every PR title, description, and commit body with `/技术写作` (every layer except Diátaxis, and apply the STE vocabulary rules: one word per action, keep articles, a plain verb over `-ing` where one works), then apply `/清理AI腔`.
+**PRs.** Run `/清理代码腔` on the diff before commit and `/清理代码注释` before review. Write every PR title, description, and commit body with `/技术写作` (every layer except Diátaxis, and apply the STE vocabulary rules: one word per action, keep articles, a plain verb over `-ing` where one works), then apply `/清理AI腔`.
 
 **Titles.** Conventional Commits `type(scope): subject`, no trailing period. Type such as `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, or `perf`. Scope is the area, such as `s` or `poteto-mode`. Subject is short, imperative, and names a real symbol when one carries the change, for example `fix(s): retarget opening-a-pr babysit trigger`.
 

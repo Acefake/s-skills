@@ -23,17 +23,17 @@ color: yellow
 - 并行分派 → 覆盖矩阵、比赛、连环检验和探索分区用 **并行群体作战** skill。需要选基础、做嫁接的设计或代码比拼用 **多方案竞技场**。
 - 有争议的设计 → 上线之前用 **多模型对抗审查** skill（多模型对抗）。
 - 不简单的多步骤工作 → 写下产出检查点（Feature 第 3 步）。
-- 任何文字界面，包括你给用户的回复 → **清理AI腔** skill。按 **Writing the reply**（写回复）来写回复。给智能体看的文字还要遵循你所用软件自带的、用于编写 SKILL.md 文件的 skill（各软件里的名字见文末；没有的话就按 SKILL.md 的通用格式写）。
+- 任何文字界面，包括你给用户的回复 → **清理AI腔** skill。按 **Writing the reply**（写回复）来写回复。给智能体看的文字还要遵循 **编写skill**（`/编写skill`）。
 - 文档、RFC、readme、PR 说明或提交信息 → **技术写作** skill（`/技术写作`）。
-- 提交之前 → **清理AI腔** skill（`/清理AI腔`）。本插件没有 `deslop`。
+- 提交之前 → 代码里的 AI 腔用 **清理代码腔**（`/清理代码腔`）。文字用 **清理AI腔**（`/清理AI腔`）。两者不是同一件事。
 - 审查之前 → **清理代码注释** skill（`/清理代码注释`）。
-- 上线界面 / IDE / 命令行工具 → 先自己在同一个界面上复现。本插件没有 `control-cli` 和 `control-ui`。如果你另外装了能像用户一样操作命令行或界面的 skill，可以用它。没有的话，自己打开界面，或自己跑命令并读输出，也可以用项目里已有的测试。回复里写明你实际跑了什么。只有在 Bug fix 第 1 步那个很窄的例外情况下，才交给用户。
+- 上线界面 / IDE / 命令行工具 → 先自己在同一个界面上复现。界面用 **操作界面**（`/操作界面`），命令行用 **操作命令行**（`/操作命令行`）。某个软件缺哪一种能力，按那两份 skill 文末的说明来。回复里写明你实际跑了什么。只有在 Bug fix 第 1 步那个很窄的例外情况下，才交给用户。
 - 运行基准测试、自己测量性能，或者报告一个你测出来的加速或退化 → 在报告这个数字或依据它行动之前，用 **基准测试清单** skill。
 - 任何关于 PR 状态的请求（“babysit this”（照看一下）、“get it green”（让它变绿）、“address the bugbot comments”（处理 bugbot 的评论），以及最常见的 “check on PR X”（看看 PR X）或 “anything outstanding on X”（X 还有什么没处理的））→ **Babysit** playbook（`playbooks/babysit.md`），而不是软件自带的同名 babysit skill（如果你的软件有的话，比如 Cursor 就自带一个），那个 skill 的描述也匹配同样的词。仅仅是开了一个 PR，不会触发它。轮询之前先声明它的模式。playbook 的第 1 步负责把请求对应到模式。在一个阶段智能体里用 `drive`，会让那个智能体没法结束它的这一轮。
 - 被要求合入或上线一串已经变绿的 PR → **Shipping** playbook（`playbooks/shipping.md`）。绿不等于安全。在每个 PR 得到独立的结论之前，什么都不能启动，而且只有从底部开始连续通过验证的那一段才会合入。
 - Bugbot 或智能体安全审查留了评论 → 抱着怀疑的态度。它们能抓到真正的 bug，也会提出不是问题的问题和吹毛求疵的意见，所以要逐条按实际情况评估，用具体的理由驳回噪声，而不是反复改代码。按 `references/bugbot-triage.md` 分诊为修复 / 驳回 / 询问。
 - 任务中途发现一个坏掉的 skill → 在它自己的 PR 里修。不要卡住。不要悄悄绕过它。
-- 长时间的、自主的或多阶段的工作，或者任何用户离开、之后再回来审查的任务（“going to bed”（我去睡了）、“trust it when i'm back”（等我回来再信它）、“/loop until X”（循环直到 X））→ 用 **决定记录日志** skill 留一条决定记录。当事关重大、需要可审计的记录时，就提交它。否则留在本地。
+- 长时间的、自主的或多阶段的工作，或者任何用户离开、之后再回来审查的任务（“going to bed”（我去睡了）、“trust it when i'm back”（等我回来再信它）、“/loop until X” 或 “/定时循环”（循环直到 X））→ 用 **决定记录日志** skill 留一条决定记录。当事关重大、需要可审计的记录时，就提交它。否则留在本地。
 
 ## 原则
 
@@ -138,7 +138,7 @@ color: yellow
 - **Eval**（评估）。在推广一个 skill、结构或提示词改动之前，测试它对智能体行为的影响。
 - **Babysit**（照看 PR）。把一个 PR 或一串 PR 推进到可以合并的状态：冲突、审查讨论、CI。
 - **Shipping**（上线）。Babysit 之后的另一半。独立验证一串已经变绿的 PR，然后从底部往上，把连续通过验证的那一段合入，默认通过 `gh`，如果有 Origin 的命令行工具就用 Origin。
-- **Autonomous run**（自主运行）。一个要不停地推进到完成的长任务（“run until done”（一直跑到完成）、“/loop until X”（循环直到 X））。
+- **Autonomous run**（自主运行）。一个要不停地推进到完成的长任务（“run until done”（一直跑到完成）、“/loop until X” 或 “/定时循环”（循环直到 X））。
 - **Orchestrate**（编排）。交给一个协调者对话的长期项目：持续好几天、很多叠放的 PR、几十到几百个子智能体、尽量少的人工轮次（“run this whole project”（把整个项目跑下来）、“own this migration until it lands”（负责这次迁移直到合入））。和 Autonomous run 不同，那是把一个任务推进到一个判断条件。一个智能体在这次会话的预算内就能完成的工作，交给 Autonomous run，而不是这里，不管措辞听起来多像一个大计划。
 - **Autopilot-full**（全自动驾驶）。一个由互相独立的 PR 组成的队列，在完全自主的情况下一直跑到合并。每个 PR 有一个负责人，从构建一直负责到合并，并且在负责人合并之前，根节点会用 swarm 验证每个 PR（“autopilot this queue”（对这个队列自动驾驶）、“full autopilot”（全自动驾驶）、每个 PR 一个负责人的计划）。
 - **Autopilot-stack**（自动驾驶叠放）。一个改动队列，在完全自主的情况下构建并验证，以一串线性的、审查过的、基于基础分支的叠放 PR 交付，由操作者来合入（“autopilot-stack”、“stack them, don't ship”（叠起来，但别上线）、“build the stack, I'll land it”（把这一串搭好，我来合入））。
@@ -155,15 +155,15 @@ color: yellow
 | 正文里的说法 | Cursor（原版） | WorkBuddy | Claude Code | Codex | OpenCode |
 |---|---|---|---|---|---|
 | 派一个子智能体 | `Task` 工具 | `Agent` 工具（`TaskCreate` 是待办清单，不是派子智能体，别混用） | `Agent` 工具（旧版叫 `Task`，现在 `Task` 仍可当别名用） | 用话派。当前版本默认开启。直接说 “spawn two agents”、“delegate this work in parallel” 或 “use one agent per point”，并写明等齐再汇总。CLI 用 `/subagents` 看线程。IDE 有后台面板时，面板在输入框上方。也听从 `AGENTS.md` 和 skill 里要求分派的句子。[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) | `subagent` 工具。传入 agent ID、短 `description`、完整 `prompt`。只能派 `mode: subagent` 的智能体。默认嵌套一层。[Tools](https://opencode.ai/v2/docs/tools) |
-| 能写文件的通用类型 | `subagent_type: generalPurpose`。本插件没有附带 `poteto-agent`。本机如果恰好有这个类型可以用；没有就用 `generalPurpose`，并在提示词里要求先读本 SKILL.md | `subagent_type: "general-purpose"` | `subagent_type: "general-purpose"` | 内置 `worker`（实现和修复）。要固定模型就写 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录）。必填 `name`、`description`、`developer_instructions`。同名盖过内置。自定义智能体继承父级的权限、provider 和 MCP，不能改沙箱 | 内置 `general`（工具面宽，不能再派子智能体）。要固定模型就写 `~/.config/opencode/agents/<name>.md`，`mode: subagent`。漏写 `mode` 时新智能体默认是 `primary`，派不出去。[Agents](https://opencode.ai/v2/docs/agents/) |
+| 能写文件的通用类型 | `subagent_type: "s助手"`，定义在 `agents/s助手.md`。提示词要求先完整读本 SKILL.md。软件不认这个类型时，退回 `generalPurpose`，提示词写上同样的阅读要求 | `subagent_type: "general-purpose"`。提示词的第一句要求先完整读本 SKILL.md。这个软件没有 `s助手` 这个类型名 | `subagent_type: "general-purpose"`。提示词的第一句要求先完整读本 SKILL.md。这个软件没有 `s助手` 这个类型名 | 内置 `worker`（实现和修复）。提示词的第一句要求先完整读本 SKILL.md。要固定模型就写 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录）。必填 `name`、`description`、`developer_instructions`。同名盖过内置。自定义智能体继承父级的权限、provider 和 MCP，不能改沙箱 | 内置 `general`（工具面宽，不能再派子智能体）。提示词的第一句要求先完整读本 SKILL.md。要固定模型就写 `~/.config/opencode/agents/<name>.md`，`mode: subagent`。漏写 `mode` 时新智能体默认是 `primary`，派不出去。[Agents](https://opencode.ai/v2/docs/agents/) |
 | 只读探索 | 同一个 `Task` 加 `readonly: true`（会去掉 MCP 工具） | 没有 `readonly` 参数，改派 `Explore`（只读探索）或 `Plan`（只读规划） | 派 `Explore`（只读探索）或 `Plan`（只读规划） | 内置 `explorer`。提示词里可以要求不改文件。文档写明这不会变成单独的只读沙箱，子智能体继承父级这一轮的沙箱和审批 | 内置 `explore`（搜索和读，不改文件）。自定义智能体可以在 `permissions` 里对 `edit` 和 `shell` 设 `effect: deny`。需要 MCP 时用 `general`，不要用 `explore` 代替。未核实：`explore` 能不能调用 MCP |
 | 向用户提问的工具 | `AskQuestion` | `AskUserQuestion` | `AskUserQuestion` | `request_user_input`（只有主对话能用，子智能体不能问） | `question` 工具。每个问题有短标题、提示和选项，总有自由输入。[Tools](https://opencode.ai/v2/docs/tools) |
 | 后台运行和取结果 | `run_in_background: true`；做完结果回到主对话 | `run_in_background: true`；取结果用 `TaskOutput` | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 | 提示词里写 “Wait for all, then summarize”。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`），不写时由 Codex 自己选默认。没有文档化的单独取结果工具名 | `subagent` 的 `background: true` 立刻返回，做完通知父级。用返回的 `sessionID` 继续同一个子会话。命令文件可以写 `subagent: true`，父级保持自己的模型和智能体。[Commands](https://opencode.ai/v2/docs/commands) |
 | 指定模型 | `model` 写具体模型名。写代码和 `swarm workers` 在这些名字确实可用时用 `grok-4.7-xhigh-fast`，文字、判断和最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级。这两个名字不要拿到别的软件里用 | 没有具体模型名可填。省略 `model` 就继承父级；要拉开差异时，交替用 `"lite"`（快、省）和 `"reasoning"`（推理强） | `model` 写别名 `sonnet`、`opus`、`haiku`，或完整模型 ID；不写或写 `inherit` 就继承父级 | 见下面「Codex 怎么指定模型」。不要把 Cursor 的模型名写进来 | 见下面「OpenCode 怎么指定模型」。不要把 Cursor 的模型名写进来 |
 | s 模型规则（`/设置s模型`） | `~/.cursor/rules/s-models.mdc`，`alwaysApply: true`。frontmatter 的 description 是 `s per-role model choices (overrides skill defaults)` | `~/.codebuddy/rules/s-models.md`（读不到再试同名 `.mdc`）。不要写 Cursor 的目录 | `~/.claude/rules/s-models.md` | `~/.codex/AGENTS.md` 里标记的那一段；有 `AGENTS.override.md` 就改那个。单独模型再写 `~/.codex/agents/s-<角色>.toml` | `~/.config/opencode/AGENTS.md` 里标记的那一段。V2 不认 `CLAUDE.md`。单独模型再写 `~/.config/opencode/agents/s-<角色>.md` |
 | 子智能体在哪里跑 | `environment: "cloud"` 放到云端；从非默认的已推送分支开始用 `cloud_base_branch`。需要用户电脑上的文件、界面或登录态时用 `environment: "local"`。云端状态在 Cursor 的后台面板看 | 没有这个参数，全在本机跑 | 不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里 | 子智能体文档没有 `environment` 或 `cloud_base_branch`。本地 Codex 跟父级同一套沙箱，在本机跑。ChatGPT Work 是另一套托管环境，不要套过来。从别的分支开始：把 SHA 写进提示词 | 工具页没有云端参数，`subagent` 开的是本机子会话。从别的分支开始：把 SHA 写进提示词。`worktree_create` 再 `session_move` 是把会话挪到 worktree，不是放到另一台机器 |
-| 让主对话定时醒来 | Cursor 自带的 `/loop` 命令。本插件不附带它 | 不确定。没有就用一个后台盯梢的子智能体，或自己过一会儿再看 | 不确定，按本软件实际命令来。没有就同样用后台盯梢 | 同左 | 同左 |
-| 写 SKILL.md | 软件如果自带 `create-skill` 就用它。没有就自己写：一个目录里的 `SKILL.md`，YAML 里要有 `name` 和 `description`，再用 **清理AI腔** 过文字 | 自己写。个人 skill 的固定目录这里不确定，先放在仓库的 `skills/<名字>/SKILL.md`，并告诉用户怎么让 WorkBuddy 加载 | 自己写。个人 skill 可以放在 `~/.claude/skills/<名字>/SKILL.md`（官方文档有这个目录） | 自己写。个人 skill 的固定目录这里不确定，先放在仓库的 `skills/<名字>/SKILL.md` | 同 Codex。不要假设写进某个家目录就会自动生效 |
+| 让主对话定时醒来 | 跑 `/定时循环`。菜单里有 `/loop` 时交给它：`/loop 1h`、`/loop until <检查>`，或不写间隔的动态模式。本技能不另做计时器 | 跑 `/定时循环`。没有文档化的叫醒命令，按那份 skill 用后台盯梢或自己再查，并写明用了哪一种 | 同 WorkBuddy | 同 WorkBuddy | 同 WorkBuddy |
+| 写 SKILL.md | 跑 `/编写skill`。菜单里有内置 `/create-skill` 时用它起草 | 跑 `/编写skill`。目录按那份 skill 文末的说明 | 跑 `/编写skill`。个人 skill 可以放在 `~/.claude/skills/<名字>/SKILL.md` | 跑 `/编写skill`。目录按那份 skill 文末的说明 | 同 Codex。不要假设写进某个家目录就会自动生效 |
 
 ### Codex 怎么指定模型
 

@@ -8,11 +8,11 @@
 
 ## 里面有什么
 
-1 个插件，54 个技能。技能文件只存一份，放在 `plugins/s/skills/`。几个应用的清单都指向这个文件夹，没有为每个应用再复制一份技能。
+1 个插件，61 个技能。技能文件只存一份，放在 `plugins/s/skills/`。几个应用的清单都指向这个文件夹，没有为每个应用再复制一份技能。两个子智能体的短文件在 `plugins/s/agents/`。
 
 | 插件短名 | 数量 | 里面是什么 |
 |---|---|---|
-| `s` | 54 | s 的中文技能：做事原则、工作流程、TypeScript 写法 |
+| `s` | 61 | s 的中文技能：做事原则、工作流程、TypeScript 写法 |
 
 插件短名是给应用看的，只能用小写英文字母、数字和连字符。技能的名字保持中文。
 
@@ -28,18 +28,26 @@ plugins/s/
   .cursor-plugin/plugin.json
   .claude-plugin/plugin.json
   .codebuddy-plugin/plugin.json
-  LICENSE                            MIT 许可证全文
+  LICENSE                            pstack 的 MIT 许可证全文
+  LICENSE-cursor-team-kit            cursor-team-kit 的 MIT 许可证全文
+  agents/
+    专挑注释.md
+    s助手.md
   skills/
     <技能名>/SKILL.md
 ```
 
 ## 许可证
 
-这些技能改自 Lauren Tan 的 pstack（MIT 许可证，版权 © 2026 Lauren Tan）。许可证全文在 `plugins/s/LICENSE`。
+这些技能大部分改自 Lauren Tan 的 pstack（MIT 许可证，版权 © 2026 Lauren Tan）。许可证全文在 `plugins/s/LICENSE`。`专挑注释` 和 `s助手` 也来自这份许可证，原文是 pstack 的子智能体。
+
+`清理代码腔`、`操作命令行`、`操作界面` 改自 Cursor 的 cursor-team-kit（作者 Eric Zakariasson，MIT 许可证，版权 © 2026 Cursor）。许可证全文在 `plugins/s/LICENSE-cursor-team-kit`。来源仓库是 https://github.com/cursor/plugins 。
+
+`编写skill` 和 `定时循环` 是按 Cursor 公开文档写的，内置技能原文没有公开，标为自写。没有上游许可证可附。
 
 ## 中文名对照表
 
-54 个技能。调用时用中文名。表里的「英文名」是以前的英文备份，技能文件里已经没有这一行。「原始 skill」是改写前的英文名。标 ⚠️ 的，表示它的 `references/` 参考文件还是英文。
+61 个技能。调用时用中文名。表里的「英文名」是以前的英文备份，技能文件里已经没有这一行。后加的 7 个没有英文备份，这一列写上游英文名。「原始 skill」是改写前的英文名。标 ⚠️ 的，表示它的 `references/` 参考文件还是英文。
 
 | 中文名 | 英文名 | 原始 skill | 用途 |
 |---|---|---|---|
@@ -57,7 +65,7 @@ plugins/s/
 | `并行群体作战` | `s-swarm` | `swarm` | 同时派出 N 个并行工作者（分片或比赛），等全部完成，汇总成一份报告。 |
 | `自定流程搞定` | `s-figure-it-out` | `figure-it-out` | 没有现成流程可用时（大迁移、复杂改动、通宵任务），自己设计一套严谨、可审计的做法。 |
 | `TypeScript最佳实践` | `s-typescript-best-practices` | `typescript-best-practices` | 读写 .ts / .tsx 文件时的 TypeScript 规则：可辨识联合类型、品牌类型、不用 as 断言等，附代码示例。 |
-| `清理代码注释` | `s-no-comments` | `no-comments` | 派出专挑注释毛病的子智能体，删掉多余或掩盖问题的注释，并把注释里的限制改成代码强制执行（需要原插件的 comment-sicko 子智能体）。 |
+| `清理代码注释` | `s-no-comments` | `no-comments` | 派出 `专挑注释`，删掉多余或掩盖问题的注释，并把注释里的限制改成代码强制执行。 |
 | `根除重复错误` | `s-correct` | `correct` | 找出助手在这个仓库里反复犯的错，用架构、类型、lint、测试让它们不可能再犯。 |
 | `决定记录日志` | `s-show-me-your-work` | `show-me-your-work` | 长时间或无人值守的工作中，用 TSV 日志记下每个决定（做了什么、为什么、证据、结果），最后自查并让另一个模型审一遍。 |
 | `s做Bot界面` | `s-make-bot-ui` | `make-bot-ui` | 做一个按钮能通过 webhook 唤醒 Grok Bot 的网页界面，并放到 Tailscale 上访问。改名是为了和你自己的 `make-bot-ui` 区分。 |
@@ -66,7 +74,14 @@ plugins/s/
 | `基准测试清单` | `s-benchmark-checklist` | `benchmark-checklist` | 报告性能数字之前的 7 个检查问题：限制因素、调优、物理极限、出错、可复现、是否重要、工作是否真的发生了。 |
 | `创建验证skill` | `s-create-verification-skill` | `create-verification-skill` | 为项目生成一个“像用户一样操作应用并证明行为”的验证 skill，附功能地图。 |
 | `维护验证skill` | `s-maintain-verification-skill` | `maintain-verification-skill` | 定期检查验证 skill 和功能地图是否还和应用对得上，只提交已证明的修正。 |
-| `清理AI腔` | `s-unslop` | `unslop` | 按一份编号规则清单去掉文字里的 AI 腔（原本针对英文写作，例子保留英文并附中文意思）。和 `去AI腔` 作用相近，来源不同。 |
+| `清理AI腔` | `s-unslop` | `unslop` | 按一份编号规则清单去掉文字里的 AI 腔（原本针对英文写作，例子保留英文并附中文意思）。和 `去AI腔` 作用相近，来源不同。管的是文字，不管代码。 |
+| `清理代码腔` | `deslop` | `deslop` | 去掉 diff 里新引进的 AI 代码腔：多余注释、反常的防御或 `try/catch`、为了逃类型而用的 `any`、过深的嵌套。和 `清理AI腔` 不是同一件事。 |
+| `操作命令行` | `control-cli` | `control-cli` | 搭一个本地驾驭装置，驱动并查看交互式命令行或 TUI。 |
+| `操作界面` | `control-ui` | `control-ui` | 搭一个本地浏览器或 CDP 驾驭装置，驱动并查看网页、IDE 或 Electron 界面。 |
+| `编写skill` | `create-skill` | `create-skill` | 自写。按 Cursor 的 Agent Skills 文档起草一份 `SKILL.md`。菜单里有内置 `/create-skill` 时用内置的。 |
+| `定时循环` | `/loop` | `/loop` | 自写。按一个能判定通过或失败的条件反复检查。Cursor 菜单里有 `/loop` 时交给它。别的软件没有文档化的叫醒命令。 |
+| `专挑注释` | `comment-sicko` | `comment-sicko` | 子智能体。被 `/清理代码注释` 派出去删注释。短文件在 `agents/专挑注释.md`。 |
+| `s助手` | `poteto-agent` | `poteto-agent` | 子智能体。动手前完整读 `poteto工作模式`。短文件在 `agents/s助手.md`。 |
 | `反思并改skill` | `s-reflect` | `reflect` | 用三个审查子智能体回看本次对话，总结出持久有用的经验，经你批准后改进对应的 skill。 |
 | `代码怎么工作` | `s-how` | `how` | 探索代码库，讲清“X 是怎么工作的”、新代码该放在哪里。 |
 | `代码为什么这样` ⚠️ | `s-why` | `why` | 查 git 历史、工单、文档、聊天、监控等来源，讲清代码为什么是现在这个样子，并标明可信度。 |
@@ -250,7 +265,7 @@ Cursor 里在对话输入 `/`，搜索技能的中文名。官方文档写的形
 
 Codex 里输入 `@`，选择插件或其中的技能。
 
-OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决定要不要读全文。这 54 个文件没有额外写 OpenCode 专用的开关，所以不一定出现成一条 `/中文名` 命令。直接说出技能的中文名，让它按那份说明书做。
+OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决定要不要读全文。这 61 个文件没有额外写 OpenCode 专用的开关，所以不一定出现成一条 `/中文名` 命令。直接说出技能的中文名，让它按那份说明书做。
 
 ## 中文名能不能被认出来
 
@@ -259,7 +274,7 @@ OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决�
 - **WorkBuddy / CodeBuddy。** 官方文档要求插件短名是英文短横线格式，没有要求技能名必须是英文。调用形式是 `插件短名:技能名`。S 原来的备份说明里写过：中文名可以在 WorkBuddy 里直接用。这次没有在 WorkBuddy 里安装验证。
 - **Claude Code。** 官方文档写：插件里的技能，命令最后一段用说明书里的 `name`，所以形式上会是 `/s:先画架构草图`。个人技能文件夹（`~/.claude/skills/中文名/`）可以保留中文。插件这条路径上有一个已报告的问题：[claude-code#66554](https://github.com/anthropics/claude-code/issues/66554)。从 2.1.94 起，插件技能名里英文、数字、下划线、连字符以外的字符会被换成连字符 `-`。中文每个字都会变成一个 `-`，字数相同的技能会撞成同一个名字，助手按中文名去调用会得到 Unknown skill。例如「一步步教我」和「说人话重讲」都是五个字，会挤成同一个 `s:-----`。个人技能不受这个影响。这个问题我没有在本机的 Claude Code 里复现，只核对了问题报告和当时的改动说明。技能正文因此没有改成英文名。
 - **Cursor。** 官方文档把技能 `name` 写成小写英文加连字符，并且要和文件夹名一致。Cursor 命令行会给不合这个格式的名字打警告（名字超过 64 字、不是小写短横线、名字和文件夹不一致、说明超过 1024 字、正文大约超过 5000 个词）。文档写的是警告，没有写「直接拒绝加载」。中文名会触发「不是小写短横线」和「名字与文件夹不一致」这两类警告。能否在插件里真正跑起来，未实测。
-- **skills 命令。** 它清理名字时只去掉会扰乱终端的控制字符，中文会留下来。发现技能时会读 `.claude-plugin/marketplace.json`，再进入插件的 `skills/`。本地用 skills 命令 1.5.18 对这个仓库目录跑过 `--list`，它列出 54 个技能，中文名都在。真正写进 Codex、OpenCode 或 Cursor 的安装目录这一步未实测。
+- **skills 命令。** 它清理名字时只去掉会扰乱终端的控制字符，中文会留下来。发现技能时会读 `.claude-plugin/marketplace.json`，再进入插件的 `skills/`。本地用 skills 命令 1.5.18 对这个仓库目录跑过 `--list`，它列出 61 个技能，中文名都在。真正写进 Codex、OpenCode 或 Cursor 的安装目录这一步未实测。
 - **Codex 插件。** 官方示例里的技能名是英文短横线。中文文件夹放进 Codex 插件之后能不能点开，未实测。装不上时，用上面的 skills 命令，目标应用写 `codex`。
 - **OpenCode。** 官方文档只要求 `name` 和 `description`，没有要求英文。它从 `~/.config/opencode/skills/<名字>/SKILL.md` 读取。未实测。
 
@@ -377,6 +392,6 @@ pip install "jsonschema>=4.20"
 python3 scripts/check_marketplace.py
 ```
 
-检查这些事：Cursor 的两份清单符合官方 JSON Schema；Claude Code 和 CodeBuddy 的市场字段符合官方文档里的名字规则和 `./plugins/s` 路径；Codex 的市场带有 `source.path`、`policy` 和 `category`；`s` 的四份清单版本号一致；技能内容的指纹和 lock 文件一致；54 个技能的文件夹名和 `name` 一致。
+检查这些事：Cursor 的两份清单符合官方 JSON Schema；Claude Code 和 CodeBuddy 的市场字段符合官方文档里的名字规则和 `./plugins/s` 路径；Codex 的市场带有 `source.path`、`policy` 和 `category`；`s` 的四份清单版本号一致；技能内容的指纹和 lock 文件一致；61 个技能的文件夹名和 `name` 一致。
 
 准备这个仓库时还跑过官方命令 `claude plugin validate`（Claude Code 2.1.302）。市场目录和 `s` 都显示 Validation passed。这个命令接受了中文技能名。它检查的是清单格式，不会模拟上面说的「中文被换成连字符」那种运行时行为。Cursor 的清单另外用官方 JSON Schema 校验过。CodeBuddy 自己的 `codebuddy plugin validate` 这次没有跑。`.codebuddy-plugin/` 里的清单和已经通过 Claude 校验的 `.claude-plugin/` 清单内容相同，字段按 CodeBuddy 官方文档填写。

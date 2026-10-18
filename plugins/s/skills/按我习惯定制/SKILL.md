@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 一个有引导的流程，把用户的工作习惯变成一个智能体会遵守的 skill。产出是一个为他量身定做的 `-mode` skill（例如 `jay-mode`、`priya-mode`）。
 
-这个 skill 协调两样东西：一轮直接进行的挖掘（见第 1 步），以及 **清理AI腔** skill（负责文字规范）。软件如果自带编写 SKILL.md 的 skill（Cursor 叫 `create-skill`），编写那一步用它。没有就自己写。本插件不附带 `create-skill`。它安排先后顺序，不代替这些步骤。
+这个 skill 协调两样东西：一轮直接进行的挖掘（见第 1 步），以及 **清理AI腔** skill（负责文字规范）。编写 SKILL.md 那一步用 **编写skill**（`/编写skill`）。它安排先后顺序，不代替这些步骤。
 
 ## 流程
 
@@ -64,7 +64,7 @@ disable-model-invocation: true
 
 ### 4. 起草 skill
 
-软件自带编写 SKILL.md 的 skill（Cursor 叫 `create-skill`）就用它。没有就自己写。放置方式：
+编写那一步跑 `/编写skill`。放置方式：
 
 - 路径：保留已有 mode skill 所在的位置。新的 mode：Cursor 放 `.cursor/skills/<handle>-mode/SKILL.md`，用户要个人 skill 就放 `~/.cursor/skills/<handle>-mode/`。Claude Code 对应 `.claude/skills/` 和 `~/.claude/skills/`。WorkBuddy、Codex、OpenCode 的个人目录这里不确定，先写仓库里的 `skills/<handle>-mode/SKILL.md`，并告诉用户按该软件的方式加载。不要假装写进某个没确认过的家目录就会自动生效。
 - 代号（handle）：用户的名字，或者他选的标识。
@@ -99,11 +99,11 @@ disable-model-invocation: true
 
 ## 什么时候不用
 
-- 用户想要一个针对具体任务的 skill（而不是工作习惯）：不用挖掘。有编写 skill 就只用它；没有就自己写一份 `SKILL.md`。
+- 用户想要一个针对具体任务的 skill（而不是工作习惯）：不用挖掘。跑 `/编写skill`。
 - 用户想记录一个很窄的流程（例如“我是怎么写提交信息的”）。那是一个普通 skill，不是 mode skill。
 
 ## 在不同软件里怎么用
 
 提问工具和「写 SKILL.md」那一行，以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。挖掘时的并行子智能体也按那张表里 Cursor、OpenCode、Codex 的派法：Cursor 用 `Task`、`subagent_type: generalPurpose`、`readonly: true`，模型用较快的写代码模型（`grok-4.7-xhigh-fast` 这次可用才用这个名字）；OpenCode 用 `subagent` 加 `background: true`，内置 `explore` 或 `s-how-explorer`；Codex 用话派，点名一个这次账号里真有的较快模型，等齐再汇总。WorkBuddy 用 `Explore`，Claude Code 用 `Explore`。
 
-Cursor 的 skill 目录是 `.cursor/skills/` 和 `~/.cursor/skills/`。Claude Code 是 `.claude/skills/` 和 `~/.claude/skills/`。WorkBuddy、Codex、OpenCode 的个人 skill 目录这里不确定，新文件先放在仓库的 `skills/<代号>-mode/SKILL.md`。本插件没有 `create-skill`，也没有 `unslop`；文字用 **清理AI腔**。
+Cursor 的 skill 目录是 `.cursor/skills/` 和 `~/.cursor/skills/`。Claude Code 是 `.claude/skills/` 和 `~/.claude/skills/`。WorkBuddy、Codex、OpenCode 的个人 skill 目录这里不确定，新文件先放在仓库的 `skills/<代号>-mode/SKILL.md`。编写用 `/编写skill`。文字用 **清理AI腔**。

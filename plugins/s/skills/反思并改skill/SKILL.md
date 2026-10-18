@@ -51,9 +51,9 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 严格按照每一条已批准条目的 Routing（去向）来做：
 
 - 对已有 skill 的小修改（一条一行的要点、收紧一句话、改正一个过时的事实）：父智能体直接做。
-- 对已有 skill 的实质性修改（一个新的小节、一张新的模式表、超过大约 10 行）：如果软件自带编写 SKILL.md 的 skill（Cursor 叫 `create-skill`），就用它跑起草、测试、迭代。本插件没有这个 skill。没有的话，自己改文件：保留原有的 YAML `name` 和 `description`，改完用 **清理AI腔** 过一遍文字。
-- `tune description: <skill path>`（这个 skill 存在，但在该触发时没有触发）：有编写 skill 就用它的描述优化。没有就只改 `description`，让它覆盖用户实际会说的那句话，改完读一遍确认没有把正文的触发条件写丢。
-- `new skill: <kebab-name>`：有编写 skill 就交给它。没有就自己新建目录和 `SKILL.md`，YAML 里写 `name` 和 `description`，正文照已有 skill 的形状写，再用 **清理AI腔**。不要临时编一个没人能安装的格式。
+- 对已有 skill 的实质性修改（一个新的小节、一张新的模式表、超过大约 10 行）：跑 `/编写skill` 做起草、测试、迭代。保留原有的 YAML `name` 和 `description`，改完用 **清理AI腔** 过一遍文字。
+- `tune description: <skill path>`（这个 skill 存在，但在该触发时没有触发）：用 `/编写skill` 做描述优化。只改 `description`，让它覆盖用户实际会说的那句话，改完读一遍确认没有把正文的触发条件写丢。
+- `new skill: <kebab-name>`：交给 `/编写skill`。YAML 里写 `name` 和 `description`，正文照已有 skill 的形状写，再用 **清理AI腔**。
 
 如果你的环境带有 SKILL.md 校验工具，在宣布完成之前，对每个改动过的 skill 都运行一遍。
 
@@ -68,7 +68,7 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 ## 在不同软件里怎么用
 
-判断、发散和综合读 `reflect judgment, divergent, synthesizer`，工具视角读 `reflect tooling`。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 的 skill 不是本插件的一部分。Cursor 如果装了 `create-skill` 可以用。WorkBuddy、Claude Code、Codex、OpenCode 按上面第 5 步自己写。
+判断、发散和综合读 `reflect judgment, divergent, synthesizer`，工具视角读 `reflect tooling`。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/编写skill`。WorkBuddy、Claude Code、Codex、OpenCode 按那份 skill 文末的目录说明放置。
 
 ### Cursor（原版参数）
 

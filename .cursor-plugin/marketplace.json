@@ -4,13 +4,13 @@
     "name": "S"
   },
   "metadata": {
-    "description": "S 的中文 AI 技能市场。现在只有 s 这一个插件，54 个中文技能。"
+    "description": "S 的中文 AI 技能市场。现在只有 s 这一个插件，61 个中文技能。"
   },
   "plugins": [
     {
       "name": "s",
       "source": "plugins/s",
-      "description": "s 的 54 个中文技能，包括做事原则、工作流程和 TypeScript 写法。"
+      "description": "s 的 61 个中文技能，包括做事原则、工作流程和 TypeScript 写法。"
     }
   ]
 }

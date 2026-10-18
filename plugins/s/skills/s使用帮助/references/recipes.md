@@ -41,7 +41,7 @@
 
 ## 离开和回来
 
-- `/poteto工作模式 im going to bed. <goal> in a fresh worktree off <base>. done means <checks>. keep a decision log. don't ask me before committing. keep going until the checks pass. if you're truly stuck after a few hours, stop and write up why.`（我去睡了。在从某个基础分支开的新 worktree 里完成某个目标。完成的意思是通过某些检查。记一份决定日志。提交之前不用问我。一直做到检查通过。如果几个小时后真的卡住了，就停下来写清楚原因。Cursor 上可以在末尾加 `/loop until done`。别的软件没有这个命令。）
+- `/poteto工作模式 im going to bed. <goal> in a fresh worktree off <base>. done means <checks>. keep a decision log. don't ask me before committing. keep going until the checks pass. if you're truly stuck after a few hours, stop and write up why.`（我去睡了。在从某个基础分支开的新 worktree 里完成某个目标。完成的意思是通过某些检查。记一份决定日志。提交之前不用问我。一直做到检查通过。如果几个小时后真的卡住了，就停下来写清楚原因。末尾加上 `/定时循环`。Cursor 菜单里有 `/loop` 时，那一句是 `/loop until done`。别的软件按 `/定时循环` 的说明。）
 - `/决定记录日志 catch me up on what you did last night.`（告诉我你昨晚做了什么。）先读它的 Attention 部分。
 - `/poteto工作模式 full autopilot on this queue. each item is independent.`（对这个队列全自动驾驶。每一项都是独立的。）
 - `/poteto工作模式 autopilot these changes but stack them, don't ship. i'll land the stack.`（自动完成这些改动，但把它们叠起来，别上线。我自己来合入。）
