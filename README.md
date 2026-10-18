@@ -1,6 +1,6 @@
 # S 的中文技能市场
 
-这个仓库是 S 自己的**插件市场**。插件市场就是一份目录，里面列出可以安装的插件。现在目录里有两个插件：`s` 和 `s-ui`。插件是一组技能。技能（skill）是一份写给 AI 助手看的说明书，文件名固定叫 `SKILL.md`，开头有名字和说明，后面是具体步骤。
+这个仓库是 S 自己的**插件市场**。插件市场就是一份目录，里面列出可以安装的插件。现在目录里只有一个插件：`s`。插件是一组技能。技能（skill）是一份写给 AI 助手看的说明书，文件名固定叫 `SKILL.md`，开头有名字和说明，后面是具体步骤。
 
 技能正文是中文。同一份文件给 WorkBuddy、Cursor、Claude Code 用。改完合并进 `main` 分支之后，已经安装的应用可以收到更新。Codex 和 OpenCode 用各自的装法，读的也是这一份文件。
 
@@ -8,12 +8,11 @@
 
 ## 里面有什么
 
-2 个插件，78 个技能。技能文件只存一份：`s` 在 `plugins/s/skills/`，`s-ui` 在 `plugins/s-ui/skills/`。几个应用的清单都指向这些文件夹，没有为每个应用再复制一份技能。两个子智能体的短文件在 `plugins/s/agents/`。`s-ui` 没有子智能体。
+1 个插件，78 个技能。技能文件只存一份，放在 `plugins/s/skills/`。几个应用的清单都指向这个文件夹，没有为每个应用再复制一份技能。两个子智能体的短文件在 `plugins/s/agents/`。
 
 | 插件短名 | 数量 | 里面是什么 |
 |---|---|---|
-| `s` | 61 | s 的中文技能：做事原则、工作流程、TypeScript 写法 |
-| `s-ui` | 17 | 界面设计和动画。不含 Figma |
+| `s` | 78 | s 的中文技能：做事原则、工作流程、TypeScript 写法、界面设计和动画 |
 
 插件短名是给应用看的，只能用小写英文字母、数字和连字符。技能的名字保持中文。
 
@@ -31,21 +30,14 @@ plugins/s/
   .codebuddy-plugin/plugin.json
   LICENSE                            pstack 的 MIT 许可证全文
   LICENSE-cursor-team-kit            cursor-team-kit 的 MIT 许可证全文
+  LICENSE-emilkowalski-skills        Emil Kowalski 技能的 MIT 许可证全文
+  LICENSE-impeccable                 impeccable 的 Apache 2.0 许可证全文
+  LICENSE-ui-ux-pro-max              ui-ux-pro-max 的 MIT 许可证全文
+  LICENSE-vercel-agent-skills        Vercel agent-skills 的 MIT 说明
+  NOTICE-impeccable.md               impeccable 的第三方说明
   agents/
     专挑注释.md
     s助手.md
-  skills/
-    <技能名>/SKILL.md
-plugins/s-ui/
-  plugin.json
-  .cursor-plugin/plugin.json
-  .claude-plugin/plugin.json
-  .codebuddy-plugin/plugin.json
-  LICENSE-emilkowalski-skills
-  LICENSE-impeccable
-  LICENSE-ui-ux-pro-max
-  LICENSE-vercel-agent-skills
-  NOTICE-impeccable.md
   skills/
     <技能名>/SKILL.md
 ```
@@ -58,19 +50,19 @@ plugins/s-ui/
 
 `编写skill` 和 `定时循环` 是按 Cursor 公开文档写的，内置技能原文没有公开，标为自写。没有上游许可证可附。
 
-`s-ui` 的 17 个技能来自下面几处，没有 Figma。
+界面和动画这 17 个技能也在插件 `s` 里，没有 Figma。
 
-Emil Kowalski 的 https://github.com/emilkowalski/skills （commit 2d22863，MIT 许可证，版权 © 2026 Emil Kowalski）。许可证全文在 `plugins/s-ui/LICENSE-emilkowalski-skills`。这 14 个技能是：`Emil设计理念`、`Expo动画`、`Sonner用法`、`做动画`、`动画审查`、`动画性能`、`动画改进计划`、`动画术语表`、`手机原生手感`、`找动画机会`、`界面压力测试`、`选前端库`、`苹果式设计`、`多版本原型`。
+Emil Kowalski 的 https://github.com/emilkowalski/skills （commit 2d22863，MIT 许可证，版权 © 2026 Emil Kowalski）。许可证全文在 `plugins/s/LICENSE-emilkowalski-skills`。这 14 个技能是：`Emil设计理念`、`Expo动画`、`Sonner用法`、`做动画`、`动画审查`、`动画性能`、`动画改进计划`、`动画术语表`、`手机原生手感`、`找动画机会`、`界面压力测试`、`选前端库`、`苹果式设计`、`多版本原型`。
 
-Next Level Builder 的 https://github.com/nextlevelbuilder/ui-ux-pro-max-skill （`.claude/skills/ui-ux-pro-max`，commit 56ea9cf，MIT 许可证，版权 © 2024 Next Level Builder）。许可证全文在 `plugins/s-ui/LICENSE-ui-ux-pro-max`。技能是 `UIUX知识库`。
+Next Level Builder 的 https://github.com/nextlevelbuilder/ui-ux-pro-max-skill （`.claude/skills/ui-ux-pro-max`，commit 56ea9cf，MIT 许可证，版权 © 2024 Next Level Builder）。许可证全文在 `plugins/s/LICENSE-ui-ux-pro-max`。技能是 `UIUX知识库`。
 
-Paul Bakaus 的 https://github.com/pbakaus/impeccable （`cursor-plugin/skills/impeccable`，版本 4.6.0，commit 08d5b47，Apache 2.0，版权 © 2025 Paul Bakaus；插件发布者 Renaissance Geek, Inc.）。许可证全文在 `plugins/s-ui/LICENSE-impeccable`，第三方说明在 `plugins/s-ui/NOTICE-impeccable.md`。技能是 `精致界面设计`。这里的 `SKILL.md` 是中文翻译，内容做了翻译改动。`reference/` 和 `scripts/` 保持原文。
+Paul Bakaus 的 https://github.com/pbakaus/impeccable （`cursor-plugin/skills/impeccable`，版本 4.6.0，commit 08d5b47，Apache 2.0，版权 © 2025 Paul Bakaus；插件发布者 Renaissance Geek, Inc.）。许可证全文在 `plugins/s/LICENSE-impeccable`，第三方说明在 `plugins/s/NOTICE-impeccable.md`。技能是 `精致界面设计`。这里的 `SKILL.md` 是中文翻译，内容做了翻译改动。`reference/` 和 `scripts/` 保持原文。
 
-Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-guidelines`，commit 063bee9）。仓库没有单独的 LICENSE 文件，README 写的是 MIT。摘录在 `plugins/s-ui/LICENSE-vercel-agent-skills`。技能是 `网页设计规范`。
+Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-guidelines`，commit 063bee9）。仓库没有单独的 LICENSE 文件，README 写的是 MIT。摘录在 `plugins/s/LICENSE-vercel-agent-skills`。技能是 `网页设计规范`。
 
 ## 中文名对照表
 
-61 个技能。调用时用中文名。表里的「英文名」是以前的英文备份，技能文件里已经没有这一行。后加的 7 个没有英文备份，这一列写上游英文名。「原始 skill」是改写前的英文名。标 ⚠️ 的，表示它的 `references/` 参考文件还是英文。
+78 个技能，都在插件 `s` 里。调用时用中文名。表里的「英文名」是以前的英文备份，技能文件里已经没有这一行。后加的 7 个没有英文备份，这一列写上游英文名。「原始 skill」是改写前的英文名。标 ⚠️ 的，表示附带参考文件还是英文。
 
 | 中文名 | 英文名 | 原始 skill | 用途 |
 |---|---|---|---|
@@ -136,9 +128,9 @@ Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-gui
 | `原则-测行为不测实现` | `s-principle-test-behavior-not-implementation` | `principle-test-behavior-not-implementation` | 测试断言使用者能看到的行为，不绑定内部实现。 |
 | `原则-类型系统纪律` | `s-principle-type-system-discipline` | `principle-type-system-discipline` | 让非法状态无法表示，在边界解析外部数据。 |
 
-### s-ui
+### 界面和动画
 
-17 个技能。调用时用中文名。「英文名」是以前的英文备份，技能文件里已经没有这一行。「原始 skill」是改写前的英文名。标 ⚠️ 的，表示附带文件还是英文。
+下面 17 个也在插件 `s` 里。调用时同样用中文名。「英文名」是以前的英文备份，不是另一个插件。
 
 | 中文名 | 英文名 | 原始 skill | 用途 |
 |---|---|---|---|
@@ -162,7 +154,7 @@ Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-gui
 
 ## 合并进 main 之后怎么装
 
-市场短名是 `s-skills`。插件短名是 `s` 和 `s-ui`。`s-ui@s-skills` 的意思是：市场 `s-skills` 里的插件 `s-ui`。
+市场短名是 `s-skills`。插件短名是 `s`。`s@s-skills` 的意思是：市场 `s-skills` 里的插件 `s`。界面和动画技能在这个插件里。如果之前装过单独的 `s-ui`，卸掉 `s-ui@s-skills`，再更新 `s`。
 
 还没合并、想先试用这条分支时，看下一节。
 
@@ -173,11 +165,10 @@ Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-gui
 ```text
 /plugin marketplace add Acefake/s-skills
 /plugin install s@s-skills
-/plugin install s-ui@s-skills
 /reload-plugins
 ```
 
-`/plugin` 是插件管理命令。`marketplace add` 是把这个 GitHub 仓库登记成一个市场。`install` 是安装里面的插件。只要其中一个，就只留对应的那一行 `install`。`/reload-plugins` 是重新加载插件，不用退出应用。
+`/plugin` 是插件管理命令。`marketplace add` 是把这个 GitHub 仓库登记成一个市场。`install` 是安装里面的插件。`/reload-plugins` 是重新加载插件，不用退出应用。
 
 ### Claude Code
 
@@ -186,11 +177,10 @@ Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-gui
 ```text
 /plugin marketplace add Acefake/s-skills
 /plugin install s@s-skills
-/plugin install s-ui@s-skills
 /reload-plugins
 ```
 
-也可以在终端里运行 `claude plugin marketplace add Acefake/s-skills`，然后 `claude plugin install s@s-skills` 和 `claude plugin install s-ui@s-skills`。
+也可以在终端里运行 `claude plugin marketplace add Acefake/s-skills`，然后 `claude plugin install s@s-skills`。
 
 ### Cursor
 
@@ -201,8 +191,8 @@ Cursor 用仓库里的 `.cursor-plugin/marketplace.json` 把整个仓库当成�
 1. 打开 Cursor 的 Dashboard，进入 Plugins & MCPs（插件和 MCP）。
 2. 在 Team Marketplaces（团队市场）里选 Import from Repo（从仓库导入）。
 3. 粘贴 `https://github.com/Acefake/s-skills`。
-4. 确认它列出了插件 `s` 和 `s-ui`，保存。
-5. 在 Cursor 侧边栏的 Customize（自定义）里安装要的那个。安装时可选「只给自己」或「这个项目」。
+4. 确认它列出了插件 `s`，保存。
+5. 在 Cursor 侧边栏的 Customize（自定义）里安装 `s`。安装时可选「只给自己」或「这个项目」。
 
 个人用的 Cursor 也可以在 Customize → Plugins 里找 Import marketplace / Add marketplace（导入市场），粘贴同一个仓库地址。2026-10-18 的官方文档把导入步骤写在团队市场那一节；个人界面上的入口名称以你本机菜单为准。导入这一步我没有在 Cursor 里点过。
 
@@ -216,9 +206,9 @@ Codex 现在有插件市场。官方说明写在 [Build plugins](https://develop
 codex plugin marketplace add Acefake/s-skills
 ```
 
-然后打开 Codex，输入 `/plugins`，安装 `s` 或 `s-ui`。装完新开一个对话再用。
+然后打开 Codex，输入 `/plugins`，安装 `s`。装完新开一个对话再用。
 
-Codex 还会顺带读取 `.claude-plugin/marketplace.json` 和 `.cursor-plugin/marketplace.json`。这三个文件都列了 `s` 和 `s-ui`，所以 Codex 里可能看到重复的条目。同一个插件装其中一个即可。这一重复我没有在 Codex 里打开确认过。
+Codex 还会顺带读取 `.claude-plugin/marketplace.json` 和 `.cursor-plugin/marketplace.json`。这三个文件都只列了 `s`，所以 Codex 里可能看到重复的条目。装其中一个即可。这一重复我没有在 Codex 里打开确认过。
 
 Codex 的 IDE 扩展不支持插件。要用插件，打开 Codex 命令行，或 ChatGPT 桌面版里的 Codex。
 
@@ -228,7 +218,7 @@ OpenCode 到 2026-10-18 还没有官方的插件市场。它会从本机的技�
 
 ### skills 命令（Codex、OpenCode、也可以给 Cursor）
 
-[vercel-labs/skills](https://github.com/vercel-labs/skills) 是一个安装技能的命令行工具。它会在仓库里找 `SKILL.md`。这个仓库的 Claude 市场清单写了插件路径，它能顺着路径找到 `plugins/s/skills/<技能名>/` 和 `plugins/s-ui/skills/<技能名>/`。
+[vercel-labs/skills](https://github.com/vercel-labs/skills) 是一个安装技能的命令行工具。它会在仓库里找 `SKILL.md`。这个仓库的 Claude 市场清单写了插件路径，它能顺着路径找到 `plugins/s/skills/<技能名>/`。
 
 装到当前用户、所有项目都能用（`-g` 就是 global，全局）：
 
@@ -254,13 +244,13 @@ npx skills add Acefake/s-skills --list
 
 ## 合并前先试一条分支
 
-不带分支名时，装到的是 `main`。`main` 上有 `s` 和 `s-ui`。要试一条还没合并的分支，把下面命令里的 `分支名` 换成那条分支。分支名里有斜杠时，整段地址加引号。
+不带分支名时，装到的是 `main`。`main` 上只有插件 `s`。要试一条还没合并的分支，把下面命令里的 `分支名` 换成那条分支。分支名里有斜杠时，整段地址加引号。
 
 **WorkBuddy。** 官方文档对 Git 地址写了「地址后面加 `#` 再加分支或标签」。用完整地址：
 
 ```text
 /plugin marketplace add https://github.com/Acefake/s-skills.git#分支名
-/plugin install s-ui@s-skills
+/plugin install s@s-skills
 /reload-plugins
 ```
 
@@ -270,7 +260,7 @@ WorkBuddy 文档里的 GitHub 短写例子是 `owner/repo`，没有写 `#分支`
 
 ```text
 /plugin marketplace add Acefake/s-skills#分支名
-/plugin install s-ui@s-skills
+/plugin install s@s-skills
 /reload-plugins
 ```
 
@@ -280,7 +270,7 @@ WorkBuddy 文档里的 GitHub 短写例子是 `owner/repo`，没有写 `#分支`
 codex plugin marketplace add Acefake/s-skills --ref 分支名
 ```
 
-然后在对话里用 `/plugins` 安装 `s-ui`。我没有在 Codex 里跑过。
+然后在对话里用 `/plugins` 安装 `s`。我没有在 Codex 里跑过。
 
 **OpenCode，以及合并前给 Cursor / Codex 装技能。** skills 命令用 `#` 后面跟分支名（分支名里有斜杠，所以整段要加引号）：
 
@@ -306,7 +296,7 @@ npx skills add "Acefake/s-skills#分支名" --list
 
 ```text
 /s:先画架构草图
-/s-ui:精致界面设计
+/s:精致界面设计
 ```
 
 斜杠 `/` 是调用命令。冒号前面是插件短名，后面是技能的中文名。没有别的命令占用这个中文名时，只打 `/先画架构草图` 往往也能用。助手也可以在任务对得上技能开头的说明时，自己去读那份说明书。
@@ -334,23 +324,23 @@ OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决�
 
 分两条路。
 
-**插件市场（WorkBuddy、Claude Code、Codex 的插件安装）。** 应用把插件复制到本机的一个缓存目录。WorkBuddy 和 Claude Code 的官方文档写明：已经安装的插件，要等它的**版本号**变了，才会换成新的一份。版本号写在每个插件的四份清单里（`plugin.json`、`.cursor-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.codebuddy-plugin/plugin.json`）。`s` 现在是 `1.1.3`，`s-ui` 现在是 `1.0.0`。市场目录里故意不再写一遍版本号。官方文档说两处都写的话，以 `plugin.json` 为准，并且校验命令会警告它们不一致。
+**插件市场（WorkBuddy、Claude Code、Codex 的插件安装）。** 应用把插件复制到本机的一个缓存目录。WorkBuddy 和 Claude Code 的官方文档写明：已经安装的插件，要等它的**版本号**变了，才会换成新的一份。版本号写在每个插件的四份清单里（`plugin.json`、`.cursor-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.codebuddy-plugin/plugin.json`）。`s` 现在是 `1.1.4`。市场目录里故意不再写一遍版本号。官方文档说两处都写的话，以 `plugin.json` 为准，并且校验命令会警告它们不一致。
 
 所以：改了某个插件里的技能或许可证之后，要让别人的应用收到，必须把那个插件的版本号加大，再合并。只合并文件、不改版本号，WorkBuddy 和 Claude Code 会继续用旧缓存。
 
 加大版本号：
 
 ```text
-python3 scripts/bump_plugin_version.py s-ui
+python3 scripts/bump_plugin_version.py s
 ```
 
-或者一次处理所有内容变了的插件：
+或者：
 
 ```text
 python3 scripts/bump_plugin_version.py --all
 ```
 
-脚本只把最后一位加 1，例如 `1.0.0` 变成 `1.0.1`。它同时改那个插件的四份清单和 `plugin-versions.lock.json`。这个 lock 文件记下「这一版对应的文件内容指纹」。内容变了却没加大版本号时，`python3 scripts/check_marketplace.py` 会失败，GitHub 上的检查也会失败。内容没变时，脚本不改版本号。
+现在只有 `s`，两条命令效果一样。脚本只把最后一位加 1，例如 `1.1.3` 变成 `1.1.4`。它同时改四份清单和 `plugin-versions.lock.json`。这个 lock 文件记下「这一版对应的文件内容指纹」。内容变了却没加大版本号时，`python3 scripts/check_marketplace.py` 会失败，GitHub 上的检查也会失败。内容没变时，脚本不改版本号。
 
 想把 `1.0.1` 改成 `1.1.0` 或 `2.0.0`：手动改 lock 文件里的 `version`，以及该插件四份清单里的 `version`，再跑检查。内容指纹对得上、五处版本号一致，检查就会通过。
 
@@ -405,7 +395,6 @@ WorkBuddy 和 Claude Code，在对话里：
 
 ```text
 /plugin uninstall s@s-skills
-/plugin uninstall s-ui@s-skills
 ```
 
 连市场一起去掉：
@@ -416,9 +405,9 @@ WorkBuddy 和 Claude Code，在对话里：
 
 去掉市场时，从它装上的插件会一起卸掉。
 
-Cursor：在 Customize 里找到已安装的 `s` 或 `s-ui`，选卸载。团队市场由管理员在 Dashboard 的 Team Marketplaces 里移除。
+Cursor：在 Customize 里找到已安装的 `s`，选卸载。团队市场由管理员在 Dashboard 的 Team Marketplaces 里移除。
 
-Codex：在 `/plugins` 里对要卸的插件选卸载。终端里移除市场：
+Codex：在 `/plugins` 里对 `s` 选卸载。终端里移除市场：
 
 ```text
 codex plugin marketplace remove s-skills
@@ -445,4 +434,4 @@ python3 scripts/check_marketplace.py
 
 检查这些事：Cursor 的两份清单符合官方 JSON Schema；Claude Code 和 CodeBuddy 的市场字段符合官方文档里的名字规则和 `./plugins/<插件短名>` 路径；Codex 的市场带有 `source.path`、`policy` 和 `category`；每个插件的四份清单版本号一致；技能内容的指纹和 lock 文件一致；78 个技能的文件夹名和 `name` 一致。
 
-准备这个仓库时还跑过官方命令 `claude plugin validate`（Claude Code 2.1.302）。市场目录和 `s` 都显示 Validation passed。这次对 `s-ui` 也跑了同一条命令。这个命令接受了中文技能名。它检查的是清单格式，不会模拟上面说的「中文被换成连字符」那种运行时行为。Cursor 的清单另外用官方 JSON Schema 校验过。CodeBuddy 自己的 `codebuddy plugin validate` 这次没有跑。`.codebuddy-plugin/` 里的清单和已经通过 Claude 校验的 `.claude-plugin/` 清单内容相同，字段按 CodeBuddy 官方文档填写。
+准备这个仓库时还跑过官方命令 `claude plugin validate`（Claude Code 2.1.302）。市场目录和 `s` 都显示 Validation passed。这个命令接受了中文技能名。它检查的是清单格式，不会模拟上面说的「中文被换成连字符」那种运行时行为。Cursor 的清单另外用官方 JSON Schema 校验过。CodeBuddy 自己的 `codebuddy plugin validate` 这次没有跑。`.codebuddy-plugin/` 里的清单和已经通过 Claude 校验的 `.claude-plugin/` 清单内容相同，字段按 CodeBuddy 官方文档填写。
