@@ -24,7 +24,7 @@ disable-model-invocation: true
 
 检查那些会改变答案的状态，只有当它确实改变答案时才提：
 
-- 没有 `~/.cursor/rules/s-models.mdc`，说明这个用户还没运行过 `/设置s模型`，所以每个角色都用它的默认模型。
+- 当前软件里还没有 s 的模型配置（路径见 [`/设置s模型`](../设置s模型/SKILL.md) 文末的表，不要只看 `~/.cursor/rules/`），说明这个用户还没运行过 `/设置s模型`，所以每个角色都跟父对话的模型走。
 - 项目里没有 `verify-*` skill 或其他操作应用的测试工具，说明智能体没有用脚本操作应用的办法。当问题是关于证明一个改动能用时，提一下 `/创建验证skill`。
 
 当模型规则不存在、而且这一点很重要时，问用户现在要不要为每个角色挑一个模型，并选一个推理预算。在这些情况下它很重要：用户是新手，问题是关于设置或成本的，或者答案取决于运行的是哪些模型。每次对话最多问一次。如果需求也不清楚，就把两个问题一起问。给两个选择：
@@ -34,15 +34,15 @@ disable-model-invocation: true
 
 ## 安装设置
 
-1. 在聊天里用 `/add-plugin s` 安装，或者从侧边栏的 Customize 里安装。
-2. 运行 [`/设置s模型`](../设置s模型/SKILL.md)。它会询问推理预算，给每个角色对应一个模型，并写一条规则。这条规则对新的对话生效。
+1. 按仓库 [README](../../README.md) 里对应当前软件的装法安装。`/add-plugin s` 和侧边栏 Customize 是 Cursor 的装法。WorkBuddy、Claude Code、Codex、OpenCode 用 README 里的命令。
+2. 运行 [`/设置s模型`](../设置s模型/SKILL.md)。它会询问推理预算，给每个角色对应一个模型，并写到**当前软件**会读的位置。新对话才会读到。写到 `~/s-models.md` 的兜底不会自动生效。
 3. 用 `/poteto工作模式`、一个目标和一个能判定通过或失败的检查，开始一个真实的任务。
 
 在用户调用某个 skill 之前，安装不会改变任何东西。只有 `/设置s模型` 会根据用户的话自动加载。细节见 [README](../../README.md) 和[指南第 1 页](../../docs/guide/01-setup.md)。按照 [`references/prompting.md`](references/prompting.md)，主动提出和他们一起斟酌第一条提示词。
 
 如果担心的是成本，就说清楚 token 花在了哪里、怎样少花一些。s 会在子智能体和审查组上多花 token。重新运行 `/设置s模型`，选一个更小的预算或更便宜的模型。设成 `auto` 或 `inherit-parent` 的角色会用聊天本身的模型运行，当聊天用的是 Auto 或更便宜的模型时，这样能省 token。更短的审查组列表会运行更少的子智能体，每个条目一个。把 `/poteto工作模式` 留给需要严谨的工作。
 
-s 是为 Cursor 打造的。它的 skill 用的是 Agent Skills 格式，所以其他工具也能读。但大多数工作流程类的 skill，包括 `/poteto工作模式`、`/代码怎么工作`、`/代码为什么这样` 和 `/一步步教我`，都会派出按角色指定模型的 Cursor 子智能体，而 Custom Mode 和 `/loop` 都是 Cursor 的功能，所以在其他工具里这些部分可能用不了。
+这些 skill 的正文按通用说法写。派子智能体、指定模型、定时醒来，各软件能做到哪一步，看 [`poteto工作模式`](../poteto工作模式/SKILL.md) 文末的表。软件派不出子智能体，就在主对话里按顺序做。Custom Mode 和 `/loop` 是 Cursor 的功能，本插件不附带它们。别的软件没有等价命令时，每个新任务自己输入 `/poteto工作模式`，长时间的检查用一个后台盯梢的子智能体，或自己过一会儿再看。
 
 ## 用 `/poteto工作模式` 开始一个任务
 
@@ -54,7 +54,7 @@ s 是为 Cursor 打造的。它的 skill 用的是 Agent Skills 格式，所以�
 - 在 Mac 上按 Option+Enter，在 Windows 上按 Alt+Enter，或者在 skill 条目上选 Use as Mode，会把它变成一个 Custom Mode。在用户退出这个模式之前，它每一轮都留在上下文里，而且不会掺和到随便聊聊的轮次里。
 - Cursor 的文档列出了 Agents Window 和命令行工具里的 Custom Mode。在其他地方，每开始一个新任务都用 `/poteto工作模式`。
 
-谈到这个时，附上 [Cursor 的 skill 文档](https://cursor.com/docs/skills)的链接。在对话中途说 “new task”（新任务），会让这个模式去匹配一个新的 playbook。`/poteto工作模式` 在它的 playbook 步骤派出子智能体时，已经在用 `poteto-agent`。如果想让你自己派出的子智能体也是同样的风格，就用 `subagent_type: "poteto-agent"` 派出它。
+谈到 Cursor 的 Custom Mode 时，附上 [Cursor 的 skill 文档](https://cursor.com/docs/skills)的链接。在对话中途说 “new task”（新任务），会让这个模式去匹配一个新的 playbook。自己派子智能体时，用 poteto工作模式 文末表里「能写文件的通用类型」那一格。本插件没有附带 `poteto-agent`。
 
 ## 挑一个 skill
 
@@ -106,9 +106,12 @@ s 是为 Cursor 打造的。它的 skill 用的是 Agent Skills 格式，所以�
 
 不在 s 里的：
 
-- `/deslop`、`control-cli` 和 `control-ui` 在 `cursor-team-kit` 插件里。
-- `/loop` 和 `/create-skill` 是 Cursor 自带的。
+- 去掉 AI 腔用 [`/清理AI腔`](../清理AI腔/SKILL.md)。本插件没有 `deslop`。
+- 像用户一样操作界面或命令行：本插件没有 `control-ui` 和 `control-cli`。有别的 skill 或项目自己的测试就用；没有就自己打开界面，或自己跑命令并读输出。
+- 编写 SKILL.md：Cursor 如果装了 `create-skill` 可以用。没有就自己写，YAML 里要有 `name` 和 `description`，再用 `/清理AI腔`。
+- `/loop` 是 Cursor 自带的定时命令，本插件不附带。没有它，用后台盯梢的子智能体，或自己过一会儿再看。
 - s 没有 `/orchestrate` skill。Orchestrate 是 `/poteto工作模式` 里的一个 playbook。如果斜杠菜单里出现了 `/orchestrate`，那是别的插件提供的。
+- `comment-sicko` 不是本插件里的 skill。`/清理代码注释` 在软件有这个子智能体类型时会用它，没有就自己删注释。
 
 ## Playbook 和原则
 
@@ -133,11 +136,11 @@ s 没有做计划的 skill。Cursor 的 Plan Mode 可以和它一起用。对于
 |---|---|
 | 几轮之后模式不再起作用了 | 它是用 Enter 启动的。把它作为 Custom Mode 启动，或者每个任务都用 `/poteto工作模式` 开始。 |
 | 一个问题被当成了上一个任务的下一步 | 说 “new task”（新任务），或者说这一轮不需要这个模式。 |
-| 新的模型选择没有效果 | `/设置s模型` 写的规则对新对话生效。开一个新对话。 |
+| 新的模型选择没有效果 | `/设置s模型` 写到当前软件的配置里，对新对话生效。开一个新对话。如果它说写的是 `~/s-models.md`，软件不会自动读，需要把正文贴进始终生效的说明。 |
 | 运行花的钱比预期多 | 见“安装设置”下面关于成本的那一段。 |
 | 某个 skill 没有自己加载 | 只有 `/设置s模型` 会根据用户的话自动加载。其他的在用户输入它们、或者 `/poteto工作模式` 运行它们时才加载，而 `/poteto工作模式` 不会运行每一个 skill。 |
 | 并行的智能体互相覆盖了 | 给每个智能体它自己的 worktree，或者把它们作为云端智能体运行，每个都有自己的机器。 |
-| 一次通宵运行有进展，但什么都没完成 | `/loop` 需要一个能判定通过或失败的检查，而不是一段时长。见[指南第 7 页](../../docs/guide/07-overnight.md)。 |
+| 一次通宵运行有进展，但什么都没完成 | 定时检查需要一个能判定通过或失败的检查，而不是一段时长。Cursor 用 `/loop`。别的软件没有这个命令时，用后台盯梢的子智能体，或自己过一会儿再看。 |
 | 回复凭一次绿色的构建就声称成功 | 要求看真实的命令、流程、存储的值或性能剖析。这就是 prove-it-works（证明它真的能用）原则。 |
 
 对于跑偏的运行，[`references/prompting.md`](references/prompting.md) 里有一句话就能用的引导。[指南第 10 页](../../docs/guide/10-recipes-and-pitfalls.md)有更多的坑和值得照抄的做法。

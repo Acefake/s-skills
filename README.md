@@ -269,7 +269,7 @@ OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决�
 
 分两条路。
 
-**插件市场（WorkBuddy、Claude Code、Codex 的插件安装）。** 应用把插件复制到本机的一个缓存目录。WorkBuddy 和 Claude Code 的官方文档写明：已经安装的插件，要等它的**版本号**变了，才会换成新的一份。版本号写在 `s` 的四份清单里（`plugin.json`、`.cursor-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.codebuddy-plugin/plugin.json`），现在是 `1.1.0`。市场目录里故意不再写一遍版本号。官方文档说两处都写的话，以 `plugin.json` 为准，并且校验命令会警告它们不一致。
+**插件市场（WorkBuddy、Claude Code、Codex 的插件安装）。** 应用把插件复制到本机的一个缓存目录。WorkBuddy 和 Claude Code 的官方文档写明：已经安装的插件，要等它的**版本号**变了，才会换成新的一份。版本号写在 `s` 的四份清单里（`plugin.json`、`.cursor-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.codebuddy-plugin/plugin.json`），现在是 `1.1.1`。市场目录里故意不再写一遍版本号。官方文档说两处都写的话，以 `plugin.json` 为准，并且校验命令会警告它们不一致。
 
 所以：改了 s 里的技能或许可证之后，要让别人的应用收到，必须把版本号加大，再合并。只合并文件、不改版本号，WorkBuddy 和 Claude Code 会继续用旧缓存。
 
@@ -365,6 +365,10 @@ npx skills remove --agent opencode --skill '*' -g
 ```
 
 把 `opencode` 换成 `codex` 或 `cursor` 即可。不加 `--skill '*'` 时，命令会让你选择要卸哪些。
+
+## 插件里的脚本在 Windows 上怎么跑
+
+`plugins/s/skills/poteto工作模式/scripts/` 里的测试要用 [Bun](https://bun.sh)。`决定记录日志/scripts/log.sh` 和 `poteto工作模式/scripts/worktree-audit.sh` 是 bash。Windows 的 PowerShell 跑不了它们，请用 Git Bash 或 WSL。`worktree-audit.sh` 还需要本机有 `git`、`jq` 和 `rg`。`check-plan.mjs` 和 `watch-pr` 是 Node，PowerShell 里可以用 `node` 跑。这些脚本这次在 Linux 上跑过。Windows 上没有这台机器，只根据命令差异做了修改，没有在 PowerShell 或 Git Bash 里实际跑过。
 
 ## 改完怎么自己检查
 

@@ -22,21 +22,21 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 ## 2. 同时派出三个审查者
 
-一条消息，三个 `Task` 调用，`subagent_type: generalPurpose`，用智能体模式（`readonly: false`）。审查者需要 MCP 访问权限，去查对话记录里提到的工单、聊天线程和可观测性追踪记录，而 readonly 会去掉 MCP。
+一条消息，三个子智能体，用能访问 MCP 的类型。会去掉 MCP 的只读模式不要用。审查者要去查对话记录里提到的工单、聊天线程和可观测性追踪记录。
 
-每个审查者和综合者都对应 `s-models.mdc` 规则里的一个角色行，以及一个默认值。把 `model` 设成那一行的值；如果这条规则或那一行不存在，就设成默认值。如果值是 `auto` 或 `inherit-parent`，就不设 `model`。如果 Task 工具拒绝某个模型名，就用默认的并说明一下。如果它连默认的也拒绝，就从它的报错信息里选同一系列中最接近的有效模型名。按 **poteto工作模式** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
+每个审查者和综合者都对应 s 模型配置里的一个角色行。路径见文末。把模型设成那一行的值。没有这一行，判断和发散用更强的模型，工具视角用较快的写代码模型。值是 `auto` 或 `inherit-parent`，或者软件不能指定模型，就不设。软件拒绝了某个名字，就换同一系列里它接受的最接近的名字，并说一句。按 **poteto工作模式** skill 里 “子智能体” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
 
-| 视角 | 角色行 | 默认 `model` | 提示词模板 |
+| 视角 | 角色行 | 没有配置、而且软件能指定模型时 | 提示词模板 |
 |---|---|---|---|
-| 判断（Judgment） | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` | `references/judgment-reviewer.md` |
-| 工具（Tooling） | `reflect tooling` | `grok-4.7-xhigh-fast` | `references/tooling-reviewer.md` |
-| 发散（Divergent） | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` | `references/divergent-reviewer.md` |
+| 判断（Judgment） | `reflect judgment, divergent, synthesizer` | 判断力最强的模型。Cursor 上、并且 `claude-opus-5-5-xhigh` 可用时可以用这个名字 | `references/judgment-reviewer.md` |
+| 工具（Tooling） | `reflect tooling` | 较快的写代码模型。Cursor 上、并且 `grok-4.7-xhigh-fast` 可用时可以用这个名字 | `references/tooling-reviewer.md` |
+| 发散（Divergent） | `reflect judgment, divergent, synthesizer` | 同判断 | `references/divergent-reviewer.md` |
 
-把每个模板原样传过去，在标明的地方替换成对话记录的路径或摘要。审查者在 `Task` 的回复正文里返回发现。
+把每个模板原样传过去，在标明的地方替换成对话记录的路径或摘要。审查者在子智能体的回复正文里返回发现。派不出三个子智能体时，在主对话里按三个视角各写一遍，并说一句没有换模型。
 
 ## 3. 综合
 
-一个 `Task` 调用，`subagent_type: generalPurpose`，`model` 取自 `reflect judgment, divergent, synthesizer` 那一行（默认 `claude-opus-5-5-xhigh`），用智能体模式（`readonly: false`）。它会通过 MCP 抽查引用，而 readonly 会去掉 MCP。把 `references/synthesizer.md` 原样传过去，在标明的地方内联每个审查者的完整输出。它返回一份 Accepted / Rejected / Backlog 列表。
+再派一个子智能体，类型同样要能访问 MCP。模型取自 `reflect judgment, divergent, synthesizer` 那一行。没有这一行，或软件不能指定模型，就按上一节的规则。把 `references/synthesizer.md` 原样传过去，在标明的地方内联每个审查者的完整输出。它返回一份 Accepted / Rejected / Backlog 列表。
 
 ## 4. 结构化强制检查
 
@@ -51,9 +51,9 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 严格按照每一条已批准条目的 Routing（去向）来做：
 
 - 对已有 skill 的小修改（一条一行的要点、收紧一句话、改正一个过时的事实）：父智能体直接做。
-- 对已有 skill 的实质性修改（一个新的小节、一张新的模式表、超过大约 10 行）：交给 Cursor 自带的 `create-skill` skill，跑它的“起草 / 测试 / 迭代”循环。
-- `tune description: <skill path>`（这个 skill 存在，但在该触发时没有触发）：交给 `create-skill`，跑它的描述优化循环。
-- `new skill via create-skill: <kebab-name>`：把创建工作交给 `create-skill`。不要临时自己编一个形状。
+- 对已有 skill 的实质性修改（一个新的小节、一张新的模式表、超过大约 10 行）：如果软件自带编写 SKILL.md 的 skill（Cursor 叫 `create-skill`），就用它跑起草、测试、迭代。本插件没有这个 skill。没有的话，自己改文件：保留原有的 YAML `name` 和 `description`，改完用 **清理AI腔** 过一遍文字。
+- `tune description: <skill path>`（这个 skill 存在，但在该触发时没有触发）：有编写 skill 就用它的描述优化。没有就只改 `description`，让它覆盖用户实际会说的那句话，改完读一遍确认没有把正文的触发条件写丢。
+- `new skill: <kebab-name>`：有编写 skill 就交给它。没有就自己新建目录和 `SKILL.md`，YAML 里写 `name` 和 `description`，正文照已有 skill 的形状写，再用 **清理AI腔**。不要临时编一个没人能安装的格式。
 
 如果你的环境带有 SKILL.md 校验工具，在宣布完成之前，对每个改动过的 skill 都运行一遍。
 
@@ -65,3 +65,7 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 - 新建的 skill：`<skill path>`。每条一行（很少见）。
 - 已提交到开发体验跟踪系统的待办：`<issue title>`（`<tags>`）。每条一行。
 - 丢弃的：每个被拒绝的发现一行，附上综合者给的理由。
+
+## 在不同软件里怎么用
+
+工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。判断、发散和综合读 `reflect judgment, divergent, synthesizer`，工具视角读 `reflect tooling`。写 SKILL.md 的 skill 不是本插件的一部分。Cursor 如果装了 `create-skill` 可以用。WorkBuddy、Claude Code、Codex、OpenCode 没有随 s 附带的编写 skill，按上面第 5 步自己写。

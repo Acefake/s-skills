@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 探索代码库，回答“X 是怎么工作的？”这类问题。给出的架构讲解，要达到一位资深工程师刚接手一个子系统时所需要的程度：足够建立一个能用的心智模型，但又不能多到读起来像带注释的源代码。
 
-每次派出的都是一个 Task 子智能体，参数为 `subagent_type: generalPurpose` 和 `readonly: true`。探索者（explorer）用 `s-models.mdc` 规则里的 `how explorer` 那一行（默认 `grok-4.7-xhigh-fast`），每个讲解者（explainer）用 `how explainer` 那一行（默认 `claude-opus-5-5-xhigh`）。把 `model` 设成那一行的值；如果这条规则或那一行不存在，就设成默认值。如果值是 `auto` 或 `inherit-parent`，就不设 `model`。如果 Task 工具拒绝某个模型名，就用默认的并说明一下。如果它连默认的也拒绝，就从它的报错信息里选同一系列中最接近的有效模型名。按 **poteto工作模式** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
+每次派出的都是一个子智能体。探索用只读类型；只读会丢掉你需要的工具时，改用能看代码、但提示词里禁止它写文件的类型。探索者读 s 模型配置里的 `how explorer`，讲解者读 `how explainer`。路径见文末。没有这一行，探索用较快的写代码模型，讲解用判断力最强的模型。软件不能指定模型，或值是 `auto` / `inherit-parent`，就省略模型。软件拒绝了某个名字，就换同一系列里它接受的最接近的名字，并说一句。按 **poteto工作模式** skill 里 “子智能体” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。Cursor 的 `grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只在 Cursor 上、并且这次确实可用时才当作这两个角色的默认。
 
 ## 1. 评估复杂度
 
@@ -34,3 +34,7 @@ disable-model-invocation: true
 ## 输出格式
 
 讲解使用 `references/explainer-prompt.md` 里规定的几个部分，不适用的就去掉：Overview（概览）、Key Concepts（关键概念）、How It Works（怎么工作）、Where Things Live（东西在哪里）、Gotchas（容易踩的坑）。
+
+## 在不同软件里怎么用
+
+工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。探索读 `how explorer`，讲解读 `how explainer`。软件不能指定模型，或派不出子智能体时，在主对话里自己探索再讲解，并说一句没有换模型。需要 MCP 时不要用会丢掉 MCP 的只读模式。

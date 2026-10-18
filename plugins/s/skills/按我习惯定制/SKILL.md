@@ -1,6 +1,6 @@
 ---
 name: 按我习惯定制
-description: "用于“automate me（把我自动化）”、“创建/更新/刷新我的 -mode skill”、“把我的偏好或工作方式变成/记录成一个 skill”，或者希望智能体按用户的工作方式来做事时。通过 create-skill + unslop 起草或修改一个个人专属的 -mode skill，可选择从最近的对话记录里提取新的证据。"
+description: "用于“automate me（把我自动化）”、“创建/更新/刷新我的 -mode skill”、“把我的偏好或工作方式变成/记录成一个 skill”，或者希望智能体按用户的工作方式来做事时。起草或修改一个个人专属的 -mode skill，用清理AI腔收文字，可选择从最近的对话记录里提取新的证据。"
 disable-model-invocation: true
 ---
 
@@ -8,13 +8,13 @@ disable-model-invocation: true
 
 一个有引导的流程，把用户的工作习惯变成一个智能体会遵守的 skill。产出是一个为他量身定做的 `-mode` skill（例如 `jay-mode`、`priya-mode`）。
 
-这个 skill 协调另外三样东西：一轮直接进行的挖掘（见第 1 步）、Cursor 自带的 `create-skill`（负责编写 skill），以及 **清理AI腔** skill（负责文字规范）。它安排它们的先后顺序。它不代替它们。
+这个 skill 协调两样东西：一轮直接进行的挖掘（见第 1 步），以及 **清理AI腔** skill（负责文字规范）。软件如果自带编写 SKILL.md 的 skill（Cursor 叫 `create-skill`），编写那一步用它。没有就自己写。本插件不附带 `create-skill`。它安排先后顺序，不代替这些步骤。
 
 ## 流程
 
 ### 0. 检查有没有已有的 skill
 
-递归查找和用户代号匹配的 `.cursor/skills/**/*-mode/SKILL.md` 和 `~/.cursor/skills/*-mode/SKILL.md`。mode skill 可能放在个人分类目录里（`.cursor/skills/<handle>/`），不一定在最顶层。如果已经有一个，就用 `AskQuestion` 确认意图（除非用户已经说了“更新我的 skill”之类的话）：
+查找和用户代号匹配的 `*-mode/SKILL.md`。Cursor 看 `.cursor/skills/` 和 `~/.cursor/skills/`。Claude Code 看 `.claude/skills/` 和 `~/.claude/skills/`。WorkBuddy、Codex、OpenCode 的个人 skill 目录这里不确定，再在当前仓库里搜 `*-mode/SKILL.md`。mode skill 可能放在个人分类目录里，不一定在最顶层。如果已经有一个，就用这个软件的提问工具确认意图（名字见 poteto工作模式 文末的表；没有这种工具就在对话里问）。除非用户已经说了“更新我的 skill”之类的话：
 
 - 更新已有的 skill（重复运行时的默认选项）
 - 从头重新做（很少见，做之前先问为什么）
@@ -41,7 +41,7 @@ disable-model-invocation: true
 
 ### 2. 直接问用户
 
-挖掘会漏掉那些还没出现过的意图。使用 `AskQuestion` 工具（结构化的多选题），而不是让用户从零开始打字。
+挖掘会漏掉那些还没出现过的意图。用这个软件的提问工具做结构化的多选题（名字见 poteto工作模式 文末的表）。没有这种工具，就在对话里列出选项。不要让用户从零开始打字。
 
 形式：一两个问题，每个 4-6 个选项，分类问题用 `allow_multiple: true`（允许多选）。先问大的（“哪些方面最重要？”），再针对用户选中的方面，给出具体选项继续问。结构化的几轮问完后，再在聊天里问一个开放式问题，补上选项漏掉的东西。
 
@@ -64,17 +64,17 @@ disable-model-invocation: true
 
 ### 4. 起草 skill
 
-用 Cursor 自带的 `create-skill` skill 来编写这个 skill。放置方式：
+软件自带编写 SKILL.md 的 skill（Cursor 叫 `create-skill`）就用它。没有就自己写。放置方式：
 
-- 路径：保留已有 mode skill 所在的分类。新的 mode，如果仓库里已经有这个代号的个人分类，就用 `.cursor/skills/<handle>/<handle>-mode/SKILL.md`。否则默认放在项目里的 `.cursor/skills/<handle>-mode/SKILL.md`（如果用户喜欢个人 skill，就放在 `~/.cursor/skills/<handle>-mode/`）。
+- 路径：保留已有 mode skill 所在的位置。新的 mode：Cursor 放 `.cursor/skills/<handle>-mode/SKILL.md`，用户要个人 skill 就放 `~/.cursor/skills/<handle>-mode/`。Claude Code 对应 `.claude/skills/` 和 `~/.claude/skills/`。WorkBuddy、Codex、OpenCode 的个人目录这里不确定，先写仓库里的 `skills/<handle>-mode/SKILL.md`，并告诉用户按该软件的方式加载。不要假装写进某个没确认过的家目录就会自动生效。
 - 代号（handle）：用户的名字，或者他选的标识。
 - Frontmatter 的 `description`：在用户的名字 + `/<handle>-mode` + “按他的风格工作” 时触发，而不是在 “写代码” 或 “审查 PR” 这类通用关键词上触发。
-- Frontmatter 的格式：遵守 `create-skill` 的 YAML 规则。`description` 保持为一个 YAML 值。当标点或换行需要时，给它加引号，或者用 `description: >-` 加缩进的续行。
+- Frontmatter 至少要有 `name` 和 `description`。`description` 保持为一个 YAML 值。当标点或换行需要时，给它加引号，或者用 `description: >-` 加缩进的续行。
 - Frontmatter 默认写 `disable-model-invocation: true`。只有用户明确希望他的 mode 每一轮都生效时，才去掉。
 
 ### 5. 反复打磨文字
 
-对每一行都用上 **清理AI腔** skill 和 `create-skill` 的写作指南。
+对每一行都用上 **清理AI腔** skill。软件自带的编写 skill 如果还有写作指南，也照着做。
 
 把草稿给用户看，接受反馈。要做好多次修改的准备。狠心地删。mode skill 不是一本使用手册。
 
@@ -93,11 +93,15 @@ disable-model-invocation: true
 
 ## 评估
 
-`-mode` skill 是主观的产出。`create-skill` 那种“测试/迭代”的基准循环在这里没什么用。和用户一起凭感觉检查：读起来像他吗？漏了什么吗？然后就发布。
+`-mode` skill 是主观的产出。编写 skill 那种“测试/迭代”的基准循环在这里没什么用。和用户一起凭感觉检查：读起来像他吗？漏了什么吗？然后就发布。
 
 只有当这个 skill 的触发准确度在实际使用中确实成了问题时，才去做一轮描述（description）优化。
 
 ## 什么时候不用
 
-- 用户想要一个针对具体任务的 skill（而不是工作习惯）：只用 `create-skill` 就行，不需要挖掘。
+- 用户想要一个针对具体任务的 skill（而不是工作习惯）：不用挖掘。有编写 skill 就只用它；没有就自己写一份 `SKILL.md`。
 - 用户想记录一个很窄的流程（例如“我是怎么写提交信息的”）。那是一个普通 skill，不是 mode skill。
+
+## 在不同软件里怎么用
+
+提问工具和「写 SKILL.md」那一行，以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。Cursor 的 skill 目录是 `.cursor/skills/` 和 `~/.cursor/skills/`。Claude Code 是 `.claude/skills/` 和 `~/.claude/skills/`。WorkBuddy、Codex、OpenCode 的个人 skill 目录这里不确定，新文件先放在仓库的 `skills/<代号>-mode/SKILL.md`。本插件没有 `create-skill`，也没有 `unslop`；文字用 **清理AI腔**。

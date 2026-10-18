@@ -25,9 +25,9 @@ color: yellow
 - 不简单的多步骤工作 → 写下产出检查点（Feature 第 3 步）。
 - 任何文字界面，包括你给用户的回复 → **清理AI腔** skill。按 **Writing the reply**（写回复）来写回复。给智能体看的文字还要遵循你所用软件自带的、用于编写 SKILL.md 文件的 skill（各软件里的名字见文末；没有的话就按 SKILL.md 的通用格式写）。
 - 文档、RFC、readme、PR 说明或提交信息 → **技术写作** skill（`/技术写作`）。
-- 提交之前 → `cursor-team-kit` 插件里的 `deslop` skill（`/deslop`）。
+- 提交之前 → **清理AI腔** skill（`/清理AI腔`）。本插件没有 `deslop`。
 - 审查之前 → **清理代码注释** skill（`/清理代码注释`）。
-- 上线界面 / IDE / 命令行工具 → 对应的控制 skill。`cursor-team-kit` 提供 `control-cli`（命令行和终端界面）和 `control-ui`（浏览器 / Electron / 网页界面）。修 bug 时，先自己在同一个界面上复现。只有在 Bug fix 第 1 步那个很窄的例外情况下，才交给用户。
+- 上线界面 / IDE / 命令行工具 → 先自己在同一个界面上复现。本插件没有 `control-cli` 和 `control-ui`。如果你另外装了能像用户一样操作命令行或界面的 skill，可以用它。没有的话，自己打开界面，或自己跑命令并读输出，也可以用项目里已有的测试。回复里写明你实际跑了什么。只有在 Bug fix 第 1 步那个很窄的例外情况下，才交给用户。
 - 运行基准测试、自己测量性能，或者报告一个你测出来的加速或退化 → 在报告这个数字或依据它行动之前，用 **基准测试清单** skill。
 - 任何关于 PR 状态的请求（“babysit this”（照看一下）、“get it green”（让它变绿）、“address the bugbot comments”（处理 bugbot 的评论），以及最常见的 “check on PR X”（看看 PR X）或 “anything outstanding on X”（X 还有什么没处理的））→ **Babysit** playbook（`playbooks/babysit.md`），而不是软件自带的同名 babysit skill（如果你的软件有的话，比如 Cursor 就自带一个），那个 skill 的描述也匹配同样的词。仅仅是开了一个 PR，不会触发它。轮询之前先声明它的模式。playbook 的第 1 步负责把请求对应到模式。在一个阶段智能体里用 `drive`，会让那个智能体没法结束它的这一轮。
 - 被要求合入或上线一串已经变绿的 PR → **Shipping** playbook（`playbooks/shipping.md`）。绿不等于安全。在每个 PR 得到独立的结论之前，什么都不能启动，而且只有从底部开始连续通过验证的那一段才会合入。
@@ -106,7 +106,7 @@ color: yellow
 
 - **简短的陈述句。** 一句话一个意思，以句号结尾。
 - **任何地方都不用长破折号。** 把文件列表的要点写成一句话（“`main.js` owns persistence and the IPC handlers”，`main.js` 负责持久化和 IPC 处理），把粗体的小节标题写成单独的一句话（“**Verification.** End to end via CDP”，**验证。** 通过 CDP 端到端验证）。
-- **在句子中间用冒号连接也不行**（unslop 第 14 条）。列表前面的冒号可以。
+- **在句子中间用冒号连接也不行**（**清理AI腔** 第 14 条）。列表前面的冒号可以。
 - **简洁不是删内容的借口。** 句子要短，但 playbook 的回复里点名的每一部分都要保留：细节、取舍、选择、待定的决定。
 - **从使用者和维护者的角度说明影响。** 在任何实现细节之前，先说出这份工作是为谁做的（一个最终用户、一个导入这个库的同事），以及对他们来说什么变了。然后说下一个负责这份代码的工程师会接手什么。如果你说不出他们任何一方会注意到什么，那就是工作或解释出了问题。
 - **永远不要编造链接、引用或对话记录的出处。** 只链接你在这次会话里产出或读过的产物。
@@ -150,24 +150,25 @@ color: yellow
 
 ## 在不同软件里怎么用
 
-这一套 skill 会在好几个软件里用，正文只写通用说法。下面这张表说明，正文里的通用说法在各个软件里具体对应什么。Cursor 一列是原版的写法。WorkBuddy 一列来自在 WorkBuddy 里实际适配的结果。Claude Code 一列来自它的官方文档。Codex 一列只确认了一部分。
+这一套 skill 会在好几个软件里用，正文只写通用说法。下面这张表说明，正文里的通用说法在各个软件里具体对应什么。Cursor 一列是原版的写法。WorkBuddy 的工具名来自以前在 WorkBuddy 里适配的结果。模型配置写到哪，以 [设置s模型](../设置s模型/SKILL.md) 为准，依据是各软件的公开文档。没有文档支撑的格子写「不确定」。
 
-| 正文里的说法 | Cursor（原版） | WorkBuddy | Claude Code | Codex（只确认了一部分） |
-|---|---|---|---|---|
-| 派一个子智能体 | `Task` 工具 | `Agent` 工具（`TaskCreate` 是待办清单，不是派子智能体，别混用） | `Agent` 工具（旧版叫 `Task`，现在 `Task` 仍可当别名用） | 直接用话让它派子智能体（“spawn”），它内部有派出、等待、发消息、关闭这几个工具 |
-| 能写文件的通用类型 | `subagent_type: "poteto-agent"`（s 插件自带，会自动先读本 SKILL.md） | `subagent_type: "general-purpose"` | `subagent_type: "general-purpose"` | 不确定，按本软件实际工具来 |
-| 只读探索 | 同一个 `Task` 加 `readonly: true`（会去掉 MCP 工具） | 没有 `readonly` 参数，改派 `Explore`（只读探索）或 `Plan`（只读规划） | 派 `Explore`（只读探索）或 `Plan`（只读规划） | 不确定，按本软件实际工具来 |
-| 向用户提问的工具 | `AskQuestion` | `AskUserQuestion` | `AskUserQuestion` | `request_user_input`（只有主对话能用，子智能体不能问） |
-| 后台运行和取结果 | `run_in_background: true`；做完结果回到主对话 | `run_in_background: true`；取结果用 `TaskOutput` | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 | 派出后用“等待”工具收结果 |
-| 指定模型 | `model` 写具体模型名。默认写代码和 `swarm workers` 用 `grok-4.7-xhigh-fast`，文字和判断、最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级 | 没有具体模型名可填。省略 `model` 就继承父级；要拉开差异时，交替用 `"lite"`（快、省）和 `"reasoning"`（推理强） | `model` 写别名 `sonnet`、`opus`、`haiku`，或完整模型 ID；不写或写 `inherit` 就继承父级 | 在自定义子智能体的配置里设模型；细节不确定，按本软件实际设置来 |
-| s 模型规则（`/设置s模型`） | 写到 `~/.cursor/rules/s-models.mdc`，按角色一行一个模型 | 没有这个规则文件，不要运行 `/设置s模型`（它写的目录这里读不到） | 不读这个目录，不要运行 | 不确定，默认当作没有 |
-| 子智能体在哪里跑 | `environment: "cloud"` 放到云端；云端状态在 Cursor 的后台面板看 | 没有这个参数，全在本机跑 | 不确定，默认当作全在本机跑 | 不确定，默认当作全在本机跑 |
-| 让主对话定时醒来 | Cursor 自带的 `/loop` 命令 | 不确定，没有就用一个后台盯梢的子智能体 | 不确定，按本软件实际命令来 | 不确定，按本软件实际命令来 |
-| 自带的写 SKILL.md 的 skill | `create-skill` | 不确定 | 不确定 | 不确定 |
+| 正文里的说法 | Cursor（原版） | WorkBuddy | Claude Code | Codex | OpenCode |
+|---|---|---|---|---|---|
+| 派一个子智能体 | `Task` 工具 | `Agent` 工具（`TaskCreate` 是待办清单，不是派子智能体，别混用） | `Agent` 工具（旧版叫 `Task`，现在 `Task` 仍可当别名用） | 直接用话让它派子智能体（“spawn”），它内部有派出、等待、发消息、关闭这几个工具 | 不确定具体工具名。派不了就在主对话里按顺序做 |
+| 能写文件的通用类型 | 能写文件的通用子智能体。本插件没有附带 `poteto-agent`。本机如果恰好有这个类型可以用；没有就用通用类型，并在提示词里要求先读本 SKILL.md | `subagent_type: "general-purpose"` | `subagent_type: "general-purpose"` | 不确定，按本软件实际工具来 | 不确定，按本软件实际工具来 |
+| 只读探索 | 同一个 `Task` 加 `readonly: true`（会去掉 MCP 工具） | 没有 `readonly` 参数，改派 `Explore`（只读探索）或 `Plan`（只读规划） | 派 `Explore`（只读探索）或 `Plan`（只读规划） | 不确定，按本软件实际工具来 | 不确定，按本软件实际工具来 |
+| 向用户提问的工具 | `AskQuestion` | `AskUserQuestion` | `AskUserQuestion` | `request_user_input`（只有主对话能用，子智能体不能问） | 不确定。没有就在对话里直接问 |
+| 后台运行和取结果 | `run_in_background: true`；做完结果回到主对话 | `run_in_background: true`；取结果用 `TaskOutput` | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 | 派出后用“等待”工具收结果 | 不确定。没有就等它返回，或过一会儿再看 |
+| 指定模型 | `model` 写具体模型名。写代码和 `swarm workers` 在这些名字确实可用时用 `grok-4.7-xhigh-fast`，文字、判断和最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级。这两个名字不要拿到别的软件里用 | 没有具体模型名可填。省略 `model` 就继承父级；要拉开差异时，交替用 `"lite"`（快、省）和 `"reasoning"`（推理强） | `model` 写别名 `sonnet`、`opus`、`haiku`，或完整模型 ID；不写或写 `inherit` 就继承父级 | 在自定义子智能体的配置里设模型。这一轮能不能单独换，不确定。不能就省略 | 智能体配置里可以设模型。单次派出能不能换，不确定。不能就省略 |
+| s 模型规则（`/设置s模型`） | `~/.cursor/rules/s-models.mdc`，`alwaysApply: true` | `~/.codebuddy/rules/s-models.md`（读不到再试同名 `.mdc`）。不要写 Cursor 的目录 | `~/.claude/rules/s-models.md` | `~/.codex/AGENTS.md` 里标记的那一段；有 `AGENTS.override.md` 就改那个 | `~/.config/opencode/AGENTS.md` 里标记的那一段。V2 不认 `CLAUDE.md` |
+| 子智能体在哪里跑 | `environment: "cloud"` 放到云端；云端状态在 Cursor 的后台面板看 | 没有这个参数，全在本机跑 | 不确定，默认当作全在本机跑 | 不确定，默认当作全在本机跑 | 不确定，默认当作全在本机跑 |
+| 让主对话定时醒来 | Cursor 自带的 `/loop` 命令。本插件不附带它 | 不确定。没有就用一个后台盯梢的子智能体，或自己过一会儿再看 | 不确定，按本软件实际命令来。没有就同样用后台盯梢 | 同左 | 同左 |
+| 写 SKILL.md | 软件如果自带 `create-skill` 就用它。没有就自己写：一个目录里的 `SKILL.md`，YAML 里要有 `name` 和 `description`，再用 **清理AI腔** 过文字 | 自己写。个人 skill 的固定目录这里不确定，先放在仓库的 `skills/<名字>/SKILL.md`，并告诉用户怎么让 WorkBuddy 加载 | 自己写。个人 skill 可以放在 `~/.claude/skills/<名字>/SKILL.md`（官方文档有这个目录） | 自己写。个人 skill 的固定目录这里不确定，先放在仓库的 `skills/<名字>/SKILL.md` | 同 Codex。不要假设写进某个家目录就会自动生效 |
 
 几条总规则：
 
 - **找不到就用最接近的。** 某个工具名、类型名或模型名在你的软件里找不到时，用本软件里最接近的那个，并在回复里说一句用了什么替代。不要卡住，也不要假装有这个工具，或者假装检测到了这个模型。
-- **正文和 playbook 里出现的 Cursor 名字。** playbook 里（英文原文）还会出现原版的默认模型名，比如 `grok-4.7-xhigh-fast`，或者 “Subagents section” 这种说法。这些都按上面这张表换成你的软件里的对应写法，“Subagents section” 指的就是本文的“子智能体”一节。
-- **派不了子智能体的软件。** 就在主对话里按顺序自己做，把原本要派出去的那部分当成一个独立的步骤，结果照样自己审查。
-- **其他 s skill 里的模型设置。** `代码怎么工作`、`代码为什么这样`、`多模型对抗审查`、`并行群体作战`、`反思并改skill`、`多方案竞技场`、`设置s模型` 里提到 `~/.cursor/rules/s-models.mdc`、角色行，或者 `claude-*`、`grok-*`、`composer-*` 这类模型名的，只在 Cursor 里有效。在别的软件里，同样按上面这张表的“指定模型”一行来。
+- **正文和 playbook 里出现的 Cursor 名字。** playbook 里如果还出现 `grok-4.7-xhigh-fast` 这类名字，或者 “Subagents section” 这种说法，按上面这张表换成你的软件里的对应写法。“Subagents section” 指的就是本文的“子智能体”一节。不要把 Cursor 的模型名填进别的软件。
+- **派不了子智能体的软件。** 就在主对话里按顺序自己做，把原本要派出去的那部分当成一个独立的步骤，结果照样自己审查。软件支持的话，难的步骤换一个更强的模型再做一遍。
+- **其他 s skill 里的模型设置。** `代码怎么工作`、`代码为什么这样`、`多模型对抗审查`、`并行群体作战`、`反思并改skill`、`多方案竞技场`、`先画架构草图` 读的是 `/设置s模型` 为**当前软件**写的那份配置，不是 `~/.cursor/rules/`。读不到配置，或软件不能给子智能体指定模型，就省略模型，让它跟父对话走，并说一句。
+- **五个软件都对不上。** `/设置s模型` 会把正文写到 `~/s-models.md`。那个文件不会自动生效。

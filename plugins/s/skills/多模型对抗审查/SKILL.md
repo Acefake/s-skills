@@ -24,16 +24,16 @@ disable-model-invocation: true
 
 ## 第 3 步：派出审查者
 
-用 Task 工具在一条消息里启动所有审查者，`~/.cursor/rules/s-models.mdc` 里 `interrogate reviewers` 那一行有几个条目就派几个，标记为 Reviewer A、B 等等，和条目数对应。如果这条规则或那一行不存在，就用表里的默认值。
+在一条消息里启动所有审查者。读当前软件的 s 模型配置（路径见文末）里 `interrogate reviewers` 那一行，有几个条目就派几个，标记为 Reviewer A、B 等等。没有这份配置或没有这一行，就派两个：一个用你判断力最强的模型，一个用你写代码较快的模型。软件不能给子智能体单独指定模型时，两个都省略模型，让它们跟父对话走，并说一句这次没有换模型。
 
-| 子智能体 | 默认模型 |
+| 子智能体 | 没有配置、而且软件能指定模型时 |
 |----------|---------------|
-| Reviewer A | `claude-opus-5-5-xhigh` |
-| Reviewer B | `grok-4.7-xhigh-fast` |
+| Reviewer A | 判断力最强的模型。Cursor 上、并且 `claude-opus-5-5-xhigh` 确实可用时，可以用这个名字 |
+| Reviewer B | 较快的写代码模型。Cursor 上、并且 `grok-4.7-xhigh-fast` 确实可用时，可以用这个名字 |
 
-每个审查者的参数是 `subagent_type: generalPurpose`、`readonly: true`，`model` 设为它配置的条目；如果没有配置那一行，就设为表里的默认值。对于 `auto` 或 `inherit-parent` 条目，省略 `model`，让那个审查者用父级的模型。
+每个审查者用能看代码的类型。只读可以，但不要用会丢掉你需要的工具的只读模式。`model` 设为配置里的条目。`auto` 或 `inherit-parent` 省略模型。工具名见文末。
 
-如果 Task 工具拒绝了某个配置的条目，就让那个审查者用它所在系列在表里的默认值，并说明一下。系列按前缀划分：`claude-*` 是一个系列；`grok-*` 和 `cursor-grok-*`、`composer-*` 是一个系列。被拒绝的 `composer-*` 条目改用 Reviewer B 的默认值。如果找不到匹配的系列，就用 Reviewer A 的默认值。如果它连表里的默认值也拒绝，就从它报错信息里的有效模型名中选最接近的等价模型来派出（优先选同一系列、同一推理档位的），并另开一个 PR 去更新默认值表。不要因为模型名的问题卡住审查。永远不要把别名条目当成被拒绝的模型名，也不要对它用上面任何一种回退规则。
+软件拒绝了某个配置的条目，就让那个审查者用它所在系列里、这次实际可用的最接近的名字，并说明一下。系列按名字前缀分。找不到同一系列，就用 Reviewer A 那一档。别名条目不是模型名，不要对它做回退。不要因为模型名卡住审查。
 
 读 `references/reviewer-prompt.md`，为每个审查者填写同一个模板：写明的意图、diff 或文件内容、`references/rubric.md` 里的评审标准，以及 `references/code-quality-review.md` 里的代码质量视角。按 **poteto工作模式** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
 
@@ -72,3 +72,13 @@ disable-model-invocation: true
 
 ### 一致性地图（Agreement Map）
 [模型在哪里一致、在哪里分歧，以及这种模式说明了什么。]
+
+## 在不同软件里怎么用
+
+工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。
+
+| | Cursor | WorkBuddy | Claude Code | Codex | OpenCode |
+|---|---|---|---|---|---|
+| 角色行 | `interrogate reviewers` | 同左 | 同左 | 同左 | 同左 |
+| 怎么拉开差异 | 两个不同的具体模型名，而且必须是这次账号里有的 | 一个 `"reasoning"`，一个 `"lite"`。不要填 Cursor 的模型名 | `opus` 和 `sonnet`（或 `haiku`），或两个完整 ID | 不确定能不能给每个审查者单独换模型。不能就省略，并写明两次用的是同一个模型 | 同 Codex |
+| 派不出子智能体 | 在主对话里自己审两遍，第二遍换一种角度。软件支持的话，第二遍换一个更强的模型 | 同左 | 同左 | 同左 | 同左 |

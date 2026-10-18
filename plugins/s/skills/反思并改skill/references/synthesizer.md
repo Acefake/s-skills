@@ -14,7 +14,7 @@
 
 - 持久性（durability）：在 6 个月后，路径、SHA、工具版本和代码形状都变了之后，仍然成立。
 - 具体性（specificity）：足够宽，能用在各种任务上；又足够准，让以后的智能体能认出什么时候该用它。拒绝含糊的套话（“写好代码”）和过分具体的事实（“`<specific-skill-name>` 在上限 80 的情况下有 175 个 token”）。
-- 已有 skill 优先（existing-skill-first）：只有在没有任何已有 skill 是真正合适的归宿、这个模式反复出现、并且这个话题值得有一个单独的 skill 时，才提议 `new skill via create-skill:`。
+- 已有 skill 优先（existing-skill-first）：只有在没有任何已有 skill 是真正合适的归宿、这个模式反复出现、并且这个话题值得有一个单独的 skill 时，才提议 `new skill:`。软件如果自带编写 SKILL.md 的 skill（Cursor 叫 `create-skill`）就交给它；没有就由父智能体按现有 skill 的形状自己写。
 - 收敛（convergence）：被 2 个或更多审查者呼应的发现，可信度更高。只有一个审查者提出的发现，在其他标准上必须过更高的门槛。
 - 能改变决定（decision-changing）：以后的智能体会因为这次修改而做出不同的事，而不只是多读了一些文字。
 - 结构化机制检查（structural）：如果一条 lint 规则、一个脚本、一个元数据标记或一个运行时检查已经在强制执行这条规则，或者能便宜地强制执行它，就放进 Backlog。skill 里的文字，是给机制没法强制执行的东西用的。
@@ -41,7 +41,7 @@
 |---|---|---|
 | <父智能体用过的某个 skill 里的失败模式> | <对那个 skill 正文的修改> | <skill 路径 + 小节> |
 | <skill 存在但没有触发> | <调整这个 skill 的描述，让它下次能触发> | <tune description: <skill path>> |
-| <新的模式，没有任何已有 skill 是真正合适的归宿> | <通过 create-skill 起草一个新 skill> | <new skill via create-skill: <kebab-name>> |
+| <新的模式，没有任何已有 skill 是真正合适的归宿> | <起草一个新 skill。有编写 skill 就用它，否则父智能体自己写> | <new skill: <kebab-name>> |
 
 每条发现一行。用户逐行批准。
 

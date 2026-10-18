@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Needs bash. On Windows run this in Git Bash or WSL. PowerShell cannot run it.
+# Also needs git, jq, and ripgrep (rg) on PATH.
 # Read-only worktree prune audit. Classifies every git worktree by size, merge
 # state, uncommitted work, remote/PR state, and the most recent chat that
 # operated in it. Emits a table sorted by size with a suggested bucket. Never
@@ -11,6 +13,10 @@
 #   origin/HEAD is the remote's default branch, not necessarily the branch PRs
 #   merge into; pass -b when they differ.
 set -u
+
+command -v git >/dev/null 2>&1 || { echo "error: git is required" >&2; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "error: jq is required" >&2; exit 1; }
+command -v rg >/dev/null 2>&1 || { echo "error: ripgrep (rg) is required" >&2; exit 1; }
 
 base=""
 while [ $# -gt 0 ]; do
@@ -102,12 +108,28 @@ git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt;
 
 	# Most recent chat whose transcript operated in this worktree. Match path
 	# followed by "/" or a quote so glint-482 does not match glint-482-r37.
+	# mtime: GNU stat -c, BSD/macOS stat -f. date: BSD date -r, GNU date -d.
 	last="-"; last_ts=0
 	if [ -d "$transcripts" ]; then
-		f=$(rg -l -e "${wt}/" -e "${wt}\"" "$transcripts" 2>/dev/null \
-			| xargs stat -f '%m %N' 2>/dev/null | sort -rn | head -1)
-		if [ -n "$f" ]; then last_ts=$(echo "$f" | awk '{print $1}')
-			last=$(date -r "$last_ts" '+%Y-%m-%d' 2>/dev/null); fi
+		best=0
+		hits=$(mktemp)
+		rg -l -e "${wt}/" -e "${wt}\"" "$transcripts" > "$hits" 2>/dev/null || true
+		while IFS= read -r one; do
+			[ -n "$one" ] || continue
+			if m=$(stat -c '%Y' "$one" 2>/dev/null); then
+				:
+			else
+				m=$(stat -f '%m' "$one" 2>/dev/null || echo 0)
+			fi
+			if [ "$m" -gt "$best" ] 2>/dev/null; then best=$m; fi
+		done < "$hits"
+		rm -f "$hits"
+		if [ "$best" -gt 0 ]; then
+			last_ts=$best
+			if ! last=$(date -r "$last_ts" '+%Y-%m-%d' 2>/dev/null); then
+				last=$(date -d "@$last_ts" '+%Y-%m-%d' 2>/dev/null || echo "-")
+			fi
+		fi
 	fi
 	recent=$([ "$last_ts" -gt 0 ] 2>/dev/null && [ $(( (now - last_ts) / 86400 )) -le 4 ] && echo yes || echo no)
 

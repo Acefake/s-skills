@@ -10,7 +10,7 @@ import {
 } from "node:fs/promises";
 import { realpathSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import {
   NotFoundError,
   UserError,
@@ -84,6 +84,9 @@ async function makeGitStack(directory: string): Promise<{
   git({ repo, args: ["init", "--initial-branch=main"] });
   git({ repo, args: ["config", "user.name", "Orch Test"] });
   git({ repo, args: ["config", "user.email", "orch@example.com"] });
+  // The fixture must not wait on the machine's commit signer or fsmonitor.
+  git({ repo, args: ["config", "commit.gpgsign", "false"] });
+  git({ repo, args: ["config", "core.fsmonitor", "false"] });
   await writeFile(join(repo, "main.txt"), "main\n");
   git({ repo, args: ["add", "."] });
   git({ repo, args: ["commit", "-m", "main"] });
@@ -190,27 +193,14 @@ async function withFakeForge<T>({
   const { fields } = FORGE_FIXTURES[forge];
   const list = (filter: string, branch: string): string =>
     `pr list ${filter} ${branch} --state all --json ${fields}`;
-  const fake = join(bin, forge);
-  await writeFile(
-    fake,
-    `#!/usr/bin/env bash
-set -euo pipefail
-if [ "$(pwd -P)" != "${realpathSync(join(directory, "repo"))}" ]; then
-  printf '${forge} ran outside the fixture repo: %s\\n' "$(pwd -P)" >&2
-  exit 2
-fi
-case "$*" in
-  "${list("--head", "stack/open")}")
-    cat "${outputPath}"
-    ;;
-  "${list("--head", "stack/closed")}")
-    printf '%s\\n' '${forgeRows(forge, [{ number: 13, state: "closed", head: "stack/closed", base: "stack/merged" }])}'
-    ;;
-  "${list("--head", "stack/merged")}")
-    printf '%s\\n' '${forgeRows(forge, [{ number: 10, state: "merged", head: "stack/merged", base: "main" }])}'
-    ;;
-  "${list("--base", "stack/open")}")
-    printf '%s\\n' '${forgeRows(forge, [
+  const cases = {
+    [list("--head", "stack/closed")]: forgeRows(forge, [
+      { number: 13, state: "closed", head: "stack/closed", base: "stack/merged" },
+    ]),
+    [list("--head", "stack/merged")]: forgeRows(forge, [
+      { number: 10, state: "merged", head: "stack/merged", base: "main" },
+    ]),
+    [list("--base", "stack/open")]: forgeRows(forge, [
       { number: 14, state: "draft", head: "stack/draft", base: "stack/open" },
       {
         number: 15,
@@ -218,22 +208,50 @@ case "$*" in
         head: "stack/abandoned",
         base: "stack/open",
       },
-    ])}'
-    ;;
-  "${list("--base", "stack/draft")}")
-    printf '[]\\n'
-    ;;
-  *)
-    printf 'unexpected ${forge} arguments: %s\\n' "$*" >&2
-    exit 2
-    ;;
-esac
+    ]),
+    [list("--base", "stack/draft")]: "[]",
+  };
+  const fake = join(bin, forge);
+  const repoReal = realpathSync(join(directory, "repo"));
+  await writeFile(
+    fake,
+    `#!${process.execPath}
+import { readFileSync, realpathSync } from "node:fs";
+const expected = ${JSON.stringify(repoReal)};
+const outputPath = ${JSON.stringify(outputPath)};
+const cases = ${JSON.stringify(cases)};
+const headOpen = ${JSON.stringify(list("--head", "stack/open"))};
+let cwd = process.cwd();
+try { cwd = realpathSync(cwd); } catch {}
+if (cwd !== expected && cwd.toLowerCase() !== expected.toLowerCase()) {
+  process.stderr.write(${JSON.stringify(forge)} + " ran outside the fixture repo: " + cwd + "\\n");
+  process.exit(2);
+}
+const key = process.argv.slice(2).join(" ");
+if (key === headOpen) {
+  process.stdout.write(readFileSync(outputPath));
+  process.exit(0);
+}
+if (!Object.prototype.hasOwnProperty.call(cases, key)) {
+  process.stderr.write("unexpected " + ${JSON.stringify(forge)} + " arguments: " + key + "\\n");
+  process.exit(2);
+}
+const body = String(cases[key]);
+process.stdout.write(body.endsWith("\\n") ? body : body + "\\n");
 `
   );
   await chmod(fake, 0o755);
+  if (process.platform === "win32") {
+    const wrapper = join(bin, `${forge}.cmd`);
+    const exec = process.execPath.replace(/"/g, '""');
+    await writeFile(
+      wrapper,
+      `@echo off\r\n"${exec}" "%~dp0${forge}" %*\r\n`
+    );
+  }
 
   const originalPath = process.env.PATH;
-  process.env.PATH = `${bin}:${originalPath ?? ""}`;
+  process.env.PATH = [bin, originalPath].filter((part) => part).join(delimiter);
   try {
     return await operation();
   } finally {
@@ -420,7 +438,7 @@ describe("Store", () => {
 
   it("replaces a stale lock whose holder pid is dead", async () => {
     const { directory } = await initializedStore();
-    const exited = Bun.spawn(["true"]);
+    const exited = Bun.spawn([process.execPath, "-e", "process.exit(0)"]);
     await exited.exited;
     await writeFile(join(directory, ".orch.lock"), `${exited.pid}\n`);
 

@@ -1,3 +1,4 @@
+// Run with Bun. On Windows, `bun` must be on PATH. This file does not run under PowerShell by itself.
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";

@@ -28,7 +28,7 @@ disable-model-invocation: true
 
 用设计草图这个任务和阶段 A 的摸底产物，运行 **多方案竞技场** skill。把 `references/runner-prompt.md` 作为每个参赛者的提示词传进去。
 
-参赛者从 `s-models.mdc` 规则里的 `architect runners` 那一行取，代替 `arena runners` 那一行。如果这条规则或那一行不存在，就用 `claude-opus-5-5-xhigh` 和 `grok-4.7-xhigh-fast`。别名条目和被拒绝的条目，按 **多方案竞技场** skill 阶段 A 里的参赛者规则处理。
+参赛者从当前软件的 s 模型配置里 `architect runners` 那一行取，代替 `arena runners`。路径见文末。没有这一行，就按 **多方案竞技场** 的默认：一个更强的模型，一个较快的写代码模型。软件不能指定模型就省略。别名条目和被拒绝的条目，按 **多方案竞技场** 阶段 A 的参赛者规则处理。Cursor 的 `claude-opus-5-5-xhigh` 和 `grok-4.7-xhigh-fast` 只在 Cursor 上、并且这次确实可用时才用。
 
 设计两遍。在综合之前，要求至少有两个结构上截然不同的候选，哪怕第一个看起来已经够好了。这就是把 **exhaust-the-design-space** 原则 skill 落到实处。要的是整体形状上的不同方案，而不是在同一个形状里做局部修补。
 
@@ -77,3 +77,7 @@ Arena 会返回一份综合好的设计包。它的综合决定，用来填写�
 ## 产出
 
 先写调用方的用法，再从中推导出类型草图。小改动就是一个包含新类型和签名的文件。较大的工作是一份模块地图加上类型定义。设计理由随之一起交付，按照 `references/rationale-template.md` 的形状来写，包括用法草图和综合决定。
+
+## 在不同软件里怎么用
+
+工具名和模型差异以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。这个 skill 自己的角色行是 `architect runners`，用来代替竞技场的 `arena runners`。派不出子智能体时，在主对话里自己写两份结构不同的草图，再按阶段 B 的标准选一份。

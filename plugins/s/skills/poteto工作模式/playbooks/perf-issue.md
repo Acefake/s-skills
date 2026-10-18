@@ -14,7 +14,7 @@
    7. Do it cheaper.
 
    When an earlier mantra meets the target, stop.
-3. Plan the fix from the trace. If it crosses a function boundary, `先画架构草图` first. Delegate implementation to a subagent using your configured perf-issue model (default `grok-4.7-xhigh-fast`). Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section. Review the diff. Capture a post-fix trace.
+3. Plan the fix from the trace. If it crosses a function boundary, `先画架构草图` first. Delegate implementation to a subagent using your configured perf-issue model (the `perf-issue` line in the s model config from 设置s模型; if the app cannot set a sub-agent model, omit it and say so. Do not paste a Cursor model slug into another app). Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section. Review the diff. Capture a post-fix trace.
    Apply the **原则-可验证小单元** principle skill, verifying each attempt before trying the next.
 4. Parse and compare the artifacts (JSON to sqlite, diff). "Inconclusive" or wrong-surface is not a pass. Flag it.
 5. Cite the measurement in the PR.

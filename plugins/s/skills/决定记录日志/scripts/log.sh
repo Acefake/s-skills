@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Needs bash. On Windows run this in Git Bash or WSL. PowerShell cannot run it.
 # Append a well-formed row to a show-me-your-work decision log (TSV).
 # Usage: log.sh <logfile> <phase> <decision> <why> <evidence> <result>
 set -euo pipefail
