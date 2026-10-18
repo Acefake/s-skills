@@ -1,0 +1,25 @@
+---
+name: 原则-结果导向
+description: "在有明确阶段边界的计划内重写和迁移中使用。直接向目标架构收敛；不要用用完即扔的兼容代码去维持平稳的中间状态。"
+disable-model-invocation: true
+---
+
+> 翻译自 pstack 插件（编号 9717366）的 `principle-outcome-oriented-execution` skill，原作者 Lauren Tan（版权 © 2026 Lauren Tan），许可证 MIT（全文见上一级文件夹的 `LICENSE-pstack`），仅供自用。插件版本 0.15.25，原项目：https://github.com/cursor/plugins/tree/main/pstack 。
+> 说明：`disable-model-invocation: true` 表示这个 skill 只能由用户主动调用，AI 不会自己调用它。
+> 英文名备份：s-principle-outcome-oriented-execution
+
+# 以结果为导向地执行
+
+优化的目标是预期中、可验证的最终状态，而不是维持平稳的中间状态。
+
+**为什么：** 让每个中间步骤都完全稳定，常常会产生临时的兼容代码，而这些代码最后会变成长期的技术债。直接向目标架构收敛，并在明确的验证边界上证明正确性。
+
+**核心规则：**
+- 最终状态的完整性优先于过渡期的稳定
+- 只要是计划好的、范围明确的、可以撤销的，中间出现破坏是可以接受的
+
+**护栏：**
+- 这条只用于有明确阶段边界的计划内重写和迁移
+- 事先说明在哪里可以接受临时破坏
+- 迁移过程中，对正在改动的区域保留高信号的检查
+- 计划完成时，要求完整的静态检查和运行时验证

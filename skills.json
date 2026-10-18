@@ -1,0 +1,515 @@
+{
+  "schema": 1,
+  "name": "s-skills",
+  "repo": "Acefake/s-skills",
+  "defaultGroups": [
+    "pstack"
+  ],
+  "groups": [
+    {
+      "id": "pstack",
+      "title": "pstack",
+      "summary": "pstack 插件里的 54 个技能，是你现在默认用的那一套。作者 Lauren Tan，MIT 许可证。",
+      "license": "MIT",
+      "path": "skills/pstack",
+      "licenseFiles": [
+        "LICENSE-pstack"
+      ],
+      "skills": [
+        {
+          "name": "TypeScript最佳实践",
+          "englishName": "s-typescript-best-practices"
+        },
+        {
+          "name": "poteto工作模式",
+          "englishName": "s-poteto-mode"
+        },
+        {
+          "name": "pstack使用帮助",
+          "englishName": "s-poteto-help"
+        },
+        {
+          "name": "pstack做Bot界面",
+          "englishName": "s-pstack-make-bot-ui"
+        },
+        {
+          "name": "一步步教我",
+          "englishName": "s-teach"
+        },
+        {
+          "name": "代码为什么这样",
+          "englishName": "s-why"
+        },
+        {
+          "name": "代码怎么工作",
+          "englishName": "s-how"
+        },
+        {
+          "name": "先画架构草图",
+          "englishName": "s-architect"
+        },
+        {
+          "name": "决定记录日志",
+          "englishName": "s-show-me-your-work"
+        },
+        {
+          "name": "创建验证skill",
+          "englishName": "s-create-verification-skill"
+        },
+        {
+          "name": "动手前磨清任务",
+          "englishName": "s-sharpen"
+        },
+        {
+          "name": "原则-为领域建模",
+          "englishName": "s-principle-model-the-domain"
+        },
+        {
+          "name": "原则-从头重新设计",
+          "englishName": "s-principle-redesign-from-first-principles"
+        },
+        {
+          "name": "原则-体验优先",
+          "englishName": "s-principle-experience-first"
+        },
+        {
+          "name": "原则-修根本原因",
+          "englishName": "s-principle-fix-root-causes"
+        },
+        {
+          "name": "原则-偷懒守则",
+          "englishName": "s-principle-laziness-protocol"
+        },
+        {
+          "name": "原则-先减后加",
+          "englishName": "s-principle-subtract-before-you-add"
+        },
+        {
+          "name": "原则-先分开共享状态",
+          "englishName": "s-principle-separate-before-serializing-shared-state"
+        },
+        {
+          "name": "原则-减轻读者负担",
+          "englishName": "s-principle-minimize-reader-load"
+        },
+        {
+          "name": "原则-别卡着等人",
+          "englishName": "s-principle-never-block-on-the-human"
+        },
+        {
+          "name": "原则-可验证小单元",
+          "englishName": "s-principle-sequence-verifiable-units"
+        },
+        {
+          "name": "原则-基础优先",
+          "englishName": "s-principle-foundational-thinking"
+        },
+        {
+          "name": "原则-守住上下文",
+          "englishName": "s-principle-guard-the-context-window"
+        },
+        {
+          "name": "原则-守住边界",
+          "englishName": "s-principle-boundary-discipline"
+        },
+        {
+          "name": "原则-打造杠杆",
+          "englishName": "s-principle-build-the-lever"
+        },
+        {
+          "name": "原则-操作幂等",
+          "englishName": "s-principle-make-operations-idempotent"
+        },
+        {
+          "name": "原则-教训写进结构",
+          "englishName": "s-principle-encode-lessons-in-structure"
+        },
+        {
+          "name": "原则-测行为不测实现",
+          "englishName": "s-principle-test-behavior-not-implementation"
+        },
+        {
+          "name": "原则-穷尽设计空间",
+          "englishName": "s-principle-exhaust-the-design-space"
+        },
+        {
+          "name": "原则-类型系统纪律",
+          "englishName": "s-principle-type-system-discipline"
+        },
+        {
+          "name": "原则-结果导向",
+          "englishName": "s-principle-outcome-oriented-execution"
+        },
+        {
+          "name": "原则-解释数字",
+          "englishName": "s-principle-explain-the-number"
+        },
+        {
+          "name": "原则-证明真能用",
+          "englishName": "s-principle-prove-it-works"
+        },
+        {
+          "name": "原则-质疑前提",
+          "englishName": "s-principle-attack-the-premise"
+        },
+        {
+          "name": "原则-迁完再删旧API",
+          "englishName": "s-principle-migrate-callers-then-delete-legacy-apis"
+        },
+        {
+          "name": "反思并改skill",
+          "englishName": "s-reflect"
+        },
+        {
+          "name": "回想最近工作",
+          "englishName": "s-recall"
+        },
+        {
+          "name": "基准测试清单",
+          "englishName": "s-benchmark-checklist"
+        },
+        {
+          "name": "复述用户目标",
+          "englishName": "s-in-your-own-words"
+        },
+        {
+          "name": "多方案竞技场",
+          "englishName": "s-arena"
+        },
+        {
+          "name": "多模型对抗审查",
+          "englishName": "s-interrogate"
+        },
+        {
+          "name": "并行群体作战",
+          "englishName": "s-swarm"
+        },
+        {
+          "name": "技术写作",
+          "englishName": "s-technical-writing"
+        },
+        {
+          "name": "按我习惯定制",
+          "englishName": "s-automate-me"
+        },
+        {
+          "name": "改动影响范围",
+          "englishName": "s-blast-radius"
+        },
+        {
+          "name": "根除重复错误",
+          "englishName": "s-correct"
+        },
+        {
+          "name": "测试驱动修bug",
+          "englishName": "s-tdd"
+        },
+        {
+          "name": "清理AI腔",
+          "englishName": "s-unslop"
+        },
+        {
+          "name": "清理代码注释",
+          "englishName": "s-no-comments"
+        },
+        {
+          "name": "维护验证skill",
+          "englishName": "s-maintain-verification-skill"
+        },
+        {
+          "name": "自定流程搞定",
+          "englishName": "s-figure-it-out"
+        },
+        {
+          "name": "补上对话进度",
+          "englishName": "s-ketchup"
+        },
+        {
+          "name": "设置pstack模型",
+          "englishName": "s-setup-pstack"
+        },
+        {
+          "name": "说人话重讲",
+          "englishName": "s-bro"
+        }
+      ]
+    },
+    {
+      "id": "compound-engineering",
+      "title": "Compound Engineering",
+      "summary": "Compound Engineering 插件里的 15 个技能（做计划、查 bug、提交代码等）。作者 Kieran Klaassen 与 Trevin Chow，MIT 许可证。",
+      "license": "MIT",
+      "path": "skills/compound-engineering",
+      "licenseFiles": [
+        "LICENSE-compound-engineering"
+      ],
+      "skills": [
+        {
+          "name": "交接单",
+          "englishName": "s-ce-handoff"
+        },
+        {
+          "name": "代码审查",
+          "englishName": "s-ce-code-review"
+        },
+        {
+          "name": "做计划",
+          "englishName": "s-ce-plan"
+        },
+        {
+          "name": "全自动开发",
+          "englishName": "s-lfg"
+        },
+        {
+          "name": "去AI腔",
+          "englishName": "s-ce-noslop"
+        },
+        {
+          "name": "处理PR意见",
+          "englishName": "s-ce-resolve-pr-feedback"
+        },
+        {
+          "name": "大白话解释",
+          "englishName": "s-wtf"
+        },
+        {
+          "name": "头脑风暴",
+          "englishName": "s-ce-brainstorm"
+        },
+        {
+          "name": "按计划实现",
+          "englishName": "s-ce-work"
+        },
+        {
+          "name": "提交代码",
+          "englishName": "s-ce-commit"
+        },
+        {
+          "name": "提交推送开PR",
+          "englishName": "s-ce-commit-push-pr"
+        },
+        {
+          "name": "文档审查",
+          "englishName": "s-ce-doc-review"
+        },
+        {
+          "name": "查bug",
+          "englishName": "s-ce-debug"
+        },
+        {
+          "name": "简化代码",
+          "englishName": "s-ce-simplify-code"
+        },
+        {
+          "name": "解释代码",
+          "englishName": "s-ce-explain"
+        }
+      ]
+    },
+    {
+      "id": "superpowers",
+      "title": "Superpowers",
+      "summary": "Superpowers 插件里的 1 个技能：完成前验证。作者 Jesse Vincent，MIT 许可证。",
+      "license": "MIT",
+      "path": "skills/superpowers",
+      "licenseFiles": [
+        "LICENSE-superpowers"
+      ],
+      "skills": [
+        {
+          "name": "完成前验证",
+          "englishName": "s-verification-before-completion"
+        }
+      ]
+    },
+    {
+      "id": "ui-ux",
+      "title": "界面设计",
+      "summary": "做界面用的：Emil Kowalski 的动画和设计、impeccable、ui-ux-pro-max 知识库、Vercel 的网页规范。许可证不完全一样，见各组说明。",
+      "license": "混合（MIT 与 Apache 2.0）",
+      "path": "skills/ui-ux",
+      "licenseFiles": [
+        "LICENSE-emilkowalski-skills",
+        "LICENSE-impeccable",
+        "NOTICE-impeccable.md",
+        "LICENSE-ui-ux-pro-max",
+        "LICENSE-vercel-agent-skills"
+      ],
+      "skills": [
+        {
+          "name": "Emil设计理念",
+          "englishName": "s-emil-design-eng"
+        },
+        {
+          "name": "Expo动画",
+          "englishName": "s-animate-expo"
+        },
+        {
+          "name": "Sonner用法",
+          "englishName": "s-ask-sonner"
+        },
+        {
+          "name": "UIUX知识库",
+          "englishName": "s-ui-ux-pro-max"
+        },
+        {
+          "name": "做动画",
+          "englishName": "s-animate"
+        },
+        {
+          "name": "写Swift",
+          "englishName": "s-write-swift"
+        },
+        {
+          "name": "动画审查",
+          "englishName": "s-review-animations"
+        },
+        {
+          "name": "动画性能",
+          "englishName": "s-animation-performance"
+        },
+        {
+          "name": "动画改进计划",
+          "englishName": "s-improve-animations"
+        },
+        {
+          "name": "动画术语表",
+          "englishName": "s-animation-vocabulary"
+        },
+        {
+          "name": "多版本原型",
+          "englishName": "s-emil-prototype"
+        },
+        {
+          "name": "手机原生手感",
+          "englishName": "s-mobile-native"
+        },
+        {
+          "name": "找动画机会",
+          "englishName": "s-find-animation-opportunities"
+        },
+        {
+          "name": "界面压力测试",
+          "englishName": "s-break-ui"
+        },
+        {
+          "name": "精致界面设计",
+          "englishName": "s-impeccable"
+        },
+        {
+          "name": "网页设计规范",
+          "englishName": "s-web-design-guidelines"
+        },
+        {
+          "name": "苹果式设计",
+          "englishName": "s-emil-apple-design"
+        },
+        {
+          "name": "选前端库",
+          "englishName": "s-pick-ui-library"
+        }
+      ]
+    },
+    {
+      "id": "figma",
+      "title": "Figma",
+      "summary": "Figma 官方的 16 个技能。上游仓库没有许可证文件。你知道这一点，仍然决定放进这个公开仓库自用。",
+      "license": "未注明",
+      "path": "skills/figma",
+      "licenseFiles": [
+        "NOTICE-figma.md"
+      ],
+      "skills": [
+        {
+          "name": "FigJam白板操作",
+          "englishName": "s-figma-use-figjam"
+        },
+        {
+          "name": "Figma与SwiftUI",
+          "englishName": "s-figma-swiftui"
+        },
+        {
+          "name": "Figma做动画",
+          "englishName": "s-figma-use-motion"
+        },
+        {
+          "name": "Figma动效转代码",
+          "englishName": "s-figma-implement-motion"
+        },
+        {
+          "name": "Figma幻灯片",
+          "englishName": "s-figma-use-slides"
+        },
+        {
+          "name": "Figma插件基础",
+          "englishName": "s-figma-use"
+        },
+        {
+          "name": "Figma搭建页面",
+          "englishName": "s-figma-generate-design"
+        },
+        {
+          "name": "Figma新建文件",
+          "englishName": "s-figma-create-new-file"
+        },
+        {
+          "name": "Figma生成图表",
+          "englishName": "s-figma-generate-diagram"
+        },
+        {
+          "name": "Figma生成式插件",
+          "englishName": "s-figma-generative-plugins"
+        },
+        {
+          "name": "Figma着色器",
+          "englishName": "s-figma-shaders"
+        },
+        {
+          "name": "Figma组件对应代码",
+          "englishName": "s-figma-code-connect"
+        },
+        {
+          "name": "Figma规格文档",
+          "englishName": "s-figma-spec"
+        },
+        {
+          "name": "Figma设计稿转代码",
+          "englishName": "s-figma-design-to-code"
+        },
+        {
+          "name": "Figma设计系统",
+          "englishName": "s-figma-generate-library"
+        },
+        {
+          "name": "代码导入Figma",
+          "englishName": "s-figma-code-workflows"
+        }
+      ]
+    },
+    {
+      "id": "my-skills",
+      "title": "我自己的",
+      "summary": "你自己写的 5 个技能，原文是英文，这次没有改内容。",
+      "license": "你自己的作品，仓库里没有单独的许可证文件",
+      "path": "skills/my-skills",
+      "licenseFiles": [],
+      "skills": [
+        {
+          "name": "apple-design-2"
+        },
+        {
+          "name": "design-a-grok-bot"
+        },
+        {
+          "name": "make-bot-ui"
+        },
+        {
+          "name": "routine-healthcheck"
+        },
+        {
+          "name": "transcript-healthcheck"
+        }
+      ]
+    }
+  ]
+}
