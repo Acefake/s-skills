@@ -1,25 +1,20 @@
 # S 的中文技能市场
 
-这个仓库是 S 自己的**插件市场**。插件市场就是一份目录，里面列出可以安装的插件。每个插件是一组技能。技能（skill）是一份写给 AI 助手看的说明书，文件名固定叫 `SKILL.md`，开头有名字和说明，后面是具体步骤。
+这个仓库是 S 自己的**插件市场**。插件市场就是一份目录，里面列出可以安装的插件。现在目录里只有一个插件：`pstack`。插件是一组技能。技能（skill）是一份写给 AI 助手看的说明书，文件名固定叫 `SKILL.md`，开头有名字和说明，后面是具体步骤。
 
-技能正文是中文。S 把同一份文件装进 WorkBuddy、Cursor、Claude Code。改完合并进 `main` 分支之后，已经安装的应用可以收到更新。Codex 和 OpenCode 没有和前三个完全一样的安装入口，仓库里也给它们准备了可用的装法。
+技能正文是中文。同一份文件给 WorkBuddy、Cursor、Claude Code 用。改完合并进 `main` 分支之后，已经安装的应用可以收到更新。Codex 和 OpenCode 用各自的装法，读的也是这一份文件。
 
 仓库是公开的，这是 S 自己的选择。
 
 ## 里面有什么
 
-6 个插件，一共 109 个技能。技能文件只存一份，放在对应插件的 `skills/` 里面。三个应用的清单都指向这些文件夹，没有为每个应用再复制一份技能。
+1 个插件，54 个技能。技能文件只存一份，放在 `plugins/pstack/skills/`。几个应用的清单都指向这个文件夹，没有为每个应用再复制一份技能。
 
 | 插件短名 | 数量 | 里面是什么 |
 |---|---|---|
 | `pstack` | 54 | pstack 的中文技能：做事原则、工作流程、TypeScript 写法 |
-| `compound-engineering` | 15 | Compound Engineering 的中文技能：做计划、查 bug、提交、审查 |
-| `superpowers` | 1 | Superpowers 里译出的「完成前验证」 |
-| `ui-ux` | 18 | 界面设计：impeccable、ui-ux-pro-max、Vercel 的网页设计规范、Emil Kowalski 的 15 个技能 |
-| `figma` | 16 | Figma 官方技能的中文版 |
-| `s-own` | 5 | S 自己写的技能，正文保持英文，没有改过 |
 
-插件短名是给应用看的，只能用小写英文字母、数字和连字符。技能的名字保持中文（S 自己的那 5 个保持原来的英文名）。
+插件短名是给应用看的，只能用小写英文字母、数字和连字符。技能的名字保持中文。
 
 目录长这样：
 
@@ -28,97 +23,39 @@
 .claude-plugin/marketplace.json      Claude Code 的市场目录
 .codebuddy-plugin/marketplace.json   WorkBuddy / CodeBuddy 的市场目录
 .agents/plugins/marketplace.json     Codex 的市场目录
-plugins/<插件短名>/
+plugins/pstack/
   plugin.json                        Codex 和通用插件格式用的清单
   .cursor-plugin/plugin.json
   .claude-plugin/plugin.json
   .codebuddy-plugin/plugin.json
-  CREDITS.md                         这个插件的作者和许可证说明
+  CREDITS.md                         作者和许可证说明
   skills/
     <技能名>/SKILL.md
-    LICENSE-...                      上游许可证，放在技能的上一级
+    LICENSE-pstack                   上游许可证，放在技能的上一级
 ```
 
-技能正文里写着「许可证全文见上一级文件夹」。所以上游的 `LICENSE-*` 和 impeccable 的 `NOTICE-impeccable.md` 放在 `skills/` 里，和技能文件夹并排，没有改这些文件里的字。
+技能正文里写着「许可证全文见上一级文件夹」。所以 `LICENSE-pstack` 放在 `skills/` 里，和技能文件夹并排。这些技能文件里的字没有改。
 
 ## 作者和许可证
 
-翻译时用的版本记在每个 `SKILL.md` 开头。这里是总表。
+翻译时用的版本记在每个 `SKILL.md` 开头。
 
 | 插件 | 上游 | 作者 | 许可证 |
 |---|---|---|---|
 | `pstack` | Cursor 插件 pstack，编号 9717366，版本 0.15.25 | Lauren Tan，版权 © 2026 Lauren Tan | MIT，文件 `LICENSE-pstack` |
-| `compound-engineering` | Compound Engineering，编号 680，版本 3.29.0 | Kieran Klaassen 和 Trevin Chow，版权 © 2025 Every | MIT，文件 `LICENSE-compound-engineering` |
-| `superpowers` | Superpowers，编号 684，版本 6.1.1 | Jesse Vincent，版权 © 2025 Jesse Vincent | MIT，文件 `LICENSE-superpowers` |
-| `ui-ux` | [impeccable](https://github.com/pbakaus/impeccable) commit 08d5b47 | Paul Bakaus，版权 © 2025 Paul Bakaus | Apache 2.0。要同时保留 `LICENSE-impeccable` 和 `NOTICE-impeccable.md`。中文版是翻译，算对原文的改动 |
-| `ui-ux` | [ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) commit 56ea9cf | Next Level Builder，版权 © 2024 | MIT，文件 `LICENSE-ui-ux-pro-max` |
-| `ui-ux` | [Emil Kowalski skills](https://github.com/emilkowalski/skills) commit 2d22863 | Emil Kowalski，版权 © 2026 Emil Kowalski | MIT，文件 `LICENSE-emilkowalski-skills` |
-| `ui-ux` | [Vercel agent-skills](https://github.com/vercel-labs/agent-skills) commit 063bee9 | Vercel | 上游仓库没有单独的 LICENSE 文件，README 末尾写了 MIT。说明在 `LICENSE-vercel-agent-skills` |
-| `figma` | [Figma mcp-server-guide](https://github.com/figma/mcp-server-guide) commit f278942 | Figma | 上游仓库没有许可证文件。S 知道这一点，仍然选择放进这个公开仓库，只给自己用 |
-| `s-own` | S 自己的备份 `my-skills/` | S | 备份里没有单独的许可证文件 |
 
-每个插件目录里的 `CREDITS.md` 重复了这一插件对应的说明，这样应用把插件复制到本机缓存之后，许可证还在插件里面。
+`plugins/pstack/CREDITS.md` 重复了这段说明。应用把插件复制到本机缓存之后，许可证还在插件里面。
 
 ## 中文名对照表
 
-104 个翻译技能。「英文名」是英文名备份里的名字，每个 `SKILL.md` 开头有一行 `英文名备份：s-...`。「原始 skill」是上游插件或仓库里的英文名。标 ⚠️ 的，表示它的 `references/` 参考文件还是英文（那些文件太大，翻译时留了原文）。
+54 个技能。「英文名」是英文名备份里的名字，每个 `SKILL.md` 开头有一行 `英文名备份：s-...`。「原始 skill」是上游插件里的英文名。标 ⚠️ 的，表示它的 `references/` 参考文件还是英文（那些文件太大，翻译时留了原文）。
 
 | 中文名 | 英文名 | 原始 skill | 用途 |
 |---|---|---|---|
-| `全自动开发` ⚠️ | `s-lfg` | `lfg`（CE 680） | 全自动把一个需求从头做到完成；改代码的话最后会自动推送并开好 PR。只在明确要“全自动”时用。 |
-| `头脑风暴` ⚠️ | `s-ce-brainstorm` | `ce-brainstorm`（CE 680） | 头脑风暴：把模糊的想法整理成“要做什么”的需求。 |
-| `做计划` ⚠️ | `s-ce-plan` | `ce-plan`（CE 680） | 做计划：把多步骤的工作拆成清楚的步骤（只做计划，不写代码）。 |
-| `按计划实现` ⚠️ | `s-ce-work` | `ce-work`（CE 680） | 照着计划或明确的要求去实现，并在本地验证。 |
-| `查bug` ⚠️ | `s-ce-debug` | `ce-debug`（CE 680） | 排查 bug：先找到根本原因，再（经同意）先写测试后修复。 |
-| `简化代码` | `s-ce-simplify-code` | `ce-simplify-code`（CE 680） | 把刚写好的代码变简单、好读，功能完全不变。 |
-| `代码审查` ⚠️ | `s-ce-code-review` | `ce-code-review`（CE 680） | 审查代码改动或 PR，找 bug、回归问题、测试和规范问题。默认只报告，不改代码。 |
-| `处理PR意见` ⚠️ | `s-ce-resolve-pr-feedback` | `ce-resolve-pr-feedback`（CE 680） | 处理别人在 PR 上留下的审查意见：判断、修复、回复、标记解决。 |
-| `提交代码` | `s-ce-commit` | `ce-commit`（CE 680） | 帮你把改动提交（commit）到本地，写好提交说明。不推送。 |
-| `提交推送开PR` ⚠️ | `s-ce-commit-push-pr` | `ce-commit-push-pr`（CE 680） | 提交 + 推送 + 开 PR 一次做完；也可以只帮你写 PR 说明。 |
 | `测试驱动修bug` | `s-tdd` | `tdd`（pstack 9717366） | 修 bug 时先写一个会失败的测试，再修到它通过（只在明确要求或很容易测时用）。 |
-| `完成前验证` | `s-verification-before-completion` | `verification-before-completion`（Superpowers 684） | 说“做完了/修好了/通过了”之前，必须先真的跑命令验证。 |
-| `大白话解释` | `s-wtf` | `wtf`（CE 680） | 没看懂上一条消息（或某个文件、链接、段落）时，用大白话重新解释。 |
-| `解释代码` | `s-ce-explain` | `ce-explain`（CE 680） | 根据证据解释代码“怎么工作、为什么这样”，或者回顾一段时间里做了什么。 |
 | `一步步教我` | `s-teach` | `teach`（pstack 9717366） | 像老师一样，一步一步把一块工作讲到你真正弄懂。 |
-| `去AI腔` | `s-ce-noslop` | `ce-noslop`（CE 680） | 改写或检查文字，去掉“AI 腔”，让人一读就懂。 |
 | `技术写作` | `s-technical-writing` | `technical-writing`（pstack 9717366） | 技术文档写作规范（原本针对英文写作），用于写文档、readme、PR 说明、提交信息。 |
-| `文档审查` ⚠️ | `s-ce-doc-review` | `ce-doc-review`（CE 680） | 从多个角色的角度审查需求文档、计划或规格说明，找出会影响结果的问题。 |
-| `交接单` | `s-ce-handoff` | `ce-handoff`（CE 680） | 写一份交接单，让另一个 AI 助手（或新的对话）能接着做；也可以从交接单续接。 |
 | `按我习惯定制` | `s-automate-me` | `automate-me`（pstack 9717366） | 从你的对话习惯里总结规则，做成一个“按你的方式工作”的专属 skill。 |
-| `网页设计规范` | `s-web-design-guidelines` | `web-design-guidelines`（Vercel） | 按 Vercel 的《网页界面规范》检查界面代码（规范内容运行时从网上读取）。 |
-| `精致界面设计` ⚠️ | `s-impeccable` | `impeccable`（impeccable） | 设计、点评、打磨前端界面的一整套方法，避免做出“AI 味”的千篇一律界面。 |
-| `UIUX知识库` ⚠️ | `s-ui-ux-pro-max` | `ui-ux-pro-max`（ui-ux-pro-max） | 带数据库的 UI/UX 设计知识库：用脚本按产品类型查风格、配色、字体、图表建议。 |
-| `苹果式设计` | `s-emil-apple-design` | `apple-design`（Emil Kowalski） | 苹果式流畅界面和有物理感的动效（弹簧、手势、惯性、半透明材质、字体排版），用在网页上。改名是为了和你自己的 `apple-design-2` 区分。 |
-| `界面压力测试` | `s-break-ui` | `break-ui`（Emil Kowalski） | 用最坏情况的真实数据（超长名字、空列表、emoji 等）搞坏界面，列出坏点和修法。 |
-| `选前端库` | `s-pick-ui-library` | `pick-ui-library`（Emil Kowalski） | 按任务从精选清单里推荐前端库（提示消息、拖放、图表等）。只在你明确叫它时才用。 |
-| `Emil设计理念` | `s-emil-design-eng` | `emil-design-eng`（Emil Kowalski） | Emil 的设计工程理念：界面打磨、组件设计、动画该不该做、用什么缓动和时长；审查时用“修改前 / 修改后 / 原因”表格。 |
-| `做动画` | `s-animate` | `animate`（Emil Kowalski） | 从零做一个动画：按顺序决定该不该动、为什么动、用什么工具、什么曲线和时长，然后直接写代码。 |
-| `Expo动画` ⚠️ | `s-animate-expo` | `animate-expo`（Emil Kowalski） | 给 Expo / React Native 手机应用加动画（Reanimated、手势等）。 |
-| `动画性能` | `s-animation-performance` | `animation-performance`（Emil Kowalski） | 排查和避免动画卡顿：只动 transform 和 opacity、少触发重排等。 |
-| `动画术语表` | `s-animation-vocabulary` | `animation-vocabulary`（Emil Kowalski） | 动画术语表：把“想要的感觉”翻译成准确的动画词汇（术语保留英文，附中文解释）。 |
-| `Sonner用法` | `s-ask-sonner` | `ask-sonner`（Emil Kowalski） | 回答关于 Sonner（React 提示消息库）的用法问题。 |
-| `找动画机会` | `s-find-animation-opportunities` | `find-animation-opportunities`（Emil Kowalski） | 在现有界面里找出哪些地方该加动画、哪些不该加，给出带数值的建议（只提建议，不改代码）。 |
-| `动画改进计划` | `s-improve-animations` | `improve-animations`（Emil Kowalski） | 全面审查代码库里的动画，写出按优先级排序的审计结果，以及交给其他助手执行的实现计划。 |
-| `动画审查` | `s-review-animations` | `review-animations`（Emil Kowalski） | 按 Emil 的标准审查动画代码，列出问题和修法。只在你明确叫它时才用。 |
-| `多版本原型` | `s-emil-prototype` | `prototype`（Emil Kowalski） | 为一块界面做出几个真正不同的版本，放在切换器后面让你实时比较、选定。只在你明确叫它时才用。改名是为了和 `ce-prototype` 区分。 |
-| `手机原生手感` | `s-mobile-native` | `mobile-native`（Emil Kowalski） | 让手机网页 / 应用的手感像原生应用（触摸反馈、滚动、手势、安全区域等）。 |
-| `写Swift` | `s-write-swift` | `write-swift`（Emil Kowalski） | 怎样写好现代 Swift：值类型、Swift 6 并发、协议和泛型、性能、测试等。 |
-| `Figma新建文件` | `s-figma-create-new-file` | `figma-create-new-file`（Figma） | 在 Figma 里新建设计 / 白板 / 幻灯片文件的步骤。 |
-| `Figma设计稿转代码` | `s-figma-design-to-code` | `figma-design-to-code`（Figma） | 把 Figma 设计准确地写成代码（必须先读的前置步骤）。 |
-| `代码导入Figma` | `s-figma-code-workflows` | `figma-code-workflows`（Figma） | 把本地 HTML 或项目导入 Figma，选择做成可编辑设计图层还是可运行的代码图层。 |
-| `Figma规格文档` | `s-figma-spec` | `figma-spec`（Figma） | 新建、阅读、编辑、评论 Figma 里的规格文档（需求文档、方案等）。 |
-| `Figma与SwiftUI` ⚠️ | `s-figma-swiftui` | `figma-swiftui`（Figma） | Figma 和 SwiftUI（苹果 iOS 界面代码）之间互相转换的“指路牌”。 |
-| `Figma生成式插件` | `s-figma-generative-plugins` | `figma-generative-plugins`（Figma） | 新建和修改可重复使用的生成式 Figma 插件。 |
-| `Figma着色器` | `s-figma-shaders` | `figma-shaders`（Figma） | 新建和修改 Figma 里的着色器效果和着色器填充（显卡逐像素计算的特效）。 |
-| `FigJam白板操作` ⚠️ | `s-figma-use-figjam` | `figma-use-figjam`（Figma） | 在 FigJam 白板里用 `use_figma` 工具做便利贴、连接线、分区等。 |
-| `Figma做动画` ⚠️ | `s-figma-use-motion` | `figma-use-motion`（Figma） | 在 Figma 里给图层做动画：关键帧、动画样式、缓动、时间轴。 |
-| `Figma插件基础` ⚠️ | `s-figma-use` | `figma-use`（Figma） | 用 `use_figma` 工具在 Figma 里执行插件代码的基础规则（每次调用 `use_figma` 前必须先读）。 |
-| `Figma幻灯片` ⚠️ | `s-figma-use-slides` | `figma-use-slides`（Figma） | 在 Figma Slides 里用 `use_figma` 做幻灯片：设计思路、搭建流程、分区、演讲者备注。 |
-| `Figma搭建页面` ⚠️ | `s-figma-generate-design` | `figma-generate-design`（Figma） | 根据代码或描述，用设计系统的组件和变量在 Figma 里搭建或更新整个页面 / 弹窗 / 面板。 |
-| `Figma设计系统` ⚠️ | `s-figma-generate-library` | `figma-generate-library`（Figma） | 根据代码库在 Figma 里搭建或更新设计系统：变量、组件、变体、主题。 |
-| `Figma生成图表` ⚠️ | `s-figma-generate-diagram` | `figma-generate-diagram`（Figma） | 用 Mermaid 在 FigJam 里生成流程图、时序图、ER 图、状态图、甘特图（调用 `generate_diagram` 前必须先读）。 |
-| `Figma组件对应代码` ⚠️ | `s-figma-code-connect` | `figma-code-connect`（Figma） | 写 Code Connect 模板文件（`.figma.ts`），把 Figma 组件对应到代码。 |
-| `Figma动效转代码` ⚠️ | `s-figma-implement-motion` | `figma-implement-motion`（Figma） | 把 Figma 里做好的动画写成真正的代码（motion.dev、CSS 关键帧等）。 |
 | `poteto工作模式` ⚠️ | `s-poteto-mode` | `poteto-mode`（pstack 9717366） | pstack 的总入口：按任务类型匹配一套操作手册（playbook），照着步骤做，按需调用其他 skill，并用原则指导每个决定。 |
 | `设置pstack模型` | `s-setup-pstack` | `setup-pstack`（pstack 9717366） | 检测你能用的模型，按角色设置 pstack 用哪个模型、推理预算多大，写成一条始终生效的规则。 |
 | `pstack使用帮助` | `s-poteto-help` | `poteto-help`（pstack 9717366） | 回答“pstack 怎么用、该用哪个 skill”，给你一段可以直接发的提示词。 |
@@ -170,21 +107,11 @@ plugins/<插件短名>/
 | `原则-测行为不测实现` | `s-principle-test-behavior-not-implementation` | `principle-test-behavior-not-implementation`（pstack 9717366） | 测试断言使用者能看到的行为，不绑定内部实现。 |
 | `原则-类型系统纪律` | `s-principle-type-system-discipline` | `principle-type-system-discipline`（pstack 9717366） | 让非法状态无法表示，在边界解析外部数据。 |
 
-S 自己的 5 个技能不在上表里。文件夹名和说明书里的名字如下：
+## 合并进 main 之后怎么装
 
-| 文件夹 | 说明书里的名字 |
-|---|---|
-| `apple-design-2` | `Apple Design` |
-| `design-a-grok-bot` | `Design a Grok Bot` |
-| `make-bot-ui` | `Make Bot UI` |
-| `routine-healthcheck` | `Routine healthcheck` |
-| `transcript-healthcheck` | `Transcript healthcheck` |
+市场短名是 `s-skills`。插件短名是 `pstack`。`pstack@s-skills` 的意思是：市场 `s-skills` 里的插件 `pstack`。
 
-## 装到每个应用
-
-等这些文件合并进 GitHub 上的 `main` 分支之后，再用下面的命令。市场短名是 `s-skills`。
-
-六个插件都要装的话，把下面每个插件短名都装一次：`pstack`、`compound-engineering`、`superpowers`、`ui-ux`、`figma`、`s-own`。
+还没合并、想先试用这条分支时，看下一节。
 
 ### WorkBuddy（腾讯，底层是 CodeBuddy Code）
 
@@ -192,37 +119,23 @@ S 自己的 5 个技能不在上表里。文件夹名和说明书里的名字如
 
 ```text
 /plugin marketplace add Acefake/s-skills
-```
-
-`/plugin` 是插件管理命令。`marketplace` 是市场。`add` 是把这个 GitHub 仓库登记成一个市场。登记之后还要安装具体插件：
-
-```text
 /plugin install pstack@s-skills
-/plugin install compound-engineering@s-skills
-/plugin install superpowers@s-skills
-/plugin install ui-ux@s-skills
-/plugin install figma@s-skills
-/plugin install s-own@s-skills
-```
-
-`pstack@s-skills` 的意思是：市场 `s-skills` 里的插件 `pstack`。装完运行：
-
-```text
 /reload-plugins
 ```
 
-这是重新加载插件，不用退出应用。
+`/plugin` 是插件管理命令。`marketplace add` 是把这个 GitHub 仓库登记成一个市场。`install` 是安装里面的插件。`/reload-plugins` 是重新加载插件，不用退出应用。
 
 ### Claude Code
 
-命令和 WorkBuddy 一样，在 Claude Code 的对话里输入：
+命令和 WorkBuddy 一样，在对话里输入：
 
 ```text
 /plugin marketplace add Acefake/s-skills
 /plugin install pstack@s-skills
+/reload-plugins
 ```
 
-其余五个插件把短名换掉。也可以在终端里运行 `claude plugin marketplace add Acefake/s-skills`，然后 `claude plugin install pstack@s-skills`。装完在对话里运行 `/reload-plugins`。
+也可以在终端里运行 `claude plugin marketplace add Acefake/s-skills`，然后 `claude plugin install pstack@s-skills`。
 
 ### Cursor
 
@@ -233,8 +146,8 @@ Cursor 用仓库里的 `.cursor-plugin/marketplace.json` 把整个仓库当成�
 1. 打开 Cursor 的 Dashboard，进入 Plugins & MCPs（插件和 MCP）。
 2. 在 Team Marketplaces（团队市场）里选 Import from Repo（从仓库导入）。
 3. 粘贴 `https://github.com/Acefake/s-skills`。
-4. 确认它列出了上面 6 个插件，保存。
-5. 在 Cursor 侧边栏的 Customize（自定义）里安装要用的插件。安装时可选「只给自己」或「这个项目」。
+4. 确认它列出了插件 `pstack`，保存。
+5. 在 Cursor 侧边栏的 Customize（自定义）里安装 `pstack`。安装时可选「只给自己」或「这个项目」。
 
 个人用的 Cursor 也可以在 Customize → Plugins 里找 Import marketplace / Add marketplace（导入市场），粘贴同一个仓库地址。2026-10-18 的官方文档把导入步骤写在团队市场那一节；个人界面上的入口名称以你本机菜单为准。导入这一步我没有在 Cursor 里点过。
 
@@ -248,19 +161,19 @@ Codex 现在有插件市场。官方说明写在 [Build plugins](https://develop
 codex plugin marketplace add Acefake/s-skills
 ```
 
-然后打开 Codex，输入 `/plugins`，在市场列表里安装插件。装完新开一个对话再用。
+然后打开 Codex，输入 `/plugins`，安装 `pstack`。装完新开一个对话再用。
 
-Codex 还会顺带读取 `.claude-plugin/marketplace.json` 和 `.cursor-plugin/marketplace.json`。这三个文件都列出了同一批插件，所以 Codex 里可能看到重复的条目。装其中一个即可。这一重复我没有在 Codex 里打开确认过。
+Codex 还会顺带读取 `.claude-plugin/marketplace.json` 和 `.cursor-plugin/marketplace.json`。这三个文件都只列了 `pstack`，所以 Codex 里可能看到重复的条目。装其中一个即可。这一重复我没有在 Codex 里打开确认过。
 
 Codex 的 IDE 扩展不支持插件。要用插件，打开 Codex 命令行，或 ChatGPT 桌面版里的 Codex。
 
 ### OpenCode
 
-OpenCode 到 2026-10-18 还没有官方的插件市场（官方仓库里仍是一条待做的需求）。它会从本机的技能文件夹读取 `SKILL.md`。用下面的 skills 命令装到 OpenCode。
+OpenCode 到 2026-10-18 还没有官方的插件市场。它会从本机的技能文件夹读取 `SKILL.md`。用下面的 skills 命令装到 OpenCode。
 
 ### skills 命令（Codex、OpenCode、也可以给 Cursor）
 
-[vercel-labs/skills](https://github.com/vercel-labs/skills) 是一个安装技能的命令行工具。它会在仓库里找 `SKILL.md`。这个仓库的 Claude 市场清单写了每个插件的路径，它能顺着路径找到 `plugins/<插件>/skills/<技能名>/`。
+[vercel-labs/skills](https://github.com/vercel-labs/skills) 是一个安装技能的命令行工具。它会在仓库里找 `SKILL.md`。这个仓库的 Claude 市场清单写了插件路径，它能顺着路径找到 `plugins/pstack/skills/<技能名>/`。
 
 装到当前用户、所有项目都能用（`-g` 就是 global，全局）：
 
@@ -284,36 +197,78 @@ npx skills update -g
 npx skills add Acefake/s-skills --list
 ```
 
+## 合并前先试这条分支
+
+分支名是 `cursor/s-skills-marketplace-2463`。合并进 `main` 之前，`Acefake/s-skills` 不带分支名时读的是空的 `main`。
+
+**WorkBuddy。** 官方文档对 Git 地址写了「地址后面加 `#` 再加分支或标签」。用完整地址：
+
+```text
+/plugin marketplace add https://github.com/Acefake/s-skills.git#cursor/s-skills-marketplace-2463
+/plugin install pstack@s-skills
+/reload-plugins
+```
+
+WorkBuddy 文档里的 GitHub 短写例子是 `owner/repo`，没有写 `#分支`。完整 Git 地址这一条是文档写了的。我没有在 WorkBuddy 里跑过这条命令。
+
+**Claude Code。** 官方文档写明 GitHub 短写可以加 `#分支`：
+
+```text
+/plugin marketplace add Acefake/s-skills#cursor/s-skills-marketplace-2463
+/plugin install pstack@s-skills
+/reload-plugins
+```
+
+**Codex。** 官方命令可以用 `--ref` 指定分支：
+
+```text
+codex plugin marketplace add Acefake/s-skills --ref cursor/s-skills-marketplace-2463
+```
+
+然后在对话里用 `/plugins` 安装 `pstack`。我没有在 Codex 里跑过。
+
+**OpenCode，以及合并前给 Cursor / Codex 装技能。** skills 命令用 `#` 后面跟分支名（分支名里有斜杠，所以整段要加引号）：
+
+```text
+npx skills add "Acefake/s-skills#cursor/s-skills-marketplace-2463" -g -a opencode -a cursor -a codex -y
+```
+
+只要其中一个应用，就只留一个 `-a`。先看有哪些技能、不安装：
+
+```text
+npx skills add "Acefake/s-skills#cursor/s-skills-marketplace-2463" --list
+```
+
+不要用 `https://github.com/Acefake/s-skills/tree/cursor/s-skills-marketplace-2463`。这个命令把 `tree/` 后面的第一段当成分支名，斜杠后面当成子目录，会指错地方。
+
+**Cursor 的市场导入。** 官方文档写的是粘贴仓库地址，没有写导入时怎么选分支。导入后跟的是仓库的默认分支 `main`。合并前 `main` 还是空的，所以这条导入先不要做。合并前想在 Cursor 里试用，用上面的 skills 命令，`-a cursor`。
+
 ## 装上之后怎么调用
 
-应用会把插件短名加在技能名前面，中间用冒号。这叫命名空间，用来避免两个插件里的技能撞名。
+应用会把插件短名加在技能名前面，中间用冒号。这叫命名空间，用来避免和别的插件撞名。
 
 在 WorkBuddy 和 Claude Code 里，输入：
 
 ```text
 /pstack:先画架构草图
-/compound-engineering:做计划
-/superpowers:完成前验证
-/ui-ux:精致界面设计
-/figma:Figma插件基础
 ```
 
-斜杠 `/` 是调用命令。冒号前面是插件短名，后面是技能的中文名。没有别的命令占用这个中文名时，只打 `/做计划` 往往也能用。助手也可以在任务对得上技能开头的说明时，自己去读那份说明书。
+斜杠 `/` 是调用命令。冒号前面是插件短名，后面是技能的中文名。没有别的命令占用这个中文名时，只打 `/先画架构草图` 往往也能用。助手也可以在任务对得上技能开头的说明时，自己去读那份说明书。
 
 Cursor 里在对话输入 `/`，搜索技能的中文名。官方文档写的形式是 `/技能名`。如果列表里显示成带插件短名的，就选带短名的那一项。
 
 Codex 里输入 `@`，选择插件或其中的技能。
 
-OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决定要不要读全文。这 109 个文件没有额外写 OpenCode 专用的开关，所以不一定出现成一条 `/中文名` 命令。直接说出技能的中文名，让它按那份说明书做。
+OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决定要不要读全文。这 54 个文件没有额外写 OpenCode 专用的开关，所以不一定出现成一条 `/中文名` 命令。直接说出技能的中文名，让它按那份说明书做。
 
 ## 中文名能不能被认出来
 
-技能文件夹和说明书里的 `name` 都是中文（S 自己的 5 个除外）。插件短名是英文。下面是 2026-10-18 对照官方文档和已知问题后的判断。标了「未实测」的，是没有在那个应用里真正安装过。
+技能文件夹和说明书里的 `name` 都是中文。插件短名是英文。下面是 2026-10-18 对照官方文档和已知问题后的判断。标了「未实测」的，是没有在那个应用里真正安装过。
 
 - **WorkBuddy / CodeBuddy。** 官方文档要求插件短名是英文短横线格式，没有要求技能名必须是英文。调用形式是 `插件短名:技能名`。S 原来的备份说明里写过：中文名可以在 WorkBuddy 里直接用。这次没有在 WorkBuddy 里安装验证。
 - **Claude Code。** 官方文档写：插件里的技能，命令最后一段用说明书里的 `name`，所以形式上会是 `/pstack:先画架构草图`。个人技能文件夹（`~/.claude/skills/中文名/`）可以保留中文。插件这条路径上有一个已报告的问题：[claude-code#66554](https://github.com/anthropics/claude-code/issues/66554)。从 2.1.94 起，插件技能名里英文、数字、下划线、连字符以外的字符会被换成连字符 `-`。中文每个字都会变成一个 `-`，字数相同的技能会撞成同一个名字，助手按中文名去调用会得到 Unknown skill。例如「一步步教我」和「说人话重讲」都是五个字，会挤成同一个 `pstack:-----`。个人技能不受这个影响。这个问题我没有在本机的 Claude Code 里复现，只核对了问题报告和当时的改动说明。技能正文因此没有改成英文名。
 - **Cursor。** 官方文档把技能 `name` 写成小写英文加连字符，并且要和文件夹名一致。Cursor 命令行会给不合这个格式的名字打警告（名字超过 64 字、不是小写短横线、名字和文件夹不一致、说明超过 1024 字、正文大约超过 5000 个词）。文档写的是警告，没有写「直接拒绝加载」。中文名会触发「不是小写短横线」和「名字与文件夹不一致」这两类警告。能否在插件里真正跑起来，未实测。
-- **skills 命令。** 我读了 2026-10-18 的 `vercel-labs/skills` 源码。它清理名字时只去掉会扰乱终端的控制字符，中文会留下来。发现技能时会读 `.claude-plugin/marketplace.json`，再进入每个插件的 `skills/`。本地用 skills 命令 1.5.18 跑过 `npx skills add <仓库目录> --list`，它列出 109 个技能，中文名都在，没有被丢掉。真正写进 Codex、OpenCode 或 Cursor 的安装目录这一步未实测。
+- **skills 命令。** 它清理名字时只去掉会扰乱终端的控制字符，中文会留下来。发现技能时会读 `.claude-plugin/marketplace.json`，再进入插件的 `skills/`。本地用 skills 命令 1.5.18 对这个仓库目录跑过 `--list`，它列出 54 个技能，中文名都在。真正写进 Codex、OpenCode 或 Cursor 的安装目录这一步未实测。
 - **Codex 插件。** 官方示例里的技能名是英文短横线。中文文件夹放进 Codex 插件之后能不能点开，未实测。装不上时，用上面的 skills 命令，目标应用写 `codex`。
 - **OpenCode。** 官方文档只要求 `name` 和 `description`，没有要求英文。它从 `~/.config/opencode/skills/<名字>/SKILL.md` 读取。未实测。
 
@@ -323,9 +278,9 @@ OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决�
 
 分两条路。
 
-**插件市场（WorkBuddy、Claude Code、Codex 的插件安装）。** 应用把插件复制到本机的一个缓存目录。WorkBuddy 和 Claude Code 的官方文档写明：已经安装的插件，要等它的**版本号**变了，才会换成新的一份。版本号写在每个插件的四份清单里（`plugin.json`、`.cursor-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.codebuddy-plugin/plugin.json`），像 `1.0.0`。市场目录里故意不再写一遍版本号。官方文档说两处都写的话，以 `plugin.json` 为准，并且校验命令会警告它们不一致。
+**插件市场（WorkBuddy、Claude Code、Codex 的插件安装）。** 应用把插件复制到本机的一个缓存目录。WorkBuddy 和 Claude Code 的官方文档写明：已经安装的插件，要等它的**版本号**变了，才会换成新的一份。版本号写在 `pstack` 的四份清单里（`plugin.json`、`.cursor-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.codebuddy-plugin/plugin.json`），现在是 `1.0.0`。市场目录里故意不再写一遍版本号。官方文档说两处都写的话，以 `plugin.json` 为准，并且校验命令会警告它们不一致。
 
-所以：改了某个插件里的技能或许可证之后，要让别人的应用收到，必须把该插件的版本号加大，再合并。只合并文件、不改版本号，WorkBuddy 和 Claude Code 会继续用旧缓存。
+所以：改了 pstack 里的技能或许可证之后，要让别人的应用收到，必须把版本号加大，再合并。只合并文件、不改版本号，WorkBuddy 和 Claude Code 会继续用旧缓存。
 
 加大版本号：
 
@@ -333,19 +288,19 @@ OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决�
 python3 scripts/bump_plugin_version.py pstack
 ```
 
-把 `pstack` 换成改过的插件短名。一次改了多个插件：
+或者：
 
 ```text
 python3 scripts/bump_plugin_version.py --all
 ```
 
-脚本只把最后一位加 1，例如 `1.0.0` 变成 `1.0.1`。它同时改四份清单和 `plugin-versions.lock.json`。这个 lock 文件记下「这一版对应的文件内容指纹」。内容变了却没加大版本号时，`python3 scripts/check_marketplace.py` 会失败，GitHub 上的检查也会失败。
+现在只有 `pstack`，两条命令效果一样。脚本只把最后一位加 1，例如 `1.0.0` 变成 `1.0.1`。它同时改四份清单和 `plugin-versions.lock.json`。这个 lock 文件记下「这一版对应的文件内容指纹」。内容变了却没加大版本号时，`python3 scripts/check_marketplace.py` 会失败，GitHub 上的检查也会失败。内容没变时，脚本不改版本号。
 
 想把 `1.0.1` 改成 `1.1.0` 或 `2.0.0`：手动改 lock 文件里的 `version`，以及该插件四份清单里的 `version`，再跑检查。内容指纹对得上、五处版本号一致，检查就会通过。
 
-**Cursor 团队市场**的官方文档另外说：打开 Enable Auto Refresh（自动刷新）之后，仓库一推送，Cursor 会重新读市场（大约最多每 10 分钟一次），跟的是新的提交。这需要仓库安装了 Cursor 的 GitHub App。个人导入的刷新方式以 Cursor 当时的界面为准。
+**Cursor 团队市场**的官方文档另外说：打开 Enable Auto Refresh（自动刷新）之后，仓库一推送，Cursor 会重新读市场（大约最多每 10 分钟一次），跟的是它正在跟踪的那个分支上的新提交。这需要仓库安装了 Cursor 的 GitHub App。个人导入的刷新方式以 Cursor 当时的界面为准。
 
-**skills 命令**不看 `1.0.0` 这种版本号。`npx skills update -g` 会对照 GitHub 上的文件重新装。
+**skills 命令**不看 `1.0.0` 这种版本号。`npx skills update -g` 会对照 GitHub 上的文件重新装。如果当初是用 `#分支名` 装的，更新仍对着那条分支，合并进 `main` 之后要改成从 `Acefake/s-skills` 重装一次。
 
 ### 第三方市场默认不会自动更新
 
@@ -396,7 +351,7 @@ WorkBuddy 和 Claude Code，在对话里：
 /plugin uninstall pstack@s-skills
 ```
 
-六个都卸掉时，对每个短名做一次。连市场一起去掉：
+连市场一起去掉：
 
 ```text
 /plugin marketplace remove s-skills
@@ -404,9 +359,9 @@ WorkBuddy 和 Claude Code，在对话里：
 
 去掉市场时，从它装上的插件会一起卸掉。
 
-Cursor：在 Customize 里找到已安装的插件，选卸载。团队市场由管理员在 Dashboard 的 Team Marketplaces 里移除。
+Cursor：在 Customize 里找到已安装的 `pstack`，选卸载。团队市场由管理员在 Dashboard 的 Team Marketplaces 里移除。
 
-Codex：在 `/plugins` 里对插件选卸载。终端里移除市场：
+Codex：在 `/plugins` 里对 `pstack` 选卸载。终端里移除市场：
 
 ```text
 codex plugin marketplace remove s-skills
@@ -427,6 +382,6 @@ pip install "jsonschema>=4.20"
 python3 scripts/check_marketplace.py
 ```
 
-检查这些事：Cursor 的两份清单符合官方 JSON Schema；Claude Code 和 CodeBuddy 的市场字段符合官方文档里的名字规则和 `./plugins/...` 路径；Codex 的市场带有 `source.path`、`policy` 和 `category`；六个插件的四份清单版本号一致；技能内容的指纹和 lock 文件一致；104 个翻译技能的文件夹名和 `name` 一致，并且上一级真的有它点名的许可证文件。
+检查这些事：Cursor 的两份清单符合官方 JSON Schema；Claude Code 和 CodeBuddy 的市场字段符合官方文档里的名字规则和 `./plugins/pstack` 路径；Codex 的市场带有 `source.path`、`policy` 和 `category`；`pstack` 的四份清单版本号一致；技能内容的指纹和 lock 文件一致；54 个技能的文件夹名和 `name` 一致，并且上一级真的有它点名的许可证文件。
 
-准备这个仓库时还跑过官方命令 `claude plugin validate`（Claude Code 2.1.302）。市场目录和六个插件都显示 Validation passed。这个命令接受了中文技能名。它检查的是清单格式，不会模拟上面说的「中文被换成连字符」那种运行时行为。Cursor 的清单另外用官方 JSON Schema 校验过。CodeBuddy 自己的 `codebuddy plugin validate` 这次没有跑。`.codebuddy-plugin/` 里的清单和已经通过 Claude 校验的 `.claude-plugin/` 清单内容相同，字段按 CodeBuddy 官方文档填写。
+准备这个仓库时还跑过官方命令 `claude plugin validate`（Claude Code 2.1.302）。市场目录和 `pstack` 都显示 Validation passed。这个命令接受了中文技能名。它检查的是清单格式，不会模拟上面说的「中文被换成连字符」那种运行时行为。Cursor 的清单另外用官方 JSON Schema 校验过。CodeBuddy 自己的 `codebuddy plugin validate` 这次没有跑。`.codebuddy-plugin/` 里的清单和已经通过 Claude 校验的 `.claude-plugin/` 清单内容相同，字段按 CodeBuddy 官方文档填写。

@@ -16,32 +16,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGINS_DIR = ROOT / "plugins"
 LOCK_PATH = ROOT / "plugin-versions.lock.json"
 
-PLUGIN_ORDER = (
-    "pstack",
-    "compound-engineering",
-    "superpowers",
-    "ui-ux",
-    "figma",
-    "s-own",
-)
+PLUGIN_ORDER = ("pstack",)
 
 EXPECTED_SKILL_COUNTS = {
     "pstack": 54,
-    "compound-engineering": 15,
-    "superpowers": 1,
-    "ui-ux": 18,
-    "figma": 16,
-    "s-own": 5,
-}
-
-# Folder name -> frontmatter name for S's own skills. These files are
-# unchanged from the backup, so the two names are not the same.
-OWN_SKILL_NAMES = {
-    "apple-design-2": "Apple Design",
-    "design-a-grok-bot": "Design a Grok Bot",
-    "make-bot-ui": "Make Bot UI",
-    "routine-healthcheck": "Routine healthcheck",
-    "transcript-healthcheck": "Transcript healthcheck",
 }
 
 MANIFEST_REL_PATHS = (
