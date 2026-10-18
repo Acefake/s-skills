@@ -49,10 +49,44 @@ disable-model-invocation: true
 
 ## 在不同软件里怎么用
 
-工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。
+参赛者读 `arena runners`，交叉评审读 `arena cross-judge pool` 并从中选一个，优先和父级不同系列。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。
 
-| | Cursor | WorkBuddy | Claude Code | Codex | OpenCode |
-|---|---|---|---|---|---|
-| 参赛者 | `arena runners` | 同左。能拉开差异时用 `"lite"` 和 `"reasoning"` | 同左。能拉开差异时用 `opus` 和 `sonnet` | 同左。不能单独换模型就省略 | 同 Codex |
-| 交叉评审 | `arena cross-judge pool`，选一个和父级不同系列的 | 同左 | 同左 | 同左 | 同左 |
-| 派不出子智能体 | 在主对话里自己做两稿，再自己按评分标准选。软件支持的话，第二稿换一个更强的模型 | 同左 | 同左 | 同左 | 同左 |
+### Cursor（原版参数）
+
+阶段 B：一条消息里 N 个 `Task`，`run_in_background: true`，`subagent_type: generalPurpose`（参赛者要写到自己的输出目录），`model` 为该条目。`auto` 或 `inherit-parent` 省略 `model`。
+
+没有 `arena runners` 时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。
+
+`Task` 拒绝了某个条目，就改用它所在系列的默认，并说一句。系列按前缀：`claude-*` 是一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 是一个系列。被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`。找不到匹配的系列，就用 `claude-opus-5-5-xhigh`。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。别名条目不要拿去回退。
+
+阶段 C：参赛者都完成之后，再派一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`model` 从 `arena cross-judge pool` 里选一个，优先和父级不同系列。没有这行时，从上面两个默认里选一个不同系列的。
+
+### OpenCode
+
+阶段 B：每个参赛者一次 `subagent`，`background: true`。agent ID 用 `s-arena-runners-1`、`s-arena-runners-2`（`mode: subagent`，各自的 `model`）。没有这些文件时用内置 `general`，并说明继承了父级模型。
+
+阶段 C：等后台子会话都通知完成之后，再派一个只读评审。agent ID 用池里选中的那一个 `s-arena-cross-judge-pool-<n>`。没有文件时用内置 `explore`。不要在调用上传 `model`（工具页没有这个参数；未核实的 issue 写法见 poteto 文末）。
+
+文档：[Tools](https://opencode.ai/v2/docs/tools)、[Agents](https://opencode.ai/v2/docs/agents/)。
+
+### Codex
+
+阶段 B 的提示词：Spawn one subagent per runner. Runner 1 is `s-arena-runners-1`. Runner 2 is `s-arena-runners-2`. Wait for all of them, then stop. 没有 toml 时，改成点名两个这次账号里真有的模型，并写上 `model_reasoning_effort`。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。
+
+阶段 C：等齐之后再派一个。Spawn one subagent, `s-arena-cross-judge-pool-<n>`（或点名池里选中的模型）. It only scores. Do not edit files. Wait for it. 提示词禁止改文件，不会变成单独的只读沙箱。
+
+`default_subagent_model` 拉不开多个参赛者。profile 不是每个参赛者一个。未核实：给单个子智能体选 profile。
+
+文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
+### WorkBuddy
+
+参赛者用 `Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。能拉开差异时一个 `"lite"`、一个 `"reasoning"`。交叉评审改派 `Explore` 或 `Plan`。不要填 Cursor 的模型名。
+
+### Claude Code
+
+参赛者用 `Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `opus` 和 `sonnet`，或完整 ID。交叉评审用 `Explore`。不写模型或写 `inherit` 就跟父级。
+
+### 派不出子智能体
+
+在主对话里自己做两稿，再自己按评分标准选。软件支持的话，第二稿换一个更强的模型。

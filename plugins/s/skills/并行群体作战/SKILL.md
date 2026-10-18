@@ -42,10 +42,40 @@ disable-model-invocation: true
 
 ## 在不同软件里怎么用
 
-工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。
+角色行是 `swarm workers`。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。一条消息里把 N 个工作者都派出去。
 
-| | Cursor | WorkBuddy | Claude Code | Codex | OpenCode |
-|---|---|---|---|---|---|
-| 角色行 | `swarm workers` | 同左 | 同左 | 同左 | 同左 |
-| 放到别的机器 | `environment: "cloud"`。从别的分支开始用 `cloud_base_branch` | 没有这些参数，全在本机跑。任务说明里写 SHA | 不确定有没有云端参数。没有就在本机跑 | 同 Claude Code | 同 Claude Code |
-| 派不出子智能体 | 在主对话里一片一片做，做完再汇总。不要假装已经并行了 | 同左 | 同左 | 同左 | 同左 |
+### Cursor（原版参数）
+
+每个工作者一个 `Task`：`subagent_type: generalPurpose`，`environment: "cloud"`，`run_in_background: true`，`model` 用第 4 步选的名字。`auto` 或 `inherit-parent` 省略 `model`。没有这行配置、并且 `grok-4.7-xhigh-fast` 这次真能传给 `Task` 时，用这个名字。
+
+只有工作者需要用户电脑上的文件、界面或登录态时，才改 `environment: "local"`。必须从一个非默认的、已推送的分支开始时，传 `cloud_base_branch`。
+
+`Task` 拒绝了配置的名字，就改用 `grok-4.7-xhigh-fast` 并说一句。连这个默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
+
+### OpenCode
+
+每个工作者调一次 `subagent`，`background: true`。agent ID 用 `s-swarm-workers`（`~/.config/opencode/agents/s-swarm-workers.md`，`mode: subagent`，`model` 等于角色行）。没有这个文件时用内置 `general`。`general` 不能再派子智能体，提示词里也要写明工作者不要再往下派。
+
+工具页没有 `environment` 和 `cloud_base_branch`。全在本机子会话里跑，SHA 写在 prompt 里。不要在调用上传 `model`（工具页没有这个参数；issue 里的写法未核实，见 poteto 文末）。
+
+文档：[Tools](https://opencode.ai/v2/docs/tools)、[Agents](https://opencode.ai/v2/docs/agents/)。
+
+### Codex
+
+提示词写成：Spawn N subagents in parallel. Each is `s-swarm-workers`（或 “each uses model \<模型\> with model_reasoning_effort \<档位\>”）. Wait for all of them, then summarize. 文件在 `~/.codex/agents/s-swarm-workers.toml`。没有文件时点名这次账号里真有的较快模型。文档举例 `gpt-6-luna` 只在账号有它时才用。
+
+没有 `cloud_base_branch`。SHA 写在提示词里。未核实：有没有把子智能体放到另一台机器的参数。子智能体文档只写了跟父级同一套沙箱。并发很多时，看 `[agents].max_concurrent_threads_per_session`，不写则由 Codex 自己选默认。
+
+文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
+### WorkBuddy
+
+`Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`，做完用 `TaskOutput` 取结果。没有云端参数，全在本机跑，SHA 写在任务说明里。模型省略，或用 `"lite"`。
+
+### Claude Code
+
+`Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `sonnet` 或完整 ID，不写就跟父级。不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里。
+
+### 派不出子智能体
+
+在主对话里一片一片做，做完再汇总。不要假装已经并行了。

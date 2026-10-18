@@ -75,6 +75,18 @@ ts	phase	decision	why	evidence	result
 
 对于产生了记录的运行，每条回复都以一个“Attention”（注意）部分结尾。第一行单独写审查者的模型（`reviewed by <model>`），然后列出每一个标记，指向具体的行或时刻。“No flags”（没有标记）是一个有效的值。模型名不是。
 
+## 在不同软件里怎么用
+
+这个审查者要和做这份工作的模型不同系列。具体派法以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末为准。
+
+Cursor：一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`model` 选和父级不同系列的名字。这次能用时，父级是 `grok-*` 就用 `claude-opus-5-5-xhigh`，父级是 `claude-*` 就用 `grok-4.7-xhigh-fast`。
+
+OpenCode：`subagent` 派一个 `mode: subagent` 的智能体，`model` 用另一个系列。没有现成文件时用内置 `explore`，并说明继承了父级模型、这次没有换系列。不要在调用上传 `model`（工具页没有这个参数）。
+
+Codex：提示词里点名另一个这次账号里真有的模型，或点名一个已经写好、模型不同的自定义智能体。`default_subagent_model` 拉不开系列。文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
+WorkBuddy：能拉开差异时，父级是 `"lite"` 就用 `"reasoning"`，反过来也一样。Claude Code：父级是 `sonnet` 就用 `opus`，或换一个完整 ID。派不出子智能体时，在主对话里换一种角度再看一遍日志，并说一句没有换模型。
+
 ## 审阅这条记录
 
 从上往下读，顺着证据指针去看，抽查。GitHub 会把提交进去的 TSV 显示成表格。在终端里用 `column -s$'\t' -t decisions.tsv` 也能显示成表格。

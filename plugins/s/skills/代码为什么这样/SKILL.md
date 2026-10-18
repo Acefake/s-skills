@@ -99,4 +99,34 @@ disable-model-invocation: true
 
 ## 在不同软件里怎么用
 
-工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。调查读 `why investigators`，综合读 `why synthesizer`。需要 MCP 时用能访问 MCP 的类型，不要用会丢掉 MCP 的只读模式。派不出子智能体时，在主对话里按来源一类一类查，并说一句没有换模型。
+调查读 `why investigators`，综合读 `why synthesizer`。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。调查者要能用 MCP，提示词里仍然禁止它写文件。
+
+### Cursor（原版参数）
+
+每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: false`。不要用 `readonly: true`，它会去掉 MCP，调查者和综合者的引用抽查会失效。
+
+调查者的 `model` 是 `why investigators`，没有这行时用 `grok-4.7-xhigh-fast`。综合者的 `model` 是 `why synthesizer`，没有这行时用 `claude-opus-5-5-xhigh`。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。拒绝了某个名字，就改用该角色的默认；连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
+
+### OpenCode
+
+调查者用 `s-why-investigators`，综合者用 `s-why-synthesizer`。没有这些文件时用内置 `general`，并说明继承了父级模型。不要用 `explore`：它不改文件，但是否带得上 MCP 未核实。`general` 不能再派子智能体，符合一个调查者只查一个来源。自定义智能体不要禁 `execute`。一条消息里对每个来源调一次 `subagent`，`background: true`，等齐再派综合者。不要在调用上传 `model`。
+
+文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
+
+### Codex
+
+自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`，或 `s-why-investigators`。综合点名 `s-why-synthesizer`。提示词写成：Spawn one subagent per evidence source. Each uses model \<why investigators\>. Wait for all, then spawn one synthesizer on model \<why synthesizer\>. Do not edit files. 模型名用这次账号里真有的。提示词禁止改文件，不会变成单独的只读沙箱。
+
+文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
+### WorkBuddy
+
+`Agent`，`subagent_type: "general-purpose"`。不要改派 `Explore` 或 `Plan`，那两个对不上需要 MCP 的调查。能拉开差异时调查用 `"lite"`，综合用 `"reasoning"`。
+
+### Claude Code
+
+`Agent`，`subagent_type: "general-purpose"`。调查的 `model` 用 `sonnet`，综合用 `opus`，或完整 ID。需要 MCP 时不要改用 `Explore`。
+
+### 派不出子智能体
+
+在主对话里按来源一类一类查，并说一句没有换模型。

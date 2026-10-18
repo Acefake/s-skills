@@ -68,4 +68,41 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 ## 在不同软件里怎么用
 
-工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。判断、发散和综合读 `reflect judgment, divergent, synthesizer`，工具视角读 `reflect tooling`。写 SKILL.md 的 skill 不是本插件的一部分。Cursor 如果装了 `create-skill` 可以用。WorkBuddy、Claude Code、Codex、OpenCode 没有随 s 附带的编写 skill，按上面第 5 步自己写。
+判断、发散和综合读 `reflect judgment, divergent, synthesizer`，工具视角读 `reflect tooling`。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 的 skill 不是本插件的一部分。Cursor 如果装了 `create-skill` 可以用。WorkBuddy、Claude Code、Codex、OpenCode 按上面第 5 步自己写。
+
+### Cursor（原版参数）
+
+三个 `Task`，外加综合时再一个 `Task`。每个都是 `subagent_type: generalPurpose`，`readonly: false`。`readonly: true` 会去掉 MCP。
+
+| 视角 | 角色行 | 没有这行、并且名字这次可用时的 `model` |
+|---|---|---|
+| 判断 | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` |
+| 工具 | `reflect tooling` | `grok-4.7-xhigh-fast` |
+| 发散 | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` |
+| 综合 | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` |
+
+`auto` 或 `inherit-parent` 省略 `model`。`Task` 拒绝了某个名字，就改用该行的默认并说一句。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
+
+### OpenCode
+
+判断和发散用 `s-reflect-judgment-divergent-synthesizer`，工具视角用 `s-reflect-tooling`，综合等齐后再用同一个判断智能体。没有这些文件时用内置 `general`，并说明继承了父级模型。不要用 `explore`（是否带得上 MCP 未核实）。`general` 不能再派子智能体。`background: true`，不要在调用上传 `model`。
+
+文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
+
+### Codex
+
+提示词写成：Spawn three subagents. Judgment and divergent use `s-reflect-judgment-divergent-synthesizer`（或 model \<判断模型\>). Tooling uses `s-reflect-tooling`（或 model \<写代码模型\>). Wait for all three. Then spawn one synthesizer on the judgment model. 自定义智能体继承父级 MCP。提示词可以要求审查者不要改 skill 文件；这不会变成单独的只读沙箱。模型名用这次账号里真有的。
+
+文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
+### WorkBuddy
+
+`Agent`，`subagent_type: "general-purpose"`。判断和发散用 `"reasoning"`，工具视角用 `"lite"`。不要改派 `Explore`。
+
+### Claude Code
+
+`Agent`，`subagent_type: "general-purpose"`。判断、发散和综合的 `model` 用 `opus`，工具视角用 `sonnet`，或完整 ID。需要 MCP 时不要改用 `Explore`。
+
+### 派不出三个子智能体
+
+在主对话里按三个视角各写一遍，并说一句没有换模型。

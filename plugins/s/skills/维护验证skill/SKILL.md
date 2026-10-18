@@ -37,3 +37,9 @@ disable-model-invocation: true
 6. **提交或停下。** 如果是 changed：开一个包含已证明修正的 PR，先把每个改动过的文件重新读一遍。如果是 clean 或 blocked：不开 PR，如实报告结果和覆盖情况。
 
 在一个临时位置保留简洁的运行笔记（覆盖了哪些功能、无法到达的前提条件、确认的过时之处、结果）；不要提交它们。
+
+## 在不同软件里怎么用
+
+第 2 步的源代码阅读者只读、并行，不换模型也能做。派法以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的「只读探索」为准。
+
+Cursor：每个功能一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`。OpenCode：每个功能一次 `subagent`，`background: true`，用内置 `explore`。Codex：提示词里 “Spawn one explorer subagent per feature file. Wait for all. Do not edit files.” 提示词禁止改文件，不会变成单独的只读沙箱。WorkBuddy 和 Claude Code 派 `Explore`。派不出时，在主对话里一个功能一个功能读，并说一句没有并行。

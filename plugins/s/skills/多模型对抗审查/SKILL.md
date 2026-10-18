@@ -75,10 +75,40 @@ disable-model-invocation: true
 
 ## 在不同软件里怎么用
 
-工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。
+角色行是 `interrogate reviewers`。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。工具名以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。一条消息里把审查者都派出去。
 
-| | Cursor | WorkBuddy | Claude Code | Codex | OpenCode |
-|---|---|---|---|---|---|
-| 角色行 | `interrogate reviewers` | 同左 | 同左 | 同左 | 同左 |
-| 怎么拉开差异 | 两个不同的具体模型名，而且必须是这次账号里有的 | 一个 `"reasoning"`，一个 `"lite"`。不要填 Cursor 的模型名 | `opus` 和 `sonnet`（或 `haiku`），或两个完整 ID | 不确定能不能给每个审查者单独换模型。不能就省略，并写明两次用的是同一个模型 | 同 Codex |
-| 派不出子智能体 | 在主对话里自己审两遍，第二遍换一种角度。软件支持的话，第二遍换一个更强的模型 | 同左 | 同左 | 同左 | 同左 |
+### Cursor（原版参数）
+
+用 `Task`。每个审查者：`subagent_type: generalPurpose`，`readonly: true`，`model` 设为那一行的对应条目。`auto` 或 `inherit-parent` 省略 `model`。
+
+没有这行配置时，Reviewer A 用 `claude-opus-5-5-xhigh`，Reviewer B 用 `grok-4.7-xhigh-fast`。这两个名字必须是这次真能传给 `Task` 的。
+
+`Task` 拒绝了某个条目，就改用它所在系列的默认，并说一句。系列按前缀：`claude-*` 是一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 是一个系列。被拒绝的 `composer-*` 改用 Reviewer B 的默认 `grok-4.7-xhigh-fast`。找不到匹配的系列，就用 Reviewer A 的默认 `claude-opus-5-5-xhigh`。连默认也被拒绝时，从报错里的有效名字里选最接近的，优先同一系列、同一推理档位，并另开一个 PR 更新默认表。别名条目不是模型名，不要对它做回退。
+
+### OpenCode
+
+每个审查者调一次 `subagent`。agent ID 用 [设置s模型](../设置s模型/SKILL.md) 写的 `s-interrogate-reviewers-1`、`s-interrogate-reviewers-2`（文件在 `~/.config/opencode/agents/`，`mode: subagent`，`model` 是该条目）。prompt 用填好的审查模板。这两个智能体的 `permissions` 应对 `edit` 和 `shell` 设 `deny`。
+
+没有这些文件时，用内置 `explore`（不改文件），并说明子会话会继承父级模型，这次没有拉开差异。不要把 Cursor 的模型名写进 `model`。不要在调用上传 `model`：工具页没有这个参数，issue 里的写法标为未核实，见 poteto 文末。
+
+文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
+
+### Codex
+
+用话派，不要找 `Task` 的 `model` 参数。提示词写成：Spawn one subagent per reviewer. Reviewer A is `<name-a>`（或 “uses model \<A\> with model_reasoning_effort \<档位\>”）. Reviewer B is `<name-b>`. Wait for both. Do not edit files. Return each reviewer's findings.
+
+`<name-a>` 是 `~/.codex/agents/s-interrogate-reviewers-1.toml` 的 `name`。文件里的 `model` 和 `model_reasoning_effort` 优先于口头点名。没有这些文件时，在提示词里点名两个这次账号里真有的模型。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。`[agents].default_subagent_model` 是全体一个默认，拉不开两个审查者。profile 是整次进程的覆盖，不是每个审查者一个。未核实：给单个子智能体选 profile。
+
+提示词里的「不要改文件」不会变成单独的只读沙箱。文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
+### WorkBuddy
+
+`Agent`，`subagent_type: "general-purpose"`。能拉开差异时一个 `"reasoning"`、一个 `"lite"`。没有 `readonly`，在提示词里禁止写文件。不要填 Cursor 的模型名。
+
+### Claude Code
+
+`Agent`，`subagent_type: "general-purpose"`。`model` 用 `opus` 和 `sonnet`，或两个完整 ID。不写或写 `inherit` 就跟父级。需要 MCP 时不要改用会丢掉 MCP 的 `Explore`。
+
+### 派不出子智能体
+
+在主对话里自己审两遍，第二遍换一种角度。软件支持的话，第二遍换一个更强的模型，并说一句。

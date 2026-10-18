@@ -150,20 +150,42 @@ color: yellow
 
 ## 在不同软件里怎么用
 
-这一套 skill 会在好几个软件里用，正文只写通用说法。下面这张表说明，正文里的通用说法在各个软件里具体对应什么。Cursor 一列是原版的写法。WorkBuddy 的工具名来自以前在 WorkBuddy 里适配的结果。模型配置写到哪，以 [设置s模型](../设置s模型/SKILL.md) 为准，依据是各软件的公开文档。没有文档支撑的格子写「不确定」。
+这一套 skill 会在好几个软件里用，正文只写通用说法。下面这张表说明，正文里的通用说法在各个软件里具体对应什么。Cursor 一列是原版的写法。OpenCode 和 Codex 两列按各自当前的官方文档写，链接在格子里。WorkBuddy 的工具名来自以前在 WorkBuddy 里适配的结果。Claude Code 是短兜底。模型配置写到哪，以 [设置s模型](../设置s模型/SKILL.md) 为准。没有文档支撑的格子写「不确定」。和官方工具页不一致、只在 issue 里出现的做法，标「未核实」。
 
 | 正文里的说法 | Cursor（原版） | WorkBuddy | Claude Code | Codex | OpenCode |
 |---|---|---|---|---|---|
-| 派一个子智能体 | `Task` 工具 | `Agent` 工具（`TaskCreate` 是待办清单，不是派子智能体，别混用） | `Agent` 工具（旧版叫 `Task`，现在 `Task` 仍可当别名用） | 直接用话让它派子智能体（“spawn”），它内部有派出、等待、发消息、关闭这几个工具 | 不确定具体工具名。派不了就在主对话里按顺序做 |
-| 能写文件的通用类型 | 能写文件的通用子智能体。本插件没有附带 `poteto-agent`。本机如果恰好有这个类型可以用；没有就用通用类型，并在提示词里要求先读本 SKILL.md | `subagent_type: "general-purpose"` | `subagent_type: "general-purpose"` | 不确定，按本软件实际工具来 | 不确定，按本软件实际工具来 |
-| 只读探索 | 同一个 `Task` 加 `readonly: true`（会去掉 MCP 工具） | 没有 `readonly` 参数，改派 `Explore`（只读探索）或 `Plan`（只读规划） | 派 `Explore`（只读探索）或 `Plan`（只读规划） | 不确定，按本软件实际工具来 | 不确定，按本软件实际工具来 |
-| 向用户提问的工具 | `AskQuestion` | `AskUserQuestion` | `AskUserQuestion` | `request_user_input`（只有主对话能用，子智能体不能问） | 不确定。没有就在对话里直接问 |
-| 后台运行和取结果 | `run_in_background: true`；做完结果回到主对话 | `run_in_background: true`；取结果用 `TaskOutput` | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 | 派出后用“等待”工具收结果 | 不确定。没有就等它返回，或过一会儿再看 |
-| 指定模型 | `model` 写具体模型名。写代码和 `swarm workers` 在这些名字确实可用时用 `grok-4.7-xhigh-fast`，文字、判断和最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级。这两个名字不要拿到别的软件里用 | 没有具体模型名可填。省略 `model` 就继承父级；要拉开差异时，交替用 `"lite"`（快、省）和 `"reasoning"`（推理强） | `model` 写别名 `sonnet`、`opus`、`haiku`，或完整模型 ID；不写或写 `inherit` 就继承父级 | 在自定义子智能体的配置里设模型。这一轮能不能单独换，不确定。不能就省略 | 智能体配置里可以设模型。单次派出能不能换，不确定。不能就省略 |
-| s 模型规则（`/设置s模型`） | `~/.cursor/rules/s-models.mdc`，`alwaysApply: true` | `~/.codebuddy/rules/s-models.md`（读不到再试同名 `.mdc`）。不要写 Cursor 的目录 | `~/.claude/rules/s-models.md` | `~/.codex/AGENTS.md` 里标记的那一段；有 `AGENTS.override.md` 就改那个 | `~/.config/opencode/AGENTS.md` 里标记的那一段。V2 不认 `CLAUDE.md` |
-| 子智能体在哪里跑 | `environment: "cloud"` 放到云端；云端状态在 Cursor 的后台面板看 | 没有这个参数，全在本机跑 | 不确定，默认当作全在本机跑 | 不确定，默认当作全在本机跑 | 不确定，默认当作全在本机跑 |
+| 派一个子智能体 | `Task` 工具 | `Agent` 工具（`TaskCreate` 是待办清单，不是派子智能体，别混用） | `Agent` 工具（旧版叫 `Task`，现在 `Task` 仍可当别名用） | 用话派。当前版本默认开启。直接说 “spawn two agents”、“delegate this work in parallel” 或 “use one agent per point”，并写明等齐再汇总。CLI 用 `/subagents` 看线程。IDE 有后台面板时，面板在输入框上方。也听从 `AGENTS.md` 和 skill 里要求分派的句子。[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) | `subagent` 工具。传入 agent ID、短 `description`、完整 `prompt`。只能派 `mode: subagent` 的智能体。默认嵌套一层。[Tools](https://opencode.ai/v2/docs/tools) |
+| 能写文件的通用类型 | `subagent_type: generalPurpose`。本插件没有附带 `poteto-agent`。本机如果恰好有这个类型可以用；没有就用 `generalPurpose`，并在提示词里要求先读本 SKILL.md | `subagent_type: "general-purpose"` | `subagent_type: "general-purpose"` | 内置 `worker`（实现和修复）。要固定模型就写 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录）。必填 `name`、`description`、`developer_instructions`。同名盖过内置。自定义智能体继承父级的权限、provider 和 MCP，不能改沙箱 | 内置 `general`（工具面宽，不能再派子智能体）。要固定模型就写 `~/.config/opencode/agents/<name>.md`，`mode: subagent`。漏写 `mode` 时新智能体默认是 `primary`，派不出去。[Agents](https://opencode.ai/v2/docs/agents/) |
+| 只读探索 | 同一个 `Task` 加 `readonly: true`（会去掉 MCP 工具） | 没有 `readonly` 参数，改派 `Explore`（只读探索）或 `Plan`（只读规划） | 派 `Explore`（只读探索）或 `Plan`（只读规划） | 内置 `explorer`。提示词里可以要求不改文件。文档写明这不会变成单独的只读沙箱，子智能体继承父级这一轮的沙箱和审批 | 内置 `explore`（搜索和读，不改文件）。自定义智能体可以在 `permissions` 里对 `edit` 和 `shell` 设 `effect: deny`。需要 MCP 时用 `general`，不要用 `explore` 代替。未核实：`explore` 能不能调用 MCP |
+| 向用户提问的工具 | `AskQuestion` | `AskUserQuestion` | `AskUserQuestion` | `request_user_input`（只有主对话能用，子智能体不能问） | `question` 工具。每个问题有短标题、提示和选项，总有自由输入。[Tools](https://opencode.ai/v2/docs/tools) |
+| 后台运行和取结果 | `run_in_background: true`；做完结果回到主对话 | `run_in_background: true`；取结果用 `TaskOutput` | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 | 提示词里写 “Wait for all, then summarize”。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`），不写时由 Codex 自己选默认。没有文档化的单独取结果工具名 | `subagent` 的 `background: true` 立刻返回，做完通知父级。用返回的 `sessionID` 继续同一个子会话。命令文件可以写 `subagent: true`，父级保持自己的模型和智能体。[Commands](https://opencode.ai/v2/docs/commands) |
+| 指定模型 | `model` 写具体模型名。写代码和 `swarm workers` 在这些名字确实可用时用 `grok-4.7-xhigh-fast`，文字、判断和最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级。这两个名字不要拿到别的软件里用 | 没有具体模型名可填。省略 `model` 就继承父级；要拉开差异时，交替用 `"lite"`（快、省）和 `"reasoning"`（推理强） | `model` 写别名 `sonnet`、`opus`、`haiku`，或完整模型 ID；不写或写 `inherit` 就继承父级 | 见下面「Codex 怎么指定模型」。不要把 Cursor 的模型名写进来 | 见下面「OpenCode 怎么指定模型」。不要把 Cursor 的模型名写进来 |
+| s 模型规则（`/设置s模型`） | `~/.cursor/rules/s-models.mdc`，`alwaysApply: true`。frontmatter 的 description 是 `s per-role model choices (overrides skill defaults)` | `~/.codebuddy/rules/s-models.md`（读不到再试同名 `.mdc`）。不要写 Cursor 的目录 | `~/.claude/rules/s-models.md` | `~/.codex/AGENTS.md` 里标记的那一段；有 `AGENTS.override.md` 就改那个。单独模型再写 `~/.codex/agents/s-<角色>.toml` | `~/.config/opencode/AGENTS.md` 里标记的那一段。V2 不认 `CLAUDE.md`。单独模型再写 `~/.config/opencode/agents/s-<角色>.md` |
+| 子智能体在哪里跑 | `environment: "cloud"` 放到云端；从非默认的已推送分支开始用 `cloud_base_branch`。需要用户电脑上的文件、界面或登录态时用 `environment: "local"`。云端状态在 Cursor 的后台面板看 | 没有这个参数，全在本机跑 | 不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里 | 子智能体文档没有 `environment` 或 `cloud_base_branch`。本地 Codex 跟父级同一套沙箱，在本机跑。ChatGPT Work 是另一套托管环境，不要套过来。从别的分支开始：把 SHA 写进提示词 | 工具页没有云端参数，`subagent` 开的是本机子会话。从别的分支开始：把 SHA 写进提示词。`worktree_create` 再 `session_move` 是把会话挪到 worktree，不是放到另一台机器 |
 | 让主对话定时醒来 | Cursor 自带的 `/loop` 命令。本插件不附带它 | 不确定。没有就用一个后台盯梢的子智能体，或自己过一会儿再看 | 不确定，按本软件实际命令来。没有就同样用后台盯梢 | 同左 | 同左 |
 | 写 SKILL.md | 软件如果自带 `create-skill` 就用它。没有就自己写：一个目录里的 `SKILL.md`，YAML 里要有 `name` 和 `description`，再用 **清理AI腔** 过文字 | 自己写。个人 skill 的固定目录这里不确定，先放在仓库的 `skills/<名字>/SKILL.md`，并告诉用户怎么让 WorkBuddy 加载 | 自己写。个人 skill 可以放在 `~/.claude/skills/<名字>/SKILL.md`（官方文档有这个目录） | 自己写。个人 skill 的固定目录这里不确定，先放在仓库的 `skills/<名字>/SKILL.md` | 同 Codex。不要假设写进某个家目录就会自动生效 |
+
+### Codex 怎么指定模型
+
+文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)。
+
+派出时在提示词里点名模型和推理档位，例如 “Spawn one subagent using model \<模型\> with model_reasoning_effort \<档位\>”。模型名用这次账号里真有的。文档举例是 `gpt-6.1-sol`（重活）和 `gpt-6-luna`（快、窄），账号没有就不要写。档位只有该模型支持才能写：`ultra`、`max`、`xhigh`、`high`、`medium`、`low`。文档建议 GPT-6 Luna 从 `high` 起，GPT-6 Astra 从 `low` 起。
+
+自定义文件 `~/.codex/agents/<name>.toml` 里如果写了 `model` 或 `model_reasoning_effort`，文件优先。文件应用前，每个字段先按「这次派出时点名的值 → `[agents]` 的对应默认 → 父级」解析。文件只写 `model`、没写推理档位时，会保留刚才解析到的档位；模型不支持那个档位，就要在文件里把 `model_reasoning_effort` 一起写上。两个字段都没配，子智能体继承父级。
+
+`~/.codex/config.toml` 的 `[agents]` 里，`default_subagent_model` 和 `default_subagent_reasoning_effort` 是全体一个默认，拉不开多个角色。`agents.enabled` 默认 `true`。
+
+profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/config.toml`，再盖上 `~/.codex/<name>.config.toml` 的顶层键。Codex 0.134.0 起不再读 `[profiles.<name>]`，也不再支持顶层 `profile = "..."`。未核实：能不能给一个被派的子智能体单独选 profile。文档没有这么写，不要这么做。
+
+### OpenCode 怎么指定模型
+
+文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)、[Commands](https://opencode.ai/v2/docs/commands)、[从 V1 迁移](https://opencode.ai/v2/docs/migrate-v1/)。
+
+把模型写在智能体的 `model` 字段，格式 `provider/model`，档位接在 `#` 后面，例如 `anthropic/claude-sonnet-4-5#high`。没写 `model` 的子智能体继承父会话的模型。命令的优先级是：命令自己的 `model`，否则所选智能体的 `model`，否则当前会话的模型。
+
+官方工具页没有给 `subagent` 调用写 `model` 参数。未核实：调用时再传 `model`。维护者在 [issue 6651](https://github.com/anomalyco/opencode/issues/6651)（2026-10-01，关单，称 [#49194](https://github.com/anomalyco/opencode/pull/49194) 已加上）和仍开放的 [issue 51071](https://github.com/anomalyco/opencode/issues/51071) 里写了可选参数，优先级是调用参数、然后智能体配置、然后父会话。按工具页来：不要传这个参数，用 [设置s模型](../设置s模型/SKILL.md) 写的 `s-<角色>.md` 钉住模型。
+
+新文件用 V2 字段。不要新写单数 `agent`、分开的 `variant`、`prompt`、`permission`、`tools`、`disable`、`maxSteps`。
 
 几条总规则：
 

@@ -33,3 +33,13 @@ disable-model-invocation: true
 相邻的功能或工单不要写进来，除非它卡住了这一个。当小结和线索行超过一屏时，先删细节，再删线索。用 **清理AI腔** skill 过一遍简报的文字，聊天记录里的发现用 UUID 引用，共享记录里的发现用它的来源引用（PR 编号、工单 ID、聊天永久链接、错误跟踪系统里的问题），在任何公开输出之前把私密的上下文清理掉。
 
 **回复：** 按上面的约定写的简报。
+
+## 在不同软件里怎么用
+
+第 3 步的挖掘子智能体用较快、较便宜的写代码模型，并行，只读。第 4 步的来源调查沿用 [代码为什么这样](../代码为什么这样/SKILL.md) 文末的派法。
+
+Cursor：每个切片一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`model` 用 `how explorer` 那一档。没有配置、并且 `grok-4.7-xhigh-fast` 这次可用时，用这个名字。
+
+OpenCode：每个切片一次 `subagent`，`background: true`，用 `s-how-explorer` 或内置 `explore`。Codex：提示词里 “Spawn one subagent per slice, use the fast model \<名字\>, wait for all”。模型名用这次账号里真有的，文档举例 `gpt-6-luna` 只在账号有它时才用。
+
+WorkBuddy 用 `Explore`，能选的话用 `"lite"`。Claude Code 用 `Explore`，`model` 用 `haiku` 或 `sonnet`。只有一两次对话时不派，这和第 3 步一样。

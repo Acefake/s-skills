@@ -104,4 +104,6 @@ disable-model-invocation: true
 
 ## 在不同软件里怎么用
 
-提问工具和「写 SKILL.md」那一行，以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。Cursor 的 skill 目录是 `.cursor/skills/` 和 `~/.cursor/skills/`。Claude Code 是 `.claude/skills/` 和 `~/.claude/skills/`。WorkBuddy、Codex、OpenCode 的个人 skill 目录这里不确定，新文件先放在仓库的 `skills/<代号>-mode/SKILL.md`。本插件没有 `create-skill`，也没有 `unslop`；文字用 **清理AI腔**。
+提问工具和「写 SKILL.md」那一行，以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。挖掘时的并行子智能体也按那张表里 Cursor、OpenCode、Codex 的派法：Cursor 用 `Task`、`subagent_type: generalPurpose`、`readonly: true`，模型用较快的写代码模型（`grok-4.7-xhigh-fast` 这次可用才用这个名字）；OpenCode 用 `subagent` 加 `background: true`，内置 `explore` 或 `s-how-explorer`；Codex 用话派，点名一个这次账号里真有的较快模型，等齐再汇总。WorkBuddy 用 `Explore`，Claude Code 用 `Explore`。
+
+Cursor 的 skill 目录是 `.cursor/skills/` 和 `~/.cursor/skills/`。Claude Code 是 `.claude/skills/` 和 `~/.claude/skills/`。WorkBuddy、Codex、OpenCode 的个人 skill 目录这里不确定，新文件先放在仓库的 `skills/<代号>-mode/SKILL.md`。本插件没有 `create-skill`，也没有 `unslop`；文字用 **清理AI腔**。

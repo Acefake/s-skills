@@ -80,4 +80,26 @@ Arena 会返回一份综合好的设计包。它的综合决定，用来填写�
 
 ## 在不同软件里怎么用
 
-工具名和模型差异以 [poteto工作模式](../poteto工作模式/SKILL.md) 文末的表为准。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。这个 skill 自己的角色行是 `architect runners`，用来代替竞技场的 `arena runners`。派不出子智能体时，在主对话里自己写两份结构不同的草图，再按阶段 B 的标准选一份。
+这个 skill 把 [多方案竞技场](../多方案竞技场/SKILL.md) 的派法拿来画草图。角色行换成 `architect runners`，代替 `arena runners`。拒绝规则、后台、只读评审，都按竞技场文末同一软件的那一节。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。
+
+### Cursor（原版参数）
+
+没有 `architect runners` 时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。别名条目和被拒绝的条目，按竞技场 Cursor 一节的系列规则处理：`claude-*` 一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 一个系列；被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`；找不到系列就用 `claude-opus-5-5-xhigh`。
+
+参赛者是 `Task`，`run_in_background: true`，`subagent_type: generalPurpose`，`model` 为该条目。
+
+### OpenCode
+
+agent ID 用 `s-architect-runners-1`、`s-architect-runners-2`，`subagent` 加 `background: true`。没有这些文件时用内置 `general`，并说明继承了父级模型。文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
+
+### Codex
+
+提示词里点名 `s-architect-runners-1` 和 `s-architect-runners-2`，或点名两个这次账号里真有的模型，写明等齐再汇总。文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
+### WorkBuddy 和 Claude Code
+
+WorkBuddy 能拉开差异时用 `"lite"` 和 `"reasoning"`。Claude Code 用 `opus` 和 `sonnet`，或完整 ID。两边都用能写文件的通用类型，后台运行。不要填 Cursor 的模型名。
+
+### 派不出子智能体
+
+在主对话里自己写两份结构不同的草图，再按阶段 B 的标准选一份。
