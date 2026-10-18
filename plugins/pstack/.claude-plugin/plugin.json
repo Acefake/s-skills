@@ -1,0 +1,17 @@
+{
+  "name": "pstack",
+  "version": "1.0.0",
+  "description": "pstack 的 54 个中文技能，包括做事原则、工作流程和 TypeScript 写法。原作者 Lauren Tan，许可证 MIT。",
+  "author": {
+    "name": "S",
+    "url": "https://github.com/Acefake"
+  },
+  "homepage": "https://github.com/Acefake/s-skills",
+  "repository": "https://github.com/Acefake/s-skills",
+  "keywords": [
+    "pstack",
+    "chinese",
+    "skills"
+  ],
+  "license": "MIT"
+}

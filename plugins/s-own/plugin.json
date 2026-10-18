@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "s-own",
+  "version": "1.0.0",
+  "description": "S 自己写的 5 个技能。正文保持英文，没有改过。备份里没有单独的许可证文件。",
+  "author": {
+    "name": "S",
+    "url": "https://github.com/Acefake"
+  },
+  "homepage": "https://github.com/Acefake/s-skills",
+  "repository": "https://github.com/Acefake/s-skills",
+  "keywords": [
+    "personal",
+    "skills"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "S 自己的技能",
+        "shortDescription": "S 自己的 5 个技能，正文是英文。",
+        "longDescription": "S 自己写的 5 个技能。正文保持英文，没有改过。备份里没有单独的许可证文件。",
+        "developerName": "S",
+        "category": "Productivity",
+        "websiteURL": "https://github.com/Acefake/s-skills"
+      }
+    }
+  }
+}

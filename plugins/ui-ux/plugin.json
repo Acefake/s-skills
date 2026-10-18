@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ui-ux",
+  "version": "1.0.0",
+  "description": "18 个界面设计中文技能，来自 impeccable、ui-ux-pro-max、Vercel 网页设计规范和 Emil Kowalski。impeccable 是 Apache 2.0，其余是 MIT。",
+  "author": {
+    "name": "S",
+    "url": "https://github.com/Acefake"
+  },
+  "homepage": "https://github.com/Acefake/s-skills",
+  "repository": "https://github.com/Acefake/s-skills",
+  "keywords": [
+    "ui",
+    "ux",
+    "design",
+    "chinese",
+    "skills"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "界面设计中文技能",
+        "shortDescription": "18 个界面设计中文技能，含 MIT 和 Apache 2.0。",
+        "longDescription": "18 个界面设计中文技能，来自 impeccable、ui-ux-pro-max、Vercel 网页设计规范和 Emil Kowalski。impeccable 是 Apache 2.0，其余是 MIT。",
+        "developerName": "S",
+        "category": "Productivity",
+        "websiteURL": "https://github.com/Acefake/s-skills"
+      }
+    }
+  },
+  "license": "MIT AND Apache-2.0"
+}

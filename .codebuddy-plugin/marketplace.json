@@ -1,0 +1,40 @@
+{
+  "name": "s-skills",
+  "version": "1.0.0",
+  "description": "S 的中文 AI 技能。每个插件是一组翻译好的技能，技能文件在各应用之间共用一份。",
+  "owner": {
+    "name": "S"
+  },
+  "plugins": [
+    {
+      "name": "pstack",
+      "source": "./plugins/pstack",
+      "description": "pstack 的 54 个中文技能，包括做事原则、工作流程和 TypeScript 写法。原作者 Lauren Tan，许可证 MIT。"
+    },
+    {
+      "name": "compound-engineering",
+      "source": "./plugins/compound-engineering",
+      "description": "Compound Engineering 的 15 个中文技能，包括做计划、查 bug、提交和审查。原作者 Kieran Klaassen 与 Trevin Chow，许可证 MIT。"
+    },
+    {
+      "name": "superpowers",
+      "source": "./plugins/superpowers",
+      "description": "Superpowers 译出的 1 个中文技能「完成前验证」。原作者 Jesse Vincent，许可证 MIT。"
+    },
+    {
+      "name": "ui-ux",
+      "source": "./plugins/ui-ux",
+      "description": "18 个界面设计中文技能，来自 impeccable、ui-ux-pro-max、Vercel 网页设计规范和 Emil Kowalski。impeccable 是 Apache 2.0，其余是 MIT。"
+    },
+    {
+      "name": "figma",
+      "source": "./plugins/figma",
+      "description": "Figma 官方的 16 个中文技能。上游仓库没有许可证文件。S 知道这一点，仍然放进这个公开仓库，只给自己用。"
+    },
+    {
+      "name": "s-own",
+      "source": "./plugins/s-own",
+      "description": "S 自己写的 5 个技能。正文保持英文，没有改过。备份里没有单独的许可证文件。"
+    }
+  ]
+}
