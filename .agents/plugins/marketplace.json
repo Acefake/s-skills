@@ -16,6 +16,19 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "s-ui",
+      "description": "s-ui 的 17 个中文技能：界面设计、动画和选前端库。不含 Figma。",
+      "source": {
+        "source": "local",
+        "path": "./plugins/s-ui"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }

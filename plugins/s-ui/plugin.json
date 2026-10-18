@@ -1,0 +1,31 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "s-ui",
+  "version": "1.0.0",
+  "description": "s-ui 的 17 个中文技能：界面设计、动画和选前端库。不含 Figma。",
+  "author": {
+    "name": "S",
+    "url": "https://github.com/Acefake"
+  },
+  "homepage": "https://github.com/Acefake/s-skills",
+  "repository": "https://github.com/Acefake/s-skills",
+  "keywords": [
+    "s-ui",
+    "chinese",
+    "design",
+    "animation"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "s-ui 设计与动画",
+        "shortDescription": "17 个中文技能：界面设计、动画和选前端库。",
+        "longDescription": "s-ui 的 17 个中文技能：界面设计、动画和选前端库。不含 Figma。",
+        "developerName": "S",
+        "category": "Productivity",
+        "websiteURL": "https://github.com/Acefake/s-skills"
+      }
+    }
+  },
+  "license": "Apache-2.0 AND MIT"
+}
