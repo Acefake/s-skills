@@ -2,9 +2,9 @@
   "schema": 1,
   "note": "contentSha256 covers every file in the plugin except the four manifest JSON files. Bump version when it changes.",
   "plugins": {
-    "pstack": {
-      "version": "1.0.0",
-      "contentSha256": "544adcc2ff5ed7dcae4f97ae6ec6592ad8e1d2a8b6060f4e75a227cd63f38817"
+    "s": {
+      "version": "1.1.0",
+      "contentSha256": "2dc2fa496b6bbdada28c38c5466dcd15f02701c72847d40b5ec5bb3fb542d8a1"
     }
   }
 }

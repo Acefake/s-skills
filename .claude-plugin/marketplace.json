@@ -1,15 +1,15 @@
 {
   "name": "s-skills",
   "version": "1.0.0",
-  "description": "S 的中文 AI 技能。现在只有 pstack 这一个插件，技能文件在各应用之间共用一份。",
+  "description": "S 的中文 AI 技能。现在只有 s 这一个插件，技能文件在各应用之间共用一份。",
   "owner": {
     "name": "S"
   },
   "plugins": [
     {
-      "name": "pstack",
-      "source": "./plugins/pstack",
-      "description": "pstack 的 54 个中文技能，包括做事原则、工作流程和 TypeScript 写法。原作者 Lauren Tan，许可证 MIT。"
+      "name": "s",
+      "source": "./plugins/s",
+      "description": "s 的 54 个中文技能，包括做事原则、工作流程和 TypeScript 写法。"
     }
   ]
 }
