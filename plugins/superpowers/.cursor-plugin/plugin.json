@@ -1,0 +1,18 @@
+{
+  "name": "superpowers",
+  "displayName": "Superpowers 中文技能",
+  "description": "Superpowers 译出的 1 个中文技能「完成前验证」。原作者 Jesse Vincent，许可证 MIT。",
+  "version": "1.0.0",
+  "author": {
+    "name": "S"
+  },
+  "homepage": "https://github.com/Acefake/s-skills",
+  "repository": "https://github.com/Acefake/s-skills",
+  "keywords": [
+    "superpowers",
+    "chinese",
+    "skills"
+  ],
+  "category": "Skills",
+  "license": "MIT"
+}

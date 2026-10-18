@@ -1,0 +1,16 @@
+{
+  "name": "figma",
+  "version": "1.0.0",
+  "description": "Figma 官方的 16 个中文技能。上游仓库没有许可证文件。S 知道这一点，仍然放进这个公开仓库，只给自己用。",
+  "author": {
+    "name": "S",
+    "url": "https://github.com/Acefake"
+  },
+  "homepage": "https://github.com/Acefake/s-skills",
+  "repository": "https://github.com/Acefake/s-skills",
+  "keywords": [
+    "figma",
+    "chinese",
+    "skills"
+  ]
+}
