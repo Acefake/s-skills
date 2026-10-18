@@ -4,7 +4,11 @@
   "plugins": {
     "s": {
       "version": "1.1.3",
-      "contentSha256": "ce753ccf0cb63529b1e520311715523cdbecce65853026f147bba4cb1811f167"
+      "contentSha256": "b5ee453ba771a9a3f4f2bd3c1c9dfafa38ab99860173258f2607464a52a8a550"
+    },
+    "s-ui": {
+      "version": "1.0.0",
+      "contentSha256": "12dd99dd17e13df7cfae9512a07c3884c9ec7025f99629e1167ae04e9d6e5926"
     }
   }
 }
