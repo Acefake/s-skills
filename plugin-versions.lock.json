@@ -5,26 +5,6 @@
     "pstack": {
       "version": "1.0.0",
       "contentSha256": "544adcc2ff5ed7dcae4f97ae6ec6592ad8e1d2a8b6060f4e75a227cd63f38817"
-    },
-    "compound-engineering": {
-      "version": "1.0.0",
-      "contentSha256": "88accfb61ede4480e1f2c5cc995151e26b62f59b5e5b1f8a0fcfc2a22d7e1de1"
-    },
-    "superpowers": {
-      "version": "1.0.0",
-      "contentSha256": "c62479121f3732b035075fb3cf60499ad44b33bbf8b2e37a08783482f2d32c1e"
-    },
-    "ui-ux": {
-      "version": "1.0.0",
-      "contentSha256": "775e67082cdca057b8a0616fed74405ad8bc55f8701bb059f30cf4d772fac9bd"
-    },
-    "figma": {
-      "version": "1.0.0",
-      "contentSha256": "7ce1d98f9fd0d1362d01055aa5b8091ca2a120eae884e2ba6e3882e175cd6855"
-    },
-    "s-own": {
-      "version": "1.0.0",
-      "contentSha256": "944b6e2168a306ab0c12d8805dfc11b3d0e7e541a0da10dcf530538922887cce"
     }
   }
 }

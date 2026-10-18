@@ -26,7 +26,6 @@ from marketplace_lib import (
     KEBAB_RE,
     LOCK_PATH,
     MARKETPLACE_NAME,
-    OWN_SKILL_NAMES,
     PLUGIN_ORDER,
     ROOT,
     SEMVER_RE,
@@ -278,20 +277,12 @@ def check_skills(problems: Problems) -> None:
             frontmatter = text[3:frontmatter_end] if frontmatter_end != -1 else ""
             if "description:" not in frontmatter:
                 problems.add(f"{name}/{skill.name}: SKILL.md is missing frontmatter description")
-            if name == "s-own":
-                expected_name = OWN_SKILL_NAMES.get(skill.name)
-                if skill_name != expected_name:
-                    problems.add(
-                        f"s-own/{skill.name}: frontmatter name is {skill_name!r}, "
-                        f"backup name is {expected_name!r}"
-                    )
-            else:
-                if skill_name != skill.name:
-                    problems.add(
-                        f"{name}/{skill.name}: frontmatter name is {skill_name!r}"
-                    )
-                if "英文名备份：" not in text:
-                    problems.add(f"{name}/{skill.name}: missing 英文名备份 line")
+            if skill_name != skill.name:
+                problems.add(
+                    f"{name}/{skill.name}: frontmatter name is {skill_name!r}"
+                )
+            if "英文名备份：" not in text:
+                problems.add(f"{name}/{skill.name}: missing 英文名备份 line")
             previous = seen_names.get(skill_name)
             if previous:
                 problems.add(f"duplicate skill name {skill_name!r} in {previous} and {name}/{skill.name}")
@@ -303,8 +294,6 @@ def check_skills(problems: Problems) -> None:
                         f"{name}/{skill.name} points at {license_name}, "
                         "which is not in the skill parent folder"
                     )
-        if name == "ui-ux" and not (skills_root / "NOTICE-impeccable.md").is_file():
-            problems.add("ui-ux is missing NOTICE-impeccable.md next to its skills")
 
 
 def main() -> int:
