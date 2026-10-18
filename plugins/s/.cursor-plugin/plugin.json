@@ -1,0 +1,20 @@
+{
+  "name": "s",
+  "displayName": "s 中文技能",
+  "description": "s 的 61 个中文技能，包括做事原则、工作流程和 TypeScript 写法。",
+  "version": "1.1.3",
+  "author": {
+    "name": "S"
+  },
+  "homepage": "https://github.com/Acefake/s-skills",
+  "repository": "https://github.com/Acefake/s-skills",
+  "keywords": [
+    "s",
+    "chinese",
+    "skills"
+  ],
+  "category": "Skills",
+  "license": "MIT",
+  "skills": "./skills/",
+  "agents": "./agents/"
+}

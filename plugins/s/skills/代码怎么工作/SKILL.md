@@ -1,0 +1,72 @@
+---
+name: 代码怎么工作
+description: "用于“X 是怎么工作的”、在改东西之前先走读代码，以及关于放在哪里 / 归谁管 / 分层的问题（“这个应该放在哪”、“哪个包负责这个”、“这一层对不对”）。讲解子系统的架构、运行时的流程，帮新人建立心智模型。问动机请用 why。"
+disable-model-invocation: true
+---
+
+# 怎么工作（How）
+
+探索代码库，回答“X 是怎么工作的？”这类问题。给出的架构讲解，要达到一位资深工程师刚接手一个子系统时所需要的程度：足够建立一个能用的心智模型，但又不能多到读起来像带注释的源代码。
+
+每次派出的都是一个子智能体。探索用只读类型；只读会丢掉你需要的工具时，改用能看代码、但提示词里禁止它写文件的类型。探索者读 s 模型配置里的 `how explorer`，讲解者读 `how explainer`。路径见文末。没有这一行，探索用较快的写代码模型，讲解用判断力最强的模型。软件不能指定模型，或值是 `auto` / `inherit-parent`，就省略模型。软件拒绝了某个名字，就换同一系列里它接受的最接近的名字，并说一句。按 **poteto工作模式** skill 里 “子智能体” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。Cursor 的 `grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只在 Cursor 上、并且这次确实可用时才当作这两个角色的默认。
+
+## 1. 评估复杂度
+
+如果范围不明确，就说出你的理解，然后去探索。用户可以再纠正方向。
+
+- **简单**（单个模块、一个小工具函数、一个很窄的问题，比如“函数 X 是怎么工作的”）：不派探索者。派出一个讲解者，一次完成探索和讲解，提示词用 `references/explainer-prompt.md` 组装，去掉“探索者发现”那一节。跳到第 4 步。
+- **复杂**（跨多个文件或服务的子系统、一个横跨多处的功能、完整的架构概览）：进入第 2 步。
+
+拿不准的时候，走简单路线。
+
+## 2. 探索（只用于复杂情况）
+
+把问题拆成 2 到 4 个角度，每个角度是子系统中不同的一块。在一条消息里派出所有探索者，每个都用 `references/explorer-prompt.md`，并填好它负责的角度。
+
+## 3. 综合（只用于复杂情况）
+
+所有探索者都返回之后，派出一个讲解者，用 `references/explainer-prompt.md`，并填入每个探索者的发现。
+
+## 4. 呈现
+
+把讲解者的输出呈现出来。为了清楚，或者根据对话补充一点上下文，做些轻微的修改没问题。不要大幅重写。
+
+## 输出格式
+
+讲解使用 `references/explainer-prompt.md` 里规定的几个部分，不适用的就去掉：Overview（概览）、Key Concepts（关键概念）、How It Works（怎么工作）、Where Things Live（东西在哪里）、Gotchas（容易踩的坑）。
+
+## 在不同软件里怎么用
+
+探索读 `how explorer`，讲解读 `how explainer`。配置路径以 [设置s模型](../设置s模型/SKILL.md) 为准。复杂情况先并行派探索者，等齐再派一个讲解者。
+
+### Cursor（原版参数）
+
+每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: true`。探索者的 `model` 是 `how explorer`，没有这行时用 `grok-4.7-xhigh-fast`。讲解者的 `model` 是 `how explainer`，没有这行时用 `claude-opus-5-5-xhigh`。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。
+
+`Task` 拒绝了某个名字，就改用该角色的默认并说一句。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。`readonly: true` 会去掉 MCP。需要 MCP 时不要用这个只读参数，改成提示词里禁止写文件。
+
+### OpenCode
+
+探索者用 `s-how-explorer`，讲解者用 `s-how-explainer`。没有这些文件时，探索用内置 `explore`，讲解也用 `explore`（讲解只产出文字）。复杂情况能并行就在一条消息里多次调用 `subagent`，并加 `background: true`，等通知到齐再派讲解者。未核实：一次回复里的多次 `subagent` 是否保证同时跑。官方只写了单次调用可以前台等待，或 `background: true` 后通知父级。
+
+需要 MCP 时不要用 `explore`。未核实：`explore` 能不能调用 MCP。改用 `general` 或自定义智能体，提示词里禁止写文件，并且不要禁 `execute`。不要在调用上传 `model`。
+
+文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
+
+### Codex
+
+探索用内置 `explorer`，或 `s-how-explorer`。讲解用 `s-how-explainer`，或在提示词里点名模型。复杂情况写成：Spawn one explorer subagent per angle. Each uses model \<how explorer\> with model_reasoning_effort \<档位\>. Wait for all, then spawn one explainer on model \<how explainer\>. 没有 toml、也点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
+
+文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+
+### WorkBuddy
+
+探索派 `Explore` 或 `Plan`。讲解用 `Agent`，`subagent_type: "general-purpose"`，提示词里禁止写文件。能拉开差异时探索用 `"lite"`，讲解用 `"reasoning"`。
+
+### Claude Code
+
+探索派 `Explore`。讲解用 `Agent`，`model` 为 `opus` 或完整 ID；探索用 `sonnet` 或 `haiku`。需要 MCP 时不要用 `Explore`。
+
+### 派不出子智能体
+
+在主对话里自己探索再讲解，并说一句没有换模型。

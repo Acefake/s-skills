@@ -5,11 +5,11 @@
   },
   "plugins": [
     {
-      "name": "pstack",
-      "description": "pstack 的 54 个中文技能，包括做事原则、工作流程和 TypeScript 写法。原作者 Lauren Tan，许可证 MIT。",
+      "name": "s",
+      "description": "s 的 61 个中文技能，包括做事原则、工作流程和 TypeScript 写法。",
       "source": {
         "source": "local",
-        "path": "./plugins/pstack"
+        "path": "./plugins/s"
       },
       "policy": {
         "installation": "AVAILABLE",

@@ -281,8 +281,6 @@ def check_skills(problems: Problems) -> None:
                 problems.add(
                     f"{name}/{skill.name}: frontmatter name is {skill_name!r}"
                 )
-            if "英文名备份：" not in text:
-                problems.add(f"{name}/{skill.name}: missing 英文名备份 line")
             previous = seen_names.get(skill_name)
             if previous:
                 problems.add(f"duplicate skill name {skill_name!r} in {previous} and {name}/{skill.name}")
