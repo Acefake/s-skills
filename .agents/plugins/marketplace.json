@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "s",
-      "description": "s 的 78 个中文技能，包括做事原则、工作流程、TypeScript 写法、界面设计和动画。",
+      "description": "s 的 85 个中文技能，包括做事原则、工作流程、TypeScript 写法、界面设计和动画。",
       "source": {
         "source": "local",
         "path": "./plugins/s"

@@ -8,11 +8,11 @@
 
 ## 里面有什么
 
-1 个插件，78 个技能。技能文件只存一份，放在 `plugins/s/skills/`。几个应用的清单都指向这个文件夹，没有为每个应用再复制一份技能。两个子智能体的短文件在 `plugins/s/agents/`。
+1 个插件，85 个技能。技能文件只存一份，放在 `plugins/s/skills/`。几个应用的清单都指向这个文件夹，没有为每个应用再复制一份技能。两个子智能体的短文件在 `plugins/s/agents/`。
 
 | 插件短名 | 数量 | 里面是什么 |
 |---|---|---|
-| `s` | 78 | s 的中文技能：做事原则、工作流程、TypeScript 写法、界面设计和动画 |
+| `s` | 85 | s 的中文技能：做事原则、工作流程、TypeScript 写法、界面设计和动画 |
 
 插件短名是给应用看的，只能用小写英文字母、数字和连字符。技能的名字保持中文。
 
@@ -34,6 +34,10 @@ plugins/s/
   LICENSE-impeccable                 impeccable 的 Apache 2.0 许可证全文
   LICENSE-ui-ux-pro-max              ui-ux-pro-max 的 MIT 许可证全文
   LICENSE-vercel-agent-skills        Vercel agent-skills 的 MIT 说明
+  LICENSE-anthropics-skills          Anthropic frontend-design 的 Apache 2.0 许可证全文
+  LICENSE-pskoett-self-improving-agent  pskoett 这份技能没有许可证的说明
+  LICENSE-shadcn                     shadcn/ui 的 MIT 许可证全文
+  LICENSE-taste-skill                taste-skill 的 MIT 许可证全文
   NOTICE-impeccable.md               impeccable 的第三方说明
   agents/
     专挑注释.md
@@ -50,19 +54,27 @@ plugins/s/
 
 `编写skill` 和 `定时循环` 是按 Cursor 公开文档写的，内置技能原文没有公开，标为自写。没有上游许可证可附。
 
-界面和动画这 17 个技能也在插件 `s` 里，没有 Figma。
+界面、动画和视觉物料这 23 个技能也在插件 `s` 里，没有 Figma。
 
 Emil Kowalski 的 https://github.com/emilkowalski/skills （commit 2d22863，MIT 许可证，版权 © 2026 Emil Kowalski）。许可证全文在 `plugins/s/LICENSE-emilkowalski-skills`。这 14 个技能是：`Emil设计理念`、`Expo动画`、`Sonner用法`、`做动画`、`动画审查`、`动画性能`、`动画改进计划`、`动画术语表`、`手机原生手感`、`找动画机会`、`界面压力测试`、`选前端库`、`苹果式设计`、`多版本原型`。
 
-Next Level Builder 的 https://github.com/nextlevelbuilder/ui-ux-pro-max-skill （`.claude/skills/ui-ux-pro-max`，commit 56ea9cf，MIT 许可证，版权 © 2024 Next Level Builder）。许可证全文在 `plugins/s/LICENSE-ui-ux-pro-max`。技能是 `UIUX知识库`。
+Next Level Builder 的 https://github.com/nextlevelbuilder/ui-ux-pro-max-skill （commit 56ea9cf，MIT 许可证，版权 © 2024 Next Level Builder）。许可证全文在 `plugins/s/LICENSE-ui-ux-pro-max`。`UIUX知识库` 来自 `.claude/skills/ui-ux-pro-max`。这次对照的就是这个提交，数据文件和上游一致，中文说明书没有重译。同一仓库、同一提交里另外收了 `.claude/skills/design`（`全套视觉设计`）和 `.claude/skills/design-system`（`设计系统`）。这两份的 `references/` 仍是英文。上游还有 `brand`、`ui-styling` 等旁边的技能，这次没有单独收。`全套视觉设计` 和 `设计系统` 里写明了：配色和字体查 `UIUX知识库`，shadcn 写法查 `shadcn组件`。
 
 Paul Bakaus 的 https://github.com/pbakaus/impeccable （`cursor-plugin/skills/impeccable`，版本 4.6.0，commit 08d5b47，Apache 2.0，版权 © 2025 Paul Bakaus；插件发布者 Renaissance Geek, Inc.）。许可证全文在 `plugins/s/LICENSE-impeccable`，第三方说明在 `plugins/s/NOTICE-impeccable.md`。技能是 `精致界面设计`。这里的 `SKILL.md` 是中文翻译，内容做了翻译改动。`reference/` 和 `scripts/` 保持原文。
 
-Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-guidelines`，commit 063bee9）。仓库没有单独的 LICENSE 文件，README 写的是 MIT。摘录在 `plugins/s/LICENSE-vercel-agent-skills`。技能是 `网页设计规范`。
+Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-guidelines`，commit 063bee9）。仓库没有单独的 LICENSE 文件，README 写的是 MIT。摘录在 `plugins/s/LICENSE-vercel-agent-skills`。技能是 `网页设计规范`。这次对照的就是这个提交，上游说明书没有新改动，中文没有重译。
+
+pskoett 的 https://github.com/pskoett/self-improving-agent （技能目录 `self-improving-agent/`，commit 6013e81）。skills.sh 上的安装名是 `self-improvement`。2026-10-19 用 skills.sh 的搜索接口核对：名字正好是 `self-improvement` 的，这一条 9723 次安装，是最高的。名字正好是 `self-improving` 的最高只有 232 次（modelscope.cn）。同仓库里另一条 `self-improving-agent` 是 288 次，名字对不上，没有收。仓库没有 LICENSE 文件，`package.json` 里也没有 license 字段。说明在 `plugins/s/LICENSE-pskoett-self-improving-agent`。这份只供 S 个人使用，上游没有给出复制和再分发的许可。技能是 `自我改进`。`references/` 和 `assets/` 仍是英文。它和 `反思并改skill` 不是同一件事：这个把教训记到 `.learnings/`，那个是回头改技能说明书。
+
+Anthropic 的 https://github.com/anthropics/skills （`skills/frontend-design`，commit dbd4588）。这个技能自带的许可证是 Apache 2.0，全文在 `plugins/s/LICENSE-anthropics-skills`。技能是 `有主见的界面`。同一仓库的说明写着：很多技能是开源（Apache 2.0）；`docx`、`pdf`、`pptx`、`xlsx` 是 source-available，可以看源码，不是开源。这次只收了 `frontend-design`，没有收那四个。仓库根目录的 `THIRD_PARTY_NOTICES.md` 是给文档技能里的第三方程序（例如 FFmpeg，GPL）用的。`frontend-design` 只有一份说明书，没有带上那些程序，所以没有复制那份 NOTICE。
+
+Leonxlnx 的 https://github.com/leonxlnx/taste-skill （commit b9ca2fd，MIT 许可证，版权 © 2026 Leonxlnx）。许可证全文在 `plugins/s/LICENSE-taste-skill`。`前端设计品味` 的安装名是 `design-taste-frontend`（目录 `skills/taste-skill`）。`高端视觉设计` 的安装名是 `high-end-visual-design`（目录 `skills/soft-skill`），说明书写了只有被点名才加载。`前端设计品味` 的 `references/`、`library/`、`scripts/` 保持原文。
+
+shadcn 的 https://github.com/shadcn-ui/ui （`skills/shadcn`，commit e316269，MIT 许可证，版权 © 2023 shadcn）。许可证全文在 `plugins/s/LICENSE-shadcn`。技能是 `shadcn组件`。`rules/` 和其他英文说明仍是英文。
 
 ## 中文名对照表
 
-78 个技能，都在插件 `s` 里。调用时用中文名。表里的「英文名」是以前的英文备份，技能文件里已经没有这一行。后加的 7 个没有英文备份，这一列写上游英文名。「原始 skill」是改写前的英文名。标 ⚠️ 的，表示附带参考文件还是英文。
+85 个技能，都在插件 `s` 里。调用时用中文名。表里的「英文名」是以前的英文备份，技能文件里已经没有这一行。没有旧英文备份的，这一列写上游英文名。「原始 skill」是改写前的英文名。标 ⚠️ 的，表示附带参考文件还是英文。
 
 | 中文名 | 英文名 | 原始 skill | 用途 |
 |---|---|---|---|
@@ -98,6 +110,7 @@ Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-gui
 | `专挑注释` | `comment-sicko` | `comment-sicko` | 子智能体。被 `/清理代码注释` 派出去删注释。短文件在 `agents/专挑注释.md`。 |
 | `s助手` | `poteto-agent` | `poteto-agent` | 子智能体。动手前完整读 `poteto工作模式`。短文件在 `agents/s助手.md`。 |
 | `反思并改skill` | `s-reflect` | `reflect` | 用三个审查子智能体回看本次对话，总结出持久有用的经验，经你批准后改进对应的 skill。 |
+| `自我改进` ⚠️ | `self-improvement` | `self-improvement` | 把失败、纠正和过时的知识记到项目的 `.learnings/`。和 `反思并改skill` 不同，这里不改技能说明书。`references/` 仍是英文。上游没有许可证，只供个人用。 |
 | `代码怎么工作` | `s-how` | `how` | 探索代码库，讲清“X 是怎么工作的”、新代码该放在哪里。 |
 | `代码为什么这样` ⚠️ | `s-why` | `why` | 查 git 历史、工单、文档、聊天、监控等来源，讲清代码为什么是现在这个样子，并标明可信度。 |
 | `回想最近工作` | `s-recall` | `recall` | 从你的聊天记录和共享记录里，重建你最近在某件事上的工作进度，给一份简报。 |
@@ -130,7 +143,9 @@ Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-gui
 
 ### 界面和动画
 
-下面 17 个也在插件 `s` 里。调用时同样用中文名。「英文名」是以前的英文备份，不是另一个插件。
+下面 23 个也在插件 `s` 里。调用时同样用中文名。「英文名」是以前的英文备份，不是另一个插件。后加的 6 个没有旧英文备份，这一列写上游英文名。
+
+这 6 个和原来的 `精致界面设计` 有重叠，都是为了让界面不要看起来像模板。分工：`精致界面设计` 是一整套打磨流程，带命令和检查脚本。`有主见的界面` 短，只管视觉方向。`前端设计品味` 从研究过的方向里抽一套，再用真浏览器查俗套。`高端视觉设计` 只有点名才用，只管留白多、对比柔和的那一套。`设计系统` 管令牌和幻灯片。`全套视觉设计` 管标志、企业视觉识别、横幅、图标和社交图片。`shadcn组件` 管 shadcn 组件怎么装、怎么拼。`网页设计规范` 仍是按网上的规范检查代码。
 
 | 中文名 | 英文名 | 原始 skill | 用途 |
 |---|---|---|---|
@@ -151,6 +166,12 @@ Vercel 的 https://github.com/vercel-labs/agent-skills （`skills/web-design-gui
 | `选前端库` | `s-pick-ui-library` | `pick-ui-library` | 从一份精选清单里为前端任务挑库。要明确调用。 |
 | `苹果式设计` | `s-emil-apple-design` | `apple-design` | 把苹果的界面方法和动效写成网页上的做法。 |
 | `多版本原型` | `s-emil-prototype` | `prototype` | 做几个真正不同的界面版本，用切换器比较后采用。要明确调用。 |
+| `shadcn组件` ⚠️ | `shadcn` | `shadcn` | 按 shadcn 的 CLI 添加、查找和拼组件。`rules/` 仍是英文。 |
+| `全套视觉设计` ⚠️ | `design` | `design` | 标志、企业视觉识别、横幅、图标、社交图片和幻灯片。`references/` 仍是英文。 |
+| `有主见的界面` | `frontend-design` | `frontend-design` | 按这一份需求定配色、字体和版式，避开看起来像模板的默认做法。和 `精致界面设计`、`前端设计品味` 有重叠。 |
+| `前端设计品味` ⚠️ | `design-taste-frontend` | `design-taste-frontend` | 从研究过的方向里抽牌，再用真浏览器检查俗套。`references/` 仍是英文。和 `精致界面设计` 有重叠。 |
+| `高端视觉设计` | `high-end-visual-design` | `high-end-visual-design` | 只有点名才用。留白多、对比柔和、动效有弹簧感。和 `精致界面设计`、`前端设计品味` 有重叠。 |
+| `设计系统` ⚠️ | `design-system` | `design-system` | 三层设计令牌、组件规格，以及按令牌做幻灯片。`references/` 仍是英文。 |
 
 ## 合并进 main 之后怎么装
 
@@ -305,7 +326,7 @@ Cursor 里在对话输入 `/`，搜索技能的中文名。官方文档写的形
 
 Codex 里输入 `@`，选择插件或其中的技能。
 
-OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决定要不要读全文。这 78 个文件没有额外写 OpenCode 专用的开关，所以不一定出现成一条 `/中文名` 命令。直接说出技能的中文名，让它按那份说明书做。
+OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决定要不要读全文。这 85 个文件没有额外写 OpenCode 专用的开关，所以不一定出现成一条 `/中文名` 命令。直接说出技能的中文名，让它按那份说明书做。
 
 ## 中文名能不能被认出来
 
@@ -314,7 +335,7 @@ OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决�
 - **WorkBuddy / CodeBuddy。** 官方文档要求插件短名是英文短横线格式，没有要求技能名必须是英文。调用形式是 `插件短名:技能名`。S 原来的备份说明里写过：中文名可以在 WorkBuddy 里直接用。这次没有在 WorkBuddy 里安装验证。
 - **Claude Code。** 官方文档写：插件里的技能，命令最后一段用说明书里的 `name`，所以形式上会是 `/s:先画架构草图`。个人技能文件夹（`~/.claude/skills/中文名/`）可以保留中文。插件这条路径上有一个已报告的问题：[claude-code#66554](https://github.com/anthropics/claude-code/issues/66554)。从 2.1.94 起，插件技能名里英文、数字、下划线、连字符以外的字符会被换成连字符 `-`。中文每个字都会变成一个 `-`，字数相同的技能会撞成同一个名字，助手按中文名去调用会得到 Unknown skill。例如「一步步教我」和「说人话重讲」都是五个字，会挤成同一个 `s:-----`。个人技能不受这个影响。这个问题我没有在本机的 Claude Code 里复现，只核对了问题报告和当时的改动说明。技能正文因此没有改成英文名。
 - **Cursor。** 官方文档把技能 `name` 写成小写英文加连字符，并且要和文件夹名一致。Cursor 命令行会给不合这个格式的名字打警告（名字超过 64 字、不是小写短横线、名字和文件夹不一致、说明超过 1024 字、正文大约超过 5000 个词）。文档写的是警告，没有写「直接拒绝加载」。中文名会触发「不是小写短横线」和「名字与文件夹不一致」这两类警告。能否在插件里真正跑起来，未实测。
-- **skills 命令。** 发现技能时会读 `.claude-plugin/marketplace.json`，再进入插件的 `skills/`。本地用 skills 命令 1.5.18 对这个仓库目录跑过 `--list`，它列出 78 个技能，中文名都在。装进目录是另一回事：1.5.18 把文件夹名里英文、数字、`.`、`_` 以外的字符换成 `-`，换完是空的就叫 `unnamed-skill`。我用 `npx skills add <本仓库> -y -a cursor` 装进一个临时项目，再跑 `npx skills list`，只剩下 13 个目录。纯中文名的技能都写进同一个 `unnamed-skill`，后写入的盖住前面的。Codex 和 OpenCode 的安装目录这次没有装。
+- **skills 命令。** 发现技能时会读 `.claude-plugin/marketplace.json`，再进入插件的 `skills/`。本地用 skills 命令 1.5.18 对这个仓库目录跑过 `--list`，当时它列出 78 个技能，中文名都在。现在仓库里是 85 个，发现技能的方式没变。装进目录是另一回事：1.5.18 把文件夹名里英文、数字、`.`、`_` 以外的字符换成 `-`，换完是空的就叫 `unnamed-skill`。我用 `npx skills add <本仓库> -y -a cursor` 装进一个临时项目，再跑 `npx skills list`，只剩下 13 个目录。纯中文名的技能都写进同一个 `unnamed-skill`，后写入的盖住前面的。Codex 和 OpenCode 的安装目录这次没有装。
 - **Codex 插件。** 官方示例里的技能名是英文短横线。中文文件夹放进 Codex 插件之后能不能点开，未实测。装不上时，用上面的 skills 命令，目标应用写 `codex`。
 - **OpenCode。** 官方文档只要求 `name` 和 `description`，没有要求英文。它从 `~/.config/opencode/skills/<名字>/SKILL.md` 读取。未实测。
 
@@ -324,7 +345,7 @@ OpenCode 把技能交给内置的 skill 工具，按说明书开头的说明决�
 
 分两条路。
 
-**插件市场（WorkBuddy、Claude Code、Codex 的插件安装）。** 应用把插件复制到本机的一个缓存目录。WorkBuddy 和 Claude Code 的官方文档写明：已经安装的插件，要等它的**版本号**变了，才会换成新的一份。版本号写在每个插件的四份清单里（`plugin.json`、`.cursor-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.codebuddy-plugin/plugin.json`）。`s` 现在是 `1.1.4`。市场目录里故意不再写一遍版本号。官方文档说两处都写的话，以 `plugin.json` 为准，并且校验命令会警告它们不一致。
+**插件市场（WorkBuddy、Claude Code、Codex 的插件安装）。** 应用把插件复制到本机的一个缓存目录。WorkBuddy 和 Claude Code 的官方文档写明：已经安装的插件，要等它的**版本号**变了，才会换成新的一份。版本号写在每个插件的四份清单里（`plugin.json`、`.cursor-plugin/plugin.json`、`.claude-plugin/plugin.json`、`.codebuddy-plugin/plugin.json`）。`s` 现在是 `1.1.5`。市场目录里故意不再写一遍版本号。官方文档说两处都写的话，以 `plugin.json` 为准，并且校验命令会警告它们不一致。
 
 所以：改了某个插件里的技能或许可证之后，要让别人的应用收到，必须把那个插件的版本号加大，再合并。只合并文件、不改版本号，WorkBuddy 和 Claude Code 会继续用旧缓存。
 
@@ -432,6 +453,6 @@ pip install "jsonschema>=4.20"
 python3 scripts/check_marketplace.py
 ```
 
-检查这些事：Cursor 的两份清单符合官方 JSON Schema；Claude Code 和 CodeBuddy 的市场字段符合官方文档里的名字规则和 `./plugins/<插件短名>` 路径；Codex 的市场带有 `source.path`、`policy` 和 `category`；每个插件的四份清单版本号一致；技能内容的指纹和 lock 文件一致；78 个技能的文件夹名和 `name` 一致。
+检查这些事：Cursor 的两份清单符合官方 JSON Schema；Claude Code 和 CodeBuddy 的市场字段符合官方文档里的名字规则和 `./plugins/<插件短名>` 路径；Codex 的市场带有 `source.path`、`policy` 和 `category`；每个插件的四份清单版本号一致；技能内容的指纹和 lock 文件一致；85 个技能的文件夹名和 `name` 一致。
 
 准备这个仓库时还跑过官方命令 `claude plugin validate`（Claude Code 2.1.302）。市场目录和 `s` 都显示 Validation passed。这个命令接受了中文技能名。它检查的是清单格式，不会模拟上面说的「中文被换成连字符」那种运行时行为。Cursor 的清单另外用官方 JSON Schema 校验过。CodeBuddy 自己的 `codebuddy plugin validate` 这次没有跑。`.codebuddy-plugin/` 里的清单和已经通过 Claude 校验的 `.claude-plugin/` 清单内容相同，字段按 CodeBuddy 官方文档填写。

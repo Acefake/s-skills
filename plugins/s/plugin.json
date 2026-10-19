@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "s",
-  "version": "1.1.4",
-  "description": "s 的 78 个中文技能，包括做事原则、工作流程、TypeScript 写法、界面设计和动画。",
+  "version": "1.1.5",
+  "description": "s 的 85 个中文技能，包括做事原则、工作流程、TypeScript 写法、界面设计和动画。",
   "author": {
     "name": "S",
     "url": "https://github.com/Acefake"
@@ -20,8 +20,8 @@
     "com.openai": {
       "interface": {
         "displayName": "s 中文技能",
-        "shortDescription": "78 个中文技能：做事原则、工作流程、TypeScript 写法、界面设计和动画。",
-        "longDescription": "s 的 78 个中文技能，包括做事原则、工作流程、TypeScript 写法、界面设计和动画。",
+        "shortDescription": "85 个中文技能：做事原则、工作流程、TypeScript 写法、界面设计和动画。",
+        "longDescription": "s 的 85 个中文技能，包括做事原则、工作流程、TypeScript 写法、界面设计和动画。",
         "developerName": "S",
         "category": "Productivity",
         "websiteURL": "https://github.com/Acefake/s-skills"
