@@ -3,6 +3,10 @@ name: 维护验证skill
 description: "定期检查一遍，让一个项目的验证 skill 和功能地图保持真实：每个功能派一个并行的源代码阅读者，一个实时会话把每个功能都操作一遍，最多提交一个包含已证明修正的 PR。用于 /维护验证skill 或“审查一下 verify skill”。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 维护一个验证 skill
 

@@ -3,6 +3,10 @@ name: s做Bot界面
 description: "用于做一个能通过 webhook 唤醒 Grok Bot 的自定义界面（页面、仪表盘、按钮）时，用户需要提供 webhook 发送密钥时，或者要把这个界面放到 Tailscale 上访问时。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 怎样做一个 bot 界面
 

@@ -1,8 +1,12 @@
 ---
 name: 原则-操作幂等
 description: "在设计会遇到崩溃、重启和重试的命令、生命周期步骤或处理循环时使用。不管之前的运行做到一半停在哪里，都要收敛到同一个最终状态。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 让操作幂等
 

@@ -17,3 +17,5 @@ jobs:
         run: pip install "jsonschema>=4.20"
       - name: Check marketplace manifests and versions
         run: python3 scripts/check_marketplace.py
+      - name: Test skill resource validation
+        run: python3 -m unittest discover -s scripts -p "test_*.py"

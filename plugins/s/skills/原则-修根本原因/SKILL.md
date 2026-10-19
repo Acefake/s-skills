@@ -1,8 +1,12 @@
 ---
 name: 原则-修根本原因
 description: "调试时使用。把每个症状追溯到系统第一次出错的地方，在那里修。只有当一个防护处理的状态是合理存在的，它才算修复。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 修根本原因
 

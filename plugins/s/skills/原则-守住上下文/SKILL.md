@@ -1,8 +1,12 @@
 ---
 name: 原则-守住上下文
 description: "当上下文快要满了时使用：大量输出、很长的文件、反复读取、规划分派任务。把大块内容交给子智能体处理；主线程里只保留摘要，不要原始数据。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 守住上下文窗口
 

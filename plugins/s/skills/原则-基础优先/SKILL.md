@@ -1,8 +1,12 @@
 ---
 name: 原则-基础优先
 description: "在写逻辑之前使用：选择核心类型和数据结构、安排先搭框架还是先做功能、考虑并发的参与者共享了什么。把数据结构选对，后面的代码就会变得显而易见。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 基础优先思考
 

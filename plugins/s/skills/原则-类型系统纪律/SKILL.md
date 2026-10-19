@@ -1,8 +1,12 @@
 ---
 name: 原则-类型系统纪律
 description: "在设计类型、审查函数签名或用任何静态类型语言写代码时使用。让非法状态无法表示，给有语义的基本类型打上标记，在边界上解析外部数据，穷尽所有变体，从权威的 schema 推导类型。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 类型系统纪律
 

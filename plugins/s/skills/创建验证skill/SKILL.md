@@ -3,6 +3,10 @@ name: 创建验证skill
 description: "生成一个放在项目里的验证 skill，让它像用户一样操作你的应用，不限语言、框架或平台。用于 /创建验证skill、“给这个仓库做一个控制 skill”，或者一个项目没有用脚本证明界面/命令行/服务行为的办法时。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 创建一个验证 skill
 

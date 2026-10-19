@@ -14,6 +14,7 @@ schema. Those checks follow the field rules in the official docs.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -269,6 +270,7 @@ def check_skills(problems: Problems) -> None:
         skills_root = plugin_dir(name) / "skills"
         for skill in found:
             text = (skill / "SKILL.md").read_text(encoding="utf-8")
+            check_skill_resources(skill, text, problems)
             skill_name = frontmatter_name(text)
             if not skill_name:
                 problems.add(f"{name}/{skill.name}: SKILL.md is missing frontmatter name")
@@ -292,6 +294,25 @@ def check_skills(problems: Problems) -> None:
                         f"{name}/{skill.name} points at {license_name}, "
                         "which is not in the skill parent folder"
                     )
+
+
+def check_skill_resources(skill: Path, text: str, problems: Problems) -> None:
+    end = text.find("\n---", 3)
+    frontmatter = text[3:end] if text.startswith("---") and end != -1 else ""
+    disabled = bool(re.search(r"^disable-model-invocation:\s*true\s*$", frontmatter, re.M))
+    policy = skill / "agents/openai.yaml"
+    if not policy.is_file():
+        problems.add(f"{skill.name}: missing Codex invocation policy")
+    else:
+        match = re.search(r"^  allow_implicit_invocation: (true|false)\s*$", policy.read_text(encoding="utf-8"), re.M)
+        if not match or (match.group(1) == "true") == disabled:
+            problems.add(f"{skill.name}: Codex and frontmatter invocation policies disagree")
+    for target in re.findall(r"\]\(([^)]+)\)", text):
+        if "://" in target or target.startswith("#"):
+            continue
+        local = target.split("#", 1)[0]
+        if local and not (skill / local).exists():
+            problems.add(f"{skill.name}: broken local link {target}")
 
 
 def main() -> int:

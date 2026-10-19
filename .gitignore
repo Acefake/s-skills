@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 node_modules/
+.agents/skills/
+.agents/HOSTS.md
+.agents/LICENSE*
+.agents/NOTICE*

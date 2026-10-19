@@ -3,6 +3,10 @@ name: 技术写作
 description: "分层的技术写作标准：Diátaxis 文档结构、Google 开发者文档风格的句子、STE（简化技术英语）的操作说明规则、Global English（面向全球读者的英文）句法。在使用 /技术写作，或者写作、审查文档、RFC（设计提案）、readme、PR 说明或提交信息时使用。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 技术写作
 

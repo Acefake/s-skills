@@ -2,6 +2,10 @@
 name: shadcn组件
 description: 管理 shadcn 组件和项目，包括添加、搜索、修、排查、样式和组合界面（也包括聊天界面）。项目里有 components.json，或用户说 shadcn、注册表、preset、做设计系统、套用 DESIGN.md 时使用。rules/ 仍是英文。
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # shadcn/ui
 

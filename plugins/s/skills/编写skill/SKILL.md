@@ -3,6 +3,10 @@ name: 编写skill
 description: "按 Agent Skills 的形状写一份 SKILL.md：目录、YAML 的 name 和 description、正文步骤。用于 /编写skill、新建或大改一个 skill。文字写完用 /清理AI腔。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 编写 skill
 

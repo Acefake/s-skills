@@ -3,6 +3,10 @@ name: 反思并改skill
 description: 在当前对话记录上同时派出三个审查子智能体，找出值得记住的经验，并把每一条都落实成对某个已有 skill 的具体修改。在用户说 reflect（反思）时使用。
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 反思
 

@@ -1,8 +1,12 @@
 ---
 name: 原则-为领域建模
 description: "在写有状态的逻辑时使用，或者当代码分支很多、在多个文件里重复同一个关于数据形状的假设时使用。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 为领域建模
 

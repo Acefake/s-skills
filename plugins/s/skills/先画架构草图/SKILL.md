@@ -3,6 +3,10 @@ name: 先画架构草图
 description: "在写代码之前先勾勒类型、函数签名和模块结构，然后在实现逐步填充的过程中一直参与。用于 /先画架构草图、“architect this”（给这个做架构）、“design this”（设计一下），或者直接开写代码会定下错误形状的不简单工作。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 架构设计
 

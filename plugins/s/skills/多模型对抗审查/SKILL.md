@@ -3,6 +3,10 @@ name: 多模型对抗审查
 description: "用于“interrogate”（审问）、“adversarial review”（对抗式审查）、“multi-model review”（多模型审查）、“challenge this”（挑战一下）、“stress test this code”（给这段代码做压力测试）、“find blind spots”（找盲点）或“tear this apart”（把它批个体无完肤）。多个大模型审查者从各自独立的角度挑战改动。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 审问
 

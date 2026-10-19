@@ -3,6 +3,10 @@ name: s助手
 description: "poteto工作模式 派出去写代码或打杂的子智能体。动手前完整读 poteto工作模式。不要派它去跑 playbook 本身。用于父对话说派一个 s助手 的时候。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # s 助手
 

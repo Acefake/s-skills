@@ -3,6 +3,10 @@ name: 按我习惯定制
 description: "用于“automate me（把我自动化）”、“创建/更新/刷新我的 -mode skill”、“把我的偏好或工作方式变成/记录成一个 skill”，或者希望智能体按用户的工作方式来做事时。起草或修改一个个人专属的 -mode skill，用清理AI腔收文字，可选择从最近的对话记录里提取新的证据。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 把我自动化（Automate me）
 

@@ -3,6 +3,10 @@ name: s使用帮助
 description: 指导用户完成 s 的设置、使用 /poteto工作模式，以及为一个任务挑选合适的 skill、playbook 或原则。输入 /s使用帮助 加上你的问题。
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # Poteto 帮助
 
@@ -34,11 +38,11 @@ disable-model-invocation: true
 
 ## 安装设置
 
-1. 按仓库 [README](../../README.md) 里对应当前软件的装法安装。`/add-plugin s` 和侧边栏 Customize 是 Cursor 的装法。WorkBuddy、Claude Code、Codex、OpenCode 用 README 里的命令。
+1. 按仓库 [README](../../HOSTS.md) 里对应当前软件的装法安装。`/add-plugin s` 和侧边栏 Customize 是 Cursor 的装法。WorkBuddy、Claude Code、Codex、OpenCode 用 README 里的命令。
 2. 运行 [`/设置s模型`](../设置s模型/SKILL.md)。它会询问推理预算，给每个角色对应一个模型，并写到**当前软件**会读的位置。新对话才会读到。写到 `~/s-models.md` 的兜底不会自动生效。
 3. 用 `/poteto工作模式`、一个目标和一个能判定通过或失败的检查，开始一个真实的任务。
 
-在用户调用某个 skill 之前，安装不会改变任何东西。只有 `/设置s模型` 会根据用户的话自动加载。细节见 [README](../../README.md) 和[指南第 1 页](../../docs/guide/01-setup.md)。按照 [`references/prompting.md`](references/prompting.md)，主动提出和他们一起斟酌第一条提示词。
+在用户调用某个 skill 之前，安装不会改变任何东西。`/设置s模型`、TypeScript 最佳实践和原则类技能允许根据任务自动加载。细节见 [README](../../HOSTS.md) 和指南第 1 页（见[使用入口](../../HOSTS.md)）。按照 [`references/prompting.md`](references/prompting.md)，主动提出和他们一起斟酌第一条提示词。
 
 如果担心的是成本，就说清楚 token 花在了哪里、怎样少花一些。s 会在子智能体和审查组上多花 token。重新运行 `/设置s模型`，选一个更小的预算或更便宜的模型。设成 `auto` 或 `inherit-parent` 的角色会用聊天本身的模型运行，当聊天用的是 Auto 或更便宜的模型时，这样能省 token。更短的审查组列表会运行更少的子智能体，每个条目一个。把 `/poteto工作模式` 留给需要严谨的工作。
 
@@ -46,7 +50,7 @@ disable-model-invocation: true
 
 ## 用 `/poteto工作模式` 开始一个任务
 
-`/poteto工作模式` 会把任务对应到一个 playbook（操作手册），把这个 playbook 的步骤复制到待办清单里，并在步骤需要时运行其他 skill。它跳过的步骤会以 `skip: <reason>` 的形式留在清单里。一条好的提示词会说明目标，以及怎样判断它完成了。它不会列出 skill，因为手写的顺序往往会漏掉或打乱 playbook 本来会保留的步骤。在帮用户斟酌提示词之前，先读 [`references/prompting.md`](references/prompting.md)。[指南第 2 页](../../docs/guide/02-poteto-mode.md)里有例子。
+`/poteto工作模式` 会把任务对应到一个 playbook（操作手册），把这个 playbook 的步骤复制到待办清单里，并在步骤需要时运行其他 skill。它跳过的步骤会以 `skip: <reason>` 的形式留在清单里。一条好的提示词会说明目标，以及怎样判断它完成了。它不会列出 skill，因为手写的顺序往往会漏掉或打乱 playbook 本来会保留的步骤。在帮用户斟酌提示词之前，先读 [`references/prompting.md`](references/prompting.md)。指南第 2 页（见[使用入口](../../HOSTS.md)）里有例子。
 
 `/poteto工作模式` 会不会一直开着，取决于用户怎样启动它：
 
@@ -129,11 +133,11 @@ playbook 是 `/poteto工作模式` 里面的步骤清单，不是 skill，所以
 - “full autopilot on this queue”（对这个队列全自动驾驶）运行 Autopilot-full。“stack them, don't ship”（叠起来，但别上线）运行 Autopilot-stack。
 - “run the eval playbook”（运行评估 playbook）运行 Eval。
 
-如果没有 `/poteto工作模式`，像 “babysit this pr” 这样的说法，可能会改为启动 Cursor 自己做同样事情的 skill。[`poteto工作模式`](../poteto工作模式/SKILL.md) 的 Playbooks 一节列出了每个 playbook 以及它什么时候适用。[指南第 6 页](../../docs/guide/06-verify-and-ship.md)讲了开 PR、照看 PR 和合入 PR。
+如果没有 `/poteto工作模式`，像 “babysit this pr” 这样的说法，可能会改为启动 Cursor 自己做同样事情的 skill。[`poteto工作模式`](../poteto工作模式/SKILL.md) 的 Playbooks 一节列出了每个 playbook 以及它什么时候适用。指南第 6 页（见[使用入口](../../HOSTS.md)）讲了开 PR、照看 PR 和合入 PR。
 
 s 没有做计划的 skill。Cursor 的 Plan Mode 可以和它一起用。对于跨越多个阶段或多个叠放 PR 的工作，让 `/poteto工作模式` 做一个计划，会运行 [Multi-phase plan playbook](../poteto工作模式/playbooks/multi-phase-plan.md)，它只写计划，不去实现。对于设计上的问题，Prototype playbook 或 `/先画架构草图` 会先在代码里把它定下来。
 
-原则是只有一条规则的 skill，`/poteto工作模式` 会读它们，并在回复里引用。用户很少直接调用某一条。他们改为用名字来引导，比如 “apply prove it works. show me the real output.”（应用“证明它真的能用”。给我看真实的输出。）输入 `/原则-<中文名>`（原插件里是 `/principle-<name>`，比如 `/原则-证明真能用`）仍然可以按需加载一条。[指南第 8 页](../../docs/guide/08-principles.md)列出了它们。
+原则是只有一条规则的 skill，`/poteto工作模式` 会读它们，并在回复里引用。用户很少直接调用某一条。他们改为用名字来引导，比如 “apply prove it works. show me the real output.”（应用“证明它真的能用”。给我看真实的输出。）输入 `/原则-<中文名>`（原插件里是 `/principle-<name>`，比如 `/原则-证明真能用`）仍然可以按需加载一条。指南第 8 页（见[使用入口](../../HOSTS.md)）列出了它们。
 
 ## 修好一次出了问题的运行
 
@@ -143,12 +147,12 @@ s 没有做计划的 skill。Cursor 的 Plan Mode 可以和它一起用。对于
 | 一个问题被当成了上一个任务的下一步 | 说 “new task”（新任务），或者说这一轮不需要这个模式。 |
 | 新的模型选择没有效果 | `/设置s模型` 写到当前软件的配置里，对新对话生效。开一个新对话。如果它说写的是 `~/s-models.md`，软件不会自动读，需要把正文贴进始终生效的说明。 |
 | 运行花的钱比预期多 | 见“安装设置”下面关于成本的那一段。 |
-| 某个 skill 没有自己加载 | 只有 `/设置s模型` 会根据用户的话自动加载。其他的在用户输入它们、或者 `/poteto工作模式` 运行它们时才加载，而 `/poteto工作模式` 不会运行每一个 skill。 |
+| 某个 skill 没有自己加载 | `/设置s模型`、TypeScript 最佳实践和原则类技能允许根据任务自动加载。其余工作流在用户点名、或者 `/poteto工作模式` 运行它们时才加载，而 `/poteto工作模式` 不会运行每一个 skill。 |
 | 并行的智能体互相覆盖了 | 给每个智能体它自己的 worktree，或者把它们作为云端智能体运行，每个都有自己的机器。 |
 | 一次通宵运行有进展，但什么都没完成 | 定时检查需要一个能判定通过或失败的检查，而不是一段时长。用 `/定时循环`。别的软件没有内置叫醒命令时，按那份 skill 的说明。 |
 | 回复凭一次绿色的构建就声称成功 | 要求看真实的命令、流程、存储的值或性能剖析。这就是 prove-it-works（证明它真的能用）原则。 |
 
-对于跑偏的运行，[`references/prompting.md`](references/prompting.md) 里有一句话就能用的引导。[指南第 10 页](../../docs/guide/10-recipes-and-pitfalls.md)有更多的坑和值得照抄的做法。
+对于跑偏的运行，[`references/prompting.md`](references/prompting.md) 里有一句话就能用的引导。指南第 10 页（见[使用入口](../../HOSTS.md)）有更多的坑和值得照抄的做法。
 
 ## 把 s 变成自己的
 
@@ -157,7 +161,7 @@ s 没有做计划的 skill。Cursor 的 Plan Mode 可以和它一起用。对于
 - `/poteto工作模式 write a skill for <workflow>`（为某个工作流程写一个 skill）会运行编写 skill 的 playbook。评估 playbook 会对一次 skill 修改做盲测。
 - 在单独的 PR 里修一个表现不对的 skill，而不是在它出错时所在的功能工作里修。
 
-[指南第 9 页](../../docs/guide/09-make-it-yours.md)讲了这里的每一项。
+指南第 9 页（见[使用入口](../../HOSTS.md)）讲了这里的每一项。
 
 ## 回复
 

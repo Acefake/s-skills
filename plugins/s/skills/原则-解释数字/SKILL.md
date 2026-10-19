@@ -1,8 +1,12 @@
 ---
 name: 原则-解释数字
 description: "在你相信、报告或依据一个测出来的数字行动之前使用：加速比、性能退化、吞吐量、延迟或评估结果。找出限制它的因素，并排除它测的其实是别的东西、而不是你以为的那项工作。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 解释这个数字
 

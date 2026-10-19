@@ -1,8 +1,12 @@
 ---
 name: 原则-守住边界
 description: "在接入校验、错误处理或框架适配层时使用。把防护集中在系统边界（命令行、配置、网络、外部 API）；信任内部类型，把业务逻辑放在纯函数里。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 守住边界
 

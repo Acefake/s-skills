@@ -3,6 +3,10 @@ name: 动画审查
 description: 按照源自 Emil Kowalski 设计工程理念的高手艺标准，审查动画和动效代码。默认就是挑问题；通过要靠自己挣。
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 审查动画
 

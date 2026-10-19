@@ -3,6 +3,10 @@ name: 清理代码注释
 description: "派出专挑注释，修掉被采纳的问题，并为注释里声称的限制提出用代码强制执行的办法。"
 disable-model-invocation: true
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 不要注释
 

@@ -1,8 +1,12 @@
 ---
 name: 原则-先分开共享状态
 description: "当多个并发的参与者可能写同一个文件、分支、键或状态对象时使用。先消除共享；只有当“只有一个共享写入者”是真正必须的不变量时，才用结构化的方式让写入排队进行。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 先分开，再考虑让共享状态串行
 

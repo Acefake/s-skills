@@ -1,8 +1,12 @@
 ---
 name: 原则-教训写进结构
 description: "当你发现自己第二次写同一条指示，或者注意到某个纠正反复出现时使用。把这条规则写成 lint 检查、元数据标记、运行时检查或脚本，而不是写更多文字。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 把教训写进结构
 

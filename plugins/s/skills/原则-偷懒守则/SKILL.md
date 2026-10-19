@@ -1,8 +1,12 @@
 ---
 name: 原则-偷懒守则
 description: "在重构、评估改动大小，或者想加抽象、加层、层层传递信号时使用。倾向于删除，倾向于能解决问题的最小改动。"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 偷懒守则
 

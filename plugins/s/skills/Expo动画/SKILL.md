@@ -2,6 +2,10 @@
 name: Expo动画
 description: 在 React Native 和 Expo 里做动画，并按真正决定手感好坏的顺序做决定——该不该动、在哪个线程上跑、动哪些属性、用弹簧还是定时动画、手势怎么交接、在弱设备上怎么降级。用 Reanimated、Gesture Handler、Expo Router 和 expo-haptics 写出实现代码。当在 Expo 应用里给任何东西加动画，添加手势、底部面板、页面切换、按下反馈或触感反馈，或者修复在真机上卡顿的动效时使用。网页动画请用 `做动画`。
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 在 Expo 里做动画
 

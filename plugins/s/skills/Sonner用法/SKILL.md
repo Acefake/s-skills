@@ -2,6 +2,10 @@
 name: Sonner用法
 description: Sonner（一个 React 提示消息库）使用指南——安装并接好 Toaster、选对 toast() 调用、promise 和加载中的提示消息、更新/关闭/常驻提示消息、样式/主题/图标、位置和多个 Toaster。在使用 Sonner 或排查它的问题时使用——提示消息不出现、出现两次、样式丢了、不认 Tailwind 类名、被弹窗挡住，或者不跟随深色模式。
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 使用 Sonner
 

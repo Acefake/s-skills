@@ -7,6 +7,10 @@ metadata:
   author: claudekit
   version: "2.1.0"
 ---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
 
 # 全套视觉设计
 
