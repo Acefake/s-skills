@@ -47,7 +47,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 ### 让技能自动生效
 
-把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。实测 OpenCode 上同样 10 条请求，不加时只有 4 到 5 条加载技能，加了之后 10 条都加载。
+把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。Codex 没用对的两条是 `how` 和 `technical-writing`，它们是手点技能，Codex 不会自动选。
 
 ## 使用
 
