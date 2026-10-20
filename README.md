@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.3.0。插件名是 `s`，不需要再装上游插件。活跃技能 **64** 个，随插件分发；另外 **39** 个在仓库根的 [`archive/s/`](archive/s/)，不进插件包。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.3.0。插件名是 `s`，不需要再装上游插件。活跃技能 **63** 个，随插件分发；另外 **39** 个在仓库根的 [`archive/s/`](archive/s/)，不进插件包。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -84,8 +84,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
-| `ui-performance` | 自动 | 守住 INP、帧率和包体积，先测量再优化交互卡顿 |
-| `impeccable` | 自动 | 做页面、改界面、做设计审查 |
+| `impeccable` | 自动 | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
 | `frontend-design` | 手点 | 点名时给一份有主见的视觉方向，不带检查脚本 |
 
 ### 代码规范
