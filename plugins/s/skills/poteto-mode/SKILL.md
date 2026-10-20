@@ -171,8 +171,6 @@ color: yellow
 
 ### Codex 怎么指定模型
 
-文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)。
-
 派出时在提示词里点名模型和推理档位，例如 “Spawn one subagent using model \<模型\> with model_reasoning_effort \<档位\>”。模型名用这次账号里真有的。文档举例是 `gpt-6.1-sol`（重活）和 `gpt-6-luna`（快、窄），账号没有就不要写。档位只有该模型支持才能写：`ultra`、`max`、`xhigh`、`high`、`medium`、`low`。文档建议 GPT-6 Luna 从 `high` 起，GPT-6 Astra 从 `low` 起。
 
 自定义文件 `~/.codex/agents/<name>.toml` 里如果写了 `model` 或 `model_reasoning_effort`，文件优先。文件应用前，每个字段先按「这次派出时点名的值 → `[agents]` 的对应默认 → 父级」解析。文件只写 `model`、没写推理档位时，会保留刚才解析到的档位；模型不支持那个档位，就要在文件里把 `model_reasoning_effort` 一起写上。两个字段都没配，子智能体继承父级。
@@ -182,8 +180,6 @@ color: yellow
 profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/config.toml`，再盖上 `~/.codex/<name>.config.toml` 的顶层键。Codex 0.134.0 起不再读 `[profiles.<name>]`，也不再支持顶层 `profile = "..."`。未核实：能不能给一个被派的子智能体单独选 profile。文档没有这么写，不要这么做。
 
 ### OpenCode 怎么指定模型
-
-文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)、[Commands](https://opencode.ai/v2/docs/commands)、[从 V1 迁移](https://opencode.ai/v2/docs/migrate-v1/)。
 
 把模型写在智能体的 `model` 字段，格式 `provider/model`，档位接在 `#` 后面，例如 `anthropic/claude-sonnet-4-5#high`。没写 `model` 的子智能体继承父会话的模型。命令的优先级是：命令自己的 `model`，否则所选智能体的 `model`，否则当前会话的模型。
 
