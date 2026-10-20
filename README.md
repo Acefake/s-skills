@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.2.5。插件名是 `s`，不需要再装上游插件。活跃技能 **60** 个，随插件分发；另外 **39** 个在仓库根的 [`archive/s/`](archive/s/)，不进插件包。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.3.0。插件名是 `s`，不需要再装上游插件。活跃技能 **62** 个，随插件分发；另外 **39** 个在仓库根的 [`archive/s/`](archive/s/)，不进插件包。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -87,6 +87,14 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `impeccable` | 自动 | 做页面、改界面、做设计审查 |
 | `frontend-design` | 手点 | 点名时给一份有主见的视觉方向，不带检查脚本 |
 
+### 测试
+
+| 技能 | 调用 | 用途 |
+|---|---|---|
+| `test-strategy` | 自动 | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java |
+| `e2e-testing` | 自动 | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |
+| `tdd` | 自动 | 修 bug 时有便宜的测试点就先写失败测试 |
+
 ### 工作流程
 
 | 技能 | 调用 | 用途 |
@@ -113,7 +121,6 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `figure-it-out` | 手点 | 没有现成 playbook 时现做一套 |
 | `timed-loop` | 手点 | 按通过/失败条件反复醒来 |
 | `reflect` | 手点 | 把这次对话的教训改进技能 |
-| `tdd` | 手点 | 用户要求或测试很便宜时先写失败测试 |
 | `ketchup` | 手点 | 补上你离开后这次对话的变化 |
 
 ### 原则
