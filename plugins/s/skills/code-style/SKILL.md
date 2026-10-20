@@ -124,14 +124,14 @@ com.example.app.shared
 
 ## 三、质量底线
 
-- 类型严格：TS 开 `strict`，不用 `any` 和 `as` 绕类型；Go 不用空接口兜底；Java 不用原始类型。外部输入在边界解析成类型，见 `principle-boundary-discipline`、`principle-type-system-discipline`。
-- 错误不吞：TS 不写空 `catch`；Go 每个 `err` 都处理或带上下文返回（`fmt.Errorf("load order %s: %w", id, err)`）；Java 不 catch 了只打日志又继续。
-- 函数短而单一，嵌套不超过三层，用提前返回。
-- 命名用业务词，不用 `data`、`info`、`handle2`、`temp`。
-- 不留死代码、未用的导出、TODO 不带负责人和 issue。
-- 改动带测试，见 `test-strategy`。
-- 提交前格式化和 lint 全过：Prettier + ESLint、`gofmt` + `go vet`（有 golangci-lint 就跑）、仓库配置的 Java 格式化和检查（Spotless、Checkstyle 等）。
-- 界面代码同时满足 `ui-performance`。
+细则在各原则技能里，这里只列必须过的几条：
+
+- 类型严格、外部输入在边界解析：`principle-type-system-discipline`、`principle-boundary-discipline`。TS 开 `strict`，不用 `any` 和 `as` 绕类型。
+- 错误不吞，在第一次出错的地方修：`principle-fix-root-causes`。Go 的 `err` 带上下文返回（`%w`），Java 不 catch 了只打日志。
+- 不留死代码和多余抽象：`principle-subtract-before-you-add`、`deslop`。
+- 改动带测试：`test-strategy`。
+- 界面交互守 `impeccable` optimize 里的交互预算。
+- 提交前格式化和 lint 全过：Prettier + ESLint、`gofmt` + `go vet`（有 golangci-lint 就跑）、仓库配置的 Java 检查（Spotless、Checkstyle 等）。
 
 ## 审查时
 
