@@ -1,6 +1,6 @@
 ---
 name: recall
-description: "中文：从你自己的聊天记录、实时状态和共享记录（用户报告、以前的修复、事故）里重建你最近的工作上下文，然后交回一份紧凑的当前状态简报。用于“回想一下我在 X 上的工作”、“给我补补课”、“我最近在忙什么”、“我上次做到哪了”，在开始或继续工作之前用。Use when reconstructing recent work from chats and notes before continuing."
+description: "从你自己的聊天记录、实时状态和共享记录（用户报告、以前的修复、事故）里重建你最近的工作上下文，然后交回一份紧凑的当前状态简报。用于“回想一下我在 X 上的工作”、“给我补补课”、“我最近在忙什么”、“我上次做到哪了”，在开始或继续工作之前用。Use when reconstructing recent work from chats and notes before continuing."
 disable-model-invocation: true
 ---
 ## 运行环境适配

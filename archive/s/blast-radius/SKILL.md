@@ -1,6 +1,6 @@
 ---
 name: blast-radius
-description: "中文：在一个改动上线之前，找出它在 diff 之外的别处可能弄坏什么，并通过运行真实代码（而不是写一段说明）来证明它之所以安全所依赖的那一个事实。用于“X 的影响范围”、“这会弄坏什么”，或者审查一个你不放心的小 diff。Use when you need to find what a small diff can break outside the diff itself."
+description: "在一个改动上线之前，找出它在 diff 之外的别处可能弄坏什么，并通过运行真实代码（而不是写一段说明）来证明它之所以安全所依赖的那一个事实。用于“X 的影响范围”、“这会弄坏什么”，或者审查一个你不放心的小 diff。Use when you need to find what a small diff can break outside the diff itself."
 disable-model-invocation: true
 ---
 ## 运行环境适配

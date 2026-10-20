@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-development
-description: "中文：在当前会话中执行包含相互独立任务的实现计划时。Use when you are executing an implementation plan of independent tasks in the current session."
+description: "在当前会话中执行包含相互独立任务的实现计划时。Use when you are executing an implementation plan of independent tasks in the current session."
 ---
 ## 运行环境适配
 

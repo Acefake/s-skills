@@ -1,6 +1,6 @@
 ---
 name: deslop
-description: "中文：去掉这次改动里 AI 生成的代码腔：多余注释、不该有的防御、用来逃避类型的 any、过深的嵌套。用于 /deslop、提交前清 diff。文字里的 AI 腔用 /unslop，不是这个。Use when a diff needs AI-flavored code removed before commit: extra comments, needless guards, any-casts, or deep nesting."
+description: "去掉这次改动里 AI 生成的代码腔：多余注释、不该有的防御、用来逃避类型的 any、过深的嵌套。用于 /deslop、提交前清 diff。文字里的 AI 腔用 /unslop，不是这个。Use when a diff needs AI-flavored code removed before commit: extra comments, needless guards, any-casts, or deep nesting."
 ---
 ## 运行环境适配
 

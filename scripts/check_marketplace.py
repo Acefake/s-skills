@@ -260,7 +260,9 @@ def check_plugin_manifests(problems: Problems) -> None:
             problems.add(f"{name}: claude and codebuddy plugin.json differ")
 
 
-DESCRIPTION_RE = re.compile(r"^中文：.+[。！？]Use when .+[.!?]$")
+DESCRIPTION_RE = re.compile(
+    r"^(?!中文：)(?!中文触发：)(?!Use when ).+[。！？]Use when .+[.!?]$"
+)
 
 
 def frontmatter_block(text: str) -> str:
@@ -288,7 +290,7 @@ def frontmatter_description(text: str) -> str | None:
 
 def description_order_problem(desc: str) -> str | None:
     if not DESCRIPTION_RE.fullmatch(desc):
-        return "description must be 中文：…。Use when …."
+        return "description must start with the Chinese sentence, then Use when …."
     return None
 
 
@@ -300,6 +302,16 @@ def check_description(label: str, text: str, problems: Problems) -> None:
     issue = description_order_problem(desc)
     if issue:
         problems.add(f"{label}: {issue}")
+
+
+def check_agent_descriptions(problems: Problems) -> None:
+    root = ROOT / "plugins" / "s" / "agents"
+    found = sorted(path for path in root.glob("*.md")) if root.is_dir() else []
+    if len(found) != 2:
+        problems.add(f"plugins/s/agents: found {len(found)} agents, expected 2")
+    for path in found:
+        text = path.read_text(encoding="utf-8")
+        check_description(f"plugins/s/agents/{path.name}", text, problems)
 
 
 def check_archived_descriptions(problems: Problems) -> None:
@@ -375,6 +387,7 @@ def main() -> int:
         check_plugin_manifests(problems)
         check_skills(problems)
         check_archived_descriptions(problems)
+        check_agent_descriptions(problems)
     except FileNotFoundError as exc:
         problems.add(f"missing file: {exc.filename}")
     except json.JSONDecodeError as exc:

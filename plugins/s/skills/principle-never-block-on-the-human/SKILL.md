@@ -1,6 +1,6 @@
 ---
 name: principle-never-block-on-the-human
-description: "中文：在可撤销的工作上，想问“我要不要做 X？”的时候使用。Use when reversible work is waiting on a question you could answer by doing it."
+description: "在可撤销的工作上，想问“我要不要做 X？”的时候使用。Use when reversible work is waiting on a question you could answer by doing it."
 disable-model-invocation: false
 ---
 ## 运行环境适配

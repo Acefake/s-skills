@@ -1,6 +1,6 @@
 ---
 name: ketchup
-description: "中文：用几句平实的话和小图，告诉用户自从他上一条消息之后，这个对话里有什么变化。每个需要用户处理的事项，只给刚好够他做决定的背景。用于 /ketchup。Use when the user returns and needs what changed in this conversation since they left."
+description: "用几句平实的话和小图，告诉用户自从他上一条消息之后，这个对话里有什么变化。每个需要用户处理的事项，只给刚好够他做决定的背景。用于 /ketchup。Use when the user returns and needs what changed in this conversation since they left."
 disable-model-invocation: true
 ---
 ## 运行环境适配

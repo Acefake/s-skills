@@ -1,6 +1,6 @@
 ---
 name: teach
-description: "中文：把一整块工作讲得浅显明白，让人真正理解。会调用 `how` 和 `why` 两个 skill，把它们找到的内容编成一份清楚的解释。用于“教我这个”、“帮我真正弄懂 X”、“给我讲讲这个改动或这个子系统”。Use when teaching a subsystem or change so a person actually understands it."
+description: "把一整块工作讲得浅显明白，让人真正理解。会调用 `how` 和 `why` 两个 skill，把它们找到的内容编成一份清楚的解释。用于“教我这个”、“帮我真正弄懂 X”、“给我讲讲这个改动或这个子系统”。Use when teaching a subsystem or change so a person actually understands it."
 disable-model-invocation: true
 ---
 ## 运行环境适配

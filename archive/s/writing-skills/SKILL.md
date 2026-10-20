@@ -1,6 +1,6 @@
 ---
 name: writing-skills
-description: "中文：创建新技能、编辑已有技能，或在部署前验证技能是否有效时。Use when you are creating a skill, editing an existing skill, or checking that a skill works before relying on it."
+description: "创建新技能、编辑已有技能，或在部署前验证技能是否有效时。Use when you are creating a skill, editing an existing skill, or checking that a skill works before relying on it."
 ---
 ## 运行环境适配
 

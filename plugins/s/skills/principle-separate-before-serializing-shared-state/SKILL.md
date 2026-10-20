@@ -1,6 +1,6 @@
 ---
 name: principle-separate-before-serializing-shared-state
-description: "中文：当多个并发的参与者可能写同一个文件、分支、键或状态对象时使用。先消除共享；只有当“只有一个共享写入者”是真正必须的不变量时，才用结构化的方式让写入排队进行。Use when concurrent writers might share a file, branch, key, or object."
+description: "当多个并发的参与者可能写同一个文件、分支、键或状态对象时使用。先消除共享；只有当“只有一个共享写入者”是真正必须的不变量时，才用结构化的方式让写入排队进行。Use when concurrent writers might share a file, branch, key, or object."
 disable-model-invocation: false
 ---
 ## 运行环境适配

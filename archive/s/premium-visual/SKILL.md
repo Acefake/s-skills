@@ -1,6 +1,6 @@
 ---
 name: premium-visual
-description: "中文：只有被点名时才用。一套安静、打磨过的视觉：对比柔和、留白多、动效有弹簧感。和 `impeccable`、`taste-skill`、`frontend-design` 有重叠。这个不会自己跳出来，只管这一套高端视觉。Use when the user names premium-visual for a quiet, high-end visual treatment."
+description: "只有被点名时才用。一套安静、打磨过的视觉：对比柔和、留白多、动效有弹簧感。和 `impeccable`、`taste-skill`、`frontend-design` 有重叠。这个不会自己跳出来，只管这一套高端视觉。Use when the user names premium-visual for a quiet, high-end visual treatment."
 disable-model-invocation: true
 ---
 ## 运行环境适配

@@ -1,6 +1,6 @@
 ---
 name: verification-before-completion
-description: "中文：准备声称工作已完成、已修复或已通过时，以及提交或创建 PR 之前；必须先运行验证命令并核对输出，再做任何成功声称。Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always."
+description: "准备声称工作已完成、已修复或已通过时，以及提交或创建 PR 之前；必须先运行验证命令并核对输出，再做任何成功声称。Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always."
 ---
 ## 运行环境适配
 

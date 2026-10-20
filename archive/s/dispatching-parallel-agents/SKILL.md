@@ -1,6 +1,6 @@
 ---
 name: dispatching-parallel-agents
-description: "中文：面对 2 个及以上可以并行处理、彼此无共享状态、也无先后依赖的独立任务时。Use when you have two or more independent tasks that can run in parallel with no shared state and no ordering dependency."
+description: "面对 2 个及以上可以并行处理、彼此无共享状态、也无先后依赖的独立任务时。Use when you have two or more independent tasks that can run in parallel with no shared state and no ordering dependency."
 ---
 ## 运行环境适配
 

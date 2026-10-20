@@ -1,6 +1,6 @@
 ---
 name: automate-me
-description: "中文：用于“automate me（把我自动化）”、“创建/更新/刷新我的 -mode skill”、“把我的偏好或工作方式变成/记录成一个 skill”，或者希望智能体按用户的工作方式来做事时。起草或修改一个个人专属的 -mode skill，用unslop收文字，可选择从最近的对话记录里提取新的证据。Use when drafting or updating a personal mode skill from the user's habits."
+description: "用于“automate me（把我自动化）”、“创建/更新/刷新我的 -mode skill”、“把我的偏好或工作方式变成/记录成一个 skill”，或者希望智能体按用户的工作方式来做事时。起草或修改一个个人专属的 -mode skill，用unslop收文字，可选择从最近的对话记录里提取新的证据。Use when drafting or updating a personal mode skill from the user's habits."
 disable-model-invocation: true
 ---
 ## 运行环境适配

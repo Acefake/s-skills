@@ -1,6 +1,6 @@
 ---
 name: design-system
-description: "中文：做设计令牌（token，可复用的颜色、字体、间距数值）、组件规格和幻灯片。三层令牌从原始值到语义再到组件，配 CSS 变量、间距和字体阶梯、组件状态，以及符合品牌的演示文稿。和 `impeccable`、`ui-ux-pro-max`、`visual-suite` 有重叠。这个专管令牌结构和幻灯片。`references/` 仍是英文。Use when building design tokens, component specs, or slide decks."
+description: "做设计令牌（token，可复用的颜色、字体、间距数值）、组件规格和幻灯片。三层令牌从原始值到语义再到组件，配 CSS 变量、间距和字体阶梯、组件状态，以及符合品牌的演示文稿。和 `impeccable`、`ui-ux-pro-max`、`visual-suite` 有重叠。这个专管令牌结构和幻灯片。`references/` 仍是英文。Use when building design tokens, component specs, or slide decks."
 argument-hint: "[component or token]"
 license: MIT
 metadata:

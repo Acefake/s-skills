@@ -1,6 +1,6 @@
 ---
 name: using-git-worktrees
-description: "中文：开始需要与当前工作区隔离的功能开发时，或在执行实现计划之前，通过原生工具或 git worktree 回退确保存在隔离工作区。Use when you are starting feature work that must be isolated from the current workspace, or before executing an implementation plan."
+description: "开始需要与当前工作区隔离的功能开发时，或在执行实现计划之前，通过原生工具或 git worktree 回退确保存在隔离工作区。Use when you are starting feature work that must be isolated from the current workspace, or before executing an implementation plan."
 ---
 ## 运行环境适配
 

@@ -1,6 +1,6 @@
 ---
 name: self-improvement
-description: "中文：命令失败、用户纠正你、缺一项能力、知识过时，或找到更好的做法时，把教训记到项目的 .learnings/ 文件里，以后复用并按原因复查。和 `reflect` 不同：这里是记文件，不是当场改技能说明书。Use when recording a lesson in the project's .learnings/ files instead of editing a skill immediately."
+description: "命令失败、用户纠正你、缺一项能力、知识过时，或找到更好的做法时，把教训记到项目的 .learnings/ 文件里，以后复用并按原因复查。和 `reflect` 不同：这里是记文件，不是当场改技能说明书。Use when recording a lesson in the project's .learnings/ files instead of editing a skill immediately."
 version: "4.0.2"
 ---
 ## 运行环境适配

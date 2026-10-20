@@ -1,6 +1,6 @@
 ---
 name: emil-design
-description: "中文：这个 skill 记录了 Emil Kowalski 关于界面打磨、组件设计、动画决策，以及那些让软件感觉很棒的“看不见的细节”的理念。Use when applying Emil Kowalski's interface-polish and motion judgment."
+description: "这个 skill 记录了 Emil Kowalski 关于界面打磨、组件设计、动画决策，以及那些让软件感觉很棒的“看不见的细节”的理念。Use when applying Emil Kowalski's interface-polish and motion judgment."
 ---
 ## 运行环境适配
 

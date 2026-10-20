@@ -1,6 +1,6 @@
 ---
 name: unslop
-description: "中文：去掉任何文字里的 AI 腔。Use when prose sounds like AI and should be rewritten in a plain voice."
+description: "去掉任何文字里的 AI 腔。Use when prose sounds like AI and should be rewritten in a plain voice."
 disable-model-invocation: true
 ---
 ## 运行环境适配

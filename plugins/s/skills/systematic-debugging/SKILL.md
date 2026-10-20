@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: "中文：遇到任何 bug、测试失败或意外行为时，在提出修复之前。Use when you hit any bug, test failure, or unexpected behavior, before proposing a fix."
+description: "遇到任何 bug、测试失败或意外行为时，在提出修复之前。Use when you hit any bug, test failure, or unexpected behavior, before proposing a fix."
 ---
 ## 运行环境适配
 

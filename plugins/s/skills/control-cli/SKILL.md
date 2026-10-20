@@ -1,6 +1,6 @@
 ---
 name: control-cli
-description: "中文：搭一个本地的驾驭装置，驱动、查看并剖析交互式命令行或 TUI，不依赖外部服务。用于命令行体验、启动变慢、内存泄漏、卡住、提示流程，或录一段终端演示。Use when you need to drive a local CLI or TUI and inspect what it does."
+description: "搭一个本地的驾驭装置，驱动、查看并剖析交互式命令行或 TUI，不依赖外部服务。用于命令行体验、启动变慢、内存泄漏、卡住、提示流程，或录一段终端演示。Use when you need to drive a local CLI or TUI and inspect what it does."
 ---
 ## 运行环境适配
 

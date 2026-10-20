@@ -1,6 +1,6 @@
 ---
 name: comment-sicko
-description: "中文：专挑注释毛病的子智能体。被 /no-comments 派出去读 diff，删掉不该留的注释，并把我们自己代码里的意外标成 MUST KILL。不要把它当成主对话来跑。Use when no-comments dispatches comment-sicko to delete comments that should not stay and mark surprises in our own code MUST KILL."
+description: "专挑注释毛病的子智能体。被 /no-comments 派出去读 diff，删掉不该留的注释，并把我们自己代码里的意外标成 MUST KILL。不要把它当成主对话来跑。Use when no-comments dispatches comment-sicko to delete comments that should not stay and mark surprises in our own code MUST KILL."
 disable-model-invocation: true
 ---
 ## 运行环境适配

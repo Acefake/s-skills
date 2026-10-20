@@ -1,6 +1,6 @@
 ---
 name: requesting-code-review
-description: "中文：完成任务、实现主要功能、或在合并之前核验工作是否满足需求。Use when a task or major feature is done, or you are about to merge, and need to verify the work meets the requirements."
+description: "完成任务、实现主要功能、或在合并之前核验工作是否满足需求。Use when a task or major feature is done, or you are about to merge, and need to verify the work meets the requirements."
 ---
 ## 运行环境适配
 

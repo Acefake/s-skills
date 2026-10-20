@@ -1,6 +1,6 @@
 ---
 name: pick-frontend-lib
-description: "中文：从一份精选的、带个人观点的清单里，为某个前端任务挑出合适的库——数字动画、验证码输入框、图表、命令菜单、长列表虚拟化、拖放、提示消息（toast）、状态管理、样式，等等。只在被明确调用时运行；它不会自己触发。Use when the user explicitly asks to pick a frontend library from the curated list."
+description: "从一份精选的、带个人观点的清单里，为某个前端任务挑出合适的库——数字动画、验证码输入框、图表、命令菜单、长列表虚拟化、拖放、提示消息（toast）、状态管理、样式，等等。只在被明确调用时运行；它不会自己触发。Use when the user explicitly asks to pick a frontend library from the curated list."
 disable-model-invocation: true
 ---
 ## 运行环境适配

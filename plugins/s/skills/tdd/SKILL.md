@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: "中文：只在用户明确要求 TDD（测试驱动开发）、一个会失败的测试或一个回归测试时使用，或者当这个 bug 明显有一个便宜的本地测试点时使用。如果测试路径不清楚、代价高、重度依赖集成环境，或者用户没要求，就跳过。Use when the user asked for a failing test first, or the bug has a cheap local test."
+description: "只在用户明确要求 TDD（测试驱动开发）、一个会失败的测试或一个回归测试时使用，或者当这个 bug 明显有一个便宜的本地测试点时使用。如果测试路径不清楚、代价高、重度依赖集成环境，或者用户没要求，就跳过。Use when the user asked for a failing test first, or the bug has a cheap local test."
 disable-model-invocation: true
 ---
 ## 运行环境适配
