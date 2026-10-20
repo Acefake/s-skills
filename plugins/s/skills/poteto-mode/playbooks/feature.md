@@ -4,7 +4,7 @@
 
 1. `how` over the affected subsystem.
 2. `architect` for parallel design exploration.
-3. Fix the house rules for this change before delegating: module layout and doc comments per **code-style**, the test plan per **test-strategy** (add **e2e-testing** when a critical user path changes), and the **ui-performance** budget for any interactive UI. Pass all three to every implementing subagent by skill name; do not paste their contents.
+3. Fix the house rules for this change before delegating: module layout and doc comments per **code-style**, the test plan per **test-strategy** (add **e2e-testing** when a critical user path changes), and the interaction budget in `impeccable optimize` for any interactive UI. Pass all three to every implementing subagent by skill name; do not paste their contents.
 4. Write the throughput checkpoint as four todo items. A dimension that genuinely does not apply (single file, no fan-out) keeps its item with `n/a: <reason>` rather than being dropped:
    - **Blocking first steps.** Gates run before fan-out.
    - **Independent workstreams.** Disjoint files, services, or layers parallelize. Shared writes serialize.
