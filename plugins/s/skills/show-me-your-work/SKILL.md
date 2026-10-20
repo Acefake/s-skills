@@ -56,7 +56,7 @@ ts	phase	decision	why	evidence	result
 ## 规则
 
 - 只追加。一个错误的决定，用新的一行来取代它。永远不要编辑或删除历史。
-- 优先用提交进代码库的脚本产生的证据，而不是手工做的一次性证据（见 **encode-lessons-in-structure** 原则 skill）。
+- 优先用提交进代码库的脚本产生的证据，而不是手工做的一次性证据（见 **principle-encode-lessons-in-structure** 原则 skill）。
 
 ## 对照对话记录审查日志
 
@@ -87,7 +87,7 @@ Cursor：一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`m
 
 OpenCode：`subagent` 派一个 `mode: subagent` 的智能体，`model` 用另一个系列。没有现成文件时用内置 `explore`，并说明继承了父级模型、这次没有换系列。不要在调用上传 `model`（工具页没有这个参数）。
 
-Codex：提示词里点名另一个这次账号里真有的模型，或点名一个已经写好、模型不同的自定义智能体。`default_subagent_model` 拉不开系列。文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+Codex：提示词里点名另一个这次账号里真有的模型，或点名一个已经写好、模型不同的自定义智能体。`default_subagent_model` 拉不开系列。
 
 WorkBuddy：能拉开差异时，父级是 `"lite"` 就用 `"reasoning"`，反过来也一样。Claude Code：父级是 `sonnet` 就用 `opus`，或换一个完整 ID。派不出子智能体时，在主对话里换一种角度再看一遍日志，并说一句没有换模型。
 
