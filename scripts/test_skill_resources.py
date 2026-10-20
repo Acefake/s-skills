@@ -79,6 +79,12 @@ class SkillReferenceTest(unittest.TestCase):
         self.assertEqual(len(problems), 2, problems)
         self.assertEqual(skill_reference_problems('用 `tdd` 和 `swarm`。', active, archived), [])
 
+    def test_principle_without_prefix_is_reported(self):
+        active = {'principle-fix-root-causes'}
+        problems = skill_reference_problems('按 **fix-root-causes** 原则。', active, set())
+        self.assertEqual(len(problems), 1, problems)
+        self.assertEqual(skill_reference_problems('按 **principle-fix-root-causes** 原则。', active, set()), [])
+
     def test_bold_and_command_names_are_reported(self):
         active = {'tdd'}
         archived = {'test-driven-development', 'writing-skills'}
