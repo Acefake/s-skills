@@ -290,7 +290,7 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 
 **相关技能：**
 - **tdd** - 用于编写失败测试用例（阶段 4，第 1 步）
-- **verification-before-completion** - 在宣称成功之前，验证修复确实有效
+- **principle-prove-it-works** - 在宣称成功之前，对照真实结果验证修复确实有效
 
 ## 实际效果
 

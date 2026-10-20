@@ -317,8 +317,8 @@ def check_agent_descriptions(problems: Problems) -> None:
 def check_archived_descriptions(problems: Problems) -> None:
     root = ROOT / "archive" / "s"
     found = sorted(path.parent for path in root.glob("*/SKILL.md")) if root.is_dir() else []
-    if len(found) != 38:
-        problems.add(f"archive/s: found {len(found)} skills, expected 38")
+    if len(found) != 39:
+        problems.add(f"archive/s: found {len(found)} skills, expected 39")
     for skill in found:
         text = (skill / "SKILL.md").read_text(encoding="utf-8")
         check_description(f"archive/s/{skill.name}", text, problems)
