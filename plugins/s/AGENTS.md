@@ -1,6 +1,6 @@
 # s 技能：动手前先查技能
 
-本文件放进全局指令文件后生效：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 放进一条 Always 规则。也可以放进项目根目录的 `AGENTS.md`。
+本文件放进全局指令文件后生效：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 放进一条 Always 规则，Hermes 追加到 `~/.hermes/SOUL.md`。也可以放进项目根目录的 `AGENTS.md`。
 
 收到任务后，在读文件、跑命令、提问或作答之前：
 
