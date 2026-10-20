@@ -39,3 +39,10 @@ Cursor 的 Custom Mode、`/loop` 不适用于所有宿主。T3 持久定时任�
 - 要求解释一小段文字：不应仅因技能安装就修改模型配置。
 
 验证状态分为文件检查通过、会话已发现、实际已读取、行为已通过；逐项记录，不互相替代。
+
+## 官方文档
+
+技能正文里提到宿主的智能体、工具和配置时，以这些文档为准：
+
+- OpenCode：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)、[Commands](https://opencode.ai/v2/docs/commands)、[从 V1 迁移](https://opencode.ai/v2/docs/migrate-v1/)
+- Codex：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)
