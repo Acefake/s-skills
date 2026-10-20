@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: "Use when you have a spec or requirements for a multi-step task, before changing code. 中文触发：已有规格或需求、要做多步骤任务、动手改代码之前"
+description: "中文：已有规格或需求、要做多步骤任务、动手改代码之前。Use when you have a spec or requirements for a multi-step task, before changing code."
 ---
 ## 运行环境适配
 

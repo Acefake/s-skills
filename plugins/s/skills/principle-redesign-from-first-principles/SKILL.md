@@ -1,6 +1,6 @@
 ---
 name: principle-redesign-from-first-principles
-description: "Use when a new requirement should be redesigned from first principles instead of patched onto the old shape. 中文触发：在把一个新需求整合进已有设计时使用。"
+description: "中文：在把一个新需求整合进已有设计时使用。Use when a new requirement should be redesigned from first principles instead of patched onto the old shape."
 disable-model-invocation: false
 ---
 ## 运行环境适配

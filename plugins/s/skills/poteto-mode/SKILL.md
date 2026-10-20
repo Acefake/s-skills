@@ -1,6 +1,6 @@
 ---
 name: poteto-mode
-description: "Use when the user names poteto-mode or asks to work in that stricter style. 中文触发：poteto 的智能体工作风格：简洁而详细的回复、深思熟虑地使用子智能体、去掉 AI 腔的文字、简单的代码，以及经过验证的工作。用于 poteto、/poteto-mode，或者要求按这种风格工作的时候。"
+description: "中文：poteto 的智能体工作风格：简洁而详细的回复、深思熟虑地使用子智能体、去掉 AI 腔的文字、简单的代码，以及经过验证的工作。用于 poteto、/poteto-mode，或者要求按这种风格工作的时候。Use when the user names poteto-mode or asks to work in that stricter style."
 disable-model-invocation: true
 icon: crown
 color: yellow

@@ -1,6 +1,6 @@
 ---
 name: swarm
-description: "Use when you need parallel coverage, a race, chained checks, or sharded exploration. 中文触发：同时派出 N 个并行的工作者，等它们全部完成，交回一份报告。用于 /swarm、“swarm this”（让一群智能体来做），或者需要并行覆盖、比赛、连环检验和探索的时候。"
+description: "中文：同时派出 N 个并行的工作者，等它们全部完成，交回一份报告。用于 /swarm、“swarm this”（让一群智能体来做），或者需要并行覆盖、比赛、连环检验和探索的时候。Use when you need parallel coverage, a race, chained checks, or sharded exploration."
 disable-model-invocation: true
 ---
 ## 运行环境适配

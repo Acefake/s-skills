@@ -1,6 +1,6 @@
 ---
 name: no-comments
-description: "Use when you are about to review and comments that should not stay need to be removed first. 中文触发：派出 comment-sicko，修掉被采纳的问题，并为注释里声称的限制提出用代码强制执行的办法。"
+description: "中文：派出 comment-sicko，修掉被采纳的问题，并为注释里声称的限制提出用代码强制执行的办法。Use when you are about to review and comments that should not stay need to be removed first."
 disable-model-invocation: true
 ---
 ## 运行环境适配

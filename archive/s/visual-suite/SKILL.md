@@ -1,6 +1,6 @@
 ---
 name: visual-suite
-description: "Use when producing brand assets, logos, slides, banners, or social images. 中文触发：管品牌、设计令牌（token，可复用的颜色、字体、间距数值）、界面样式、标志、企业视觉识别（CIP，一套品牌物料）、幻灯片、横幅、图标、社交图片。标志 55 种风格，可用 Gemini、Atlas Cloud 或 MuAPI 生成。企业视觉识别 50 项以上的物料和样机。幻灯片是带 Chart.js 的 HTML。横幅 22 种风格，覆盖社交、广告、网页、印刷。图标 15 种风格，输出 SVG，用 Gemini 3.1 Pro。社交图片把 HTML 截成图，多平台。能做的事：设计标志、做企业视觉识别、生成样机、做幻灯片、设计横幅、生成图标、做社交图片和社交媒体图、定品牌。平台：Facebook、Twitter、LinkedIn、YouTube、Instagram、Pinterest、TikTok、Threads、Google Ads。和 `design-system`、`ui-ux-pro-max`、`shadcn` 的分工：这个管品牌物料和生成。`references/` 仍是英文。"
+description: "中文：管品牌、设计令牌（token，可复用的颜色、字体、间距数值）、界面样式、标志、企业视觉识别（CIP，一套品牌物料）、幻灯片、横幅、图标、社交图片。标志 55 种风格，可用 Gemini、Atlas Cloud 或 MuAPI 生成。企业视觉识别 50 项以上的物料和样机。幻灯片是带 Chart.js 的 HTML。横幅 22 种风格，覆盖社交、广告、网页、印刷。图标 15 种风格，输出 SVG，用 Gemini 3.1 Pro。社交图片把 HTML 截成图，多平台。能做的事：设计标志、做企业视觉识别、生成样机、做幻灯片、设计横幅、生成图标、做社交图片和社交媒体图、定品牌。平台：Facebook、Twitter、LinkedIn、YouTube、Instagram、Pinterest、TikTok、Threads、Google Ads。和 `design-system`、`ui-ux-pro-max`、`shadcn` 的分工：这个管品牌物料和生成。`references/` 仍是英文。Use when producing brand assets, logos, slides, banners, or social images."
 argument-hint: "[design-type] [context]"
 license: MIT
 metadata:

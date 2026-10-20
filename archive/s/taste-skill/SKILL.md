@@ -1,6 +1,6 @@
 ---
 name: taste-skill
-description: "Use when setting a visual direction for a page and avoiding a template look, including the draw-and-check scripts. 中文触发：做网页时定视觉方向，并避开俗套。从研究过的站点方向里抽一套（点子、构图、字体、配色、照片、区块），用真浏览器检查破绽，再看截图改。做、改、审落地页、营销站、作品集、产品页、单页、首屏时用。用户说页面很模板、很像 AI、很俗，或要更高级、更像获奖站点时也用。仪表盘、后台、设置、收件箱也用，走另一套规则。和 `impeccable`、`frontend-design` 有重叠。这个带抽牌和检查脚本。references/ 仍是英文。"
+description: "中文：做网页时定视觉方向，并避开俗套。从研究过的站点方向里抽一套（点子、构图、字体、配色、照片、区块），用真浏览器检查破绽，再看截图改。做、改、审落地页、营销站、作品集、产品页、单页、首屏时用。用户说页面很模板、很像 AI、很俗，或要更高级、更像获奖站点时也用。仪表盘、后台、设置、收件箱也用，走另一套规则。和 `impeccable`、`frontend-design` 有重叠。这个带抽牌和检查脚本。references/ 仍是英文。Use when setting a visual direction for a page and avoiding a template look, including the draw-and-check scripts."
 ---
 ## 运行环境适配
 

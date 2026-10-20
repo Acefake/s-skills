@@ -1,6 +1,6 @@
 ---
 name: principle-model-the-domain
-description: "Use when stateful logic, or the same shape assumption, is repeated across branches and files. 中文触发：在写有状态的逻辑时使用，或者当代码分支很多、在多个文件里重复同一个关于数据形状的假设时使用。"
+description: "中文：在写有状态的逻辑时使用，或者当代码分支很多、在多个文件里重复同一个关于数据形状的假设时使用。Use when stateful logic, or the same shape assumption, is repeated across branches and files."
 disable-model-invocation: false
 ---
 ## 运行环境适配

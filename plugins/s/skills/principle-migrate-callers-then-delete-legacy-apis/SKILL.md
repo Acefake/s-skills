@@ -1,6 +1,6 @@
 ---
 name: principle-migrate-callers-then-delete-legacy-apis
-description: "Use when a new internal API is introduced while old callers still exist. 中文触发：在引入一个新的内部 API、而旧的调用方还存在时使用。在同一轮里把调用方迁移过去并删掉旧 API，而不是保留兼容层。"
+description: "中文：在引入一个新的内部 API、而旧的调用方还存在时使用。在同一轮里把调用方迁移过去并删掉旧 API，而不是保留兼容层。Use when a new internal API is introduced while old callers still exist."
 disable-model-invocation: false
 ---
 ## 运行环境适配

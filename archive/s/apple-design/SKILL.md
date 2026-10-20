@@ -1,6 +1,6 @@
 ---
 name: apple-design
-description: "Use when building or reviewing gesture-driven, physically fluent, Apple-like interface motion. 中文触发：苹果的界面设计方法和流畅、有物理感的动效，翻译成网页上的做法。在搭建或审查以下内容时使用：手势驱动的界面、弹簧动画、拖动/滑动/底部弹出面板（sheet）交互、惯性和可随时打断的过渡、半透明材质和层次感、字体排版（光学尺寸、字间距、行距）、减少动效，以及苹果风格界面背后的设计基础（反馈、空间一致性、克制）。"
+description: "中文：苹果的界面设计方法和流畅、有物理感的动效，翻译成网页上的做法。在搭建或审查以下内容时使用：手势驱动的界面、弹簧动画、拖动/滑动/底部弹出面板（sheet）交互、惯性和可随时打断的过渡、半透明材质和层次感、字体排版（光学尺寸、字间距、行距）、减少动效，以及苹果风格界面背后的设计基础（反馈、空间一致性、克制）。Use when building or reviewing gesture-driven, physically fluent, Apple-like interface motion."
 ---
 ## 运行环境适配
 
