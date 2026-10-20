@@ -35,11 +35,19 @@ Codex 在终端添加市场，再在应用的插件管理入口安装 `s`：
 codex plugin marketplace add Acefake/s-skills
 ```
 
+Hermes 克隆仓库后，在 `~/.hermes/config.yaml` 加外部技能目录，详见 [HOSTS.md](plugins/s/HOSTS.md#hermes)：
+
+```yaml
+skills:
+  external_dirs:
+    - ~/s-skills/plugins/s/skills
+```
+
 Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`。各宿主的命令支持与入口以实际界面为准。安装或更新后开启新会话，确认技能路径和版本。
 
 ### 让技能自动生效
 
-把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。它要求模型动手前先查匹配的技能。实测 OpenCode 上同样 10 条请求，不加时只有 4 到 5 条加载技能，加了之后 10 条都加载。
+把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。实测 OpenCode 上同样 10 条请求，不加时只有 4 到 5 条加载技能，加了之后 10 条都加载。
 
 ## 使用
 
@@ -59,7 +67,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 - [工作模式](plugins/s/skills/poteto-mode/SKILL.md)
 - [模型设置](plugins/s/skills/setup-s-models/SKILL.md)
 - [改名对照与回滚](RENAMES.md)
-- [Codex、T3 与 Cursor 适配规则](plugins/s/HOSTS.md)
+- [Codex、Cursor、Hermes 等宿主适配规则](plugins/s/HOSTS.md)
 
 ## 活跃技能
 
