@@ -11,9 +11,7 @@ def main():
         text = path.read_text(encoding='utf-8')
         end = text.index('\n---', 3)
         implicit = not bool(re.search(r'^disable-model-invocation:\s*true\s*$', text[3:end], re.M))
-        implicit = implicit or path.parent.name.startswith('原则-') or path.parent.name in (
-            'TypeScript最佳实践', '设置s模型'
-        )
+        implicit = implicit or path.parent.name.startswith('principle-') or path.parent.name == 'setup-s-models'
         if implicit:
             text = text.replace('disable-model-invocation: true', 'disable-model-invocation: false')
             text = text.replace(
@@ -36,11 +34,6 @@ def main():
         if marker not in text:
             end = text.index('\n---', 3) + 4
             text = text[:end] + marker + text[end:]
-        if path.parent.name == 's使用帮助':
-            text = re.sub(r'\[([^\]]+)\]\(../../docs/guide/[^)]+\)', r'\1（见[使用入口](../../HOSTS.md)）', text)
-            text = text.replace('](../../README.md)', '](../../HOSTS.md)')
-            text = text.replace('只有 `/设置s模型` 会根据用户的话自动加载。', '`/设置s模型`、TypeScript 最佳实践和原则类技能允许根据任务自动加载。')
-            text = text.replace('其他的在用户输入它们、或者 `/poteto工作模式` 运行它们时才加载', '其余工作流在用户点名、或者 `/poteto工作模式` 运行它们时才加载')
         path.write_text(text, encoding='utf-8')
     print(f'Automatic skills: {automatic}')
 

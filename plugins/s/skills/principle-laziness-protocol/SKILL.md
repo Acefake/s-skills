@@ -1,0 +1,14 @@
+---
+name: principle-laziness-protocol
+description: "Use when refactoring, judging a diff, or about to add an abstraction, a layer, or pass-through signals. 中文触发：在重构、评估改动大小，或者想加抽象、加层、层层传递信号时使用。倾向于删除，倾向于能解决问题的最小改动。"
+disable-model-invocation: false
+---
+## 运行环境适配
+
+在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+
+
+# 偷懒守则
+
+- **把决定合并到一处。** 不要在好几个地方重复同一个选择。把它放在唯一的事实来源后面，再把结果当作一个简单的开关传下去。
+- **让 diff 尽量小。** 做能解决问题的最小改动。行数少，胜过“优雅”的样板代码。

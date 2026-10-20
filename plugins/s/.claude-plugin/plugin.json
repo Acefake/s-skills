@@ -1,7 +1,7 @@
 {
   "name": "s",
-  "version": "1.1.6",
-  "description": "s 的 85 个中文技能，包括做事原则、工作流程、TypeScript 写法、界面设计和动画。",
+  "version": "1.2.0",
+  "description": "s 的 61 个中文技能：做事原则、工作流程、界面设计，以及译好的 Superpowers 流程。38 个技能归档在仓库 archive/s/，不随插件分发。",
   "author": {
     "name": "S",
     "url": "https://github.com/Acefake"
@@ -13,7 +13,9 @@
     "chinese",
     "skills",
     "design",
-    "animation"
+    "animation",
+    "superpowers"
   ],
-  "license": "MIT AND Apache-2.0"
+  "license": "MIT AND Apache-2.0",
+  "logo": "icon.png"
 }
