@@ -388,7 +388,7 @@ SKILL_NAME_RES = (
 
 
 def skill_reference_problems(text: str, active: set[str], archived: set[str]) -> list[str]:
-    """Return references to the old upstream prefix or to archived skills."""
+    """Return references to the old upstream prefix, archived skills, or principles missing their prefix."""
     found: list[str] = []
     for match in UPSTREAM_PREFIX_RE.finditer(text):
         found.append(f"uses old prefix superpowers:{match.group(1)}")
@@ -397,6 +397,8 @@ def skill_reference_problems(text: str, active: set[str], archived: set[str]) ->
             name = match.group(1)
             if name in archived and name not in active:
                 found.append(f"names archived skill `{name}`")
+            elif name not in active and f"principle-{name}" in active:
+                found.append(f"names `{name}` without the principle- prefix")
     return found
 
 
