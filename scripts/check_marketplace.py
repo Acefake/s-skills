@@ -23,6 +23,7 @@ from jsonschema import Draft7Validator, Draft202012Validator, FormatChecker
 from marketplace_lib import (
     AGENT_NAME_RE,
     CLAUDE_NAME_RE,
+    EXPECTED_ARCHIVED_COUNTS,
     EXPECTED_SKILL_COUNTS,
     KEBAB_RE,
     LOCK_PATH,
@@ -317,8 +318,9 @@ def check_agent_descriptions(problems: Problems) -> None:
 def check_archived_descriptions(problems: Problems) -> None:
     root = ROOT / "archive" / "s"
     found = sorted(path.parent for path in root.glob("*/SKILL.md")) if root.is_dir() else []
-    if len(found) != 39:
-        problems.add(f"archive/s: found {len(found)} skills, expected 39")
+    expected = EXPECTED_ARCHIVED_COUNTS["s"]
+    if len(found) != expected:
+        problems.add(f"archive/s: found {len(found)} skills, expected {expected}")
     for skill in found:
         text = (skill / "SKILL.md").read_text(encoding="utf-8")
         check_description(f"archive/s/{skill.name}", text, problems)
@@ -377,7 +379,12 @@ def check_skill_resources(skill: Path, text: str, problems: Problems) -> None:
 
 
 UPSTREAM_PREFIX_RE = re.compile(r"\bsuperpowers:([a-z0-9-]+)")
-BACKTICK_NAME_RE = re.compile(r"`([a-z0-9]+(?:-[a-z0-9]+)+)`")
+# A skill is named in backticks, in bold, or as a /s: command.
+SKILL_NAME_RES = (
+    re.compile(r"`([a-z0-9]+(?:-[a-z0-9]+)+)`"),
+    re.compile(r"\*\*([a-z0-9]+(?:-[a-z0-9]+)+)\*\*"),
+    re.compile(r"/s:([a-z0-9]+(?:-[a-z0-9]+)+)"),
+)
 
 
 def skill_reference_problems(text: str, active: set[str], archived: set[str]) -> list[str]:
@@ -385,10 +392,11 @@ def skill_reference_problems(text: str, active: set[str], archived: set[str]) ->
     found: list[str] = []
     for match in UPSTREAM_PREFIX_RE.finditer(text):
         found.append(f"uses old prefix superpowers:{match.group(1)}")
-    for match in BACKTICK_NAME_RE.finditer(text):
-        name = match.group(1)
-        if name in archived and name not in active:
-            found.append(f"names archived skill `{name}`")
+    for pattern in SKILL_NAME_RES:
+        for match in pattern.finditer(text):
+            name = match.group(1)
+            if name in archived and name not in active:
+                found.append(f"names archived skill `{name}`")
     return found
 
 
