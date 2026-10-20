@@ -26,7 +26,7 @@ color: yellow
 - 跨函数边界的代码 → **architect** skill，在实现之前做并行的设计探索。
 - 并行分派 → 覆盖矩阵、比赛、连环检验和探索分区用 **swarm** skill。需要选基础、做嫁接的设计或代码比拼用 **arena**。
 - 有争议的设计 → 上线之前用 **interrogate** skill（多模型对抗）。
-- 不简单的多步骤工作 → 写下产出检查点（Feature 第 3 步）。
+- 不简单的多步骤工作 → 写下产出检查点（Feature 第 4 步）。
 - 任何文字界面，包括你给用户的回复 → **unslop** skill。按 **Writing the reply**（写回复）来写回复。给智能体看的文字还要遵循 **author-skill**（`/author-skill`）。
 - 文档、RFC、readme、PR 说明或提交信息 → **technical-writing** skill（`/technical-writing`）。
 - 提交之前 → 代码里的 AI 腔用 **deslop**（`/deslop`）。文字用 **unslop**（`/unslop`）。两者不是同一件事。
