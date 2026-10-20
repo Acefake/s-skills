@@ -8,7 +8,7 @@
 
 `frontend-design`（原「有主见的界面」）保留为手点技能，`disable-model-invocation: true`。日常做界面仍自动用 `impeccable`。
 
-1.2.1 起，frontmatter 的 `description` 以中文句子开头：`中文：……。Use when ... .`。英文 `Use when` 接在中文句号后面。活跃技能和 `archive/s/` 用同一写法。
+1.2.1 把 `description` 改成中文在前、英文 `Use when` 在后。1.2.2 起直接写中文句子：`……。Use when ... .`。英文 `Use when` 接在中文句号后面。活跃技能、`archive/s/` 和 agent 说明用同一写法。
 
 ## 回滚
 

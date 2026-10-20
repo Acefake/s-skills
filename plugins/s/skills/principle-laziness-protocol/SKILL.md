@@ -1,6 +1,6 @@
 ---
 name: principle-laziness-protocol
-description: "中文：在重构、评估改动大小，或者想加抽象、加层、层层传递信号时使用。倾向于删除，倾向于能解决问题的最小改动。Use when refactoring, judging a diff, or about to add an abstraction, a layer, or pass-through signals."
+description: "在重构、评估改动大小，或者想加抽象、加层、层层传递信号时使用。倾向于删除，倾向于能解决问题的最小改动。Use when refactoring, judging a diff, or about to add an abstraction, a layer, or pass-through signals."
 disable-model-invocation: false
 ---
 ## 运行环境适配

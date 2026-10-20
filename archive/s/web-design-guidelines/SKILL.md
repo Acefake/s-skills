@@ -1,6 +1,6 @@
 ---
 name: web-design-guidelines
-description: "中文：按照《网页界面规范》（Web Interface Guidelines）检查界面代码是否合规。当用户说“帮我看看界面”、“检查无障碍”、“审一下设计”、“看看用户体验”或“按最佳做法检查我的网站”时使用。Use when checking interface code against web interface guidelines."
+description: "按照《网页界面规范》（Web Interface Guidelines）检查界面代码是否合规。当用户说“帮我看看界面”、“检查无障碍”、“审一下设计”、“看看用户体验”或“按最佳做法检查我的网站”时使用。Use when checking interface code against web interface guidelines."
 metadata:
   author: vercel
   version: "1.0.0"

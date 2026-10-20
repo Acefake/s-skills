@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: "中文：按你的描述，为一块界面做出好几个真正不同的版本，放在一个可视化切换器后面，让你实时来回切换、选出感觉对的那个并正式采用。只在被明确调用时运行；它不会自己触发。Use when the user explicitly asks for several genuinely different UI versions behind a switcher."
+description: "按你的描述，为一块界面做出好几个真正不同的版本，放在一个可视化切换器后面，让你实时来回切换、选出感觉对的那个并正式采用。只在被明确调用时运行；它不会自己触发。Use when the user explicitly asks for several genuinely different UI versions behind a switcher."
 disable-model-invocation: true
 ---
 ## 运行环境适配

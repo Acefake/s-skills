@@ -1,6 +1,6 @@
 ---
 name: correct
-description: "中文：找出智能体在这个仓库里反复犯的错误，让每一个都不可能再犯。先试架构，再试类型，再试一条报错里写明修法的 lint 检查，再试测试，文档放在最后。证明每个检查都能在一个真实的历史错误上失败。每次操作者纠正你时，都重复一遍。用于 /correct。Use when an agent keeps making the same mistake in this repo and it should become impossible."
+description: "找出智能体在这个仓库里反复犯的错误，让每一个都不可能再犯。先试架构，再试类型，再试一条报错里写明修法的 lint 检查，再试测试，文档放在最后。证明每个检查都能在一个真实的历史错误上失败。每次操作者纠正你时，都重复一遍。用于 /correct。Use when an agent keeps making the same mistake in this repo and it should become impossible."
 disable-model-invocation: true
 ---
 ## 运行环境适配

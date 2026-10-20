@@ -1,6 +1,6 @@
 ---
 name: in-your-own-words
-description: "中文：用你自己的话，复述你认为用户的目标是什么、他们想解决什么问题。用于 /in-your-own-words。Use when restating what you think the user is trying to achieve."
+description: "用你自己的话，复述你认为用户的目标是什么、他们想解决什么问题。用于 /in-your-own-words。Use when restating what you think the user is trying to achieve."
 disable-model-invocation: true
 ---
 ## 运行环境适配

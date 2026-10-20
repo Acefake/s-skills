@@ -1,6 +1,6 @@
 ---
 name: control-ui
-description: "中文：搭一个本地的浏览器或 CDP 驾驭装置，驱动并查看网页、IDE 或 Electron 界面。用于本地界面核对、截图、无障碍快照、性能剖析、视觉对比，或复现界面 bug。Use when you need to drive a real browser or desktop UI to collect evidence."
+description: "搭一个本地的浏览器或 CDP 驾驭装置，驱动并查看网页、IDE 或 Electron 界面。用于本地界面核对、截图、无障碍快照、性能剖析、视觉对比，或复现界面 bug。Use when you need to drive a real browser or desktop UI to collect evidence."
 ---
 ## 运行环境适配
 

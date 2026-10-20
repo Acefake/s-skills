@@ -1,6 +1,6 @@
 ---
 name: principle-minimize-reader-load
-description: "中文：在审查或整理难以追踪的代码时使用。数一数从问题到答案之间隔了几层，以及读者脑子里要记住多少隐藏状态；去掉只有一个调用方的包装层，缩小可变状态的范围。Use when code is hard to follow and the reader is carrying too many layers or hidden state."
+description: "在审查或整理难以追踪的代码时使用。数一数从问题到答案之间隔了几层，以及读者脑子里要记住多少隐藏状态；去掉只有一个调用方的包装层，缩小可变状态的范围。Use when code is hard to follow and the reader is carrying too many layers or hidden state."
 disable-model-invocation: false
 ---
 ## 运行环境适配

@@ -1,6 +1,6 @@
 ---
 name: animation-glossary
-description: "中文：反查词汇表——把对网页动画或动效的模糊描述，变成准确的术语（“气泡框打开时那种弹一下的效果” → Pop in；“iOS 那种橡皮筋滚动” → Rubber-banding）。当用户问“……那个叫什么”，或者描述了一个动效却不知道名字、想要一个准确的词去跟 AI 或设计师说时使用。只用于给效果起名，不用于设计或制作效果。Use when a vague description of motion needs a precise animation term."
+description: "反查词汇表——把对网页动画或动效的模糊描述，变成准确的术语（“气泡框打开时那种弹一下的效果” → Pop in；“iOS 那种橡皮筋滚动” → Rubber-banding）。当用户问“……那个叫什么”，或者描述了一个动效却不知道名字、想要一个准确的词去跟 AI 或设计师说时使用。只用于给效果起名，不用于设计或制作效果。Use when a vague description of motion needs a precise animation term."
 ---
 ## 运行环境适配
 

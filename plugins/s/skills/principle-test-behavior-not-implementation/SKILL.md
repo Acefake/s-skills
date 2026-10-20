@@ -1,6 +1,6 @@
 ---
 name: principle-test-behavior-not-implementation
-description: "中文：在写、改或保留一个测试时使用。断言代码的使用者能观察到的东西，让测试在这个行为坏掉时失败，而在只有内部实现改变时继续通过。Use when writing, changing, or keeping a test."
+description: "在写、改或保留一个测试时使用。断言代码的使用者能观察到的东西，让测试在这个行为坏掉时失败，而在只有内部实现改变时继续通过。Use when writing, changing, or keeping a test."
 disable-model-invocation: false
 ---
 ## 运行环境适配

@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: "中文：实现任何功能或修复缺陷，在编写实现代码之前。Use when you are implementing any feature or bugfix, before writing the implementation."
+description: "实现任何功能或修复缺陷，在编写实现代码之前。Use when you are implementing any feature or bugfix, before writing the implementation."
 ---
 ## 运行环境适配
 

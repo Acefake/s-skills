@@ -1,6 +1,6 @@
 ---
 name: create-verification-skill
-description: "中文：生成一个放在项目里的验证 skill，让它像用户一样操作你的应用，不限语言、框架或平台。用于 /create-verification-skill、“给这个仓库做一个控制 skill”，或者一个项目没有用脚本证明界面/命令行/服务行为的办法时。Use when creating a project verification skill that drives the app the way a user would."
+description: "生成一个放在项目里的验证 skill，让它像用户一样操作你的应用，不限语言、框架或平台。用于 /create-verification-skill、“给这个仓库做一个控制 skill”，或者一个项目没有用脚本证明界面/命令行/服务行为的办法时。Use when creating a project verification skill that drives the app the way a user would."
 disable-model-invocation: true
 ---
 ## 运行环境适配

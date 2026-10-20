@@ -1,6 +1,6 @@
 ---
 name: receiving-code-review
-description: "中文：收到代码评审反馈、落实建议之前，尤其当反馈含糊或在技术上可疑时；需要技术严谨与核验，而不是表演式认同或盲目落实。Use when you received code review feedback, before applying it, especially when the feedback is vague or technically suspicious."
+description: "收到代码评审反馈、落实建议之前，尤其当反馈含糊或在技术上可疑时；需要技术严谨与核验，而不是表演式认同或盲目落实。Use when you received code review feedback, before applying it, especially when the feedback is vague or technically suspicious."
 ---
 ## 运行环境适配
 

@@ -1,6 +1,6 @@
 ---
 name: animate
-description: "中文：从零开始做一个动画，并按真正决定手感好坏的顺序做决定——到底该不该动、为了什么目的、用什么工具、动哪些属性、用什么曲线和时长、被打断时怎么办、怎么退场。会直接写出实现代码。当用户要求给某个东西加动画、加动效、让组件“活起来”或做一个过渡效果时使用。点评现有动效请用 review-animations；审查整个代码库请用 improve-animations。Use when adding an animation and deciding whether it should move, which properties, and which curve."
+description: "从零开始做一个动画，并按真正决定手感好坏的顺序做决定——到底该不该动、为了什么目的、用什么工具、动哪些属性、用什么曲线和时长、被打断时怎么办、怎么退场。会直接写出实现代码。当用户要求给某个东西加动画、加动效、让组件“活起来”或做一个过渡效果时使用。点评现有动效请用 review-animations；审查整个代码库请用 improve-animations。Use when adding an animation and deciding whether it should move, which properties, and which curve."
 ---
 ## 运行环境适配
 

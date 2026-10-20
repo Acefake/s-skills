@@ -1,6 +1,6 @@
 ---
 name: impeccable
-description: "中文：当用户想要设计、重新设计、构思、点评、审查、打磨、简化、加固、加动画，或用其他方式改进前端界面时使用：网站、落地页、数据看板、产品界面、组件、表单、设置页、新用户引导、空状态页面，以及原生 iOS 或 Android 页面。负责用户体验（UX）审查、视觉层级、布局、字体排版、配色、动效、界面文案、无障碍、响应式表现、边界情况，以及记录或整理设计系统（DESIGN.md、设计令牌 tokens）。也用于让平淡的界面更大胆、让吵闹的界面更安静，或者做有野心的视觉效果。不用于纯后端或和界面无关的任务。Use when designing, redesigning, reviewing, or polishing a page, component, or interface."
+description: "当用户想要设计、重新设计、构思、点评、审查、打磨、简化、加固、加动画，或用其他方式改进前端界面时使用：网站、落地页、数据看板、产品界面、组件、表单、设置页、新用户引导、空状态页面，以及原生 iOS 或 Android 页面。负责用户体验（UX）审查、视觉层级、布局、字体排版、配色、动效、界面文案、无障碍、响应式表现、边界情况，以及记录或整理设计系统（DESIGN.md、设计令牌 tokens）。也用于让平淡的界面更大胆、让吵闹的界面更安静，或者做有野心的视觉效果。不用于纯后端或和界面无关的任务。Use when designing, redesigning, reviewing, or polishing a page, component, or interface."
 version: 4.6.0
 license: Apache 2.0
 ---

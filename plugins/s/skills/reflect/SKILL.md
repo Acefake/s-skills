@@ -1,6 +1,6 @@
 ---
 name: reflect
-description: "中文：在当前对话记录上同时派出三个审查子智能体，找出值得记住的经验，并把每一条都落实成对某个已有 skill 的具体修改。在用户说 reflect（反思）时使用。Use when this conversation produced a lesson that should be written into an existing skill."
+description: "在当前对话记录上同时派出三个审查子智能体，找出值得记住的经验，并把每一条都落实成对某个已有 skill 的具体修改。在用户说 reflect（反思）时使用。Use when this conversation produced a lesson that should be written into an existing skill."
 disable-model-invocation: true
 ---
 ## 运行环境适配

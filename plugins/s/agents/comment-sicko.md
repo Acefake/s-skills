@@ -1,6 +1,6 @@
 ---
 name: comment-sicko
-description: "中文：被 no-comments 派去删掉不该留的注释，并把我们自己代码里的意外标成 MUST KILL。Use when no-comments dispatches comment-sicko to delete comments that should not stay and mark surprises in our own code MUST KILL."
+description: "被 no-comments 派去删掉不该留的注释，并把我们自己代码里的意外标成 MUST KILL。Use when no-comments dispatches comment-sicko to delete comments that should not stay and mark surprises in our own code MUST KILL."
 ---
 
 # 专挑注释

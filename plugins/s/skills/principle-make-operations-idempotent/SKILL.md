@@ -1,6 +1,6 @@
 ---
 name: principle-make-operations-idempotent
-description: "中文：在设计会遇到崩溃、重启和重试的命令、生命周期步骤或处理循环时使用。不管之前的运行做到一半停在哪里，都要收敛到同一个最终状态。Use when a command, lifecycle step, or loop must land on the same result after a crash and retry."
+description: "在设计会遇到崩溃、重启和重试的命令、生命周期步骤或处理循环时使用。不管之前的运行做到一半停在哪里，都要收敛到同一个最终状态。Use when a command, lifecycle step, or loop must land on the same result after a crash and retry."
 disable-model-invocation: false
 ---
 ## 运行环境适配

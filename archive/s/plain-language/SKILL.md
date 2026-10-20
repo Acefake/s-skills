@@ -1,6 +1,6 @@
 ---
 name: plain-language
-description: "中文：用普通人的大白话把上一条消息重新说一遍，不用行话。Use when restating the previous message in plain language without jargon."
+description: "用普通人的大白话把上一条消息重新说一遍，不用行话。Use when restating the previous message in plain language without jargon."
 disable-model-invocation: true
 ---
 ## 运行环境适配

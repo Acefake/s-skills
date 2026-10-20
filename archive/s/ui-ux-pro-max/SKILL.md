@@ -1,6 +1,6 @@
 ---
 name: ui-ux-pro-max
-description: "中文：适用于网页、手机和桌面的 UI/UX 设计知识库。在设计、搭建、审查或修复界面时使用，包括页面、组件、设计系统、无障碍、交互、响应式布局、字体排版、配色、图表，以及针对具体技术栈的界面实现。可搜索的本地数据：79 种可搜索风格（50 种在用）、192 套产品配色和推理方案、74 组字体搭配、119 条 UX 准则、105 个图标、17 个 GSAP 动画预设、25 种图表类型、22 个技术栈。Use when looking up UI/UX guidance, palettes, type, icons, or stack-specific interface data."
+description: "适用于网页、手机和桌面的 UI/UX 设计知识库。在设计、搭建、审查或修复界面时使用，包括页面、组件、设计系统、无障碍、交互、响应式布局、字体排版、配色、图表，以及针对具体技术栈的界面实现。可搜索的本地数据：79 种可搜索风格（50 种在用）、192 套产品配色和推理方案、74 组字体搭配、119 条 UX 准则、105 个图标、17 个 GSAP 动画预设、25 种图表类型、22 个技术栈。Use when looking up UI/UX guidance, palettes, type, icons, or stack-specific interface data."
 ---
 ## 运行环境适配
 
