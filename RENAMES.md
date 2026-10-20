@@ -110,7 +110,7 @@
 | （无旧中文名，上游 Superpowers） | executing-plans | 活跃 |
 | （无旧中文名，上游 Superpowers） | subagent-driven-development | 活跃 |
 | （无旧中文名，上游 Superpowers） | systematic-debugging | 活跃 |
-| （无旧中文名，上游 Superpowers） | verification-before-completion | 活跃 |
+| （无旧中文名，上游 Superpowers，与 principle-prove-it-works 重叠） | verification-before-completion | 归档 |
 | （无旧中文名，上游 Superpowers） | requesting-code-review | 活跃 |
 | （无旧中文名，上游 Superpowers） | receiving-code-review | 活跃 |
 | （无旧中文名，上游 Superpowers） | using-git-worktrees | 活跃 |
@@ -161,3 +161,4 @@
 | test-driven-development | 与 poteto 点名的 tdd 重叠，只留 tdd |
 | dispatching-parallel-agents | 与 poteto 点名的 swarm 重叠，只留 swarm |
 | writing-skills | 与 poteto 点名的 author-skill 重叠，只留 author-skill |
+| verification-before-completion | 与 poteto 点名的 principle-prove-it-works 重叠，只留 principle-prove-it-works |
