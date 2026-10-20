@@ -1,6 +1,6 @@
 ---
 name: principle-exhaust-the-design-space
-description: "Use when there is no precedent and you should try a few competing options before choosing. 中文触发：遇到代码库里没有先例的全新界面交互或架构决定时使用。先做 2-3 个互相竞争的原型，并排比较，再做决定。"
+description: "中文：遇到代码库里没有先例的全新界面交互或架构决定时使用。先做 2-3 个互相竞争的原型，并排比较，再做决定。Use when there is no precedent and you should try a few competing options before choosing."
 disable-model-invocation: false
 ---
 ## 运行环境适配

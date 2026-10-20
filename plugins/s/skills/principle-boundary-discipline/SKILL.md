@@ -1,6 +1,6 @@
 ---
 name: principle-boundary-discipline
-description: "Use when validation, error handling, or a framework adapter is being added. 中文触发：在接入校验、错误处理或框架适配层时使用。把防护集中在系统边界（命令行、配置、网络、外部 API）；信任内部类型，把业务逻辑放在纯函数里。"
+description: "中文：在接入校验、错误处理或框架适配层时使用。把防护集中在系统边界（命令行、配置、网络、外部 API）；信任内部类型，把业务逻辑放在纯函数里。Use when validation, error handling, or a framework adapter is being added."
 disable-model-invocation: false
 ---
 ## 运行环境适配

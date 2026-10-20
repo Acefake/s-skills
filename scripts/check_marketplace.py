@@ -260,6 +260,58 @@ def check_plugin_manifests(problems: Problems) -> None:
             problems.add(f"{name}: claude and codebuddy plugin.json differ")
 
 
+DESCRIPTION_RE = re.compile(r"^中文：.+[。！？]Use when .+[.!?]$")
+
+
+def frontmatter_block(text: str) -> str:
+    if not text.startswith("---"):
+        return ""
+    end = text.find("\n---", 3)
+    return text[3:end] if end != -1 else ""
+
+
+def frontmatter_description(text: str) -> str | None:
+    match = re.search(r"^description:[ \t]*(.*)$", frontmatter_block(text), re.M)
+    if not match:
+        return None
+    raw = match.group(1).strip()
+    if len(raw) >= 2 and raw[0] == raw[-1] == '"':
+        try:
+            value = json.loads(raw)
+        except json.JSONDecodeError:
+            return raw
+        return value if isinstance(value, str) else raw
+    if len(raw) >= 2 and raw[0] == raw[-1] == "'":
+        return raw[1:-1].replace("''", "'")
+    return raw
+
+
+def description_order_problem(desc: str) -> str | None:
+    if not DESCRIPTION_RE.fullmatch(desc):
+        return "description must be 中文：…。Use when …."
+    return None
+
+
+def check_description(label: str, text: str, problems: Problems) -> None:
+    desc = frontmatter_description(text)
+    if desc is None:
+        problems.add(f"{label}: SKILL.md is missing frontmatter description")
+        return
+    issue = description_order_problem(desc)
+    if issue:
+        problems.add(f"{label}: {issue}")
+
+
+def check_archived_descriptions(problems: Problems) -> None:
+    root = ROOT / "archive" / "s"
+    found = sorted(path.parent for path in root.glob("*/SKILL.md")) if root.is_dir() else []
+    if len(found) != 38:
+        problems.add(f"archive/s: found {len(found)} skills, expected 38")
+    for skill in found:
+        text = (skill / "SKILL.md").read_text(encoding="utf-8")
+        check_description(f"archive/s/{skill.name}", text, problems)
+
+
 def check_skills(problems: Problems) -> None:
     seen_names: dict[str, str] = {}
     for name in PLUGIN_ORDER:
@@ -272,13 +324,10 @@ def check_skills(problems: Problems) -> None:
             text = (skill / "SKILL.md").read_text(encoding="utf-8")
             check_skill_resources(skill, text, problems)
             skill_name = frontmatter_name(text)
+            check_description(f"{name}/{skill.name}", text, problems)
             if not skill_name:
                 problems.add(f"{name}/{skill.name}: SKILL.md is missing frontmatter name")
                 continue
-            frontmatter_end = text.find("\n---", 3)
-            frontmatter = text[3:frontmatter_end] if frontmatter_end != -1 else ""
-            if "description:" not in frontmatter:
-                problems.add(f"{name}/{skill.name}: SKILL.md is missing frontmatter description")
             if skill_name != skill.name:
                 problems.add(
                     f"{name}/{skill.name}: frontmatter name is {skill_name!r}"
@@ -325,6 +374,7 @@ def main() -> int:
         check_codex_marketplace(problems)
         check_plugin_manifests(problems)
         check_skills(problems)
+        check_archived_descriptions(problems)
     except FileNotFoundError as exc:
         problems.add(f"missing file: {exc.filename}")
     except json.JSONDecodeError as exc:

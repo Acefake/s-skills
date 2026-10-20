@@ -1,6 +1,6 @@
 ---
 name: technical-writing
-description: "Use when writing or reviewing docs, an RFC, a README, a PR description, or a commit message. 中文触发：分层的技术写作标准：Diátaxis 文档结构、Google 开发者文档风格的句子、STE（简化技术英语）的操作说明规则、Global English（面向全球读者的英文）句法。在使用 /technical-writing，或者写作、审查文档、RFC（设计提案）、readme、PR 说明或提交信息时使用。"
+description: "中文：分层的技术写作标准：Diátaxis 文档结构、Google 开发者文档风格的句子、STE（简化技术英语）的操作说明规则、Global English（面向全球读者的英文）句法。在使用 /technical-writing，或者写作、审查文档、RFC（设计提案）、readme、PR 说明或提交信息时使用。Use when writing or reviewing docs, an RFC, a README, a PR description, or a commit message."
 disable-model-invocation: true
 ---
 ## 运行环境适配

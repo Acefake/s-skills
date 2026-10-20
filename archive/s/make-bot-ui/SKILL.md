@@ -1,6 +1,6 @@
 ---
 name: make-bot-ui
-description: "Use when building a custom UI that wakes a bot through a webhook. 中文触发：用于做一个能通过 webhook 唤醒 Grok Bot 的自定义界面（页面、仪表盘、按钮）时，用户需要提供 webhook 发送密钥时，或者要把这个界面放到 Tailscale 上访问时。"
+description: "中文：用于做一个能通过 webhook 唤醒 Grok Bot 的自定义界面（页面、仪表盘、按钮）时，用户需要提供 webhook 发送密钥时，或者要把这个界面放到 Tailscale 上访问时。Use when building a custom UI that wakes a bot through a webhook."
 disable-model-invocation: true
 ---
 ## 运行环境适配

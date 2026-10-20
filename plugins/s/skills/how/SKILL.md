@@ -1,6 +1,6 @@
 ---
 name: how
-description: "Use when you need to explain how code works, walk a subsystem before changing it, or decide where something belongs. 中文触发：用于“X 是怎么工作的”、在改东西之前先走读代码，以及关于放在哪里 / 归谁管 / 分层的问题（“这个应该放在哪”、“哪个包负责这个”、“这一层对不对”）。讲解子系统的架构、运行时的流程，帮新人建立心智模型。问动机请用 why。"
+description: "中文：用于“X 是怎么工作的”、在改东西之前先走读代码，以及关于放在哪里 / 归谁管 / 分层的问题（“这个应该放在哪”、“哪个包负责这个”、“这一层对不对”）。讲解子系统的架构、运行时的流程，帮新人建立心智模型。问动机请用 why。Use when you need to explain how code works, walk a subsystem before changing it, or decide where something belongs."
 disable-model-invocation: true
 ---
 ## 运行环境适配

@@ -1,6 +1,6 @@
 ---
 name: review-animations
-description: "Use when reviewing animation code against a high craft bar. 中文触发：按照源自 Emil Kowalski 设计工程理念的高手艺标准，审查动画和动效代码。默认就是挑问题；通过要靠自己挣。"
+description: "中文：按照源自 Emil Kowalski 设计工程理念的高手艺标准，审查动画和动效代码。默认就是挑问题；通过要靠自己挣。Use when reviewing animation code against a high craft bar."
 disable-model-invocation: true
 ---
 ## 运行环境适配

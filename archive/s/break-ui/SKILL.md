@@ -1,6 +1,6 @@
 ---
 name: break-ui
-description: "Use when stress-testing a UI with worst-case data. 中文触发：用最坏情况的数据去“搞坏”一块界面——超长名字、没法断行的邮箱、只有一个字的名字、缺失的字段、巨大的数量、零条数据、超长标签、非拉丁文字、emoji、极端数字——然后把它放在一个“Demo data / Worst case”（演示数据 / 最坏情况）切换开关后面展示，并报告所有坏掉的地方，每一处都给出修法。当用户要求对某个组件或页面做压力测试、搞坏它、找边界情况，或者“试试最坏情况”时使用。视觉设计点评请用 emil-design；动效请用 review-animations。"
+description: "中文：用最坏情况的数据去“搞坏”一块界面——超长名字、没法断行的邮箱、只有一个字的名字、缺失的字段、巨大的数量、零条数据、超长标签、非拉丁文字、emoji、极端数字——然后把它放在一个“Demo data / Worst case”（演示数据 / 最坏情况）切换开关后面展示，并报告所有坏掉的地方，每一处都给出修法。当用户要求对某个组件或页面做压力测试、搞坏它、找边界情况，或者“试试最坏情况”时使用。视觉设计点评请用 emil-design；动效请用 review-animations。Use when stress-testing a UI with worst-case data."
 ---
 ## 运行环境适配
 

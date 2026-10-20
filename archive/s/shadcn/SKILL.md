@@ -1,6 +1,6 @@
 ---
 name: shadcn
-description: "Use when the project uses shadcn and you are adding, fixing, or composing those components. 中文触发：管理 shadcn 组件和项目，包括添加、搜索、修、排查、样式和组合界面（也包括聊天界面）。项目里有 components.json，或用户说 shadcn、注册表、preset、做设计系统、套用 DESIGN.md 时使用。rules/ 仍是英文。"
+description: "中文：管理 shadcn 组件和项目，包括添加、搜索、修、排查、样式和组合界面（也包括聊天界面）。项目里有 components.json，或用户说 shadcn、注册表、preset、做设计系统、套用 DESIGN.md 时使用。rules/ 仍是英文。Use when the project uses shadcn and you are adding, fixing, or composing those components."
 ---
 ## 运行环境适配
 

@@ -1,6 +1,6 @@
 ---
 name: s-help
-description: "Use when the user asks how to set up s or which skill to pick; the README table is the catalog now. 中文触发：指导用户完成 s 的设置、使用 /poteto-mode，以及为一个任务挑选合适的 skill、playbook 或原则。输入 /s-help 加上你的问题。"
+description: "中文：指导用户完成 s 的设置、使用 /poteto-mode，以及为一个任务挑选合适的 skill、playbook 或原则。输入 /s-help 加上你的问题。Use when the user asks how to set up s or which skill to pick; the README table is the catalog now."
 disable-model-invocation: true
 ---
 ## 运行环境适配

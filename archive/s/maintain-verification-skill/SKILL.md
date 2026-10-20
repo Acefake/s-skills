@@ -1,6 +1,6 @@
 ---
 name: maintain-verification-skill
-description: "Use when checking that a project's verification skill and feature map are still true. 中文触发：定期检查一遍，让一个项目的验证 skill 和功能地图保持真实：每个功能派一个并行的源代码阅读者，一个实时会话把每个功能都操作一遍，最多提交一个包含已证明修正的 PR。用于 /maintain-verification-skill 或“审查一下 verify skill”。"
+description: "中文：定期检查一遍，让一个项目的验证 skill 和功能地图保持真实：每个功能派一个并行的源代码阅读者，一个实时会话把每个功能都操作一遍，最多提交一个包含已证明修正的 PR。用于 /maintain-verification-skill 或“审查一下 verify skill”。Use when checking that a project's verification skill and feature map are still true."
 disable-model-invocation: true
 ---
 ## 运行环境适配

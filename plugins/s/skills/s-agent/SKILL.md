@@ -1,6 +1,6 @@
 ---
 name: s-agent
-description: "Use when a parent conversation dispatches s-agent to write code or do chores, after it has read poteto-mode and not to run a playbook itself. 中文触发：poteto-mode 派出去写代码或打杂的子智能体。动手前完整读 poteto-mode。不要派它去跑 playbook 本身。用于父对话说派一个 s-agent 的时候。"
+description: "中文：poteto-mode 派出去写代码或打杂的子智能体。动手前完整读 poteto-mode。不要派它去跑 playbook 本身。用于父对话说派一个 s-agent 的时候。Use when a parent conversation dispatches s-agent to write code or do chores, after it has read poteto-mode and not to run a playbook itself."
 disable-model-invocation: true
 ---
 ## 运行环境适配

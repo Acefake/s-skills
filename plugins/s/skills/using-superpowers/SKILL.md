@@ -1,6 +1,6 @@
 ---
 name: using-superpowers
-description: "Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions 中文触发：开始任何对话时，在作答、提出澄清问题、探索代码库或检查文件之前，先查找并调用相关技能。"
+description: "中文：开始任何对话时，在作答、提出澄清问题、探索代码库或检查文件之前，先查找并调用相关技能。Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions."
 ---
 ## 运行环境适配
 

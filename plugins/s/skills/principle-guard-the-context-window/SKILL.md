@@ -1,6 +1,6 @@
 ---
 name: principle-guard-the-context-window
-description: "Use when a large output, file, or plan would fill the context window. 中文触发：当上下文快要满了时使用：大量输出、很长的文件、反复读取、规划分派任务。把大块内容交给子智能体处理；主线程里只保留摘要，不要原始数据。"
+description: "中文：当上下文快要满了时使用：大量输出、很长的文件、反复读取、规划分派任务。把大块内容交给子智能体处理；主线程里只保留摘要，不要原始数据。Use when a large output, file, or plan would fill the context window."
 disable-model-invocation: false
 ---
 ## 运行环境适配

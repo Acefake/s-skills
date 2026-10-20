@@ -6,7 +6,12 @@ from unittest.mock import patch
 from contextlib import redirect_stdout
 from io import StringIO
 
-from check_marketplace import Problems, check_skill_resources
+from check_marketplace import (
+    Problems,
+    check_skill_resources,
+    description_order_problem,
+    frontmatter_description,
+)
 import update_skill_policies
 
 
@@ -44,6 +49,22 @@ class SkillResourcesTest(unittest.TestCase):
             problems = Problems()
             check_skill_resources(skill, text, problems)
             self.assertTrue(problems.ok(), problems.items)
+
+    def test_description_is_chinese_then_use_when(self):
+        good = (
+            '---\nname: sample\n'
+            'description: "中文：去掉 AI 腔。Use when prose sounds like AI."\n'
+            '---\n'
+        )
+        self.assertIsNone(description_order_problem(frontmatter_description(good)))
+        english_first = (
+            '---\nname: sample\n'
+            'description: "Use when prose sounds like AI. 中文触发：去掉 AI 腔。"\n'
+            '---\n'
+        )
+        self.assertIsNotNone(description_order_problem(frontmatter_description(english_first)))
+        self.assertIsNotNone(description_order_problem("中文：去掉 AI 腔。"))
+        self.assertIsNotNone(description_order_problem("中文触发：去掉 AI 腔。Use when prose sounds like AI."))
 
 
 if __name__ == '__main__':

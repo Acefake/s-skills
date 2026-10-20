@@ -1,6 +1,6 @@
 ---
 name: s-agent
-description: "Use when the parent conversation dispatches s-agent to write code or do chores. Read poteto-mode in full first. Do not dispatch it to run a playbook. 中文触发：父对话派 s-agent 写代码或打杂。动手前完整读 poteto-mode。不要派它去跑 playbook 本身。"
+description: "中文：父对话派 s-agent 写代码或打杂。动手前完整读 poteto-mode。不要派它去跑 playbook 本身。Use when the parent conversation dispatches s-agent to write code or do chores. Read poteto-mode in full first. Do not dispatch it to run a playbook."
 is_background: true
 ---
 

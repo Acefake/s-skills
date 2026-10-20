@@ -1,6 +1,6 @@
 ---
 name: finishing-a-development-branch
-description: "Use when implementation is done, tests pass, and you need to decide how to integrate the work. 中文触发：实现已完成、全部测试通过，且需要决定如何集成工作时，通过呈现合并、PR 或清理的结构化选项来引导开发工作收尾"
+description: "中文：实现已完成、全部测试通过，且需要决定如何集成工作时，通过呈现合并、PR 或清理的结构化选项来引导开发工作收尾。Use when implementation is done, tests pass, and you need to decide how to integrate the work."
 ---
 ## 运行环境适配
 

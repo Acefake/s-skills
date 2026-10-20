@@ -1,6 +1,6 @@
 ---
 name: principle-fix-root-causes
-description: "Use when debugging, and the fix should land where the system first went wrong. 中文触发：调试时使用。把每个症状追溯到系统第一次出错的地方，在那里修。只有当一个防护处理的状态是合理存在的，它才算修复。"
+description: "中文：调试时使用。把每个症状追溯到系统第一次出错的地方，在那里修。只有当一个防护处理的状态是合理存在的，它才算修复。Use when debugging, and the fix should land where the system first went wrong."
 disable-model-invocation: false
 ---
 ## 运行环境适配

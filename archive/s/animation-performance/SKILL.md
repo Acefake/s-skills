@@ -1,6 +1,6 @@
 ---
 name: animation-performance
-description: "Use when an animation is janky, dropping frames, or choosing properties that miss the frame budget. 中文触发：让网页动画保持在每帧的时间预算内——只动走合成层的属性，页面繁忙时让动效不占主线程，动画掉帧时找出原因。内容包括布局/绘制/合成三步流水线、换成更便宜的属性、CSS 和 WAAPI 和 requestAnimationFrame 的比较、Framer Motion 的硬件加速写法、React 每帧重新渲染、继承的 CSS 变量导致重算样式、模糊的开销，以及 `will-change` 什么时候真正有用。当动画卡顿、一顿一顿、抖动或掉帧时；选择要动哪个属性时；从性能角度在 CSS 和 JS 动画之间做选择时；或者想用 `will-change` 或 GPU 图层时使用。选择缓动、时长或决定到底该不该动请用 animate；整体审查动效请用 review-animations。"
+description: "中文：让网页动画保持在每帧的时间预算内——只动走合成层的属性，页面繁忙时让动效不占主线程，动画掉帧时找出原因。内容包括布局/绘制/合成三步流水线、换成更便宜的属性、CSS 和 WAAPI 和 requestAnimationFrame 的比较、Framer Motion 的硬件加速写法、React 每帧重新渲染、继承的 CSS 变量导致重算样式、模糊的开销，以及 `will-change` 什么时候真正有用。当动画卡顿、一顿一顿、抖动或掉帧时；选择要动哪个属性时；从性能角度在 CSS 和 JS 动画之间做选择时；或者想用 `will-change` 或 GPU 图层时使用。选择缓动、时长或决定到底该不该动请用 animate；整体审查动效请用 review-animations。Use when an animation is janky, dropping frames, or choosing properties that miss the frame budget."
 ---
 ## 运行环境适配
 

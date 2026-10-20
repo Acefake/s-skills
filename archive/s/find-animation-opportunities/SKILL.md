@@ -1,6 +1,6 @@
 ---
 name: find-animation-opportunities
-description: "Use when looking for places that should move and rejecting places that should not. 中文触发：在代码库或界面里寻找“现在没动但应该动”的地方，并否决所有不该动的地方。只读不改；它会提出带准确数值的动效建议，但不负责实现。当用户问“这里什么可以加动画？”或者想“让它感觉更有生命力”时使用。修复现有动画请改用 improve-animations 或 review-animations。"
+description: "中文：在代码库或界面里寻找“现在没动但应该动”的地方，并否决所有不该动的地方。只读不改；它会提出带准确数值的动效建议，但不负责实现。当用户问“这里什么可以加动画？”或者想“让它感觉更有生命力”时使用。修复现有动画请改用 improve-animations 或 review-animations。Use when looking for places that should move and rejecting places that should not."
 ---
 ## 运行环境适配
 

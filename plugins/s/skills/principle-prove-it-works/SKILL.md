@@ -1,6 +1,6 @@
 ---
 name: principle-prove-it-works
-description: "Use when you are about to claim something is done and need to check the real result. 中文触发：完成一项任务之后、宣布完成之前使用。对照真实的产物来验证（运行这个功能、读实际的值、检查 diff），而不是看替代指标、自我汇报或“能编译通过”。"
+description: "中文：完成一项任务之后、宣布完成之前使用。对照真实的产物来验证（运行这个功能、读实际的值、检查 diff），而不是看替代指标、自我汇报或“能编译通过”。Use when you are about to claim something is done and need to check the real result."
 disable-model-invocation: false
 ---
 ## 运行环境适配

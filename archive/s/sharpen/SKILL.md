@@ -1,6 +1,6 @@
 ---
 name: sharpen
-description: "Use when sharpening a task before implementation; day-to-day shaping uses brainstorming instead. 中文触发：开始一项任务之前先把它磨清楚：顶尖专家会怎么做、用户真正想要什么、需求该写到多细。用于 /sharpen。"
+description: "中文：开始一项任务之前先把它磨清楚：顶尖专家会怎么做、用户真正想要什么、需求该写到多细。用于 /sharpen。Use when sharpening a task before implementation; day-to-day shaping uses brainstorming instead."
 disable-model-invocation: true
 ---
 ## 运行环境适配

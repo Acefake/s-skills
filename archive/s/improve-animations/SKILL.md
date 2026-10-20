@@ -1,6 +1,6 @@
 ---
 name: improve-animations
-description: "Use when you want a read-only, prioritized animation improvement plan for a codebase. 中文触发：以资深动效顾问的身份，全面查看代码库里的动画和动效代码，然后写出一份按优先级排序的审计结果，以及给其他 AI 助手（或更便宜的模型）执行的、内容完整独立的实现计划。对源代码只读不改——它规划改进，不负责应用。当用户要求“改进动画”、“审查动效”、“让这个应用感觉更好”，或者想要一份动画修复路线图、而不是审查某一次改动时使用。"
+description: "中文：以资深动效顾问的身份，全面查看代码库里的动画和动效代码，然后写出一份按优先级排序的审计结果，以及给其他 AI 助手（或更便宜的模型）执行的、内容完整独立的实现计划。对源代码只读不改——它规划改进，不负责应用。当用户要求“改进动画”、“审查动效”、“让这个应用感觉更好”，或者想要一份动画修复路线图、而不是审查某一次改动时使用。Use when you want a read-only, prioritized animation improvement plan for a codebase."
 ---
 ## 运行环境适配
 

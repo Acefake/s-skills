@@ -1,6 +1,6 @@
 ---
 name: principle-outcome-oriented-execution
-description: "Use when a planned rewrite or migration should move directly to the target structure. 中文触发：在有明确阶段边界的计划内重写和迁移中使用。直接向目标架构收敛；不要用用完即扔的兼容代码去维持平稳的中间状态。"
+description: "中文：在有明确阶段边界的计划内重写和迁移中使用。直接向目标架构收敛；不要用用完即扔的兼容代码去维持平稳的中间状态。Use when a planned rewrite or migration should move directly to the target structure."
 disable-model-invocation: false
 ---
 ## 运行环境适配
