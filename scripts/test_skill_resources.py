@@ -69,9 +69,6 @@ class SkillResourcesTest(unittest.TestCase):
         self.assertIsNotNone(description_order_problem("中文触发：去掉 AI 腔。Use when prose sounds like AI."))
 
 
-if __name__ == '__main__':
-    unittest.main()
-
 
 class SkillReferenceTest(unittest.TestCase):
     def test_old_prefix_and_archived_names_are_reported(self):
@@ -82,3 +79,13 @@ class SkillReferenceTest(unittest.TestCase):
         self.assertEqual(len(problems), 2, problems)
         self.assertEqual(skill_reference_problems('用 `tdd` 和 `swarm`。', active, archived), [])
 
+    def test_bold_and_command_names_are_reported(self):
+        active = {'tdd'}
+        archived = {'test-driven-development', 'writing-skills'}
+        text = '见 **test-driven-development**，或运行 /s:writing-skills。'
+        problems = skill_reference_problems(text, active, archived)
+        self.assertEqual(len(problems), 2, problems)
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -22,6 +22,11 @@ EXPECTED_SKILL_COUNTS = {
     "s": 60,
 }
 
+# Skills kept under archive/<plugin>/, outside the plugin package.
+EXPECTED_ARCHIVED_COUNTS = {
+    "s": 39,
+}
+
 MANIFEST_REL_PATHS = (
     "plugin.json",
     ".cursor-plugin/plugin.json",
