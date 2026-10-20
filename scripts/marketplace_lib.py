@@ -19,7 +19,7 @@ LOCK_PATH = ROOT / "plugin-versions.lock.json"
 PLUGIN_ORDER = ("s",)
 
 EXPECTED_SKILL_COUNTS = {
-    "s": 60,
+    "s": 62,
 }
 
 # Skills kept under archive/<plugin>/, outside the plugin package.
