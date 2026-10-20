@@ -9,7 +9,7 @@
 multi_agent = true
 ```
 
-这会为 `dispatching-parallel-agents` 和 `subagent-driven-development` 这类技能启用 `spawn_agent`、`wait_agent` 和 `close_agent`。使用 subagent-driven-development 时，实现者子代理和审查者子代理做完全部工作后，你应当总是关闭它们。
+这会为 `swarm` 和 `subagent-driven-development` 这类技能启用 `spawn_agent`、`wait_agent` 和 `close_agent`。使用 subagent-driven-development 时，实现者子代理和审查者子代理做完全部工作后，你应当总是关闭它们。
 
 ## 环境检测
 

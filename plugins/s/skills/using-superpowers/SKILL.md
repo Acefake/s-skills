@@ -32,8 +32,8 @@ description: "开始任何对话时，在作答、提出澄清问题、探索代
 
 多项技能同时适用时，流程技能优先——它们确定做法，然后由实现技能（frontend-design 等）去执行。Brainstorming 和 systematic-debugging 是 Superpowers 最常用的流程技能，但这条规则对任何流程技能都成立。
 
-- 「我们来做 X」→ 先 superpowers:brainstorming，然后是实现技能。
-- 「修这个 bug」→ 先 superpowers:systematic-debugging，然后是领域技能。
+- 「我们来做 X」→ 先 brainstorming，然后是实现技能。
+- 「修这个 bug」→ 先 systematic-debugging，然后是领域技能。
 
 ## 危险信号
 

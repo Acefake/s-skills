@@ -376,6 +376,33 @@ def check_skill_resources(skill: Path, text: str, problems: Problems) -> None:
             problems.add(f"{skill.name}: broken local link {target}")
 
 
+UPSTREAM_PREFIX_RE = re.compile(r"\bsuperpowers:([a-z0-9-]+)")
+BACKTICK_NAME_RE = re.compile(r"`([a-z0-9]+(?:-[a-z0-9]+)+)`")
+
+
+def skill_reference_problems(text: str, active: set[str], archived: set[str]) -> list[str]:
+    """Return references to the old upstream prefix or to archived skills."""
+    found: list[str] = []
+    for match in UPSTREAM_PREFIX_RE.finditer(text):
+        found.append(f"uses old prefix superpowers:{match.group(1)}")
+    for match in BACKTICK_NAME_RE.finditer(text):
+        name = match.group(1)
+        if name in archived and name not in active:
+            found.append(f"names archived skill `{name}`")
+    return found
+
+
+def check_skill_references(problems: Problems) -> None:
+    skills_root = ROOT / "plugins" / "s" / "skills"
+    archive_root = ROOT / "archive" / "s"
+    active = {path.name for path in skills_root.iterdir() if path.is_dir()}
+    archived = {path.name for path in archive_root.iterdir() if path.is_dir()} if archive_root.is_dir() else set()
+    for path in sorted(skills_root.rglob("*.md")):
+        text = path.read_text(encoding="utf-8")
+        for problem in skill_reference_problems(text, active, archived):
+            problems.add(f"{path.relative_to(ROOT)}: {problem}")
+
+
 def main() -> int:
     problems = Problems()
     try:
@@ -386,6 +413,7 @@ def main() -> int:
         check_codex_marketplace(problems)
         check_plugin_manifests(problems)
         check_skills(problems)
+        check_skill_references(problems)
         check_archived_descriptions(problems)
         check_agent_descriptions(problems)
     except FileNotFoundError as exc:

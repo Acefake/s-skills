@@ -181,7 +181,7 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
    - 能自动化就写自动化测试
    - 没有框架就写一次性测试脚本
    - 修复之前必须先有
-   - 用 `superpowers:test-driven-development` 技能来编写合格的失败测试
+   - 用 `tdd` 技能来编写合格的失败测试
 
 2. **只实施一处修复**
    - 针对已确认的根因
@@ -289,8 +289,8 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 - **`condition-based-waiting.md`** - 用条件轮询替换任意超时
 
 **相关技能：**
-- **superpowers:test-driven-development** - 用于编写失败测试用例（阶段 4，第 1 步）
-- **superpowers:verification-before-completion** - 在宣称成功之前，验证修复确实有效
+- **tdd** - 用于编写失败测试用例（阶段 4，第 1 步）
+- **verification-before-completion** - 在宣称成功之前，验证修复确实有效
 
 ## 实际效果
 
