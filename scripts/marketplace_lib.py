@@ -19,7 +19,7 @@ LOCK_PATH = ROOT / "plugin-versions.lock.json"
 PLUGIN_ORDER = ("s",)
 
 EXPECTED_SKILL_COUNTS = {
-    "s": 61,
+    "s": 60,
 }
 
 MANIFEST_REL_PATHS = (

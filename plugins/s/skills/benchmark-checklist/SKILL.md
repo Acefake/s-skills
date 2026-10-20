@@ -3,11 +3,6 @@ name: benchmark-checklist
 description: "在报告一个性能测量结果或依据它行动之前，先审核它（限制因素、调优、物理极限、错误、可重复性、是否重要，以及工作是否真的发生了）。用于你跑了一个基准测试，或者要报告一个你测出来的加速或性能退化的时候。Use when you are about to report or act on a performance number."
 disable-model-invocation: true
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 基准测试清单
 
 当你产出一个性能数字时使用：一个 PR 的前后对比、一个性能退化的说法、一个爬坡优化（hillclimb）用的测试工具，或者在库或配置之间做选择。每个问题都要用一次运行得到的证据来回答，而不是对代码的猜测。

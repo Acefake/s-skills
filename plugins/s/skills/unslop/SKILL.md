@@ -3,11 +3,6 @@ name: unslop
 description: "去掉任何文字里的 AI 腔。Use when prose sounds like AI and should be rewritten in a plain voice."
 disable-model-invocation: true
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 去掉 AI 腔
 
 修改文字，去掉 AI 的写作套路。先按下面的套路扫一遍，然后重写。保留原意，符合想要的语气。

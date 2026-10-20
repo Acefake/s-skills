@@ -2,10 +2,6 @@
 name: systematic-debugging
 description: "遇到任何 bug、测试失败或意外行为时，在提出修复之前。Use when you hit any bug, test failure, or unexpected behavior, before proposing a fix."
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
 本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见上一级文件夹的 `LICENSE-superpowers`。
 
 # 系统化调试
@@ -181,7 +177,7 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
    - 能自动化就写自动化测试
    - 没有框架就写一次性测试脚本
    - 修复之前必须先有
-   - 用 `superpowers:test-driven-development` 技能来编写合格的失败测试
+   - 用 `tdd` 技能来编写合格的失败测试
 
 2. **只实施一处修复**
    - 针对已确认的根因
@@ -289,8 +285,8 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 - **`condition-based-waiting.md`** - 用条件轮询替换任意超时
 
 **相关技能：**
-- **superpowers:test-driven-development** - 用于编写失败测试用例（阶段 4，第 1 步）
-- **superpowers:verification-before-completion** - 在宣称成功之前，验证修复确实有效
+- **tdd** - 用于编写失败测试用例（阶段 4，第 1 步）
+- **principle-prove-it-works** - 在宣称成功之前，对照真实结果验证修复确实有效
 
 ## 实际效果
 

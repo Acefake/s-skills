@@ -3,11 +3,6 @@ name: principle-prove-it-works
 description: "完成一项任务之后、宣布完成之前使用。对照真实的产物来验证（运行这个功能、读实际的值、检查 diff），而不是看替代指标、自我汇报或“能编译通过”。Use when you are about to claim something is done and need to check the real result."
 disable-model-invocation: false
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 证明它真的能用
 
 每一项任务的产出，都要直接检查真实的东西来验证。不要从替代指标、自我汇报或“能编译通过”去推断。

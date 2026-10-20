@@ -3,6 +3,8 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
+# Bodies that mention models, delegation, browsers, schedules or Cursor get the host note.
+HOST_SPECIFIC = re.compile(r'cursor|subagent|子智能体|模型|浏览器|定时|Task\(|model', re.I)
 
 
 def main():
@@ -31,9 +33,12 @@ def main():
             metadata = metadata.rstrip() + '\npolicy:\n' + setting + '\n'
         policy.write_text(metadata.lstrip('\n'), encoding='utf-8')
         marker = '\n## 运行环境适配\n\n在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。\n'
-        if marker not in text:
-            end = text.index('\n---', 3) + 4
-            text = text[:end] + marker + text[end:]
+        body = text.replace(marker, '')
+        end = body.index('\n---', 3) + 4
+        if HOST_SPECIFIC.search(body[end:]):
+            text = body[:end] + marker + body[end:]
+        else:
+            text = body
         path.write_text(text, encoding='utf-8')
     print(f'Automatic skills: {automatic}')
 

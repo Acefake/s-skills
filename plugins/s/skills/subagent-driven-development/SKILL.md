@@ -67,7 +67,7 @@ digraph process {
     "Read plan, note context and global constraints, create todos" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Dispatch final code reviewer subagent (../requesting-code-review/code-reviewer.md)" [shape=box];
-    "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
+    "Use finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
     "Read plan, note context and global constraints, create todos" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer subagent asks questions?";
@@ -82,7 +82,7 @@ digraph process {
     "Mark task complete in todo list and progress ledger" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
     "More tasks remain?" -> "Dispatch final code reviewer subagent (../requesting-code-review/code-reviewer.md)" [label="no"];
-    "Dispatch final code reviewer subagent (../requesting-code-review/code-reviewer.md)" -> "Use superpowers:finishing-a-development-branch";
+    "Dispatch final code reviewer subagent (../requesting-code-review/code-reviewer.md)" -> "Use finishing-a-development-branch";
 }
 ```
 
@@ -179,7 +179,7 @@ digraph process {
 
 - [implementer-prompt.md](implementer-prompt.md) - 派发实现者子代理
 - [task-reviewer-prompt.md](task-reviewer-prompt.md) - 派发任务评审者子代理（规格符合性 + 代码质量）
-- 覆盖整个分支的终审：使用 superpowers:requesting-code-review 的 [code-reviewer.md](../requesting-code-review/code-reviewer.md)
+- 覆盖整个分支的终审：使用 requesting-code-review 的 [code-reviewer.md](../requesting-code-review/code-reviewer.md)
 
 ## 示例工作流
 
@@ -311,13 +311,13 @@ Done!
 ## 集成
 
 **必需的工作流技能：**
-- **superpowers:using-git-worktrees** - 确保隔离工作区（创建一个，或核实现有的）
-- **superpowers:writing-plans** - 创建本技能所执行的计划
-- **superpowers:requesting-code-review** - 覆盖整个分支的终审所用的代码评审模板
-- **superpowers:finishing-a-development-branch** - 全部任务完成后收尾开发
+- **using-git-worktrees** - 确保隔离工作区（创建一个，或核实现有的）
+- **writing-plans** - 创建本技能所执行的计划
+- **requesting-code-review** - 覆盖整个分支的终审所用的代码评审模板
+- **finishing-a-development-branch** - 全部任务完成后收尾开发
 
 **子代理应当使用：**
-- **superpowers:test-driven-development** - 子代理对每项任务遵循 TDD
+- **tdd** - 子代理对每项任务遵循 TDD
 
 **替代工作流：**
-- **superpowers:executing-plans** - 用于并行会话，而不是同一会话内执行
+- **executing-plans** - 用于并行会话，而不是同一会话内执行

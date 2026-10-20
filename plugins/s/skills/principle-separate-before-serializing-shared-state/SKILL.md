@@ -3,11 +3,6 @@ name: principle-separate-before-serializing-shared-state
 description: "当多个并发的参与者可能写同一个文件、分支、键或状态对象时使用。先消除共享；只有当“只有一个共享写入者”是真正必须的不变量时，才用结构化的方式让写入排队进行。Use when concurrent writers might share a file, branch, key, or object."
 disable-model-invocation: false
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 先分开，再考虑让共享状态串行
 
 当并发的参与者可能共享可变状态时，先问它们是否真的需要同一个可变对象。如果不需要，就消除共享。当共享是真实需要的，就用结构化的方式强制串行：锁文件、按顺序的阶段、独占的归属。指示和约定都不算并发控制。

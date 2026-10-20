@@ -3,11 +3,6 @@ name: principle-make-operations-idempotent
 description: "在设计会遇到崩溃、重启和重试的命令、生命周期步骤或处理循环时使用。不管之前的运行做到一半停在哪里，都要收敛到同一个最终状态。Use when a command, lifecycle step, or loop must land on the same result after a crash and retry."
 disable-model-invocation: false
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 让操作幂等
 
 设计操作时，要让它不管运行多少次、上一次运行停在哪里，都能收敛到正确的状态。每个会改变状态的操作都应该回答：“如果它运行两次会怎样？如果上一次运行在中途崩溃了会怎样？”

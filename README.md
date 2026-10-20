@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.2.2。插件名是 `s`，不需要再装上游插件。活跃技能 **61** 个，随插件分发；另外 **38** 个在仓库根的 [`archive/s/`](archive/s/)，不进插件包。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.2.5。插件名是 `s`，不需要再装上游插件。活跃技能 **60** 个，随插件分发；另外 **39** 个在仓库根的 [`archive/s/`](archive/s/)，不进插件包。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -63,7 +63,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 ### Superpowers
 
-译自 Jesse Vincent 的 Superpowers（MIT），见 [LICENSE-superpowers](plugins/s/LICENSE-superpowers)。这 11 个都会自动选用。
+译自 Jesse Vincent 的 Superpowers（MIT），见 [LICENSE-superpowers](plugins/s/LICENSE-superpowers)。这 10 个都会自动选用。
 
 | 技能 | 用途 |
 |---|---|
@@ -73,13 +73,12 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `executing-plans` | 按写好的计划做 |
 | `subagent-driven-development` | 用子智能体推进计划 |
 | `systematic-debugging` | 按证据排错 |
-| `verification-before-completion` | 声称完成前先拿证据 |
 | `requesting-code-review` | 发起代码审查 |
 | `receiving-code-review` | 处理审查意见 |
 | `using-git-worktrees` | 用 worktree 隔开工作 |
 | `finishing-a-development-branch` | 收尾开发分支 |
 
-和 poteto 重叠、因此归档的三份是 `test-driven-development`、`dispatching-parallel-agents`、`writing-skills`。留下的是 `tdd`、`swarm`、`author-skill`。
+和 poteto 重叠、因此归档的四份是 `test-driven-development`、`dispatching-parallel-agents`、`writing-skills`、`verification-before-completion`。留下的是 `tdd`、`swarm`、`author-skill`、`principle-prove-it-works`。
 
 ### 界面
 

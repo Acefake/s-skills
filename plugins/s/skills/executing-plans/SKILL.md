@@ -16,7 +16,7 @@ description: "已经有书面实现计划，要在单独的会话里按审查检
 
 **开始时宣布：**「我正在使用 executing-plans 技能来实现这份计划。」
 
-**注意：** 告诉你的人类协作者，Superpowers 在能够使用子代理时效果好得多。如果运行在支持子代理的平台上，工作质量会高很多（Claude Code、Codex CLI、Codex App 和 Copilot CLI 都算；各平台工具参考见 `../using-superpowers/references/`）。如果子代理可用，使用 superpowers:subagent-driven-development，而不是本技能。
+**注意：** 告诉你的人类协作者，Superpowers 在能够使用子代理时效果好得多。如果运行在支持子代理的平台上，工作质量会高很多（Claude Code、Codex CLI、Codex App 和 Copilot CLI 都算；各平台工具参考见 `../using-superpowers/references/`）。如果子代理可用，使用 subagent-driven-development，而不是本技能。
 
 ## 流程
 
@@ -38,7 +38,7 @@ description: "已经有书面实现计划，要在单独的会话里按审查检
 
 全部任务完成并验证之后：
 - 宣布：「我正在使用 finishing-a-development-branch 技能来完成这项工作。」
-- **必需子技能：** 使用 superpowers:finishing-a-development-branch
+- **必需子技能：** 使用 finishing-a-development-branch
 - 遵循该技能来验证测试、给出选项、执行所选项
 
 ## 何时停下并求助
@@ -70,6 +70,6 @@ description: "已经有书面实现计划，要在单独的会话里按审查检
 ## 集成
 
 **必需的工作流技能：**
-- **superpowers:using-git-worktrees** - 保证工作区是隔离的（创建一个，或确认已有的那个）
-- **superpowers:writing-plans** - 创建本技能要执行的计划
-- **superpowers:finishing-a-development-branch** - 全部任务之后完成开发
+- **using-git-worktrees** - 保证工作区是隔离的（创建一个，或确认已有的那个）
+- **writing-plans** - 创建本技能要执行的计划
+- **finishing-a-development-branch** - 全部任务之后完成开发

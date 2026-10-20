@@ -1,14 +1,9 @@
 ---
 name: frontend-design
-description: "做新界面，或重做已有界面时，定一个有主见的视觉方向：配色、字体、版式都针对这一份需求，不要看起来像套好的模板。和 `impeccable`、`taste-skill` 有重叠。这个更短，只管方向和取舍，不带检查脚本。Use when the user explicitly names frontend-design and wants a short opinionated visual direction, with no audit scripts; impeccable stays the default interface skill."
+description: "做新界面，或重做已有界面时，定一个有主见的视觉方向：配色、字体、版式都针对这一份需求，不要看起来像套好的模板。和 `impeccable` 有重叠。这个更短，只管方向和取舍，不带检查脚本。Use when the user explicitly names frontend-design and wants a short opinionated visual direction, with no audit scripts; impeccable stays the default interface skill."
 license: Apache-2.0
 disable-model-invocation: true
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 有主见的界面
 
 把这件事当成一家设计工作室的设计负责人来做。这家工作室给每个客户的视觉身份都分得开，不会被认成别人的。这个客户已经退回过看起来俗套、像模板的方案，付的钱是为了一个清楚的观点：配色、字体和版式都针对这份需求做决定，值得冒险的地方就冒险。

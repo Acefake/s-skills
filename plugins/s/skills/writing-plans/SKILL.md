@@ -18,7 +18,7 @@ description: "已有规格或需求、要做多步骤任务、动手改代码之
 
 **开始时宣布：**「我正在使用 writing-plans 技能来创建实现计划。」
 
-**上下文：** 若在隔离的 worktree 中工作，它应在执行时已通过 `superpowers:using-git-worktrees` 技能创建。
+**上下文：** 若在隔离的 worktree 中工作，它应在执行时已通过 `using-git-worktrees` 技能创建。
 
 **计划保存到：** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
 - （用户对计划存放位置的偏好覆盖此默认值）
@@ -58,7 +58,7 @@ description: "已有规格或需求、要做多步骤任务、动手改代码之
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-driven-development (recommended) or executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -166,9 +166,9 @@ git commit -m "feat: add specific feature"
 **用哪种方式？」**
 
 **若选择子代理驱动：**
-- **必需子技能：** 使用 superpowers:subagent-driven-development
+- **必需子技能：** 使用 subagent-driven-development
 - 每个任务一个全新子代理 + 两阶段评审
 
 **若选择会话内执行：**
-- **必需子技能：** 使用 superpowers:executing-plans
+- **必需子技能：** 使用 executing-plans
 - 分批执行，并为评审设置检查点
