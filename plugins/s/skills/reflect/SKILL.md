@@ -44,7 +44,7 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 ## 4. 结构化强制检查
 
-如果某个 Accepted 条目用一条 lint 规则、一个脚本、一个元数据标记或一个运行时检查来强制执行会更可靠，就把它移到 Backlog。见 **encode-lessons-in-structure** 原则 skill。
+如果某个 Accepted 条目用一条 lint 规则、一个脚本、一个元数据标记或一个运行时检查来强制执行会更可靠，就把它移到 Backlog。见 **principle-encode-lessons-in-structure** 原则 skill。
 
 ## 5. 应用
 
@@ -91,13 +91,9 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 判断和发散用 `s-reflect-judgment-divergent-synthesizer`，工具视角用 `s-reflect-tooling`，综合等齐后再用同一个判断智能体。没有这些文件时用内置 `general`，并说明继承了父级模型。不要用 `explore`（是否带得上 MCP 未核实）。`general` 不能再派子智能体。`background: true`，不要在调用上传 `model`。
 
-文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
-
 ### Codex
 
 提示词写成：Spawn three subagents. Judgment and divergent use `s-reflect-judgment-divergent-synthesizer`（或 model \<判断模型\>). Tooling uses `s-reflect-tooling`（或 model \<写代码模型\>). Wait for all three. Then spawn one synthesizer on the judgment model. 自定义智能体继承父级 MCP。提示词可以要求审查者不要改 skill 文件；这不会变成单独的只读沙箱。模型名用这次账号里真有的。
-
-文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
 
 ### WorkBuddy
 
