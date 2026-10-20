@@ -3,11 +3,6 @@ name: principle-subtract-before-you-add
 description: "在安排新增、重构或重写的顺序时使用。先删掉死代码、多余的校验器和空壳引用，再在更简单的基础上搭建。Use when sequencing an addition, refactor, or rewrite and you should delete the extra first."
 disable-model-invocation: false
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 先做减法，再做加法
 
 演进一个系统时，先去掉复杂度，再搭建。默认做减法。

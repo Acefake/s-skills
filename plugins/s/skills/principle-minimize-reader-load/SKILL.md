@@ -3,11 +3,6 @@ name: principle-minimize-reader-load
 description: "在审查或整理难以追踪的代码时使用。数一数从问题到答案之间隔了几层，以及读者脑子里要记住多少隐藏状态；去掉只有一个调用方的包装层，缩小可变状态的范围。Use when code is hard to follow and the reader is carrying too many layers or hidden state."
 disable-model-invocation: false
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 减轻读者负担
 
 可维护性就是读者为了看懂代码所要做的工作。要盯住两个维度：**要追踪的层数**（从问题到答案之间隔了多少层间接调用）和**要记住的状态**（读者必须记在脑子里的隐藏或可变的上下文）。代码行数、圈复杂度和“整洁架构”都只是替代指标。读者负担才是真正重要的。这两个维度是相互独立的。一个有 50 个全局变量的扁平文件，可能和一个 6 层的适配器堆栈一样难以推理。两个都要守住。这是 [Guard the Context Window](../principle-guard-the-context-window/SKILL.md)（守住上下文窗口）在人身上的对应版本。读者的工作记忆也是有限的。

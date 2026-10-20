@@ -3,11 +3,6 @@ name: principle-attack-the-premise
 description: "当两个或更多基于同一个前提的修复都没能通过同一道检查时使用。先把这个前提写下来并直接验证它，再去写下一个默认它成立的修复。Use when two or more fixes that share a premise fail the same check."
 disable-model-invocation: false
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 质疑前提
 
 当两个或更多基于同一个前提的修复，都没能通过同一道检查（gate）时，要怀疑的是前提，而不是这些修复。

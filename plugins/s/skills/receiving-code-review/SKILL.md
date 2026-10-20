@@ -2,10 +2,6 @@
 name: receiving-code-review
 description: "收到代码评审反馈、落实建议之前，尤其当反馈含糊或在技术上可疑时；需要技术严谨与核验，而不是表演式认同或盲目落实。Use when you received code review feedback, before applying it, especially when the feedback is vague or technically suspicious."
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
 本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见上一级文件夹的 `LICENSE-superpowers`。
 
 # 接收代码评审

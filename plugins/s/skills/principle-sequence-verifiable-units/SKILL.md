@@ -3,11 +3,6 @@ name: principle-sequence-verifiable-units
 description: "用于多步骤的工作（批量清理、迁移、一连串相似的改动），以及如何叠放提交和 PR。把工作拆成小单元，每个单元都结束在一个可验证的状态，检查通过后再做下一个，并安排交付顺序，让这个顺序本身就能向审查者证明工作是对的。Use when multi-step work should be split into units you can verify one at a time."
 disable-model-invocation: false
 ---
-## 运行环境适配
-
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-
 # 把工作排成可验证的单元
 
 把工作排成一连串小单元，每个单元结束时都处在一个你能检查的状态；当前单元没变绿（通过）之前，不要往前走。
