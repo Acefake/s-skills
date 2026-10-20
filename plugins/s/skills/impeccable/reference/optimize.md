@@ -160,6 +160,19 @@ const observer = new IntersectionObserver((entries) => {
 - Avoid inline function creation in render
 - Use React DevTools Profiler
 
+- Keep state at the lowest component that uses it; split fast-changing state away from large subtrees
+- Split Context by update frequency instead of one large Context
+- Use `useTransition` / `useDeferredValue` to keep input responsive during heavy updates
+- With React Compiler enabled, skip hand-written `memo` / `useMemo` / `useCallback`
+
+**Vue-specific**:
+- `shallowRef` / `markRaw` for large objects that do not need deep reactivity
+- `v-memo` on expensive list items
+- Put derived values in `computed`, not method calls in the template
+- Keep Pinia stores per module; read only the fields a component needs
+- Virtualize long lists with `@tanstack/vue-virtual` or `vue-virtual-scroller`
+- Lazy-load routes and heavy components with `defineAsyncComponent`
+
 **Framework-agnostic**:
 - Minimize re-renders
 - Debounce expensive operations
@@ -186,6 +199,21 @@ const observer = new IntersectionObserver((entries) => {
 - Optimistic UI updates
 - Request prioritization
 - Progressive enhancement
+
+## Interaction Budget
+
+Hold every interactive surface to these budgets. A missed budget is a bug.
+
+| Metric | Budget |
+|---|---|
+| INP | p75 < 200 ms, aim for < 100 ms |
+| Click to visible feedback | < 100 ms; pressed state appears at once |
+| Long tasks on an interaction path | none > 50 ms |
+| Animation | steady 60 fps, `transform` and `opacity` only |
+| CLS | < 0.1 |
+| First-route JS | code-split per route, aim for < 170 KB gzip |
+
+Measure on a production build with 4× CPU throttling in DevTools. Dev-mode numbers do not count. Record the same interaction in the Performance panel before and after the change; if the number did not improve, revert and try another direction. Vet reported numbers with `benchmark-checklist`.
 
 ## Core Web Vitals Optimization
 
