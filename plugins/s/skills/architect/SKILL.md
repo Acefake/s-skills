@@ -34,7 +34,7 @@ disable-model-invocation: true
 
 参赛者从当前软件的 s 模型配置里 `architect runners` 那一行取，代替 `arena runners`。路径见文末。没有这一行，就按 **arena** 的默认：一个更强的模型，一个较快的写代码模型。软件不能指定模型就省略。别名条目和被拒绝的条目，按 **arena** 阶段 A 的参赛者规则处理。Cursor 的 `claude-opus-5-5-xhigh` 和 `grok-4.7-xhigh-fast` 只在 Cursor 上、并且这次确实可用时才用。
 
-设计两遍。在综合之前，要求至少有两个结构上截然不同的候选，哪怕第一个看起来已经够好了。这就是把 **exhaust-the-design-space** 原则 skill 落到实处。要的是整体形状上的不同方案，而不是在同一个形状里做局部修补。
+设计两遍。在综合之前，要求至少有两个结构上截然不同的候选，哪怕第一个看起来已经够好了。这就是把 **principle-exhaust-the-design-space** 原则 skill 落到实处。要的是整体形状上的不同方案，而不是在同一个形状里做局部修补。
 
 在综合之前，用 [`references/design-red-flags.md`](references/design-red-flags.md) 筛查每一个候选。假设下一个贡献者是一个智能体：它只看到自己打开的文件，照抄离它最近的例子，走能编译通过的最短路径。优先选那种“一个从单个文件看起来正确的改动，对整个仓库也是正确的”的设计。
 
@@ -48,7 +48,7 @@ Arena 会返回一份综合好的设计包。它的综合决定，用来填写�
 
 当调用者明确要求时，才加一个检查点：“/architect with checkpoint”（带检查点）、“stop and show me before implementing”（实现之前先停下来给我看），或者类似的话。那时就把综合好的设计展示出来，暂停等待批准。
 
-不管哪种情况，综合结果都可以作为单独的一个提交，这就是 **foundational-thinking** 原则 skill 里“先搭脚手架”的方式。按照 **outcome-oriented-execution** 原则 skill，在填充过程中出现计划好的、范围明确的破坏是可以的。如果想在实现之前对设计施加对抗性的压力，就对综合好的草图运行 **interrogate** skill。
+不管哪种情况，综合结果都可以作为单独的一个提交，这就是 **principle-foundational-thinking** 原则 skill 里“先搭脚手架”的方式。按照 **principle-outcome-oriented-execution** 原则 skill，在填充过程中出现计划好的、范围明确的破坏是可以的。如果想在实现之前对设计施加对抗性的压力，就对综合好的草图运行 **interrogate** skill。
 
 如果人对形状提出异议（在检查点上或者事后），就把它当作阶段 A 的证据。在写更多代码之前，重新摸底，重跑阶段 B。
 
@@ -58,7 +58,7 @@ Arena 会返回一份综合好的设计包。它的综合决定，用来填写�
 
 ## 阶段 E：架构错了就推倒重来
 
-如果实现一直产生草图吸收不了的摩擦，就把草图扔掉。按照 **redesign-from-first-principles** 和 **fix-root-causes** 这两个原则 skill，不要在一个错误的设计上硬接修补。
+如果实现一直产生草图吸收不了的摩擦，就把草图扔掉。按照 **principle-redesign-from-first-principles** 和 **principle-fix-root-causes** 这两个原则 skill，不要在一个错误的设计上硬接修补。
 
 信号是一种*模式*，而不是单个的情况。迹象有：
 
@@ -74,8 +74,8 @@ Arena 会返回一份综合好的设计包。它的综合决定，用来填写�
 推倒重来时：
 
 1. 对已经建好的部分重新运行 **how** skill。
-2. 按照 redesign-from-first-principles，重新设计，就好像这些新约束从第一天起就是假设一样。
-3. 按照 **subtract-before-you-add** 原则 skill，先做减法再做加法。新的草图在变大之前，应该比旧的更小。
+2. 按照 **principle-redesign-from-first-principles**，重新设计，就好像这些新约束从第一天起就是假设一样。
+3. 按照 **principle-subtract-before-you-add** 原则 skill，先做减法再做加法。新的草图在变大之前，应该比旧的更小。
 4. 回到阶段 B，重新运行 arena。
 
 ## 产出
@@ -94,11 +94,11 @@ Arena 会返回一份综合好的设计包。它的综合决定，用来填写�
 
 ### OpenCode
 
-agent ID 用 `s-architect-runners-1`、`s-architect-runners-2`，`subagent` 加 `background: true`。没有这些文件时用内置 `general`，并说明继承了父级模型。文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
+agent ID 用 `s-architect-runners-1`、`s-architect-runners-2`，`subagent` 加 `background: true`。没有这些文件时用内置 `general`，并说明继承了父级模型。
 
 ### Codex
 
-提示词里点名 `s-architect-runners-1` 和 `s-architect-runners-2`，或点名两个这次账号里真有的模型，写明等齐再汇总。文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+提示词里点名 `s-architect-runners-1` 和 `s-architect-runners-2`，或点名两个这次账号里真有的模型，写明等齐再汇总。
 
 ### WorkBuddy 和 Claude Code
 

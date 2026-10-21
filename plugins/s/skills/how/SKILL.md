@@ -55,13 +55,9 @@ disable-model-invocation: true
 
 需要 MCP 时不要用 `explore`。未核实：`explore` 能不能调用 MCP。改用 `general` 或自定义智能体，提示词里禁止写文件，并且不要禁 `execute`。不要在调用上传 `model`。
 
-文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
-
 ### Codex
 
 探索用内置 `explorer`，或 `s-how-explorer`。讲解用 `s-how-explainer`，或在提示词里点名模型。复杂情况写成：Spawn one explorer subagent per angle. Each uses model \<how explorer\> with model_reasoning_effort \<档位\>. Wait for all, then spawn one explainer on model \<how explainer\>. 没有 toml、也点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
-
-文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
 
 ### WorkBuddy
 

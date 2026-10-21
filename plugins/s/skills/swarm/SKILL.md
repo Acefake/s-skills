@@ -62,15 +62,11 @@ disable-model-invocation: true
 
 工具页没有 `environment` 和 `cloud_base_branch`。全在本机子会话里跑，SHA 写在 prompt 里。不要在调用上传 `model`（工具页没有这个参数；issue 里的写法未核实，见 poteto 文末）。
 
-文档：[Tools](https://opencode.ai/v2/docs/tools)、[Agents](https://opencode.ai/v2/docs/agents/)。
-
 ### Codex
 
 提示词写成：Spawn N subagents in parallel. Each is `s-swarm-workers`（或 “each uses model \<模型\> with model_reasoning_effort \<档位\>”）. Wait for all of them, then summarize. 文件在 `~/.codex/agents/s-swarm-workers.toml`。没有文件时点名这次账号里真有的较快模型。文档举例 `gpt-6-luna` 只在账号有它时才用。
 
 没有 `cloud_base_branch`。SHA 写在提示词里。未核实：有没有把子智能体放到另一台机器的参数。子智能体文档只写了跟父级同一套沙箱。并发很多时，看 `[agents].max_concurrent_threads_per_session`，不写则由 Codex 自己选默认。
-
-文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
 
 ### WorkBuddy
 

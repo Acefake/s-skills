@@ -19,7 +19,7 @@ disable-model-invocation: true
 1. 说明每个候选者要产出的是什么产物。
 2. 推导出评分标准：3-6 条具体的、可以打分的标准，说明在*这个*任务上成功是什么样子。它是阶段 D 里挑选者用的工具。候选者只看到任务本身。
 3. 选择参赛者。用当前软件的 s 模型配置里 `arena runners` 那一行（路径见文末）。没有这份配置或没有这一行，就派两个：一个用判断力最强的模型，一个用较快的写代码模型。软件不能给子智能体单独指定模型时，省略模型，让它们跟父对话走，并说一句这次没有换模型。`auto` 或 `inherit-parent` 也省略。软件拒绝了某个名字，就换同一系列里它接受的最接近的名字，并说一句。不要把 Cursor 的 `grok-*`、`claude-*`、`composer-*` 名字填进别的软件。Cursor 上、并且 `claude-opus-5-5-xhigh` 与 `grok-4.7-xhigh-fast` 确实可用时，没有配置可以用这两个。当竞技场要覆盖多个设计方向时，多派一些参赛者。如果这份工作主要受生成量限制、而不是对判断力敏感，就把同一个模型用 N 次。按 **poteto-mode** skill 里 “子智能体” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
-4. 按照 **separate-before-serializing-shared-state** 原则 skill，给每个候选者一个它自己的输出位置（尽量用一个 git worktree，否则用 `/tmp/arena-<slug>/candidate-<n>/`）。
+4. 按照 **principle-separate-before-serializing-shared-state** 原则 skill，给每个候选者一个它自己的输出位置（尽量用一个 git worktree，否则用 `/tmp/arena-<slug>/candidate-<n>/`）。
 
 ## 阶段 B：分派
 
@@ -39,13 +39,13 @@ disable-model-invocation: true
 
 ## 阶段 E：嫁接
 
-把每个落选的候选者再过一遍，找出值得移植到基础里的东西，通常每个候选者一两样，而不是大部分内容。按照 **redesign-from-first-principles** 原则 skill，亲手把每一处嫁接融进去，让结果在同一个心智模型下保持连贯。不要机械地粘贴。
+把每个落选的候选者再过一遍，找出值得移植到基础里的东西，通常每个候选者一两样，而不是大部分内容。按照 **principle-redesign-from-first-principles** 原则 skill，亲手把每一处嫁接融进去，让结果在同一个心智模型下保持连贯。不要机械地粘贴。
 
 如果候选者都收敛到同一个形状，那就是很强的一致意见。记下这一点，直接交付这个共识形状。不需要嫁接。如果它们差得天南地北，说明阶段 A 的要求写得不够清楚。重新定框架再跑一遍，而不是把分歧取个平均。
 
 ## 阶段 F：验证
 
-按照 **prove-it-works** 原则 skill，像验证任何其他产出一样验证这个综合出来的产物。如果验证发现了竞技场漏掉的问题，要么是阶段 A 错了（重新定框架再跑），要么是某个候选者其实抓到了它、而你漏了这次嫁接（回到阶段 E）。不要糊弄过去。
+按照 **principle-prove-it-works** 原则 skill，像验证任何其他产出一样验证这个综合出来的产物。如果验证发现了竞技场漏掉的问题，要么是阶段 A 错了（重新定框架再跑），要么是某个候选者其实抓到了它、而你漏了这次嫁接（回到阶段 E）。不要糊弄过去。
 
 ## 产出
 
@@ -71,8 +71,6 @@ disable-model-invocation: true
 
 阶段 C：等后台子会话都通知完成之后，再派一个只读评审。agent ID 用池里选中的那一个 `s-arena-cross-judge-pool-<n>`。没有文件时用内置 `explore`。不要在调用上传 `model`（工具页没有这个参数；未核实的 issue 写法见 poteto 文末）。
 
-文档：[Tools](https://opencode.ai/v2/docs/tools)、[Agents](https://opencode.ai/v2/docs/agents/)。
-
 ### Codex
 
 阶段 B 的提示词：Spawn one subagent per runner. Runner 1 is `s-arena-runners-1`. Runner 2 is `s-arena-runners-2`. Wait for all of them, then stop. 没有 toml 时，改成点名两个这次账号里真有的模型，并写上 `model_reasoning_effort`。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。
@@ -80,8 +78,6 @@ disable-model-invocation: true
 阶段 C：等齐之后再派一个。Spawn one subagent, `s-arena-cross-judge-pool-<n>`（或点名池里选中的模型）. It only scores. Do not edit files. Wait for it. 提示词禁止改文件，不会变成单独的只读沙箱。
 
 `default_subagent_model` 拉不开多个参赛者。profile 不是每个参赛者一个。未核实：给单个子智能体选 profile。
-
-文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
 
 ### WorkBuddy
 

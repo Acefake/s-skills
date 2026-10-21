@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 没有路径时，在做任何别的事之前，先找一份路径以 `skills/poteto-mode/SKILL.md` 结尾的文件。找到不止一份时，用旁边插件清单里 `version` 最高的那份。技能目录里看不到它，并不等于这份插件不在。一份都没有，就停下来告诉父对话。
 
-用到哪条原则，就去读那条 `principle-*` skill。
+用到哪条原则，就去读那条 `principle-*` skill。写代码时按 `code-style`，写测试时按 `test-strategy`，碰交互界面时守 `impeccable` 的 optimize 预算；父对话只会点名，不会转述内容。
 
 每次新任务派一个新的 s-agent。只有 poteto-mode “子智能体” 一节写明的那几种情况，才恢复一个已经在跑的。用通用类型代替本文件，会跳过这次全文阅读，然后慢慢跑偏。
 

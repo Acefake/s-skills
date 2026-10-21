@@ -95,15 +95,13 @@ disable-model-invocation: true
 
 没有这些文件时，用内置 `explore`（不改文件），并说明子会话会继承父级模型，这次没有拉开差异。不要把 Cursor 的模型名写进 `model`。不要在调用上传 `model`：工具页没有这个参数，issue 里的写法标为未核实，见 poteto 文末。
 
-文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
-
 ### Codex
 
 用话派，不要找 `Task` 的 `model` 参数。提示词写成：Spawn one subagent per reviewer. Reviewer A is `<name-a>`（或 “uses model \<A\> with model_reasoning_effort \<档位\>”）. Reviewer B is `<name-b>`. Wait for both. Do not edit files. Return each reviewer's findings.
 
 `<name-a>` 是 `~/.codex/agents/s-interrogate-reviewers-1.toml` 的 `name`。文件里的 `model` 和 `model_reasoning_effort` 优先于口头点名。没有这些文件时，在提示词里点名两个这次账号里真有的模型。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。`[agents].default_subagent_model` 是全体一个默认，拉不开两个审查者。profile 是整次进程的覆盖，不是每个审查者一个。未核实：给单个子智能体选 profile。
 
-提示词里的「不要改文件」不会变成单独的只读沙箱。文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
+提示词里的「不要改文件」不会变成单独的只读沙箱。
 
 ### WorkBuddy
 

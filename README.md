@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.2.5。插件名是 `s`，不需要再装上游插件。活跃技能 **60** 个，随插件分发；另外 **39** 个在仓库根的 [`archive/s/`](archive/s/)，不进插件包。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.3.0。插件名是 `s`，不需要再装上游插件。技能 **63** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -35,7 +35,19 @@ Codex 在终端添加市场，再在应用的插件管理入口安装 `s`：
 codex plugin marketplace add Acefake/s-skills
 ```
 
+Hermes 克隆仓库后，在 `~/.hermes/config.yaml` 加外部技能目录，详见 [HOSTS.md](plugins/s/HOSTS.md#hermes)：
+
+```yaml
+skills:
+  external_dirs:
+    - ~/s-skills/plugins/s/skills
+```
+
 Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`。各宿主的命令支持与入口以实际界面为准。安装或更新后开启新会话，确认技能路径和版本。
+
+### 让技能自动生效
+
+把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。Codex 没用对的两条是 `how` 和 `technical-writing`，它们是手点技能，Codex 不会自动选。
 
 ## 使用
 
@@ -55,7 +67,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 - [工作模式](plugins/s/skills/poteto-mode/SKILL.md)
 - [模型设置](plugins/s/skills/setup-s-models/SKILL.md)
 - [改名对照与回滚](RENAMES.md)
-- [Codex、T3 与 Cursor 适配规则](plugins/s/HOSTS.md)
+- [Codex、Cursor、Hermes 等宿主适配规则](plugins/s/HOSTS.md)
 
 ## 活跃技能
 
@@ -78,14 +90,28 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `using-git-worktrees` | 用 worktree 隔开工作 |
 | `finishing-a-development-branch` | 收尾开发分支 |
 
-和 poteto 重叠、因此归档的四份是 `test-driven-development`、`dispatching-parallel-agents`、`writing-skills`、`verification-before-completion`。留下的是 `tdd`、`swarm`、`author-skill`、`principle-prove-it-works`。
+和 poteto 重叠、因此删掉的四份是 `test-driven-development`、`dispatching-parallel-agents`、`writing-skills`、`verification-before-completion`。留下的是 `tdd`、`swarm`、`author-skill`、`principle-prove-it-works`。
 
 ### 界面
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
-| `impeccable` | 自动 | 做页面、改界面、做设计审查 |
+| `impeccable` | 自动 | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
 | `frontend-design` | 手点 | 点名时给一份有主见的视觉方向，不带检查脚本 |
+
+### 代码规范
+
+| 技能 | 调用 | 用途 |
+|---|---|---|
+| `code-style` | 自动 | 按模块就近放文件、写文档注释、质量底线；覆盖 TS/React、Vue、Go、Java |
+
+### 测试
+
+| 技能 | 调用 | 用途 |
+|---|---|---|
+| `test-strategy` | 自动 | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java |
+| `e2e-testing` | 自动 | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |
+| `tdd` | 自动 | 修 bug 时有便宜的测试点就先写失败测试 |
 
 ### 工作流程
 
@@ -113,7 +139,6 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `figure-it-out` | 手点 | 没有现成 playbook 时现做一套 |
 | `timed-loop` | 手点 | 按通过/失败条件反复醒来 |
 | `reflect` | 手点 | 把这次对话的教训改进技能 |
-| `tdd` | 手点 | 用户要求或测试很便宜时先写失败测试 |
 | `ketchup` | 手点 | 补上你离开后这次对话的变化 |
 
 ### 原则
@@ -149,7 +174,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 ## 维护
 
-活跃技能只放在 `plugins/s/skills/<英文名>/SKILL.md`。归档技能放在 `archive/s/<英文名>/`。改完后同步调用策略、更新版本并检查：
+技能只放在 `plugins/s/skills/<英文名>/SKILL.md`。不再用的技能直接删除，名字记进 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`，要找回去翻 git 历史。改完后同步调用策略、更新版本并检查：
 
 ```text
 python scripts/update_skill_policies.py

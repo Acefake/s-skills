@@ -23,7 +23,7 @@ from jsonschema import Draft7Validator, Draft202012Validator, FormatChecker
 from marketplace_lib import (
     AGENT_NAME_RE,
     CLAUDE_NAME_RE,
-    EXPECTED_ARCHIVED_COUNTS,
+    RETIRED_SKILLS,
     EXPECTED_SKILL_COUNTS,
     KEBAB_RE,
     LOCK_PATH,
@@ -315,17 +315,6 @@ def check_agent_descriptions(problems: Problems) -> None:
         check_description(f"plugins/s/agents/{path.name}", text, problems)
 
 
-def check_archived_descriptions(problems: Problems) -> None:
-    root = ROOT / "archive" / "s"
-    found = sorted(path.parent for path in root.glob("*/SKILL.md")) if root.is_dir() else []
-    expected = EXPECTED_ARCHIVED_COUNTS["s"]
-    if len(found) != expected:
-        problems.add(f"archive/s: found {len(found)} skills, expected {expected}")
-    for skill in found:
-        text = (skill / "SKILL.md").read_text(encoding="utf-8")
-        check_description(f"archive/s/{skill.name}", text, problems)
-
-
 def check_skills(problems: Problems) -> None:
     seen_names: dict[str, str] = {}
     for name in PLUGIN_ORDER:
@@ -388,7 +377,7 @@ SKILL_NAME_RES = (
 
 
 def skill_reference_problems(text: str, active: set[str], archived: set[str]) -> list[str]:
-    """Return references to the old upstream prefix or to archived skills."""
+    """Return references to the old upstream prefix, retired skills, or principles missing their prefix."""
     found: list[str] = []
     for match in UPSTREAM_PREFIX_RE.finditer(text):
         found.append(f"uses old prefix superpowers:{match.group(1)}")
@@ -396,15 +385,16 @@ def skill_reference_problems(text: str, active: set[str], archived: set[str]) ->
         for match in pattern.finditer(text):
             name = match.group(1)
             if name in archived and name not in active:
-                found.append(f"names archived skill `{name}`")
+                found.append(f"names retired skill `{name}`")
+            elif name not in active and f"principle-{name}" in active:
+                found.append(f"names `{name}` without the principle- prefix")
     return found
 
 
 def check_skill_references(problems: Problems) -> None:
     skills_root = ROOT / "plugins" / "s" / "skills"
-    archive_root = ROOT / "archive" / "s"
     active = {path.name for path in skills_root.iterdir() if path.is_dir()}
-    archived = {path.name for path in archive_root.iterdir() if path.is_dir()} if archive_root.is_dir() else set()
+    archived = set(RETIRED_SKILLS)
     for path in sorted(skills_root.rglob("*.md")):
         text = path.read_text(encoding="utf-8")
         for problem in skill_reference_problems(text, active, archived):
@@ -422,7 +412,6 @@ def main() -> int:
         check_plugin_manifests(problems)
         check_skills(problems)
         check_skill_references(problems)
-        check_archived_descriptions(problems)
         check_agent_descriptions(problems)
     except FileNotFoundError as exc:
         problems.add(f"missing file: {exc.filename}")

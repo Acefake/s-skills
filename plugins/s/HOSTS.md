@@ -8,6 +8,20 @@
 
 原则类、setup-s-models、impeccable，以及译入的 Superpowers 流程允许按描述自动选择。frontend-design 只在点名时使用。工作模式与并行审查等复杂流程通过名字调用。各技能的声明决定具体策略。自动选择不是保证每轮运行。Codex 可用 `$技能名` 或自然语言点名，Cursor 可用 `/技能名`。`agents/openai.yaml` 为 Codex 声明调用策略，frontmatter 为支持该字段的宿主声明策略。
 
+## Hermes
+
+Hermes Agent 读 agentskills.io 格式的 SKILL.md，本插件的技能不用改就能用。克隆仓库，在 `~/.hermes/config.yaml` 里把技能目录加进外部目录：
+
+```yaml
+skills:
+  external_dirs:
+    - ~/s-skills/plugins/s/skills
+```
+
+用外部目录，不要用 `hermes skills install` 一个个装：Hub 安装只复制 SKILL.md 引用到的 `references/`、`scripts/` 等子目录，技能之间互相点名的相对路径（如 `../poteto-mode/SKILL.md`）会断。更新时在仓库里 `git pull`。Hermes 的自动维护可能改写可写的外部目录，`git status` 能看出来；要防就把目录设成只读。
+
+每个技能自动成为 `/技能名` 命令。Hermes 只在项目里读 `AGENTS.md`（还有 `.hermes.md`、`CLAUDE.md`，先找到哪个用哪个），没有全局指令文件；全局只有 `~/.hermes/SOUL.md`。子智能体、提问和模型对应关系见 poteto-mode 文末的表。
+
 ## 模型与委派
 
 先使用当前会话已加载的 `# s model configuration` 角色配置。已有用户选择持续有效，不要反复询问或用示例里的默认模型覆盖。Codex 将模型 ID 和 `reasoning_effort` 分开传递，不要拼接推理强度到模型 ID。
@@ -39,3 +53,11 @@ Cursor 的 Custom Mode、`/loop` 不适用于所有宿主。T3 持久定时任�
 - 要求解释一小段文字：不应仅因技能安装就修改模型配置。
 
 验证状态分为文件检查通过、会话已发现、实际已读取、行为已通过；逐项记录，不互相替代。
+
+## 官方文档
+
+技能正文里提到宿主的智能体、工具和配置时，以这些文档为准：
+
+- OpenCode：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)、[Commands](https://opencode.ai/v2/docs/commands)、[从 V1 迁移](https://opencode.ai/v2/docs/migrate-v1/)
+- Hermes：[Skills](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills)、[Context Files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files)、[Delegation](https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation)
+- Codex：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)

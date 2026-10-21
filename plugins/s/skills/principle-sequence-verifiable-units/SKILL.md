@@ -13,4 +13,4 @@ disable-model-invocation: false
 
 **交付。** 按能证明这份工作的顺序叠放提交和 PR。标准的形状是先放会失败的测试，再在上面放修复。其他的叙事顺序还有：先做减法再重塑、先记录基线再做处理、先搭脚手架再做功能。每个提交都能单独合入，整个顺序读起来就像一段论证。
 
-这是 **prove-it-works** 原则 skill（保证每个检查都是真实的）和 **build-the-lever** 原则 skill（让每个单元的检查变便宜）在排序方面的补充。
+这是 **principle-prove-it-works** 原则 skill（保证每个检查都是真实的）和 **principle-build-the-lever** 原则 skill（让每个单元的检查变便宜）在排序方面的补充。

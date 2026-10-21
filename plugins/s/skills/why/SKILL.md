@@ -115,13 +115,9 @@ disable-model-invocation: true
 
 调查者用 `s-why-investigators`，综合者用 `s-why-synthesizer`。没有这些文件时用内置 `general`，并说明继承了父级模型。不要用 `explore`：它不改文件，但是否带得上 MCP 未核实。`general` 不能再派子智能体，符合一个调查者只查一个来源。自定义智能体不要禁 `execute`。一条消息里对每个来源调一次 `subagent`，`background: true`，等齐再派综合者。不要在调用上传 `model`。
 
-文档：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)。
-
 ### Codex
 
 自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`，或 `s-why-investigators`。综合点名 `s-why-synthesizer`。提示词写成：Spawn one subagent per evidence source. Each uses model \<why investigators\>. Wait for all, then spawn one synthesizer on model \<why synthesizer\>. Do not edit files. 模型名用这次账号里真有的。提示词禁止改文件，不会变成单独的只读沙箱。
-
-文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)。
 
 ### WorkBuddy
 
