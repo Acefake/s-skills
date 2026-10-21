@@ -22,10 +22,48 @@ EXPECTED_SKILL_COUNTS = {
     "s": 63,
 }
 
-# Skills kept under archive/<plugin>/, outside the plugin package.
-EXPECTED_ARCHIVED_COUNTS = {
-    "s": 39,
-}
+# Skills removed from the repo in 1.3.0. Active skills must not name them.
+RETIRED_SKILLS = frozenset({
+    "animate",
+    "animation-glossary",
+    "animation-performance",
+    "apple-design",
+    "ask-sonner",
+    "automate-me",
+    "blast-radius",
+    "break-ui",
+    "correct",
+    "create-verification-skill",
+    "design-system",
+    "dispatching-parallel-agents",
+    "emil-design",
+    "expo-animate",
+    "find-animation-opportunities",
+    "improve-animations",
+    "in-your-own-words",
+    "maintain-verification-skill",
+    "make-bot-ui",
+    "native-mobile-feel",
+    "pick-frontend-lib",
+    "plain-language",
+    "premium-visual",
+    "prototype",
+    "recall",
+    "review-animations",
+    "s-help",
+    "self-improvement",
+    "shadcn",
+    "sharpen",
+    "taste-skill",
+    "teach",
+    "test-driven-development",
+    "typescript-best-practices",
+    "ui-ux-pro-max",
+    "verification-before-completion",
+    "visual-suite",
+    "web-design-guidelines",
+    "writing-skills",
+})
 
 MANIFEST_REL_PATHS = (
     "plugin.json",

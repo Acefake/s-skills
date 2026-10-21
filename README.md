@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.3.0。插件名是 `s`，不需要再装上游插件。活跃技能 **63** 个，随插件分发；另外 **39** 个在仓库根的 [`archive/s/`](archive/s/)，不进插件包。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.3.0。插件名是 `s`，不需要再装上游插件。技能 **63** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -90,7 +90,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `using-git-worktrees` | 用 worktree 隔开工作 |
 | `finishing-a-development-branch` | 收尾开发分支 |
 
-和 poteto 重叠、因此归档的四份是 `test-driven-development`、`dispatching-parallel-agents`、`writing-skills`、`verification-before-completion`。留下的是 `tdd`、`swarm`、`author-skill`、`principle-prove-it-works`。
+和 poteto 重叠、因此删掉的四份是 `test-driven-development`、`dispatching-parallel-agents`、`writing-skills`、`verification-before-completion`。留下的是 `tdd`、`swarm`、`author-skill`、`principle-prove-it-works`。
 
 ### 界面
 
@@ -174,7 +174,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 ## 维护
 
-活跃技能只放在 `plugins/s/skills/<英文名>/SKILL.md`。归档技能放在 `archive/s/<英文名>/`。改完后同步调用策略、更新版本并检查：
+技能只放在 `plugins/s/skills/<英文名>/SKILL.md`。不再用的技能直接删除，名字记进 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`，要找回去翻 git 历史。改完后同步调用策略、更新版本并检查：
 
 ```text
 python scripts/update_skill_policies.py
