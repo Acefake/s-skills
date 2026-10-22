@@ -19,11 +19,13 @@ LOCK_PATH = ROOT / "plugin-versions.lock.json"
 PLUGIN_ORDER = ("s",)
 
 EXPECTED_SKILL_COUNTS = {
-    "s": 63,
+    "s": 64,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.
 RETIRED_SKILLS = frozenset({
+    "poteto-mode",
+    "using-superpowers",
     "animate",
     "animation-glossary",
     "animation-performance",

@@ -1,6 +1,6 @@
 ---
-name: poteto-mode
-description: "poteto 的智能体工作风格：简洁而详细的回复、深思熟虑地使用子智能体、去掉 AI 腔的文字、简单的代码，以及经过验证的工作。用于 poteto、/poteto-mode，或者要求按这种风格工作的时候。Use when the user names poteto-mode or asks to work in that stricter style."
+name: s-mode
+description: "poteto 的智能体工作风格：简洁而详细的回复、深思熟虑地使用子智能体、去掉 AI 腔的文字、简单的代码，以及经过验证的工作。用于 /s-mode、poteto，或者要求按这种风格工作的时候。Use when the user names s-mode or asks to work in that stricter style."
 disable-model-invocation: true
 icon: crown
 color: yellow
@@ -94,7 +94,7 @@ color: yellow
 
 ## 子智能体
 
-**在 playbook 的某一步里派出的任何子智能体（subagent，派出去干活的小助手，比如写代码的代理、临时的帮手），都用能读写文件、能用全部工具的通用类型。** 每个子智能体的提示词里都写上这个 SKILL.md 的绝对路径，要求它动手前先完整读一遍（包括上面的原则索引），用到哪条原则，就去读那条原则的 skill。收到 `/poteto-mode` 的那个对话负责运行 playbook。永远不要派一个子智能体去运行 playbook 本身。被分派到的工作流程 skill（`how`、`why`、`interrogate`、`reflect`、`swarm`）会为了多模型审查自己选子智能体的类型和模型。尊重 skill 的规定，不要强行统一。各软件里这个通用类型叫什么，见文末“在不同软件里怎么用”。
+**在 playbook 的某一步里派出的任何子智能体（subagent，派出去干活的小助手，比如写代码的代理、临时的帮手），都用能读写文件、能用全部工具的通用类型。** 每个子智能体的提示词里都写上这个 SKILL.md 的绝对路径，要求它动手前先完整读一遍（包括上面的原则索引），用到哪条原则，就去读那条原则的 skill。收到 `/s-mode` 的那个对话负责运行 playbook。永远不要派一个子智能体去运行 playbook 本身。被分派到的工作流程 skill（`how`、`why`、`interrogate`、`reflect`、`swarm`）会为了多模型审查自己选子智能体的类型和模型。尊重 skill 的规定，不要强行统一。各软件里这个通用类型叫什么，见文末“在不同软件里怎么用”。
 
 **每次派子智能体的默认设置。** 后台运行（不用干等它，做完再取结果）。用能写文件的通用模式。只做只读探索时可以用只读类型，但有的软件的只读模式会去掉 MCP 工具，需要 MCP 的活别用只读。给文件路径，而不是把上下文整段贴进去。每个角色明确指定模型：默认写代码用快速的写代码模型，文字和判断用判断力最强的模型（各软件里的具体模型名和配置方法见文末）。写代码的代理按难度分档。最难的改动（横跨多处的设计、棘手的并发、精妙的算法）交给你判断力最强的模型，不管这个任务是需要对模糊的意图做判断，还是一串要一字不差执行的、规定得很精确的步骤。简单的机械性修改交给你的快速写代码模型。如果你的软件里有 s 的模型规则（`/setup-s-models` 生成的，见文末），规则里每个角色的那一行，会覆盖这些默认值，以及被分派到的 skill（`how`、`why`、`arena`、`swarm`、`architect`、`interrogate`、`reflect`）里的模型选择。没有对应行的角色保持默认值；角色行写的是 `inherit-parent` 或 `auto` 的，那个角色用父级聊天的模型运行（派的时候不指定模型）。每个写代码类 playbook 配置的模型，来自它对应的那一行（`feature, refactoring`、`bug-fix`、`perf-issue` 或 `hillclimb`），最难的改动读 `hardest tasks`。文字和判断读 `judgment and prose`。软件里没有这份规则时，按文末的对应关系选模型；选不了就不指定，让它继承父级。
 

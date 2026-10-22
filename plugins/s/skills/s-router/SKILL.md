@@ -1,5 +1,5 @@
 ---
-name: using-superpowers
+name: s-router
 description: "开始任何对话时，在作答、提出澄清问题、探索代码库或检查文件之前，先查找并调用相关技能。Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions."
 ---
 ## 运行环境适配
@@ -24,15 +24,26 @@ description: "开始任何对话时，在作答、提出澄清问题、探索代
 
 **在任何回应或行动之前，先调用相关或被要求使用的技能**——包括澄清问题、探索代码库或检查文件。如果事后发现它不适合当前情境，你可以不用它。
 
-**进入计划模式之前：** 如果你还没有做过头脑风暴，先调用 brainstorming 技能。
+**进入计划模式之前：** 如果你还没有做过头脑风暴，先调用 brainstorming 技能。小改动不进计划模式。
 
 然后宣布「正在使用 [skill] 来 [purpose]」，并严格按该技能执行。如果它有清单，为每一项建立一个待办。
+
+## 小改动走快路
+
+同时满足下面三条就是小改动：意图明确，只动一两个文件，不改对外接口、数据结构或依赖。拿不准就不算。
+
+小改动：
+- 不走 brainstorming 和 writing-plans，不等设计审批，直接做。
+- 只加载对口的能力技能：bug 用 systematic-debugging（有便宜的测试点就 tdd），写代码用 code-style，界面用 impeccable。
+- 提交前过一遍 deslop，交付前按 principle-prove-it-works 实际跑一遍（测试、命令或页面），把结果说出来。
+
+做着做着发现不止一两个文件，或要改接口，就停下来改走下面的流程。
 
 ## 技能优先级
 
 多项技能同时适用时，流程技能优先——它们确定做法，然后由实现技能（frontend-design 等）去执行。Brainstorming 和 systematic-debugging 是 Superpowers 最常用的流程技能，但这条规则对任何流程技能都成立。
 
-- 「我们来做 X」→ 先 brainstorming，然后是实现技能。
+- 「我们来做 X」→ 先 brainstorming，然后是实现技能（小改动见上一节）。
 - 「修这个 bug」→ 先 systematic-debugging，然后是领域技能。
 
 ## 危险信号

@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: "已经有书面实现计划，要在单独的会话里按审查检查点执行。Use when you have a written implementation plan to execute in a separate session with review checkpoints."
+description: "已经有书面实现计划，要在单独的会话里按审查检查点执行。要在当前会话里派子智能体逐个任务做，用 subagent-driven-development。Use when you have a written implementation plan to execute in a separate session with review checkpoints."
 ---
 ## 运行环境适配
 
@@ -16,7 +16,7 @@ description: "已经有书面实现计划，要在单独的会话里按审查检
 
 **开始时宣布：**「我正在使用 executing-plans 技能来实现这份计划。」
 
-**注意：** 告诉你的人类协作者，Superpowers 在能够使用子代理时效果好得多。如果运行在支持子代理的平台上，工作质量会高很多（Claude Code、Codex CLI、Codex App 和 Copilot CLI 都算；各平台工具参考见 `../using-superpowers/references/`）。如果子代理可用，使用 subagent-driven-development，而不是本技能。
+**注意：** 告诉你的人类协作者，Superpowers 在能够使用子代理时效果好得多。如果运行在支持子代理的平台上，工作质量会高很多（Claude Code、Codex CLI、Codex App 和 Copilot CLI 都算；各平台工具参考见 `../s-router/references/`）。如果子代理可用，使用 subagent-driven-development，而不是本技能。
 
 ## 流程
 
