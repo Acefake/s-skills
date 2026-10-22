@@ -1,6 +1,6 @@
 ---
 name: no-comments
-description: "派出 comment-sicko，修掉被采纳的问题，并为注释里声称的限制提出用代码强制执行的办法。Use when you are about to review and comments that should not stay need to be removed first."
+description: "派出 comment-sicko，修掉被采纳的问题，并为注释里声称的限制提出用代码强制执行的办法。只专注注释；要连防御、any、嵌套一起清，用 /deslop。Use when you are about to review and comments that should not stay need to be removed first."
 disable-model-invocation: true
 ---
 ## 运行环境适配
