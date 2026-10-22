@@ -49,6 +49,19 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。Codex 没用对的两条是 `how` 和 `technical-writing`，它们是手点技能，Codex 不会自动选。
 
+## 技能怎么被选中
+
+![s 技能路由图：从一句话开始，经 AGENTS.md 和 s-router 走到四条路径，以及 64 个技能各自的用途](docs/s-skills-route.png)
+
+一句话进来后，宿主先读 `AGENTS.md`，再由 `s-router` 从上往下判断：
+
+1. 点名了技能：直接加载它。手点技能只有这样才会用。
+2. 小改动（意图明确、只动 1–2 个文件、不改接口、数据结构或依赖）：走快路，跳过 `brainstorming` 和计划，只加载对口的能力技能，交付前实际验证。
+3. 新功能或改行为：走主流程，`brainstorming` → `writing-plans` → `using-git-worktrees` → `executing-plans` 或 `subagent-driven-development` → 代码审查 → `finishing-a-development-branch`。
+4. 跨模块、大迁移或要并行：点名 `s-mode`，按需配 `figure-it-out`、`refactor-architecture`、`swarm`、`arena`。
+
+都不是时，按描述自动选能力技能。图下半部分列出每个技能何时用、做什么；彩色底是自动选用，白底虚线是手点。
+
 ## 使用
 
 点名技能，并说明目标和完成条件：
