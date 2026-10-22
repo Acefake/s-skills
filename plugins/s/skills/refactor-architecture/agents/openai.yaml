@@ -1,0 +1,5 @@
+interface:
+  display_name: "Refactor Architecture"
+  short_description: "找出浅模块，出 HTML 报告，再逐个追问定案"
+policy:
+  allow_implicit_invocation: false

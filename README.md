@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.3.0。插件名是 `s`，不需要再装上游插件。技能 **63** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.4.0。插件名是 `s`，不需要再装上游插件。技能 **64** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -124,6 +124,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `how` | 手点 | 改之前讲清代码怎么串 |
 | `why` | 手点 | 查为什么这样设计 |
 | `architect` | 手点 | 动手前定类型和模块边界 |
+| `refactor-architecture` | 手点 | 找浅模块和耦合，出 HTML 报告，再逐个追问定案（译自 Matt Pocock） |
 | `swarm` | 手点 | 并行覆盖、比赛、分片验证 |
 | `arena` | 手点 | 同一任务多方案再嫁接 |
 | `interrogate` | 手点 | 多模型对抗审查 |

@@ -3,8 +3,8 @@
   "note": "contentSha256 covers every file in the plugin except the four manifest JSON files. Bump version when it changes.",
   "plugins": {
     "s": {
-      "version": "1.3.0",
-      "contentSha256": "79dec3b52e203665f3d0c06fa7282bfd39dca0a7fa5358e89a24258118d0f71a"
+      "version": "1.4.0",
+      "contentSha256": "42d15a2691d4823c7659cfc3daa79f4f1bf3fe7a667337ce24716f47e347ef86"
     }
   }
 }
