@@ -19,7 +19,7 @@
 
 | 旧名 | 新名 | 状态 |
 |---|---|---|
-| poteto工作模式 | poteto-mode | 活跃 |
+| poteto工作模式 | s-mode（1.4.0 前叫 poteto-mode） | 活跃 |
 | s助手 | s-agent | 活跃 |
 | 专挑注释 | comment-sicko | 活跃 |
 | 设置s模型 | setup-s-models | 活跃 |
@@ -104,7 +104,7 @@
 | 说人话重讲 | plain-language | 已删 |
 | 自我改进 | self-improvement | 已删 |
 | s使用帮助 | s-help | 已删 |
-| （无旧中文名，上游 Superpowers） | using-superpowers | 活跃 |
+| （无旧中文名，上游 Superpowers） | s-router（1.4.0 前叫 using-superpowers） | 活跃 |
 | （无旧中文名，上游 Superpowers） | brainstorming | 活跃 |
 | （无旧中文名，上游 Superpowers） | writing-plans | 活跃 |
 | （无旧中文名，上游 Superpowers） | executing-plans | 活跃 |

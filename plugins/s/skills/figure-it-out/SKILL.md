@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 ## 开始
 
-开一个待办清单，第一项是阅读 **poteto-mode** skill 里的 Principles（原则）一节。然后把下面的各个阶段作为待办项加进去。
+开一个待办清单，第一项是阅读 **s-mode** skill 里的 Principles（原则）一节。然后把下面的各个阶段作为待办项加进去。
 
 ## 阶段 A：定框架
 
@@ -32,7 +32,7 @@ disable-model-invocation: true
 
 - 在做工作之前先搭好验证工具，并从改动之前的状态采集基线，让检查结果读起来就是“旧值 vs 新值”。
 - 对于单向门式的设计决定，运行 **architect** skill（它会运行 **arena**）。对于形状已经很具体的机械性工作，跳过它。对一个已经定下来的设计再开一次竞技场，就是过度设计（见 **principle-laziness-protocol** 原则 skill）。
-- 决定哪些要分派出去。只在接缝处并行，并给每个工作者它自己的 worktree 或分支（见 **principle-separate-before-serializing-shared-state** 原则 skill）。不要分派过度。按 **poteto-mode** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
+- 决定哪些要分派出去。只在接缝处并行，并给每个工作者它自己的 worktree 或分支（见 **principle-separate-before-serializing-shared-state** 原则 skill）。不要分派过度。按 **s-mode** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
 - 把设计好的阶段列表写下来。人要审查的就是这份列表。
 
 然后执行这个设计。把它的各个步骤作为具体的条目，加到待办清单里阶段 C 和阶段 D 之间。每一步都按阶段 C 的循环纪律来跑，并把阶段 D 的记录穿插其中，每完成一步就记一行，而不是把整条记录留到最后才写。

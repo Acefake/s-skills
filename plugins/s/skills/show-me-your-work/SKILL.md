@@ -70,7 +70,7 @@ ts	phase	decision	why	evidence	result
 
 ## 用另一个模型审查这条记录
 
-交回之前，派出一个子智能体，用和做这份工作的模型不同系列的模型。自我审查不能代替这一步。这个子智能体读审计记录和本次运行的对话记录，然后指出用户应该注意的地方。不是把工作重做一遍，而是扫一遍哪些地方不够好或有风险。按 **poteto-mode** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
+交回之前，派出一个子智能体，用和做这份工作的模型不同系列的模型。自我审查不能代替这一步。这个子智能体读审计记录和本次运行的对话记录，然后指出用户应该注意的地方。不是把工作重做一遍，而是扫一遍哪些地方不够好或有风险。按 **s-mode** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
 
 - 证据薄弱或缺失的已记录决定。
 - 被跳过的验证步骤，或者在对话记录里找不到证明、却声称做过的验证步骤。
@@ -81,7 +81,7 @@ ts	phase	decision	why	evidence	result
 
 ## 在不同软件里怎么用
 
-这个审查者要和做这份工作的模型不同系列。具体派法以 [poteto-mode](../poteto-mode/SKILL.md) 文末为准。
+这个审查者要和做这份工作的模型不同系列。具体派法以 [s-mode](../s-mode/SKILL.md) 文末为准。
 
 Cursor：一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`model` 选和父级不同系列的名字。这次能用时，父级是 `grok-*` 就用 `claude-opus-5-5-xhigh`，父级是 `claude-*` 就用 `grok-4.7-xhigh-fast`。
 

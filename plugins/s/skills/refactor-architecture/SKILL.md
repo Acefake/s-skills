@@ -87,7 +87,7 @@ disable-model-invocation: true
 ### 4. 落地
 
 定案以后要动手：
-- 只动一个模块簇：按 poteto-mode 的 `playbooks/refactoring.md` 做，先锁住行为（特征测试或对拍脚本），再小步迁移，每步保持绿，最后证明行为没变。
+- 只动一个模块簇：按 s-mode 的 `playbooks/refactoring.md` 做，先锁住行为（特征测试或对拍脚本），再小步迁移，每步保持绿，最后证明行为没变。
 - 跨多个模块或要分几个 PR：先 `writing-plans` 写分步计划，再按上面的步骤逐段做。
 - 新接口上测什么用 `test-strategy` 定；旧调用方按 `principle-migrate-callers-then-delete-legacy-apis` 迁完再删。
 

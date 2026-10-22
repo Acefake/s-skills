@@ -33,7 +33,7 @@ Cursor 文档和旧默认值里的 `grok-4.7-xhigh-fast`、`claude-opus-5-5-xhig
 
 ### 3. 预算、对应和确认
 
-**(a) 询问预算。** 用这个软件里向用户提问的工具（名字见 [poteto-mode](../poteto-mode/SKILL.md) 文末的表）。没有这种工具，就在对话里列出选项。标签一字不改。配置里如果已有预算，先说出来。没有配置时，说明 `large` 和下面的默认档一致。
+**(a) 询问预算。** 用这个软件里向用户提问的工具（名字见 [s-mode](../s-mode/SKILL.md) 文末的表）。没有这种工具，就在对话里列出选项。标签一字不改。配置里如果已有预算，先说出来。没有配置时，说明 `large` 和下面的默认档一致。
 
 - `unlimited — max reasoning`（不限，最大推理）
 - `large — xhigh reasoning`（大，很高推理）
@@ -123,7 +123,7 @@ Cursor 和 WorkBuddy 的规则文件还要带该软件的 frontmatter，见文�
 
 ## 在不同软件里怎么用
 
-`~` 在 Windows 上是 `%USERPROFILE%`。工具名以 [poteto-mode](../poteto-mode/SKILL.md) 文末的表为准。角色行的正文仍是第 5 步那一份。Cursor、OpenCode、Codex 还要按下面的做法，把「这个角色用哪个模型」落到该软件真正会派出去的配置上。WorkBuddy 和 Claude Code 只写角色行。
+`~` 在 Windows 上是 `%USERPROFILE%`。工具名以 [s-mode](../s-mode/SKILL.md) 文末的表为准。角色行的正文仍是第 5 步那一份。Cursor、OpenCode、Codex 还要按下面的做法，把「这个角色用哪个模型」落到该软件真正会派出去的配置上。WorkBuddy 和 Claude Code 只写角色行。
 
 | | 写到哪里 | 会不会自动读 | 依据 |
 |---|---|---|---|

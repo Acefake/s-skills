@@ -18,9 +18,9 @@ skills:
     - ~/s-skills/plugins/s/skills
 ```
 
-用外部目录，不要用 `hermes skills install` 一个个装：Hub 安装只复制 SKILL.md 引用到的 `references/`、`scripts/` 等子目录，技能之间互相点名的相对路径（如 `../poteto-mode/SKILL.md`）会断。更新时在仓库里 `git pull`。Hermes 的自动维护可能改写可写的外部目录，`git status` 能看出来；要防就把目录设成只读。
+用外部目录，不要用 `hermes skills install` 一个个装：Hub 安装只复制 SKILL.md 引用到的 `references/`、`scripts/` 等子目录，技能之间互相点名的相对路径（如 `../s-mode/SKILL.md`）会断。更新时在仓库里 `git pull`。Hermes 的自动维护可能改写可写的外部目录，`git status` 能看出来；要防就把目录设成只读。
 
-每个技能自动成为 `/技能名` 命令。Hermes 只在项目里读 `AGENTS.md`（还有 `.hermes.md`、`CLAUDE.md`，先找到哪个用哪个），没有全局指令文件；全局只有 `~/.hermes/SOUL.md`。子智能体、提问和模型对应关系见 poteto-mode 文末的表。
+每个技能自动成为 `/技能名` 命令。Hermes 只在项目里读 `AGENTS.md`（还有 `.hermes.md`、`CLAUDE.md`，先找到哪个用哪个），没有全局指令文件；全局只有 `~/.hermes/SOUL.md`。子智能体、提问和模型对应关系见 s-mode 文末的表。
 
 ## 模型与委派
 

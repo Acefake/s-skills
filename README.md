@@ -54,17 +54,17 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 点名技能，并说明目标和完成条件：
 
 ```text
-用 poteto-mode 修复这个问题，复现后定位原因，修完运行实际流程验证。
+用 s-mode 修复这个问题，复现后定位原因，修完运行实际流程验证。
 用 how 解释这个模块的入口、数据流和关键文件。
 用 impeccable 检查这个设置页，并给出具体改进。
 ```
 
-支持插件命令的宿主也可以使用 `/s:技能名`，例如 `/s:poteto-mode`。Codex 可在技能选择器中选择相应技能。
+支持插件命令的宿主也可以使用 `/s:技能名`，例如 `/s:s-mode`。Codex 可在技能选择器中选择相应技能。
 
 原则、`setup-s-models`、`impeccable` 和译入的 Superpowers 流程可以按描述自动选用。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
 
 - [全部活跃技能](plugins/s/skills/)
-- [工作模式](plugins/s/skills/poteto-mode/SKILL.md)
+- [工作模式](plugins/s/skills/s-mode/SKILL.md)
 - [模型设置](plugins/s/skills/setup-s-models/SKILL.md)
 - [改名对照与回滚](RENAMES.md)
 - [Codex、Cursor、Hermes 等宿主适配规则](plugins/s/HOSTS.md)
@@ -79,7 +79,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 | 技能 | 用途 |
 |---|---|
-| `using-superpowers` | 日常先查该用哪个技能 |
+| `s-router` | 日常先查该用哪个技能 |
 | `brainstorming` | 做功能前先把方案磨清 |
 | `writing-plans` | 把活写成可执行计划 |
 | `executing-plans` | 按写好的计划做 |
@@ -117,7 +117,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
-| `poteto-mode` | 手点 | 点名才走的加强工作流 |
+| `s-mode` | 手点 | 点名才走的加强工作流 |
 | `s-agent` | 手点 | poteto 派出去写代码的子智能体 |
 | `comment-sicko` | 手点 | 被清注释技能派去删注释 |
 | `setup-s-models` | 自动 | 给各角色配模型和预算 |
