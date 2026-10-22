@@ -84,4 +84,21 @@ disable-model-invocation: true
 - **用户以站得住的理由否掉了候选？** 主动提一句：_「要不要记成一条 ADR，以后架构审查就不会再提它？」_ 只在以后的探索者确实需要这个理由才能避免重复提议时才问；临时理由（「现在不值得」）和不言自明的理由就跳过。
 - **想比较加深后模块的几种接口？** 按 [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md) 的并行子智能体做法来；具体怎么拆依赖、怎么换测试见 [DEEPENING.md](DEEPENING.md)。
 
-定案以后要动手，转 `writing-plans` 写分步计划；迁移按 `principle-migrate-callers-then-delete-legacy-apis`，先用 `test-strategy` 定好在新接口上测什么。
+### 4. 落地
+
+定案以后要动手：
+- 只动一个模块簇：按 poteto-mode 的 `playbooks/refactoring.md` 做，先锁住行为（特征测试或对拍脚本），再小步迁移，每步保持绿，最后证明行为没变。
+- 跨多个模块或要分几个 PR：先 `writing-plans` 写分步计划，再按上面的步骤逐段做。
+- 新接口上测什么用 `test-strategy` 定；旧调用方按 `principle-migrate-callers-then-delete-legacy-apis` 迁完再删。
+
+### 5. 守住
+
+迁完把新的模块依赖方向写成检查，放进 CI，否则几周后又会长回去：
+
+| 栈 | 怎么守 |
+|---|---|
+| TS / React / Vue | `dependency-cruiser` 的 `forbidden` 规则（禁止循环、禁止越层引用），CI 跑 `depcruise src` |
+| Go | 用 `internal/` 目录让编译器拦住越界引用；再细的规则用 `go-arch-lint` 或一个 `go list` 脚本 |
+| Java | ArchUnit 测试（`layeredArchitecture()`、`noClasses().should().dependOnClassesThat()`），随单测一起跑 |
+
+规则只写这次定下来的接缝，不要一次写满整张理想架构图。被规则拦住时，要么改代码，要么在 ADR 里写明为什么放行。
