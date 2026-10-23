@@ -1,0 +1,4 @@
+# 统一文本文件为 LF：Windows 检出后 scripts/check_marketplace.py
+# 计算的内容哈希才能与 CI（Linux）一致，否则会误报版本锁未更新。
+* text=auto eol=lf
+*.png binary
