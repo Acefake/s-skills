@@ -1,8 +1,8 @@
-# s 中文技能
+# s-atlas 中文技能
 
-![s](plugins/s/icon.png)
+![s-atlas](plugins/s-atlas/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.5.2。插件名是 `s`，不需要再装上游插件。技能 **72** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.6.0。插件名是 `s-atlas`，不需要再装上游插件。技能 **72** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -26,32 +26,32 @@ Claude Code 和 WorkBuddy 在聊天中运行：
 
 ```text
 /plugin marketplace add Acefake/s-skills
-/plugin install s@s-skills
+/plugin install s-atlas@s-skills
 ```
 
-Codex 在终端添加市场，再在应用的插件管理入口安装 `s`：
+Codex 在终端添加市场，再在应用的插件管理入口安装 `s-atlas`：
 
 ```text
 codex plugin marketplace add Acefake/s-skills
 ```
 
-Hermes 克隆仓库后，在 `~/.hermes/config.yaml` 加外部技能目录，详见 [HOSTS.md](plugins/s/HOSTS.md#hermes)：
+Hermes 克隆仓库后，在 `~/.hermes/config.yaml` 加外部技能目录，详见 [HOSTS.md](plugins/s-atlas/HOSTS.md#hermes)：
 
 ```yaml
 skills:
   external_dirs:
-    - ~/s-skills/plugins/s/skills
+    - ~/s-skills/plugins/s-atlas/skills
 ```
 
-Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`。各宿主的命令支持与入口以实际界面为准。安装或更新后开启新会话，确认技能路径和版本。
+Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-atlas`。各宿主的命令支持与入口以实际界面为准。安装或更新后开启新会话，确认技能路径和版本。
 
 ### 让技能自动生效
 
-把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。那次测量里 Codex 没用对的两条是 `how` 和 `technical-writing`。`how` 仍是手点。`technical-writing` 从 1.5.0 起按描述自动选用。
+把 [`plugins/s-atlas/AGENTS.md`](plugins/s-atlas/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。那次测量里 Codex 没用对的两条是 `how` 和 `technical-writing`。`how` 仍是手点。`technical-writing` 从 1.5.0 起按描述自动选用。
 
 ## 技能怎么被选中
 
-![s 技能路由图：从一句话开始，经 AGENTS.md 和 s-router 走到四条路径。图表示路由形状，当前有哪些技能以下面的对照表为准](docs/s-skills-route.png)
+![s-atlas 技能路由图：从一句话开始，经 AGENTS.md 和 s-router 走到四条路径。图表示路由形状，当前有哪些技能以下面的对照表为准](docs/s-skills-route.png)
 
 一句话进来后，宿主先读 `AGENTS.md`，再由 `s-router` 从上往下判断：
 
@@ -72,7 +72,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 用 impeccable 检查这个设置页，并给出具体改进。
 ```
 
-支持插件命令的宿主也可以使用 `/s:技能名`，例如 `/s:s-mode`。Codex 可在技能选择器中选择相应技能。
+支持插件命令的宿主也可以使用 `/s-atlas:技能名`，例如 `/s-atlas:s-mode`。Codex 可在技能选择器中选择相应技能。
 
 原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及译入的 Superpowers 流程可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
 
@@ -105,11 +105,11 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | 提交前清代码里的 AI 味 | `deslop` |
 | 做事时的取舍（能删就删、先验证、别卡着等人等） | 24 条 `principle-*`，按描述自动选用 |
 
-- [全部活跃技能](plugins/s/skills/)
-- [工作模式](plugins/s/skills/s-mode/SKILL.md)
-- [模型设置](plugins/s/skills/setup-s-models/SKILL.md)
+- [全部活跃技能](plugins/s-atlas/skills/)
+- [工作模式](plugins/s-atlas/skills/s-mode/SKILL.md)
+- [模型设置](plugins/s-atlas/skills/setup-s-models/SKILL.md)
 - [改名对照与回滚](RENAMES.md)
-- [Codex、Cursor、Hermes 等宿主适配规则](plugins/s/HOSTS.md)
+- [Codex、Cursor、Hermes 等宿主适配规则](plugins/s-atlas/HOSTS.md)
 
 ## 活跃技能
 
@@ -117,7 +117,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 ### Superpowers
 
-译自 Jesse Vincent 的 Superpowers（MIT），见 [LICENSE-superpowers](plugins/s/LICENSE-superpowers)。这 10 个都会自动选用。
+译自 Jesse Vincent 的 Superpowers（MIT），见 [LICENSE-superpowers](plugins/s-atlas/LICENSE-superpowers)。这 10 个都会自动选用。
 
 | 技能 | 用途 |
 |---|---|
@@ -143,7 +143,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 ### 文档文件
 
-译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文是 [LICENSE-document-skills](plugins/s/LICENSE-document-skills)。没有复制 anthropics/skills 里的 docx、pptx、xlsx、pdf。
+译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文是 [LICENSE-document-skills](plugins/s-atlas/LICENSE-document-skills)。没有复制 anthropics/skills 里的 docx、pptx、xlsx、pdf。
 
 Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录里 `npm install` 一次）。看页面需要 LibreOffice 和 poppler。docx 阅读需要 pandoc。中文渲染检查要安装 Noto CJK（Debian/Ubuntu：`fonts-noto-cjk`）。PDF 的扫描件 OCR 另要 Tesseract。
 
@@ -234,14 +234,14 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 
 ## 维护
 
-技能只放在 `plugins/s/skills/<英文名>/SKILL.md`。不再用的技能直接删除，名字记进 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`，要找回去翻 git 历史。改完后同步调用策略、更新版本并检查：
+技能只放在 `plugins/s-atlas/skills/<英文名>/SKILL.md`。不再用的技能直接删除，名字记进 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`，要找回去翻 git 历史。改完后同步调用策略、更新版本并检查：
 
 ```text
 python scripts/update_skill_policies.py
-python scripts/bump_plugin_version.py s
+python scripts/bump_plugin_version.py s-atlas
 python scripts/check_marketplace.py
 python -m unittest discover -s scripts -p "test_*.py"
-claude plugin validate plugins/s
+claude plugin validate plugins/s-atlas
 npx skills add . --list
 ```
 
@@ -251,4 +251,4 @@ npx skills add . --list
 
 ## 来源与许可证
 
-保留仍在使用的来源的许可证。Superpowers 译文见 [LICENSE-superpowers](plugins/s/LICENSE-superpowers)。`frontend-design` 来自 Anthropic skills 的 Apache 2.0，见 [LICENSE-anthropics-skills](plugins/s/LICENSE-anthropics-skills)。`refactor-architecture` 来自 Matt Pocock（MIT），见 [LICENSE-mattpocock-skills](plugins/s/LICENSE-mattpocock-skills)。`impeccable` 见 [LICENSE-impeccable](plugins/s/LICENSE-impeccable) 和 [NOTICE-impeccable.md](plugins/s/NOTICE-impeccable.md)。`deslop`、`control-cli`、`control-ui` 改自 Cursor team kit，见 [LICENSE-cursor-team-kit](plugins/s/LICENSE-cursor-team-kit)。文档四技能见 [LICENSE-document-skills](plugins/s/LICENSE-document-skills)。插件自己的许可证是 [LICENSE](plugins/s/LICENSE)。
+保留仍在使用的来源的许可证。Superpowers 译文见 [LICENSE-superpowers](plugins/s-atlas/LICENSE-superpowers)。`frontend-design` 来自 Anthropic skills 的 Apache 2.0，见 [LICENSE-anthropics-skills](plugins/s-atlas/LICENSE-anthropics-skills)。`refactor-architecture` 来自 Matt Pocock（MIT），见 [LICENSE-mattpocock-skills](plugins/s-atlas/LICENSE-mattpocock-skills)。`impeccable` 见 [LICENSE-impeccable](plugins/s-atlas/LICENSE-impeccable) 和 [NOTICE-impeccable.md](plugins/s-atlas/NOTICE-impeccable.md)。`deslop`、`control-cli`、`control-ui` 改自 Cursor team kit，见 [LICENSE-cursor-team-kit](plugins/s-atlas/LICENSE-cursor-team-kit)。文档四技能见 [LICENSE-document-skills](plugins/s-atlas/LICENSE-document-skills)。插件自己的许可证是 [LICENSE](plugins/s-atlas/LICENSE)。

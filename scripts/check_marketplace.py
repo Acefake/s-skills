@@ -306,13 +306,13 @@ def check_description(label: str, text: str, problems: Problems) -> None:
 
 
 def check_agent_descriptions(problems: Problems) -> None:
-    root = ROOT / "plugins" / "s" / "agents"
+    root = ROOT / "plugins" / "s-atlas" / "agents"
     found = sorted(path for path in root.glob("*.md")) if root.is_dir() else []
     if len(found) != 2:
-        problems.add(f"plugins/s/agents: found {len(found)} agents, expected 2")
+        problems.add(f"plugins/s-atlas/agents: found {len(found)} agents, expected 2")
     for path in found:
         text = path.read_text(encoding="utf-8")
-        check_description(f"plugins/s/agents/{path.name}", text, problems)
+        check_description(f"plugins/s-atlas/agents/{path.name}", text, problems)
 
 
 def check_skills(problems: Problems) -> None:
@@ -368,11 +368,11 @@ def check_skill_resources(skill: Path, text: str, problems: Problems) -> None:
 
 
 UPSTREAM_PREFIX_RE = re.compile(r"\bsuperpowers:([a-z0-9-]+)")
-# A skill is named in backticks, in bold, or as a /s: command.
+# A skill is named in backticks, in bold, or as a /s-atlas: command.
 SKILL_NAME_RES = (
     re.compile(r"`([a-z0-9]+(?:-[a-z0-9]+)+)`"),
     re.compile(r"\*\*([a-z0-9]+(?:-[a-z0-9]+)+)\*\*"),
-    re.compile(r"/s:([a-z0-9]+(?:-[a-z0-9]+)+)"),
+    re.compile(r"/s-atlas:([a-z0-9]+(?:-[a-z0-9]+)+)"),
 )
 
 
@@ -392,7 +392,7 @@ def skill_reference_problems(text: str, active: set[str], archived: set[str]) ->
 
 
 def check_skill_references(problems: Problems) -> None:
-    skills_root = ROOT / "plugins" / "s" / "skills"
+    skills_root = ROOT / "plugins" / "s-atlas" / "skills"
     active = {path.name for path in skills_root.iterdir() if path.is_dir()}
     archived = set(RETIRED_SKILLS)
     for path in sorted(skills_root.rglob("*.md")):

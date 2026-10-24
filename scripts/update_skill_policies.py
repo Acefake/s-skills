@@ -9,7 +9,7 @@ HOST_SPECIFIC = re.compile(r'cursor|subagent|子智能体|模型|浏览器|定�
 
 def main():
     automatic = 0
-    for path in (ROOT / 'plugins/s/skills').glob('*/SKILL.md'):
+    for path in (ROOT / 'plugins/s-atlas/skills').glob('*/SKILL.md'):
         text = path.read_text(encoding='utf-8')
         end = text.index('\n---', 3)
         implicit = not bool(re.search(r'^disable-model-invocation:\s*true\s*$', text[3:end], re.M))
