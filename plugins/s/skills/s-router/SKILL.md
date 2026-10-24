@@ -47,6 +47,7 @@ description: "开始任何对话时，在作答、提出澄清问题、探索代
 - 「修这个 bug」→ 先 systematic-debugging，然后是领域技能。修 bug、报错、bug-fix、fix bug 都走它。
 - 写或改 Word、幻灯片、表格、PDF → `docx`、`pptx`、`xlsx`、`pdf`。README、写文档、RFC 用 `technical-writing`。中英翻译用 `translate`。
 - 写提交说明或开 PR → `commit-pr`。还没决定分支怎么集成时用 `finishing-a-development-branch`。
+- 审 PR、分支、diff 或本地改动 → `s-review`。默认只出报告。每条发现带文件:行和 P0/P1/P2。
 - 教我、讲讲这块代码怎么工作 → `how`。已删除的 teach 不要加载。
 
 ## 危险信号

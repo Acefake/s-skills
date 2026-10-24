@@ -1,12 +1,12 @@
 # 宿主适配与使用入口
 
-本仓库统一使用插件名 `s`，市场名为 `s-skills`，源文件位于 `plugins/s/`。不需要安装或加载上游插件。以本次会话技能目录中的实际路径为准；能看到文件不代表已自动触发。
+本仓库统一使用插件名 `s`，市场名为 `s-skills`，源文件位于 `plugins/s/`。当前插件版本 1.5.2，活跃技能 72 个，其中包括中文代码审查技能 `s-review`（默认只出报告）。不需要安装或加载上游插件。以本次会话技能目录中的实际路径为准；能看到文件不代表已自动触发。
 
 ## Codex 本地开发
 
 在仓库根目录运行 `powershell -NoProfile -File scripts/install_local_skills.ps1`，将 72 个活跃技能以目录链接安装到本项目的 `.agents/skills/`。重复运行不会复制技能正文或覆盖同名的其他技能。适配文档和许可证作为辅助文件随安装更新。重新打开项目的新会话，确认技能路径指向本仓库。项目链接只对本项目生效；其他项目使用市场中的 `s` 插件。项目目录链接和市场缓存是同一插件的两种安装方式，开发时以项目目录为准。
 
-原则类、setup-s-models、impeccable，以及译入的 Superpowers 流程允许按描述自动选择。frontend-design 只在点名时使用。工作模式与并行审查等复杂流程通过名字调用。各技能的声明决定具体策略。自动选择不是保证每轮运行。Codex 可用 `$技能名` 或自然语言点名，Cursor 可用 `/技能名`。`agents/openai.yaml` 为 Codex 声明调用策略，frontmatter 为支持该字段的宿主声明策略。
+原则类、setup-s-models、impeccable、s-review，以及译入的 Superpowers 流程允许按描述自动选择。`s-review` 审 PR、分支或本地改动，默认只出报告，不改代码。frontend-design 只在点名时使用。工作模式与并行审查等复杂流程通过名字调用。各技能的声明决定具体策略。自动选择不是保证每轮运行。Codex 可用 `$技能名` 或自然语言点名，Cursor 可用 `/技能名`。`agents/openai.yaml` 为 Codex 声明调用策略，frontmatter 为支持该字段的宿主声明策略。
 
 ## Hermes
 

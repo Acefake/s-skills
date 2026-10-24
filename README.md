@@ -74,7 +74,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 支持插件命令的宿主也可以使用 `/s:技能名`，例如 `/s:s-mode`。Codex 可在技能选择器中选择相应技能。
 
-原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`，以及译入的 Superpowers 流程可以按描述自动选用。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
+原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及译入的 Superpowers 流程可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
 
 ## 我想做什么
 
@@ -86,6 +86,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | 按写好的计划做 | `executing-plans` 或 `subagent-driven-development` |
 | 做完了，还没决定合并、开 PR、留着还是丢掉 | `finishing-a-development-branch` |
 | 写提交说明、提交、开 PR | `commit-pr` |
+| 审 PR、分支或本地改动 | `s-review` |
 | 写或改 Word（.docx） | `docx` |
 | 做幻灯片（.pptx） | `pptx` |
 | 做表格、公式（.xlsx） | `xlsx` |
