@@ -1,7 +1,0 @@
-pskoett/self-improving-agent (https://github.com/pskoett/self-improving-agent, commit 6013e81)
-
-截至这次复制，仓库根目录和技能目录都没有 LICENSE 文件，package.json 里也没有 license 字段。
-
-因此这份技能只供 S 个人使用。仓库是公开的，但上游没有给出复制、修改、再分发的许可。不要把它当成 MIT 或其他开源许可证。
-
-（2026-10-19 核对。技能在 skills.sh 上的安装名是 self-improvement。）

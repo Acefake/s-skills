@@ -1,4 +1,4 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见上一级文件夹的 `LICENSE-superpowers`。
+本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../../LICENSE-superpowers)。
 
 ## 派发子代理需要多智能体支持
 

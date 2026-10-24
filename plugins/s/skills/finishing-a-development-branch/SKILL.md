@@ -2,7 +2,7 @@
 name: finishing-a-development-branch
 description: "实现已完成、全部测试通过，且需要决定如何集成工作时，通过呈现合并、PR 或清理的结构化选项来引导开发工作收尾。Use when implementation is done, tests pass, and you need to decide how to integrate the work."
 ---
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见上一级文件夹的 `LICENSE-superpowers`。
+本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
 
 # 收尾开发分支
 

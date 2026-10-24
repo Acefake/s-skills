@@ -1,7 +1,6 @@
 ---
 name: technical-writing
-description: "分层的技术写作标准：Diátaxis 文档结构、Google 开发者文档风格的句子、STE（简化技术英语）的操作说明规则、Global English（面向全球读者的英文）句法。在使用 /technical-writing，或者写作、审查文档、RFC（设计提案）、readme、PR 说明或提交信息时使用。Use when writing or reviewing docs, an RFC, a README, a PR description, or a commit message."
-disable-model-invocation: true
+description: "写 README、写文档、审查技术文档、RFC、PR 说明或提交信息时用的分层标准。这是 Markdown 和技术说明，Word 文件用 docx。Use when writing or reviewing a README, technical documentation, an RFC, a PR description, or a commit message."
 ---
 ## 运行环境适配
 
@@ -11,6 +10,8 @@ disable-model-invocation: true
 # 技术写作
 
 要写得让一个疲惫的工程师第一遍就能看懂。四层规则都要用上。
+
+这里管 Markdown、README、RFC、设计说明、PR 说明和提交信息的句子。`.docx` 用 `docx`，幻灯片用 `pptx`，表格用 `xlsx`，PDF 用 `pdf`。把一段现成文字译成另一种语言用 `translate`。不要用这份标准去排 Word 的字体和修订。
 
 有三条规则高于这四层：
 

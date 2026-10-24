@@ -2,7 +2,7 @@
 name: using-git-worktrees
 description: "开始需要与当前工作区隔离的功能开发时，或在执行实现计划之前，通过原生工具或 git worktree 回退确保存在隔离工作区。Use when you are starting feature work that must be isolated from the current workspace, or before executing an implementation plan."
 ---
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见上一级文件夹的 `LICENSE-superpowers`。
+本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
 
 # 使用 Git Worktree
 

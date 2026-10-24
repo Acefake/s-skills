@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.4.1。插件名是 `s`，不需要再装上游插件。技能 **64** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.5.0。插件名是 `s`，不需要再装上游插件。技能 **70** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -47,11 +47,11 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 ### 让技能自动生效
 
-把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。Codex 没用对的两条是 `how` 和 `technical-writing`，它们是手点技能，Codex 不会自动选。
+把 [`plugins/s/AGENTS.md`](plugins/s/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。那次测量里 Codex 没用对的两条是 `how` 和 `technical-writing`。`how` 仍是手点。`technical-writing` 从 1.5.0 起按描述自动选用。
 
 ## 技能怎么被选中
 
-![s 技能路由图：从一句话开始，经 AGENTS.md 和 s-router 走到四条路径，以及 64 个技能各自的用途](docs/s-skills-route.png)
+![s 技能路由图：从一句话开始，经 AGENTS.md 和 s-router 走到四条路径。图表示路由形状，当前有哪些技能以下面的对照表为准](docs/s-skills-route.png)
 
 一句话进来后，宿主先读 `AGENTS.md`，再由 `s-router` 从上往下判断：
 
@@ -74,7 +74,35 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 支持插件命令的宿主也可以使用 `/s:技能名`，例如 `/s:s-mode`。Codex 可在技能选择器中选择相应技能。
 
-原则、`setup-s-models`、`impeccable` 和译入的 Superpowers 流程可以按描述自动选用。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
+原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`，以及译入的 Superpowers 流程可以按描述自动选用。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
+
+## 我想做什么
+
+| 我想做什么 | 用哪个 skill |
+|---|---|
+| 修 bug、报错、结果不对 | `systematic-debugging` |
+| 有便宜的测试点，先写失败测试再修 | `tdd` |
+| 做新功能、改行为 | `brainstorming`，然后 `writing-plans` |
+| 按写好的计划做 | `executing-plans` 或 `subagent-driven-development` |
+| 做完了，还没决定合并、开 PR、留着还是丢掉 | `finishing-a-development-branch` |
+| 写提交说明、提交、开 PR | `commit-pr` |
+| 写或改 Word（.docx） | `docx` |
+| 做幻灯片（.pptx） | `pptx` |
+| 做表格、公式（.xlsx） | `xlsx` |
+| 读、填或生成 PDF | `pdf` |
+| 写 README、写文档、RFC、PR 说明的句子 | `technical-writing` |
+| 中文和英文互译，或中英对照 | `translate` |
+| 教我这块代码怎么工作 | `how` |
+| 问为什么这样设计 | `why` |
+| 做页面、改界面、看卡顿 | `impeccable` |
+| 点名要一份有主见的视觉方向 | `frontend-design` |
+| 文件放哪、文档注释、代码质量 | `code-style` |
+| 决定在哪一层测 | `test-strategy` |
+| 写或修 Playwright 端到端测试 | `e2e-testing` |
+| 点名走加强工作流 | `s-mode` |
+| 找浅模块、出架构报告 | `refactor-architecture` |
+| 提交前清代码里的 AI 味 | `deslop` |
+| 做事时的取舍（能删就删、先验证、别卡着等人等） | 24 条 `principle-*`，按描述自动选用 |
 
 - [全部活跃技能](plugins/s/skills/)
 - [工作模式](plugins/s/skills/s-mode/SKILL.md)
@@ -112,6 +140,19 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `impeccable` | 自动 | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
 | `frontend-design` | 手点 | 点名时给一份有主见的视觉方向，不带检查脚本 |
 
+### 文档文件
+
+译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文是 [LICENSE-document-skills](plugins/s/LICENSE-document-skills)。没有复制 anthropics/skills 里的 docx、pptx、xlsx、pdf。
+
+Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录里 `npm install` 一次）。看页面需要 LibreOffice 和 poppler。docx 阅读需要 pandoc。中文渲染检查要安装 Noto CJK（Debian/Ubuntu：`fonts-noto-cjk`）。PDF 的扫描件 OCR 另要 Tesseract。
+
+| 技能 | 调用 | 用途 |
+|---|---|---|
+| `docx` | 自动 | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
+| `pptx` | 自动 | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
+| `xlsx` | 自动 | 带公式的工作簿，保存后用 LibreOffice 重算 |
+| `pdf` | 自动 | 提取、填表、合并拆分、OCR 和新建 PDF |
+
 ### 代码规范
 
 | 技能 | 调用 | 用途 |
@@ -144,7 +185,9 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | `unslop` | 手点 | 去掉文字里的 AI 腔 |
 | `deslop` | 自动 | 提交前清掉代码里的 AI 味 |
 | `no-comments` | 手点 | 审查前删掉不该留的注释 |
-| `technical-writing` | 手点 | 写文档、RFC、PR 说明 |
+| `technical-writing` | 自动 | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
+| `commit-pr` | 自动 | 看 diff，写提交说明，推送并开 PR。集成方式还没定用 `finishing-a-development-branch` |
+| `translate` | 自动 | 中英翻译，可中英对照。代码、命令、路径不译 |
 | `author-skill` | 手点 | 按规范写或大改 SKILL.md |
 | `control-ui` | 自动 | 在真浏览器里操作界面取证 |
 | `control-cli` | 自动 | 在本地操作命令行或 TUI |
@@ -205,4 +248,4 @@ npx skills add . --list
 
 ## 来源与许可证
 
-保留各技能的原作者署名、许可证及通知文件。来源包括工作流、设计和 Superpowers，详见 [LICENSE](plugins/s/LICENSE)、插件目录下的 `LICENSE-*`、`NOTICE-*` 和各技能内的来源说明。Superpowers 译文的许可证是 [LICENSE-superpowers](plugins/s/LICENSE-superpowers)。
+保留仍在使用的来源的许可证。Superpowers 译文见 [LICENSE-superpowers](plugins/s/LICENSE-superpowers)。`frontend-design` 来自 Anthropic skills 的 Apache 2.0，见 [LICENSE-anthropics-skills](plugins/s/LICENSE-anthropics-skills)。`refactor-architecture` 来自 Matt Pocock（MIT），见 [LICENSE-mattpocock-skills](plugins/s/LICENSE-mattpocock-skills)。`impeccable` 见 [LICENSE-impeccable](plugins/s/LICENSE-impeccable) 和 [NOTICE-impeccable.md](plugins/s/NOTICE-impeccable.md)。`deslop`、`control-cli`、`control-ui` 改自 Cursor team kit，见 [LICENSE-cursor-team-kit](plugins/s/LICENSE-cursor-team-kit)。文档四技能见 [LICENSE-document-skills](plugins/s/LICENSE-document-skills)。插件自己的许可证是 [LICENSE](plugins/s/LICENSE)。
