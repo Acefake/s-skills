@@ -5,11 +5,11 @@
   },
   "plugins": [
     {
-      "name": "s",
-      "description": "s 的 72 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及译好的 Superpowers 流程。",
+      "name": "s-atlas",
+      "description": "s-atlas 的 72 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及译好的 Superpowers 流程。",
       "source": {
         "source": "local",
-        "path": "./plugins/s"
+        "path": "./plugins/s-atlas"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -18,5 +18,5 @@
       "category": "Productivity"
     }
   ],
-  "icon": "plugins/s/icon.png"
+  "icon": "plugins/s-atlas/icon.png"
 }

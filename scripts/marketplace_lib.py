@@ -16,10 +16,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGINS_DIR = ROOT / "plugins"
 LOCK_PATH = ROOT / "plugin-versions.lock.json"
 
-PLUGIN_ORDER = ("s",)
+PLUGIN_ORDER = ("s-atlas",)
 
 EXPECTED_SKILL_COUNTS = {
-    "s": 72,
+    "s-atlas": 72,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.

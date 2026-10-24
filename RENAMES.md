@@ -1,7 +1,7 @@
 # 技能改名
 
 1.2.0 把技能目录和 `name` 改成英文小写 kebab-case，文件夹名等于 `name`。
-技能在 `plugins/s/skills/`，随插件分发。1.3.0 删掉了原来放在 `archive/s/` 的 39 个归档技能，名字留在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`。
+技能在 `plugins/s-atlas/skills/`，随插件分发。1.3.0 删掉了原来放在 `archive/s/` 的 39 个归档技能，名字留在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`。
 
 活跃 61：原来的 50 个（含 frontend-design）加上 11 个译好的 Superpowers 技能。
 归档 38：原来的 35 个，加上 3 个和 poteto 重叠、因此不进 `skills/` 的 Superpowers 技能。
@@ -12,11 +12,13 @@
 
 1.5.0 新增 `docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`。它们没有旧中文名。`teach` 仍然删除，讲解走 `how`（问动机再用 `why`）。`technical-writing` 从这一版起可以按描述自动选用，Word 文件不归它。
 
-1.5.1 新增 `s-proposal`。1.5.2 新增 `s-review`（中文代码审查，默认只出报告）。它们没有旧中文名。当前插件版本 1.5.2，活跃技能 72 个。
+1.5.1 新增 `s-proposal`。1.5.2 新增 `s-review`（中文代码审查，默认只出报告）。它们没有旧中文名。
+
+1.6.0 把插件名从 `s` 改为 `s-atlas`，目录从 `plugins/s/` 改为 `plugins/s-atlas/`。技能名仍用原来的 `s-` 前缀，例如 `s-review`、`s-proposal`。市场名仍是 `s-skills`，仓库名不变。安装命令是 `/plugin install s-atlas@s-skills`。当前插件版本 1.6.0，活跃技能 72 个。
 
 ## 回滚
 
-要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
+要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s-atlas/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
 整次改名可以回退 1.2.0 的提交。旧中文名不再作为目录或 `name` 使用。
 
 ## 旧名到新名

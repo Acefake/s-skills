@@ -20,7 +20,7 @@ class SkillResourcesTest(unittest.TestCase):
     def test_policy_update_preserves_metadata_and_is_repeatable(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            skill = root / 'plugins/s/skills/sample'
+            skill = root / 'plugins/s-atlas/skills/sample'
             (skill / 'agents').mkdir(parents=True)
             (skill / 'SKILL.md').write_text('---\nname: sample\ndescription: sample\n---\nBody\n', encoding='utf-8')
             metadata = skill / 'agents/openai.yaml'
@@ -88,7 +88,7 @@ class SkillReferenceTest(unittest.TestCase):
     def test_bold_and_command_names_are_reported(self):
         active = {'tdd'}
         archived = {'test-driven-development', 'writing-skills'}
-        text = '见 **test-driven-development**，或运行 /s:writing-skills。'
+        text = '见 **test-driven-development**，或运行 /s-atlas:writing-skills。'
         problems = skill_reference_problems(text, active, archived)
         self.assertEqual(len(problems), 2, problems)
 
