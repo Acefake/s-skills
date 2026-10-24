@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.5.0。插件名是 `s`，不需要再装上游插件。技能 **70** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.5.1。插件名是 `s`，不需要再装上游插件。技能 **71** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -188,6 +188,7 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 | `technical-writing` | 自动 | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
 | `commit-pr` | 自动 | 看 diff，写提交说明，推送并开 PR。集成方式还没定用 `finishing-a-development-branch` |
 | `translate` | 自动 | 中英翻译，可中英对照。代码、命令、路径不译 |
+| `s-proposal` | 自动 | 写中文方案：先问清目标，列提纲，再按固定结构起草打磨 |
 | `author-skill` | 手点 | 按规范写或大改 SKILL.md |
 | `control-ui` | 自动 | 在真浏览器里操作界面取证 |
 | `control-cli` | 自动 | 在本地操作命令行或 TUI |

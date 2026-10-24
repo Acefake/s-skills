@@ -4,7 +4,7 @@
 
 ## Codex 本地开发
 
-在仓库根目录运行 `powershell -NoProfile -File scripts/install_local_skills.ps1`，将 70 个活跃技能以目录链接安装到本项目的 `.agents/skills/`。重复运行不会复制技能正文或覆盖同名的其他技能。适配文档和许可证作为辅助文件随安装更新。重新打开项目的新会话，确认技能路径指向本仓库。项目链接只对本项目生效；其他项目使用市场中的 `s` 插件。项目目录链接和市场缓存是同一插件的两种安装方式，开发时以项目目录为准。
+在仓库根目录运行 `powershell -NoProfile -File scripts/install_local_skills.ps1`，将 71 个活跃技能以目录链接安装到本项目的 `.agents/skills/`。重复运行不会复制技能正文或覆盖同名的其他技能。适配文档和许可证作为辅助文件随安装更新。重新打开项目的新会话，确认技能路径指向本仓库。项目链接只对本项目生效；其他项目使用市场中的 `s` 插件。项目目录链接和市场缓存是同一插件的两种安装方式，开发时以项目目录为准。
 
 原则类、setup-s-models、impeccable，以及译入的 Superpowers 流程允许按描述自动选择。frontend-design 只在点名时使用。工作模式与并行审查等复杂流程通过名字调用。各技能的声明决定具体策略。自动选择不是保证每轮运行。Codex 可用 `$技能名` 或自然语言点名，Cursor 可用 `/技能名`。`agents/openai.yaml` 为 Codex 声明调用策略，frontmatter 为支持该字段的宿主声明策略。
 
