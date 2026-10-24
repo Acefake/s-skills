@@ -1,6 +1,6 @@
 ---
 name: requesting-code-review
-description: "完成任务、实现主要功能、或在合并之前核验工作是否满足需求。Use when a task or major feature is done, or you are about to merge, and need to verify the work meets the requirements."
+description: "「做完了帮我审查」「合并前核验一下」。完成任务或主要功能后，核对是否满足需求。Use when a task or major feature is done, or you are about to merge, and need to verify the work meets the requirements."
 ---
 ## 运行环境适配
 

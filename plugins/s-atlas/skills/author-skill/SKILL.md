@@ -1,6 +1,6 @@
 ---
 name: author-skill
-description: "按 Agent Skills 的形状写一份 SKILL.md：目录、YAML 的 name 和 description、正文步骤。用于 /author-skill、新建或大改一个 skill。文字写完用 /unslop。Use when creating or substantially editing a SKILL.md."
+description: "「/author-skill」「新建一个 skill」「大改 SKILL.md」。按目录、name、description 和步骤写技能说明。文字写完用 /unslop。Use when creating or substantially editing a SKILL.md."
 disable-model-invocation: true
 ---
 ## 运行环境适配
@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 1. 问清这个 skill 什么时候该被用上，以及做完长什么样。
 2. 建一个目录，里面放 `SKILL.md`。目录名和 frontmatter 的 `name` 必须相同。
-3. frontmatter 至少写 `name` 和 `description`。`description` 写成智能体能用来判断“该不该用”的那句话，包含用户真会说的说法。中文句子直接放前面，句号后接英文 `Use when`。
+3. frontmatter 至少写 `name` 和 `description`。`description` 以用户会说的话起头，用「」括上，放在前 100 个字里。中文句子写完，句号后接英文 `Use when`。
 4. 正文写步骤、边界，以及需要时的例子。长参考放进 `references/`，可执行的东西放进 `scripts/`，模板放进 `assets/`。正文里用相对路径点它们。
 5. 只有明确要求“只有点名才加载”时，才加 `disable-model-invocation: true`。
 6. 只在某类文件上才该出现时，加 `paths`（glob）。文档里的旧字段 `globs` 还能用，新文件写 `paths`。
@@ -37,7 +37,7 @@ frontmatter 的最小形状：
 ```markdown
 ---
 name: <技能名>
-description: "<做什么，以及什么时候用>。Use when <the English trigger>."
+description: "「用户会说的这句话」。做什么。Use when <the English trigger>."
 ---
 ```
 

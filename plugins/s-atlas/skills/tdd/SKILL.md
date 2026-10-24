@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: "修 bug 时，如果这个 bug 有便宜的本地测试点，或者用户要求 TDD、先写失败测试或回归测试，就先写一个会失败的测试再修。测试路径不清楚、代价高或重度依赖集成环境时跳过，改用最接近的可运行检查。Use when fixing a bug that has a cheap local test point, or when the user asks for TDD, a failing test first, or a regression test."
+description: "「先写失败测试」「补个回归测试」「用 TDD 修」。有便宜的本地测试点就先写会失败的测试再修。路径贵或说不清就跳过。Use when fixing a bug that has a cheap local test point, or when the user asks for TDD, a failing test first, or a regression test."
 disable-model-invocation: false
 ---
 ## 运行环境适配

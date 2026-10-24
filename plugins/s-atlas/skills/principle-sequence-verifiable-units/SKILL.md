@@ -1,6 +1,6 @@
 ---
 name: principle-sequence-verifiable-units
-description: "用于多步骤的工作（批量清理、迁移、一连串相似的改动），以及如何叠放提交和 PR。把工作拆成小单元，每个单元都结束在一个可验证的状态，检查通过后再做下一个，并安排交付顺序，让这个顺序本身就能向审查者证明工作是对的。Use when multi-step work should be split into units you can verify one at a time."
+description: "「拆成小步」「一步一验」「按什么顺序交」。批量清理、迁移或一串相似改动，每步停在可验证的状态。Use when multi-step work should be split into units you can verify one at a time."
 disable-model-invocation: false
 ---
 # 把工作排成可验证的单元

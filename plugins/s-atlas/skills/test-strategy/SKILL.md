@@ -1,6 +1,6 @@
 ---
 name: test-strategy
-description: "给新功能、改动或整个项目定测试方案：每个行为放在哪一层测、用什么工具、哪些不测，并写出能直接跑的命令。覆盖 TypeScript/React、Vue、Go、Java。Use when deciding what to test and at which layer for a feature, change, or codebase in TypeScript, React, Vue, Go, or Java."
+description: "「测什么」「放在哪一层测」「补测试方案」。给功能或项目定每层用什么工具、哪些不测，并写出命令。覆盖 TypeScript、React、Vue、Go、Java。Use when deciding what to test and at which layer for a feature, change, or codebase in TypeScript, React, Vue, Go, or Java."
 ---
 # 测试方案
 

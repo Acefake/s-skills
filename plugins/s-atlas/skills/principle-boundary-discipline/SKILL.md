@@ -1,6 +1,6 @@
 ---
 name: principle-boundary-discipline
-description: "在接入校验、错误处理或框架适配层时使用。把防护集中在系统边界（命令行、配置、网络、外部 API）；信任内部类型，把业务逻辑放在纯函数里。Use when validation, error handling, or a framework adapter is being added."
+description: "「校验放在边界上」「别在内部到处防御」。防护集中在命令行、配置、网络和外部 API，业务放纯函数。Use when validation, error handling, or a framework adapter is being added."
 disable-model-invocation: false
 ---
 # 守住边界

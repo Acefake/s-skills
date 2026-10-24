@@ -1,6 +1,6 @@
 ---
 name: principle-explain-the-number
-description: "在你相信、报告或依据一个测出来的数字行动之前使用：加速比、性能退化、吞吐量、延迟或评估结果。找出限制它的因素，并排除它测的其实是别的东西、而不是你以为的那项工作。Use when you are about to trust, report, or act on a measured number."
+description: "「这个数字靠谱吗」「加速比哪来的」「别直接信这个延迟」。相信、报告或按测量数字行动前，先找出限制因素。Use when you are about to trust, report, or act on a measured number."
 disable-model-invocation: false
 ---
 ## 运行环境适配

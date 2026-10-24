@@ -1,6 +1,6 @@
 ---
 name: s-mode
-description: "poteto 的智能体工作风格：简洁而详细的回复、深思熟虑地使用子智能体、去掉 AI 腔的文字、简单的代码，以及经过验证的工作。用于 /s-mode、poteto，或者要求按这种风格工作的时候。Use when the user names s-mode or asks to work in that stricter style."
+description: "「/s-mode」「用 s-mode」「按 poteto 风格做」。点名才走的加强工作流：子智能体、去掉 AI 腔、简单代码、做完要验证。Use when the user names s-mode or asks to work in that stricter style."
 disable-model-invocation: true
 icon: crown
 color: yellow

@@ -1,6 +1,6 @@
 ---
 name: arena
-description: "就同一个任务同时派出 N 个并行的候选者，选出一个作为基础，再把落选者最强的部分嫁接进去。用于 /arena、“arena this”、“扔进竞技场”，或者只尝试一次做一个不简单的产物、很可能会定下错误形状的时候。Use when one attempt would lock in the wrong shape and you want several candidates, then graft the best parts together."
+description: "「/arena」「扔进竞技场」「多做几个方案再嫁接」。同一任务并行出候选，选一个做底，把其余长处接进去。Use when one attempt would lock in the wrong shape and you want several candidates, then graft the best parts together."
 disable-model-invocation: true
 ---
 ## 运行环境适配

@@ -1,6 +1,6 @@
 ---
 name: principle-experience-first
-description: "在产品、用户体验或功能范围上需要取舍时使用。选择让用户满意，而不是让实现方便；宁可做少量打磨好的功能，也不要做很多粗糙的功能。Use when a product, UX, or scope tradeoff should favor the person using it."
+description: "「为用户着想」「别为了好写而将就」。产品和范围上的取舍，选让人用着顺的，少做但做好。Use when a product, UX, or scope tradeoff should favor the person using it."
 disable-model-invocation: false
 ---
 # 体验优先

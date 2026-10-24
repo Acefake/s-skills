@@ -1,6 +1,6 @@
 ---
 name: principle-attack-the-premise
-description: "当两个或更多基于同一个前提的修复都没能通过同一道检查时使用。先把这个前提写下来并直接验证它，再去写下一个默认它成立的修复。Use when two or more fixes that share a premise fail the same check."
+description: "「同一前提修了两次都不对」「先验证这个前提」。写下这个前提并直接验证，再写下一个默认它成立的修复。Use when two or more fixes that share a premise fail the same check."
 disable-model-invocation: false
 ---
 # 质疑前提

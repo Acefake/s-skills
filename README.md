@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.6.0。插件名是 `s-atlas`，不需要再装上游插件。技能 **72** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.6.1。插件名是 `s-atlas`，不需要再装上游插件。技能 **72** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明以用户会说的中文触发词起头，这些词放在前 100 个字里，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -47,7 +47,9 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 ### 让技能自动生效
 
-把 [`plugins/s-atlas/AGENTS.md`](plugins/s-atlas/AGENTS.md) 的内容加进全局指令文件：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。它要求模型动手前先查匹配的技能。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。那次测量里 Codex 没用对的两条是 `how` 和 `technical-writing`。`how` 仍是手点。`technical-writing` 从 1.5.0 起按描述自动选用。
+短规则在 [`plugins/s-atlas/AGENTS-snippet.md`](plugins/s-atlas/AGENTS-snippet.md)。把它贴进全局指令：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。规则要求动手前先看可用技能，用对得上的那个；拿不准就用 `s-router`。
+
+要按任务查表，贴同目录的 [`plugins/s-atlas/AGENTS.md`](plugins/s-atlas/AGENTS.md)。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。那次测量里 Codex 没用对的两条是 `how` 和 `technical-writing`。`how` 仍是手点。`technical-writing` 从 1.5.0 起按描述自动选用。
 
 ## 技能怎么被选中
 

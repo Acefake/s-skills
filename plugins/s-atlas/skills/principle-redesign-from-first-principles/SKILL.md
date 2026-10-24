@@ -1,6 +1,6 @@
 ---
 name: principle-redesign-from-first-principles
-description: "在把一个新需求整合进已有设计时使用。Use when a new requirement should be redesigned from first principles instead of patched onto the old shape."
+description: "「新需求按第一性原理重做」「别补在旧形状上」。把新需求整合进已有设计时，重做这一层。Use when a new requirement should be redesigned from first principles instead of patched onto the old shape."
 disable-model-invocation: false
 ---
 # 从第一性原理重新设计

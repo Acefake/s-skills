@@ -1,6 +1,6 @@
 ---
 name: benchmark-checklist
-description: "在报告一个性能测量结果或依据它行动之前，先审核它（限制因素、调优、物理极限、错误、可重复性、是否重要，以及工作是否真的发生了）。用于你跑了一个基准测试，或者要报告一个你测出来的加速或性能退化的时候。Use when you are about to report or act on a performance number."
+description: "「跑了基准测试」「这个加速靠谱吗」「报告性能数字之前」。先审核限制因素、调优、误差、可重复性，以及量的是不是那项工作。Use when you are about to report or act on a performance number."
 disable-model-invocation: true
 ---
 # 基准测试清单

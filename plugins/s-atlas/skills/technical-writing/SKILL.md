@@ -1,6 +1,6 @@
 ---
 name: technical-writing
-description: "写 README、写文档、审查技术文档、RFC、PR 说明或提交信息时用的分层标准。这是 Markdown 和技术说明，Word 文件用 docx。Use when writing or reviewing a README, technical documentation, an RFC, a PR description, or a commit message."
+description: "「写 README」「写文档」「写 RFC」「改 PR 说明」。Markdown 和技术说明的分层标准。Word 用 docx。Use when writing or reviewing a README, technical documentation, an RFC, a PR description, or a commit message."
 ---
 ## 运行环境适配
 

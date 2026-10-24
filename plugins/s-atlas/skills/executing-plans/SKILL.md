@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: "已经有书面实现计划，要在单独的会话里按审查检查点执行。要在当前会话里派子智能体逐个任务做，用 subagent-driven-development。Use when you have a written implementation plan to execute in a separate session with review checkpoints."
+description: "「按计划在新会话做」「执行这份实现计划」。有书面计划、要换会话按检查点做。当前会话里派子智能体，用 subagent-driven-development。Use when you have a written implementation plan to execute in a separate session with review checkpoints."
 ---
 ## 运行环境适配
 

@@ -1,6 +1,6 @@
 ---
 name: s-review
-description: "中文代码审查：审 PR、分支或本地未提交改动，先写意图摘要，再按风险挑审查角度，每条发现带文件:行、P0/P1/P2 严重程度、原因和改法，最后给出能不能合并的结论。默认只出报告不改代码。Use when the user asks to review a PR, a branch, a diff, or local changes."
+description: "「审这个 PR」「审一下分支」「审本地改动」「做代码审查」。先写意图摘要，按风险列发现，给出能不能合并。默认只出报告。Use when the user asks to review a PR, a branch, a diff, or local changes."
 ---
 # s-review
 

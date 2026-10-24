@@ -1,6 +1,6 @@
 ---
 name: principle-build-the-lever
-description: "用于任何不简单的工作，不只是批量工作：改代码、迁移、分析、检查。不要手工去做，而是打造一个能完成它或证明它的工具（codemod、脚本、生成器，或者让子智能体照着做的 skill）。这个工具就是审查者可以重新运行的产物。Use when non-trivial work should become a tool you can run again."
+description: "「别手工改」「做成脚本」「写个 codemod」「让它能再跑一遍」。不简单的活做成可再跑的工具，审查者能重跑。Use when non-trivial work should become a tool you can run again."
 disable-model-invocation: false
 ---
 ## 运行环境适配

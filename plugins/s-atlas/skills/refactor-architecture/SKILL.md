@@ -1,6 +1,6 @@
 ---
 name: refactor-architecture
-description: "扫描代码库找出「加深」机会：把浅模块重构成深模块，结果写成一份可视化 HTML 报告，你挑一个再逐个追问到定案。用于 /refactor-architecture、“重构架构”、“理一理模块”、“找重构点”、“模块耦合太紧”、“代码难测”。Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-navigable."
+description: "「/refactor-architecture」「重构架构」「找重构点」「模块耦合太紧」「代码难测」。扫浅模块，出 HTML 报告，再逐个追问定案。Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-navigable."
 disable-model-invocation: true
 ---
 ## 运行环境适配

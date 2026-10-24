@@ -1,6 +1,6 @@
 ---
 name: code-style
-description: "写、改或审查 TypeScript、React、Vue、Go、Java 代码时遵守的个人代码规范：按模块就近放文件、导出符号和模块入口写文档注释、代码质量的底线。和仓库已有规范冲突时以仓库为准。Use when writing, changing, or reviewing TypeScript, React, Vue, Go, or Java code, to apply the owner's module layout, doc comment, and quality rules."
+description: "「文件放哪」「补文档注释」「看代码规范」。写或改 TypeScript、React、Vue、Go、Java 时按模块就近放文件。仓库已有规范优先。Use when writing, changing, or reviewing TypeScript, React, Vue, Go, or Java code, to apply the owner's module layout, doc comment, and quality rules."
 ---
 ## 运行环境适配
 

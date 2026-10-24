@@ -1,6 +1,6 @@
 ---
 name: principle-type-system-discipline
-description: "在设计类型、审查函数签名或用任何静态类型语言写代码时使用。让非法状态无法表示，给有语义的基本类型打上标记，在边界上解析外部数据，穷尽所有变体，从权威的 schema 推导类型。Use when designing types or signatures so illegal states cannot be represented."
+description: "「让非法状态写不出来」「类型怎么设计」。设计类型或签名时，在边界上解析外部数据，穷尽变体。Use when designing types or signatures so illegal states cannot be represented."
 disable-model-invocation: false
 ---
 ## 运行环境适配

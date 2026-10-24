@@ -1,6 +1,6 @@
 ---
 name: timed-loop
-description: "按一个能判定通过或失败的条件，反复醒来检查，直到完成或真的卡住。用于 /timed-loop、/loop、通宵运行、每隔一段时间看 CI 或 PR。一段时长不算完成条件。Use when work should wake repeatedly until a pass/fail condition is met or it is truly stuck."
+description: "「/timed-loop」「/loop」「每隔一阵看 CI」「通宵盯到过」。按通过或失败条件反复醒来。一段时长不算完成。Use when work should wake repeatedly until a pass/fail condition is met or it is truly stuck."
 disable-model-invocation: true
 ---
 ## 运行环境适配

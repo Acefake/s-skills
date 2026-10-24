@@ -10,6 +10,7 @@ from check_marketplace import (
     Problems,
     check_skill_resources,
     description_order_problem,
+    description_trigger_problem,
     frontmatter_description,
     skill_reference_problems,
 )
@@ -68,6 +69,16 @@ class SkillResourcesTest(unittest.TestCase):
         self.assertIsNotNone(description_order_problem("去掉 AI 腔。"))
         self.assertIsNotNone(description_order_problem("中文触发：去掉 AI 腔。Use when prose sounds like AI."))
 
+    def test_description_quotes_a_user_phrase_in_the_first_100_characters(self):
+        self.assertIsNone(
+            description_trigger_problem("「写个 Word」。创建文档。Use when producing a .docx.")
+        )
+        self.assertIsNotNone(
+            description_trigger_problem("创建 Word。「写个 Word」。Use when producing a .docx.")
+        )
+        late = "「" + ("铺垫" * 60) + "」。Use when producing a .docx."
+        self.assertGreater(late.index("」"), 100)
+        self.assertIsNotNone(description_trigger_problem(late))
 
 
 class SkillReferenceTest(unittest.TestCase):
