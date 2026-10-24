@@ -1,7 +1,7 @@
 {
   "name": "s-skills",
   "version": "1.0.0",
-  "description": "S 的中文 AI 技能。现在只有 s 这一个插件，71 个活跃技能，文件在各应用之间共用一份。",
+  "description": "S 的中文 AI 技能。现在只有 s 这一个插件，72 个活跃技能，文件在各应用之间共用一份。",
   "owner": {
     "name": "S"
   },
@@ -9,7 +9,7 @@
     {
       "name": "s",
       "source": "./plugins/s",
-      "description": "s 的 71 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及译好的 Superpowers 流程。"
+      "description": "s 的 72 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及译好的 Superpowers 流程。"
     }
   ],
   "icon": "plugins/s/icon.png"

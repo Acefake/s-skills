@@ -19,7 +19,7 @@ LOCK_PATH = ROOT / "plugin-versions.lock.json"
 PLUGIN_ORDER = ("s",)
 
 EXPECTED_SKILL_COUNTS = {
-    "s": 71,
+    "s": 72,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.
