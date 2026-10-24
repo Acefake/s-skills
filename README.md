@@ -2,7 +2,7 @@
 
 ![s](plugins/s/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.5.1。插件名是 `s`，不需要再装上游插件。技能 **71** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.5.2。插件名是 `s`，不需要再装上游插件。技能 **72** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明直接以中文句子起头，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -74,7 +74,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 
 支持插件命令的宿主也可以使用 `/s:技能名`，例如 `/s:s-mode`。Codex 可在技能选择器中选择相应技能。
 
-原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`，以及译入的 Superpowers 流程可以按描述自动选用。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
+原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及译入的 Superpowers 流程可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
 
 ## 我想做什么
 
@@ -86,6 +86,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s`�
 | 按写好的计划做 | `executing-plans` 或 `subagent-driven-development` |
 | 做完了，还没决定合并、开 PR、留着还是丢掉 | `finishing-a-development-branch` |
 | 写提交说明、提交、开 PR | `commit-pr` |
+| 审 PR、分支或本地改动 | `s-review` |
 | 写或改 Word（.docx） | `docx` |
 | 做幻灯片（.pptx） | `pptx` |
 | 做表格、公式（.xlsx） | `xlsx` |
@@ -189,6 +190,7 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 | `commit-pr` | 自动 | 看 diff，写提交说明，推送并开 PR。集成方式还没定用 `finishing-a-development-branch` |
 | `translate` | 自动 | 中英翻译，可中英对照。代码、命令、路径不译 |
 | `s-proposal` | 自动 | 写中文方案：先问清目标，列提纲，再按固定结构起草打磨 |
+| `s-review` | 自动 | 中文代码审查：审 PR、分支或本地改动，带出处和严重程度，给合并结论 |
 | `author-skill` | 手点 | 按规范写或大改 SKILL.md |
 | `control-ui` | 自动 | 在真浏览器里操作界面取证 |
 | `control-cli` | 自动 | 在本地操作命令行或 TUI |

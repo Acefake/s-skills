@@ -12,6 +12,8 @@
 
 1.5.0 新增 `docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`。它们没有旧中文名。`teach` 仍然删除，讲解走 `how`（问动机再用 `why`）。`technical-writing` 从这一版起可以按描述自动选用，Word 文件不归它。
 
+1.5.1 新增 `s-proposal`。1.5.2 新增 `s-review`（中文代码审查，默认只出报告）。它们没有旧中文名。当前插件版本 1.5.2，活跃技能 72 个。
+
 ## 回滚
 
 要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
