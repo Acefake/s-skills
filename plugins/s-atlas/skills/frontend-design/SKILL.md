@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: "做新界面，或重做已有界面时，定一个有主见的视觉方向：配色、字体、版式都针对这一份需求，不要看起来像套好的模板。和 `impeccable` 有重叠。这个更短，只管方向和取舍，不带检查脚本。Use when the user explicitly names frontend-design and wants a short opinionated visual direction, with no audit scripts; impeccable stays the default interface skill."
+description: "「点名 frontend-design」「给个视觉方向」。只在点名时定配色、字体和版式，不带检查脚本。日常做界面用 impeccable。Use when the user explicitly names frontend-design and wants a short opinionated visual direction, with no audit scripts; impeccable stays the default interface skill."
 license: Apache-2.0
 disable-model-invocation: true
 ---

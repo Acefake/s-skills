@@ -1,6 +1,6 @@
 ---
 name: principle-subtract-before-you-add
-description: "在安排新增、重构或重写的顺序时使用。先删掉死代码、多余的校验器和空壳引用，再在更简单的基础上搭建。Use when sequencing an addition, refactor, or rewrite and you should delete the extra first."
+description: "「先删再加」「死代码先清掉」。新增、重构或重写之前，先删掉死代码、多余校验和空壳引用。Use when sequencing an addition, refactor, or rewrite and you should delete the extra first."
 disable-model-invocation: false
 ---
 # 先做减法，再做加法

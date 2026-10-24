@@ -1,6 +1,6 @@
 ---
 name: interrogate
-description: "用于“interrogate”（审问）、“adversarial review”（对抗式审查）、“multi-model review”（多模型审查）、“challenge this”（挑战一下）、“stress test this code”（给这段代码做压力测试）、“find blind spots”（找盲点）或“tear this apart”（把它批个体无完肤）。多个大模型审查者从各自独立的角度挑战改动。Use when you want several models to challenge a change from independent angles."
+description: "「/interrogate」「对抗式审查」「找盲点」「把这段批一下」。多个模型从各自角度挑战改动。Use when you want several models to challenge a change from independent angles."
 disable-model-invocation: true
 ---
 ## 运行环境适配

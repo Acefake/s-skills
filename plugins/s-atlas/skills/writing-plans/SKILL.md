@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: "已有规格或需求、要做多步骤任务、动手改代码之前。Use when you have a spec or requirements for a multi-step task, before changing code."
+description: "「写个实现计划」「先拆步骤」「动手改代码之前列计划」。已有规格、要做多步任务时，先写成可执行计划。Use when you have a spec or requirements for a multi-step task, before changing code."
 ---
 ## 运行环境适配
 

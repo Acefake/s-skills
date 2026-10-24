@@ -1,6 +1,6 @@
 ---
 name: figure-it-out
-description: "当没有更具体的流程适用时，设计一套可审计的做法：大规模迁移、雄心勃勃的多部分改动，或者人离开一阵后回来审查的工作。按任务调整严谨程度，跑“假设-验证”循环，并记录决定。用于 /figure-it-out 或 “figure it out”（你自己想办法搞定）。Use when no existing playbook fits and you need to invent an auditable procedure."
+description: "「/figure-it-out」「没有现成流程」「你自己想办法」。大规模迁移或人离开后要审的活，现做一套可审计做法。Use when no existing playbook fits and you need to invent an auditable procedure."
 disable-model-invocation: true
 ---
 ## 运行环境适配

@@ -1,6 +1,6 @@
 ---
 name: pptx
-description: "创建、修改和阅读 PowerPoint（.pptx）：用 HTML 做新幻灯片、套模板、复制或重排、改幻灯片 XML、读写备注。中文要显式指定 CJK 字体，并留出余量，因为中文更宽。Use when a task produces or modifies a .pptx, or needs its text, layout, or notes read."
+description: "「做幻灯片」「做一份 PPT」「写 pptx」「改演示文稿」。用 HTML 或模板创建、修改、阅读 PowerPoint，含备注。中文指定 CJK 字体并留余量。Use when a task produces or modifies a .pptx, or needs its text, layout, or notes read."
 ---
 ## 运行环境适配
 

@@ -1,6 +1,6 @@
 ---
 name: finishing-a-development-branch
-description: "实现已完成、全部测试通过，且需要决定如何集成工作时，通过呈现合并、PR 或清理的结构化选项来引导开发工作收尾。Use when implementation is done, tests pass, and you need to decide how to integrate the work."
+description: "「做完了怎么合」「开 PR 还是合并」「收尾这个分支」。测试过了、还没定集成方式时，给出合并、PR 或清理的选项。Use when implementation is done, tests pass, and you need to decide how to integrate the work."
 ---
 本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
 

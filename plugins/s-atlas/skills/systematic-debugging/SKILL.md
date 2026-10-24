@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: "遇到任何 bug、测试失败、报错或意外行为时，在提出修复之前先查根因。修 bug、bug-fix、fix bug 都走这里。Use when you hit any bug, test failure, or unexpected behavior before proposing a fix, including 修 bug, 报错, bug-fix, and fix bug."
+description: "「修 bug」「报错了」「测试失败」「结果不对」「按钮没反应」。先查根因再改。bug-fix 和 fix bug 也走这里。Use when you hit any bug, test failure, or unexpected behavior before proposing a fix, including 修 bug, 报错, bug-fix, and fix bug."
 ---
 本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
 

@@ -1,6 +1,6 @@
 ---
 name: translate
-description: "在中文和英文之间翻译文档或文字。可以只出一种语言，也可以中英对照。代码、命令、路径和 Markdown 结构保持原样，中文用白话。Use when translating text or documents between Chinese and English, including a bilingual version."
+description: "「翻译成英文」「译成中文」「中英对照」「帮我翻译这段」。代码、命令、路径和 Markdown 结构保持原样，中文用白话。Use when translating text or documents between Chinese and English, including a bilingual version."
 ---
 ## 运行环境适配
 

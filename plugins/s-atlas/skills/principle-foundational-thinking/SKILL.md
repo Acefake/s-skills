@@ -1,6 +1,6 @@
 ---
 name: principle-foundational-thinking
-description: "在写逻辑之前使用：选择核心类型和数据结构、安排先搭框架还是先做功能、考虑并发的参与者共享了什么。把数据结构选对，后面的代码就会变得显而易见。Use when choosing core types and data structures before writing logic."
+description: "「先定数据结构」「写逻辑之前」。先选核心类型和参与者共享了什么，再写逻辑。Use when choosing core types and data structures before writing logic."
 disable-model-invocation: false
 ---
 ## 运行环境适配

@@ -1,6 +1,6 @@
 ---
 name: pdf
-description: "阅读、创建、填写和变换 PDF：提取文字和表格、扫描件 OCR、填写可填写或扁平表单，以及压平、合并、拆分、旋转、盖章和加密。Use when a task takes a .pdf as input or must produce one."
+description: "「读这份 PDF」「填 PDF 表」「合并 PDF」「拆分 PDF」「扫描件 OCR」。提取文字和表格、填写表单，以及压平、旋转、盖章和加密。Use when a task takes a .pdf as input or must produce one."
 ---
 ## 运行环境适配
 

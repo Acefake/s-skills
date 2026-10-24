@@ -295,6 +295,15 @@ def description_order_problem(desc: str) -> str | None:
     return None
 
 
+def description_trigger_problem(desc: str) -> str | None:
+    """Skill lists truncate. The phrases a person would say have to lead."""
+    if not desc.startswith("「"):
+        return "description must start with a quoted Chinese user phrase"
+    if "」" not in desc[:100]:
+        return "description must close a quoted user phrase within the first 100 characters"
+    return None
+
+
 def check_description(label: str, text: str, problems: Problems) -> None:
     desc = frontmatter_description(text)
     if desc is None:
@@ -328,6 +337,9 @@ def check_skills(problems: Problems) -> None:
             check_skill_resources(skill, text, problems)
             skill_name = frontmatter_name(text)
             check_description(f"{name}/{skill.name}", text, problems)
+            desc = frontmatter_description(text)
+            if desc and (issue := description_trigger_problem(desc)):
+                problems.add(f"{name}/{skill.name}: {issue}")
             if not skill_name:
                 problems.add(f"{name}/{skill.name}: SKILL.md is missing frontmatter name")
                 continue

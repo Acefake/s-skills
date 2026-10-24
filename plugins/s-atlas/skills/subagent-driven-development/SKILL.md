@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-development
-description: "在当前会话中执行包含相互独立任务的实现计划时。要换到单独会话、按检查点人工审查执行，用 executing-plans。Use when you are executing an implementation plan of independent tasks in the current session."
+description: "「在这个会话里派子智能体做」「按计划逐个任务做」。任务互相独立时用。要换会话按检查点做，用 executing-plans。Use when you are executing an implementation plan of independent tasks in the current session."
 ---
 ## 运行环境适配
 

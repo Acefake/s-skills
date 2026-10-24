@@ -1,6 +1,6 @@
 ---
 name: why
-description: "用于“X 为什么是这样工作的”、“我们为什么选了 Y”、设计理由、性能或功能退化、事后复盘，或者有数据支撑的阈值。找出可用的 MCP，并行地查询每一类证据（版本控制、问题跟踪系统、长篇文档、实时聊天、基础设施可观测性、错误跟踪、产品分析数据仓库），然后返回一份带引用的、关于决定和取舍的解读。运行时的行为请用 how。Use when you need the reason a design, choice, regression, or threshold is the way it is."
+description: "「为什么是这样」「我们为什么选了这个」「这个阈值哪来的」。查设计理由和取舍，带引用。运行时怎么走用 how。Use when you need the reason a design, choice, regression, or threshold is the way it is."
 disable-model-invocation: true
 ---
 ## 运行环境适配

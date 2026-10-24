@@ -1,6 +1,6 @@
 ---
 name: setup-s-models
-description: "配置 s 在每个角色上用哪个模型、用多大的推理预算。检测你可用的模型，并把结果写到当前软件会读的位置。用于 /setup-s-models、“配置 s 模型”、“s 预算”，或者修改 s 的模型选择。Use when configuring which model and reasoning budget s uses for each role."
+description: "「/setup-s-models」「配置 s 模型」「s 的预算」。检测可用模型，写到当前软件会读的位置。Use when configuring which model and reasoning budget s uses for each role."
 ---
 ## 运行环境适配
 

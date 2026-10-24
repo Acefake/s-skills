@@ -1,6 +1,6 @@
 ---
 name: show-me-your-work
-description: "为长时间运行或无人值守的工作保留一条可审查的决定记录：一个 TSV 日志，每个决定一行（做了什么、为什么、证据、结果）。默认只放在本地；当审查者需要这条记录才能信任结果时，就把它提交进代码库。用于 /show-me-your-work、自主运行或多阶段运行，或者人离开一阵后回来审查的工作。Use when a long or unattended run needs a decision log."
+description: "「/show-me-your-work」「留下决定记录」「通宵跑完我回来看」。长时间或无人值守的工作，每个决定记一行。Use when a long or unattended run needs a decision log."
 disable-model-invocation: true
 ---
 ## 运行环境适配

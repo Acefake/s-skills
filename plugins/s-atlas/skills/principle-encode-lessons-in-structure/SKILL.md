@@ -1,6 +1,6 @@
 ---
 name: principle-encode-lessons-in-structure
-description: "当你发现自己第二次写同一条指示，或者注意到某个纠正反复出现时使用。把这条规则写成 lint 检查、元数据标记、运行时检查或脚本，而不是写更多文字。Use when the same lesson is appearing for the second time and should become a check."
+description: "「这是第二次犯」「写成检查」「别再只写进说明」。把反复出现的规则写成 lint、标记或脚本。Use when the same lesson is appearing for the second time and should become a check."
 disable-model-invocation: false
 ---
 # 把教训写进结构

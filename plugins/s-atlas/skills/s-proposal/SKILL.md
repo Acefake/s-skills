@@ -1,6 +1,6 @@
 ---
 name: s-proposal
-description: "写中文方案：项目方案、技术方案、活动策划、工作计划、解决方案等。先问清目标和读者，列提纲确认，再按固定结构起草并自查打磨。Use when the user asks to write a proposal, plan, or project/technical/event plan in Chinese."
+description: "「写个方案」「技术方案」「活动策划」「工作计划」「解决方案」。先问清目标和读者，列提纲，再写成中文方案。Word 用 docx，幻灯片用 pptx。Use when the user asks to write a proposal, plan, or project/technical/event plan in Chinese."
 ---
 # s-proposal
 

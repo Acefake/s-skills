@@ -1,6 +1,6 @@
 ---
 name: principle-make-operations-idempotent
-description: "在设计会遇到崩溃、重启和重试的命令、生命周期步骤或处理循环时使用。不管之前的运行做到一半停在哪里，都要收敛到同一个最终状态。Use when a command, lifecycle step, or loop must land on the same result after a crash and retry."
+description: "「崩溃重试」「做成幂等」「再跑一遍结果一样」。命令、生命周期或循环中断后续跑，要落到同一结果。Use when a command, lifecycle step, or loop must land on the same result after a crash and retry."
 disable-model-invocation: false
 ---
 # 让操作幂等

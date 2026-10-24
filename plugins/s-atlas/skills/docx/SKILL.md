@@ -1,6 +1,6 @@
 ---
 name: docx
-description: "创建、修改、审阅和阅读 Word 文档（.docx），包括修订、批注、脚注、表格、图片和页面设置。给人读的正文先问上下文、按节写，再换一个没有上下文的读者挑没说清的地方。中文必须设置 w:eastAsia。Use when a task produces or modifies a .docx, reviews or redlines one, or needs its text, comments, or tracked changes read."
+description: "「写个 Word」「做一份 docx」「改修订」「加批注」「读这份 Word」。创建、修改、审阅 Word，含脚注、表格、图片和页面设置。中文必须设置 w:eastAsia。Use when a task produces or modifies a .docx, reviews or redlines one, or needs its text, comments, or tracked changes read."
 ---
 ## 运行环境适配
 

@@ -1,6 +1,6 @@
 ---
 name: principle-fix-root-causes
-description: "调试时使用。把每个症状追溯到系统第一次出错的地方，在那里修。只有当一个防护处理的状态是合理存在的，它才算修复。Use when debugging, and the fix should land where the system first went wrong."
+description: "「别打补丁」「找到第一次出错的地方」「修根因」。调试时把症状追到系统第一次出错的地方。Use when debugging, and the fix should land where the system first went wrong."
 disable-model-invocation: false
 ---
 # 修根本原因

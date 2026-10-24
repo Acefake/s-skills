@@ -1,6 +1,6 @@
 ---
 name: principle-minimize-reader-load
-description: "在审查或整理难以追踪的代码时使用。数一数从问题到答案之间隔了几层，以及读者脑子里要记住多少隐藏状态；去掉只有一个调用方的包装层，缩小可变状态的范围。Use when code is hard to follow and the reader is carrying too many layers or hidden state."
+description: "「这代码绕」「层数太多」「读者记不住」。审查难追的代码时，去掉只有一个调用方的包装，缩小可变状态。Use when code is hard to follow and the reader is carrying too many layers or hidden state."
 disable-model-invocation: false
 ---
 # 减轻读者负担

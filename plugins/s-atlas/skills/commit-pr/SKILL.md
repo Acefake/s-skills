@@ -1,6 +1,6 @@
 ---
 name: commit-pr
-description: "看 git status 和 diff，写 conventional commit 提交说明，需要时推送并开 PR。用于提交、commit、开 PR、pull request。分支怎么集成还没定时，用 finishing-a-development-branch。Use when writing a commit message, making a commit, or opening a pull request."
+description: "「提交」「帮我 commit」「开个 PR」「写提交说明」。看 diff，写 conventional commit，需要时推送并开 PR。分支怎么集成还没定，用 finishing-a-development-branch。Use when writing a commit message, making a commit, or opening a pull request."
 ---
 ## 运行环境适配
 

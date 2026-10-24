@@ -1,6 +1,6 @@
 ---
 name: xlsx
-description: "创建、修改、分析和重算 Excel 工作簿（.xlsx、.xlsm）。派生数字写成单元格公式，保存后用 LibreOffice 重算，并按单元格看错误、循环引用和失效函数。Use when a task produces or modifies a spreadsheet, turns CSV or TSV into one, or needs its values, formulas, or formatting read."
+description: "「做表格」「做个 Excel」「写 xlsx」「加公式」「CSV 转成表」。创建、修改、分析 .xlsx 和 .xlsm。派生数字写成单元格公式，保存后用 LibreOffice 重算。Use when a task produces or modifies a spreadsheet, turns CSV or TSV into one, or needs its values, formulas, or formatting read."
 ---
 ## 运行环境适配
 

@@ -1,6 +1,6 @@
 ---
 name: e2e-testing
-description: "用 Playwright 给 React 或 Vue 前端写稳定的端到端测试，后端可以是 Node、Go 或 Java：选关键路径、按角色定位、准备数据和登录态、在本地和 CI 里跑、排查不稳定的测试。Use when writing, running, or fixing end-to-end browser tests for a web app, including flaky Playwright tests."
+description: "「写端到端测试」「Playwright 偶发失败」「e2e 挂了」。给 React 或 Vue 写稳定的浏览器测试，后端可以是 Node、Go 或 Java。Use when writing, running, or fixing end-to-end browser tests for a web app, including flaky Playwright tests."
 ---
 # 端到端测试
 

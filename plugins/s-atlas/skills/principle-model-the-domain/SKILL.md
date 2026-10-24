@@ -1,6 +1,6 @@
 ---
 name: principle-model-the-domain
-description: "在写有状态的逻辑时使用，或者当代码分支很多、在多个文件里重复同一个关于数据形状的假设时使用。Use when stateful logic, or the same shape assumption, is repeated across branches and files."
+description: "「状态散落各处」「同一个假设写了好几遍」。把重复的数据形状收成一个结构。Use when stateful logic, or the same shape assumption, is repeated across branches and files."
 disable-model-invocation: false
 ---
 ## 运行环境适配

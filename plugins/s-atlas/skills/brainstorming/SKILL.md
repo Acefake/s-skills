@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: "任何创造性工作之前，包括创建功能、构建组件、增加功能或修改行为，先探索用户意图、需求与设计。Use when doing any creative work before implementation - creating features, building components, adding functionality, or modifying behavior - and you need to explore user intent, requirements and design before implementation."
+description: "「做个新功能」「加个接口」「改一下行为」「先把方案想清楚」。动手实现前先摸清意图、需求和设计。Use when doing any creative work before implementation - creating features, building components, adding functionality, or modifying behavior - and you need to explore user intent, requirements and design before implementation."
 ---
 ## 运行环境适配
 

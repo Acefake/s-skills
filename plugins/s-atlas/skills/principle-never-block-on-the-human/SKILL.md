@@ -1,6 +1,6 @@
 ---
 name: principle-never-block-on-the-human
-description: "在可撤销的工作上，想问“我要不要做 X？”的时候使用。Use when reversible work is waiting on a question you could answer by doing it."
+description: "「先做出来我再看」「可撤销的别问我」。可撤销的工作，做完再给人看。Use when reversible work is waiting on a question you could answer by doing it."
 disable-model-invocation: false
 ---
 # 别卡着等人
