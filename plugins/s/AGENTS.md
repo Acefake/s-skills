@@ -12,7 +12,15 @@
 | 任务 | 先加载 |
 | --- | --- |
 | 新功能、加接口、改行为 | `brainstorming`，定下设计后 `writing-plans` |
-| bug、报错、按钮没反应、结果不对 | `systematic-debugging` |
+| bug、报错、按钮没反应、结果不对、修 bug、bug-fix、fix bug | `systematic-debugging` |
+| 写 README、写文档、RFC、PR 说明的句子 | `technical-writing`（Word 用 `docx`） |
+| Word、docx、修订、批注 | `docx` |
+| 幻灯片、pptx | `pptx` |
+| 表格、xlsx、公式 | `xlsx` |
+| PDF | `pdf` |
+| 提交、开 PR | `commit-pr`（还没决定怎么集成用 `finishing-a-development-branch`） |
+| 中英翻译 | `translate` |
+| 教我、这块代码怎么工作 | `how` |
 | 界面卡顿、掉帧、滚动慢、INP 高 | `impeccable`（optimize） |
 | 界面设计、样式、交互 | `impeccable` |
 | 补测试、测什么 | `test-strategy`；写实现时 `tdd` |

@@ -10,6 +10,8 @@
 
 1.2.1 把 `description` 改成中文在前、英文 `Use when` 在后。1.2.2 起直接写中文句子：`……。Use when ... .`。英文 `Use when` 接在中文句号后面。技能和 agent 说明用同一写法。
 
+1.5.0 新增 `docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`。它们没有旧中文名。`teach` 仍然删除，讲解走 `how`（问动机再用 `why`）。`technical-writing` 从这一版起可以按描述自动选用，Word 文件不归它。
+
 ## 回滚
 
 要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。

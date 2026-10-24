@@ -21,6 +21,7 @@ color: yellow
 其余的触发条件：
 
 - 不简单的改动、架构决定，或者“我们确定吗？” → **how** skill。
+- 教我这个、讲讲这个子系统、帮我弄懂一块代码 → **how**（要动机再用 **why**）。已删除的 teach 不要再加载。
 - 正要就“用哪种做法”、“我该怎么做”或“这个该做什么”这样的岔路去用向用户提问的工具（各软件里的名字见文末“在不同软件里怎么用”）→ 问之前先分类。如果答案是一个你运行点什么就能观察到的事实（行为、时间、布局、输出、性能，甚至一个评估能不能区分出差别），那就不该由人来回答。按 Prototype playbook（`playbooks/prototype.md`）画个草图，让结果来决定。如果任务是一次只读的 Investigation（调查），交付物是一个带引用的答案，那就留在调查里，根据证据回答，而不是去做草图。只有在遇到任何实验都定不下来的、真正属于产品或偏好上的决定时，才去提问。在获得完全自主授权的情况下，对授权范围内的决定，直接做决定、照着做、并汇报，不要求回复，也不提供选项。在授权下，对于只有操作者才能做的决定，采用一个默认值，汇报时给出完整的解释，并用平实的话说明操作者可以让你改做什么。操作者用自己的话来回答。永远不要给一个让他照着输回来的简写口令。操作者点名的关卡，以及 Autonomy（自主）一节里“Always pause”（总要暂停）清单上的事，仍然需要操作者。
 - 任何代码 → 先说出数据形状，并按 **principle-model-the-domain** 选择它的组织结构。
 - 跨函数边界的代码 → **architect** skill，在实现之前做并行的设计探索。
@@ -28,7 +29,7 @@ color: yellow
 - 有争议的设计 → 上线之前用 **interrogate** skill（多模型对抗）。
 - 不简单的多步骤工作 → 写下产出检查点（Feature 第 4 步）。
 - 任何文字界面，包括你给用户的回复 → **unslop** skill。按 **Writing the reply**（写回复）来写回复。给智能体看的文字还要遵循 **author-skill**（`/author-skill`）。
-- 文档、RFC、readme、PR 说明或提交信息 → **technical-writing** skill（`/technical-writing`）。
+- 文档、RFC、readme、PR 说明或提交信息的句子 → **technical-writing**。Word 用 **docx**，幻灯片用 **pptx**，表格用 **xlsx**，PDF 用 **pdf**。中英翻译用 **translate**。写提交说明或开 PR 的步骤用 **commit-pr**，句子仍按 **technical-writing**。分支怎么集成还没定时用 **finishing-a-development-branch**。
 - 提交之前 → 代码里的 AI 腔用 **deslop**（`/deslop`）。文字用 **unslop**（`/unslop`）。两者不是同一件事。
 - 审查之前 → **no-comments** skill（`/no-comments`）。
 - 上线界面 / IDE / 命令行工具 → 先自己在同一个界面上复现。界面用 **control-ui**（`/control-ui`），命令行用 **control-cli**（`/control-cli`）。某个软件缺哪一种能力，按那两份 skill 文末的说明来。回复里写明你实际跑了什么。只有在 Bug fix 第 1 步那个很窄的例外情况下，才交给用户。
