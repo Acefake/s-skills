@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.2，共 **73** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.3，共 **74** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Claude Code、Codex、Cursor、Hermes 等宿主会按你说的话自动挑对应的技能。
 
@@ -101,6 +101,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 | 问为什么这样设计 | `why` |
 | 做页面、改界面、看卡顿 | `impeccable` |
 | 点名要一份有主见的视觉方向 | `frontend-design` |
+| 按影盒 / Apple TV 风格做界面 | `apple-glass` |
 | 文件放哪、文档注释、代码质量 | `code-style` |
 | 决定在哪一层测 | `test-strategy` |
 | 写或修 Playwright 端到端测试 | `e2e-testing` |
@@ -120,7 +121,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 「自动」是模型按描述自己选用；「手点」是 frontmatter 里有 `disable-model-invocation: true`，要点名才会加载。
 
-### 自动选用（53 个）
+### 自动选用（54 个）
 
 | 技能 | 用途 |
 |---|---|
@@ -135,6 +136,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 | `using-git-worktrees` | 用 worktree 隔开工作 |
 | `finishing-a-development-branch` | 收尾开发分支 |
 | `impeccable` | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
+| `apple-glass` | 影盒的界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
 | `docx` | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
 | `pptx` | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
 | `xlsx` | 带公式的工作簿，保存后用 LibreOffice 重算 |

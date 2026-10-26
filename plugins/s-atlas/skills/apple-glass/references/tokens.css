@@ -1,0 +1,584 @@
+/*
+ * 影盒设计令牌（design tokens）。
+ *
+ * 方向：Apple TV（iOS 26）风格，深色优先。纯黑底，内容卡片用 #1c1c1e 系实色分层，
+ * 色彩交给海报；只有浮动控件（侧栏、圆钮、胶囊、浮层）用玻璃材质（--glass-*，.yb-glass）。
+ * 强调色只用于选中、焦点和链接，主按钮在深色下为白底黑字。
+ *
+ * 规则：组件里不写裸的字号、圆角、阴影和颜色，一律引用这里的变量。
+ * 深色为默认，浅色通过 [data-theme="light"] 切换。
+ */
+:root {
+  color-scheme: dark;
+
+  /* ── 背景层次（由深到浅：纯黑底 < 侧栏 < 卡片 / 浮层 < 填充） ── */
+  --bg-base: #000000;
+  --bg-main: #000000;
+  --bg-content: #000000;
+  --bg-sidebar: #0e0e10;
+  --bg-titlebar: #000000;
+  --bg-elevated: #1c1c1e;
+  --bg-panel: #1c1c1e;
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-glass-hover: rgba(255, 255, 255, 0.08);
+  --bg-fill-secondary: #2c2c2e;
+  --bg-fill-tertiary: #1c1c1e;
+  --bg-active: rgba(255, 255, 255, 0.12);
+  --bg-active-soft: rgba(255, 255, 255, 0.08);
+  /* 页面上的内容卡片 / 面板（频道列表、节目单、网盘结果行、筛选面板）与页头筛选胶囊 */
+  --bg-card: #1c1c1e;
+  /* 次级控件底色（次级按钮、实心圆钮、分段切换的滑块、提示气泡） */
+  --control-bg: #2c2c2e;
+  --control-bg-hover: #3a3a3c;
+
+  /* ── 分隔：能用留白就不用线 ── */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.24);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-light: rgba(255, 255, 255, 0.12);
+  --separator: rgba(255, 255, 255, 0.08);
+
+  /* ── 文字三级 + 占位（纯黑底上 tertiary 仍满足 4.5:1） ── */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.64);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-quaternary: rgba(255, 255, 255, 0.3);
+  --text-main: var(--text-primary);
+  /* 放在强调色背景上的文字 */
+  --text-on-accent: #ffffff;
+
+  /* ── 强调色：只用于选中、焦点、链接 ── */
+  --accent: #0a84ff;
+  --accent-hover: #409cff;
+  --accent-soft: rgba(10, 132, 255, 0.16);
+  --accent-glow: rgba(10, 132, 255, 0.4);
+  --accent-text: #4da3ff;
+
+  /* ── 主操作按钮：深色白底黑字 ── */
+  --action-bg: #f5f5f7;
+  --action-hover: #ffffff;
+  --action-text: #111113;
+  --selection-bg: rgba(10, 132, 255, 0.4);
+
+  /* ── 语义色 ── */
+  --success: #30d158;
+  --warning: #ff9f0a;
+  --danger: #ff453a;
+  --rating: #ffd60a;
+  --favorite: #ff375f;
+  /* 角标点缀色（例如数据源类型），只用于小面积标签 */
+  --tint-purple: #bf5af2;
+
+  /*
+   * ── 媒体与遮罩 ──
+   * 视频画布和看图 / 看片浮层无论哪套主题都是深色，所以 media-* 两套取值相同；
+   * overlay-scrim 是盖在内容上的半透明黑幕（网页端播放层、灯箱、视频上的提示条）。
+   */
+  --media-bg: #000000;
+  --media-text: #ffffff;
+  --media-text-secondary: rgba(255, 255, 255, 0.85);
+  --media-text-tertiary: rgba(255, 255, 255, 0.5);
+  --media-track: rgba(255, 255, 255, 0.25);
+  /* 播放器控件的悬停底色 */
+  --media-hover: rgba(255, 255, 255, 0.16);
+  /* 播放器进度条等控件的主题色 */
+  --media-accent: #f5f5f7;
+  /* 进度条上的片头（紫）/ 片尾（橙）区间 */
+  --media-intro: rgba(191, 90, 242, 0.85);
+  --media-outro: rgba(255, 159, 10, 0.85);
+  --overlay-scrim: rgba(0, 0, 0, 0.72);
+  --overlay-scrim-strong: rgba(0, 0, 0, 0.9);
+  /* 普通弹窗背后的轻遮罩 */
+  --overlay-scrim-soft: rgba(0, 0, 0, 0.35);
+
+  /* ── 字体：优先系统字体（macOS 为 SF / 苹方，Windows 为 Segoe / 雅黑） ── */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC',
+    'Segoe UI Variable Text', 'Segoe UI', 'Microsoft YaHei UI', system-ui,
+    sans-serif;
+  --font-display:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC',
+    'Segoe UI Variable Display', 'Segoe UI', 'Microsoft YaHei UI', system-ui,
+    sans-serif;
+  --font-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+
+  /* ── 字号：参照 macOS 文字样式 ── */
+  --text-4xs: 8px; /* 只给规格字标的小字（DOLBY 下的 VISION / ATMOS），正文不用 */
+  --text-3xs: 9px; /* 只给规格字标（分级圆标 16+），正文不用 */
+  --text-2xs: 11px; /* 角标、辅助说明 */
+  --text-xs: 12px; /* 次要信息 */
+  --text-sm: 13px; /* 正文、控件 */
+  --text-md: 14px; /* 列表标题 */
+  --text-lg: 17px; /* 区块标题 */
+  --text-xl: 22px; /* 页面副标题 */
+  --text-2xl: 28px; /* 页面标题 */
+  --text-3xl: 34px; /* 详情页大标题 */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --tracking-tight: -0.022em;
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+
+  /*
+   * ── 间距：8pt 网格 ──
+   * 组件里的 padding / margin / gap / 定位偏移一律用这里的档位；
+   * 0_5 / 6_5 是网格之间的半档，只给反复出现的微调和大留白用。
+   */
+  --space-0_5: 2px;
+  --space-1: 4px;
+  --space-1_5: 6px;
+  --space-2: 8px;
+  --space-2_5: 10px;
+  --space-3: 12px;
+  --space-3_5: 14px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-6_5: 28px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+  --space-11: 80px; /* 空状态的大留白 */
+
+  /* ── 圆角：角标 4 / 小控件 6 / 控件 10 / 卡片海报 14 / 弹窗 20；胶囊与圆钮用 full ── */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px; /* 大号浮层面板（AI 助手） */
+  --radius-card: 18px; /* 海报卡与横版剧照卡（UiPosterCard / UiEpisodeCard）统一圆角 */
+  --radius-full: 999px;
+
+  /* ── 布局 ── */
+  /* 浮动玻璃侧栏：离窗口边 12px，展开 224 / 收起成 64 的图标列；内容区左侧让出侧栏 + 间距 */
+  --shell-inset: 12px;
+  --sidebar-width: 224px;
+  --sidebar-width-collapsed: 64px;
+  --titlebar-height: 52px;
+  --shell-pill-height: 44px; /* 顶部前进后退、窗口键玻璃胶囊，详情页玻璃圆钮 */
+  --shell-pill-top: 18px; /* 胶囊离窗口上沿 */
+  --shell-pill-right: 22px; /* 窗口键胶囊离窗口右沿 */
+  --shell-win-width: 132px; /* 窗口键胶囊宽（三枚 36px 按钮），页面的右上角圆钮排在它左边 */
+  /* 内容区顶部让出浮动胶囊（左侧让出多少由外壳按侧栏展开 / 收起写进 --shell-left） */
+  --shell-top: calc(
+    var(--shell-pill-top) + var(--shell-pill-height) + var(--space-2)
+  );
+  --bottom-nav-height: 56px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --content-padding-x: 40px;
+  --content-padding-y: 32px;
+  /* 控件高度三档（按钮、分段切换、筛选胶囊、输入框共用）：sm 行内 / md 页头工具条 / lg 主操作 */
+  --control-height-sm: 28px;
+  --control-height: 36px;
+  --control-height-lg: 44px;
+  --poster-min-width: 160px;
+  --poster-gap-x: 24px;
+  --poster-gap-y: 32px;
+
+  /* ── 图标：三档尺寸（Phosphor 实心路径，见 components/ui/icons.ts） ── */
+  --icon-sm: 14px;
+  --icon-md: 16px;
+  --icon-lg: 18px;
+
+  /*
+   * ── 玻璃材质（.yb-glass，只给浮动控件）──
+   * 轻底色 + 背景模糊提饱和 + 顶部内高光 + 0.5px 发丝边 + 投影。
+   * is-media（--glass-media-*）是压在画面上的版本（海报、视频上的圆钮、播放器顶栏 / 控制栏 / 齿轮菜单、
+   * 跳过片头按钮），两套主题都是深色；画面上的玻璃只用这一套。
+   * 系统「降低透明度」或设置 ui.reduceTransparency 打开时换成 --glass-solid 实色（见文件末尾）。
+   */
+  --glass-bg: rgba(36, 36, 40, 0.38);
+  --glass-bg-hover: rgba(58, 58, 62, 0.46);
+  --glass-solid: #1c1c1e;
+  --glass-solid-hover: #2c2c2e;
+  --glass-filter: blur(24px) saturate(1.8);
+  --glass-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0.5px rgba(255, 255, 255, 0.1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.14), 0 10px 30px rgba(0, 0, 0, 0.35);
+  --glass-media-bg: rgba(36, 36, 40, 0.38);
+  --glass-media-bg-hover: rgba(58, 58, 62, 0.5);
+  --glass-media-shadow: var(--glass-shadow);
+  /* 侧栏玻璃：浅色下更实，压在 Hero 画面上也是干净的浅玻璃，不混出中间灰 */
+  --glass-sidebar-bg: rgba(36, 36, 40, 0.38);
+  /* 画面上卡片的 0.5px 亮边（剧集横卡等没有整套玻璃时单用） */
+  --glass-media-edge: rgba(255, 255, 255, 0.14);
+  /* 弹出菜单（「更多」、右键菜单）：比玻璃控件不透明得多，压在海报上也读得清 */
+  --menu-bg: rgba(30, 30, 32, 0.88);
+  /*
+   * Hero（首页、详情）下沿：深色页面本就是黑底不需要渐隐。浅色在画面内部最后 fade 一段渐隐到页面底色，
+   * 文案上移 lift 避开渐隐段；Hero 高度两套主题一致。详情 Hero 更高，用更长的 --hero-detail-*。
+   */
+  --hero-edge-fade: 0px;
+  --hero-edge-lift: 0px;
+  --hero-edge-mask: none;
+  --hero-detail-fade: 0px;
+  --hero-detail-lift: 0px;
+  --hero-detail-mask: none;
+
+  /* ── 阴影：卡片 / 浮层 / 大浮层三档 ── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.6), 0 8px 18px rgba(0, 0, 0, 0.35);
+  /* 内容卡片与次级控件的投影：深色靠明度分层不加投影，浅色用柔和投影把白卡托起来 */
+  --shadow-card: 0 0 transparent;
+  --shadow-control: 0 0 transparent;
+
+  /*
+   * ── 剧照上的暗化（Hero、横版剧照卡）──
+   * 画面总是深色。fade 从上到下压暗（渐进模糊层上），side 从左往右压暗（Hero 文案一侧）。
+   * 浅色主题下 Hero 底部要渐隐到浅灰页面，fade 最深 0.45 且在渐隐段里回落（见浅色块），以免渐隐段发灰发褐。
+   */
+  --scrim-fade-hero: linear-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.35) 40%,
+    rgba(0, 0, 0, 0.82) 82%,
+    #000000 100%
+  );
+  /* 详情 Hero 用的 fade：深色同首页；浅色把最深一段压暗保持到 85%，主创行不落在褪色段上 */
+  --scrim-detail-hero: var(--scrim-fade-hero);
+  --scrim-side-hero: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.4) 28%,
+    rgba(0, 0, 0, 0) 56%
+  );
+  --scrim-fade-card: linear-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.22) 45%,
+    rgba(0, 0, 0, 0.42) 100%
+  );
+  /* 渐进模糊三层各自的渐显遮罩（.yb-pblur；mask 只取透明度） */
+  --pblur-mask-1: linear-gradient(transparent 0%, #000 22%);
+  --pblur-mask-2: linear-gradient(transparent 12%, #000 42%);
+  --pblur-mask-3: linear-gradient(transparent 28%, #000 62%);
+  /* 向下渐隐的遮罩（mask 只取透明度）：详情顶部渐隐带 / 剧集卡剧照底部羽化 */
+  --mask-fade-end-30: linear-gradient(#000 30%, transparent);
+  --media-logo-shadow: drop-shadow(
+    0 4px 18px rgba(0, 0, 0, 0.5)
+  ); /* 压在图上的片名标志 */
+  --media-kicker: rgba(255, 255, 255, 0.72); /* Hero 片名上的小标签行 */
+  --media-dot: rgba(255, 255, 255, 0.35); /* Hero 分页点 */
+  --glass-light-bg: rgba(
+    255,
+    255,
+    255,
+    0.16
+  ); /* 画面上的浅色玻璃胶囊（Hero「待看」） */
+
+  /* ── 规格标签（UiSpecBadge）：浅灰实心小方块、描边小方块、分级圆标 ── */
+  --spec-bg: rgba(255, 255, 255, 0.72);
+  --spec-text: #000000;
+  --spec-line: rgba(255, 255, 255, 0.66);
+  /* 压在画面上的规格标签（Hero）：两套主题都取深色版 */
+  --spec-media-bg: rgba(255, 255, 255, 0.72);
+  --spec-media-text: #000000;
+  --spec-media-line: rgba(255, 255, 255, 0.66);
+  --focus-ring: 0 0 0 3px var(--accent-glow);
+  /* 校验失败的输入框外圈 */
+  --focus-ring-danger: 0 0 0 3px
+    color-mix(in srgb, var(--danger) 32%, transparent);
+  /* 与内容隔开一圈底色的焦点环（海报等图片目标） */
+  --focus-ring-offset: 0 0 0 3px var(--bg-content), 0 0 0 6px var(--accent);
+
+  /* ── 滚动条 ── */
+  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.34);
+
+  /* ── 动效 ── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --duration-instant: 100ms; /* 按下反馈 */
+  --duration-fast: 150ms; /* 悬停、颜色、淡入淡出 */
+  --duration-normal: 240ms; /* 弹窗、面板进出 */
+  --duration-slow: 350ms; /* 宽度、进度条等大幅变化 */
+  --duration-spin: 800ms; /* 加载转圈一周 */
+  --duration-pulse: 1.4s; /* 呼吸 / 脉冲一个周期 */
+  --transition-panel:
+    transform var(--duration-slow) var(--ease-out),
+    opacity var(--duration-slow) var(--ease-out);
+  --transition-fast:
+    color var(--duration-fast) ease, background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease, opacity var(--duration-fast) ease,
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) ease;
+
+  /*
+   * ── AI 助手 ──
+   * 窗口正中的一列：空闲时是独立的玻璃输入胶囊，有对话后同一列展开成玻璃面板（.yb-glass）；
+   * 唯一的彩色是输入胶囊上沿 1px 的蓝紫粉渐变（思考时变亮）。
+   */
+  --assistant-streak-blue: rgba(110, 170, 255, 0.95);
+  --assistant-streak-violet: rgba(190, 150, 255, 0.95);
+  --assistant-streak-pink: rgba(255, 160, 200, 0.85);
+  --assistant-scrim: rgba(0, 0, 0, 0.56); /* 唤起时整窗压暗（再加轻模糊） */
+  --assistant-inset: rgba(0, 0, 0, 0.22); /* 面板里内凹的输入胶囊 */
+  --assistant-width: 720px; /* 居中一列（输入胶囊）的宽度，面板再加两侧内边距 */
+  --assistant-panel-height: 724px; /* 有对话时面板最高 */
+  --assistant-composer-height: 64px;
+  /* 空闲时一列顶部锚定：输入胶囊约在 43vh（130px ≈ 标题 + 上下文胶囊 + 半个输入胶囊），窄窗口约 40vh */
+  --assistant-hero-top: max(var(--space-6), calc(43vh - 130px));
+  --assistant-hero-top-narrow: max(var(--space-3), calc(40vh - 110px));
+  --duration-assistant-sheet: 550ms; /* 结果逐行弹簧滑入 */
+  --duration-assistant: 220ms; /* 唤起 / 收起（与 AssistantLauncher 的 OPEN_MS 一致） */
+
+  /*
+   * ── 层级（z-index）──
+   * 局部档只在组件自己的层叠上下文里比大小；全局档给 position: fixed 的浮层。
+   * 顺序（低 → 高）：局部档 < 底栏 < 抽屉 < 页内遮罩 < 浮层面板 < 灯箱 < 设置 < 二级对话框 < 视频墙 < 网页端播放层 < 提示。
+   * 同一组件的遮罩和窗口用 calc(var(--z-…) + 1) 叠在一起。
+   */
+  --z-raised: 2; /* 略高于兄弟元素 */
+  --z-above: 5; /* 加载层、顶栏 */
+  --z-float: 10; /* 页内浮起的内容 */
+  --z-dropdown: 20; /* 页内下拉菜单、列表栏 */
+  --z-popover: 30; /* 播放器里的弹出面板 */
+  --z-overlay: 40; /* 盖住整页的内联覆盖层 */
+  --z-overlay-top: 45; /* 覆盖层之上的错误提示、悬浮卡片 */
+  --z-bottom-nav: 1100; /* 手机底部导航 */
+  --z-drawer-backdrop: 1140;
+  --z-drawer: 1150; /* 手机侧栏抽屉 */
+  --z-modal: 2000; /* 来源管理遮罩、页内面板遮罩 */
+  --z-sheet: 2050; /* 后台任务面板、选集面板 */
+  --z-lightbox: 2060; /* 看图灯箱 */
+  --z-settings: 2100; /* 设置窗口 */
+  --z-dialog: 3000; /* 设置里再弹出的对话框 */
+  --z-player-overlay: 6000; /* 视频墙等盖住整个窗口的媒体层 */
+  --z-player: 6100; /* 网页端播放层（视频墙里点播放也在最上；桌面端在独立窗口里播） */
+  --z-assistant: 6500; /* AI 助手浮层（播放中也能唤起，盖在网页端播放层之上） */
+  --z-max: 10000; /* tooltip，永远在最上 */
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  /*
+   * 浅色：浅灰底（#f5f5f7）上放白卡，层次靠柔和投影而不是描边；
+   * 次级控件是带发丝边和轻投影的白色胶囊，玻璃是半透明白。
+   */
+  --bg-base: #f5f5f7;
+  --bg-main: #f5f5f7;
+  --bg-content: #f5f5f7;
+  --bg-sidebar: #fbfbfd;
+  --bg-titlebar: #f5f5f7;
+  --bg-elevated: #ffffff;
+  --bg-panel: #ffffff;
+  --bg-glass: rgba(0, 0, 0, 0.04);
+  --bg-glass-hover: rgba(0, 0, 0, 0.06);
+  --bg-fill-secondary: #e8e8ed;
+  --bg-fill-tertiary: rgba(118, 118, 128, 0.12);
+  --bg-active: rgba(0, 0, 0, 0.08);
+  --bg-active-soft: rgba(0, 0, 0, 0.05);
+  --bg-card: #ffffff;
+  --control-bg: #ffffff;
+  --control-bg-hover: #f2f2f5;
+
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-default: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.24);
+  --border-glass: rgba(0, 0, 0, 0.08);
+  --border-glass-light: rgba(0, 0, 0, 0.12);
+  --separator: rgba(0, 0, 0, 0.08);
+
+  --text-primary: #1d1d1f;
+  --text-secondary: rgba(60, 60, 67, 0.82);
+  --text-tertiary: rgba(60, 60, 67, 0.7);
+  --text-quaternary: rgba(60, 60, 67, 0.36);
+  --text-on-accent: #ffffff;
+
+  --accent: #007aff;
+  --accent-hover: #0062cc;
+  --accent-soft: rgba(0, 122, 255, 0.1);
+  --accent-glow: rgba(0, 122, 255, 0.32);
+  --accent-text: #0066d6;
+
+  --action-bg: #1d1d1f;
+  --action-hover: #000000;
+  --action-text: #ffffff;
+  --selection-bg: rgba(0, 122, 255, 0.24);
+
+  --success: #34c759;
+  --warning: #ff9500;
+  --danger: #ff3b30;
+  --rating: #f5a700;
+  --favorite: #ff2d55;
+  --tint-purple: #af52de;
+
+  /* 媒体画布在浅色主题下仍是深色，取值与深色主题一致 */
+  --media-bg: #000000;
+  --media-text: #ffffff;
+  --media-text-secondary: rgba(255, 255, 255, 0.85);
+  --media-text-tertiary: rgba(255, 255, 255, 0.5);
+  --media-track: rgba(255, 255, 255, 0.25);
+  --media-hover: rgba(255, 255, 255, 0.16);
+  --media-accent: #f5f5f7;
+  --media-intro: rgba(191, 90, 242, 0.85);
+  --media-outro: rgba(255, 159, 10, 0.85);
+  --overlay-scrim: rgba(0, 0, 0, 0.72);
+  --overlay-scrim-strong: rgba(0, 0, 0, 0.9);
+  --overlay-scrim-soft: rgba(0, 0, 0, 0.24);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.16);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.05);
+  --scrim-fade-hero: linear-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 36%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.42) 76%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  /* 多段缓动：渐隐段上半截几乎不透明（文案落在这里），下半截快速淡出 */
+  --hero-edge-fade: 120px;
+  --hero-edge-lift: 72px;
+  --hero-edge-mask: linear-gradient(
+    #000 calc(100% - 120px),
+    rgba(0, 0, 0, 0.97) calc(100% - 96px),
+    rgba(0, 0, 0, 0.86) calc(100% - 72px),
+    rgba(0, 0, 0, 0.6) calc(100% - 48px),
+    rgba(0, 0, 0, 0.26) calc(100% - 24px),
+    transparent
+  );
+  --scrim-detail-hero: linear-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 36%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.45) 85%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  --hero-detail-fade: 160px;
+  /* 文案上移量随窗口高度收：矮窗口里 148px 会在主演行下留出大段只有模糊画面的空带 */
+  --hero-detail-lift: min(148px, 13vh);
+  --hero-detail-mask: linear-gradient(
+    #000 calc(100% - 160px),
+    rgba(0, 0, 0, 0.97) calc(100% - 128px),
+    rgba(0, 0, 0, 0.86) calc(100% - 96px),
+    rgba(0, 0, 0, 0.6) calc(100% - 64px),
+    rgba(0, 0, 0, 0.26) calc(100% - 32px),
+    transparent
+  );
+  --shadow-control:
+    0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  --glass-bg: rgba(255, 255, 255, 0.62);
+  --glass-bg-hover: rgba(255, 255, 255, 0.78);
+  --glass-sidebar-bg: rgba(255, 255, 255, 0.84);
+  --menu-bg: rgba(255, 255, 255, 0.9);
+  --glass-solid: #f2f2f4;
+  --glass-solid-hover: #e8e8ed;
+  --glass-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.9),
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 10px 30px rgba(0, 0, 0, 0.12);
+  /* 画面上的玻璃两套主题一致，内高光取深色版 */
+  --glass-media-shadow:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0.5px rgba(255, 255, 255, 0.1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.14), 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  --spec-bg: rgba(0, 0, 0, 0.62);
+  --spec-text: #ffffff;
+  --spec-line: rgba(0, 0, 0, 0.5);
+
+  /* 浅色：唤起时盖一层浅雾而不是压黑，深色文字与浅玻璃都读得清 */
+  --assistant-scrim: rgba(242, 242, 246, 0.6);
+  --assistant-inset: rgba(0, 0, 0, 0.045);
+
+  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.34);
+}
+
+/*
+ * 压在画面上的区域（条目详情的 Hero）：画面总是深色，无论哪套主题都取深色版的文字、玻璃、
+ * 主按钮与规格标签；Hero 下部的渐进模糊压到这里的 --bg-content（黑），浅色主题下不会盖一层白雾。
+ */
+.yb-on-media {
+  color-scheme: dark;
+  --bg-content: #000000;
+  --bg-fill-secondary: #2c2c2e;
+  --bg-active: rgba(255, 255, 255, 0.12);
+  --border-glass-light: rgba(255, 255, 255, 0.12);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.64);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-quaternary: rgba(255, 255, 255, 0.3);
+  --accent-text: #4da3ff;
+  --action-bg: #f5f5f7;
+  --action-hover: #ffffff;
+  --action-text: #111113;
+  --control-bg: #2c2c2e;
+  --control-bg-hover: #3a3a3c;
+  --shadow-control: 0 0 transparent;
+  --glass-bg: var(--glass-media-bg);
+  --glass-bg-hover: var(--glass-media-bg-hover);
+  --glass-shadow: var(--glass-media-shadow);
+  --spec-bg: var(--spec-media-bg);
+  --spec-text: var(--spec-media-text);
+  --spec-line: var(--spec-media-line);
+  /* 外壳窗口键胶囊滚到画面上时（toolbarOverMedia）用到的令牌，取深色主题值 */
+  --bg-active-soft: rgba(255, 255, 255, 0.08);
+  --bg-glass-hover: rgba(255, 255, 255, 0.08);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --separator: rgba(255, 255, 255, 0.08);
+  --accent: #0a84ff;
+  --accent-hover: #409cff;
+  --accent-soft: rgba(10, 132, 255, 0.16);
+  --accent-glow: rgba(10, 132, 255, 0.4);
+  /* --glass-light-bg 两套主题同值，不在这里重声明，降低透明度时根节点的实色才能传下来 */
+}
+
+/* 外壳控件在主题玻璃与画面玻璃之间切换时的颜色过渡（不用 @property，只过渡最终计算值） */
+.yb-media-swap {
+  transition:
+    background-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
+}
+
+/*
+ * 降低透明度：系统偏好（prefers-reduced-transparency）或设置 ui.reduceTransparency（根节点 data-transparency）。
+ * 玻璃换成同层级的实色，不再做背景模糊（低配机器上 backdrop-filter 开销大）。
+ * 写在主题块之后，两套主题下都生效。
+ */
+:root[data-transparency='reduced'] {
+  --glass-light-bg: #3a3a3c;
+  --glass-bg: var(--glass-solid);
+  --glass-bg-hover: var(--glass-solid-hover);
+  --glass-sidebar-bg: var(--glass-solid);
+  --menu-bg: var(--glass-solid);
+  --glass-media-bg: #1c1c1e;
+  --glass-media-bg-hover: #2c2c2e;
+  --glass-filter: none;
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-light-bg: #3a3a3c;
+    --glass-bg: var(--glass-solid);
+    --glass-bg-hover: var(--glass-solid-hover);
+    --glass-sidebar-bg: var(--glass-solid);
+    --menu-bg: var(--glass-solid);
+    --glass-media-bg: #1c1c1e;
+    --glass-media-bg-hover: #2c2c2e;
+    --glass-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-assistant: 0ms;
+    --duration-assistant-sheet: 0ms;
+  }
+}
