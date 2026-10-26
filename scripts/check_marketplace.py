@@ -371,7 +371,9 @@ def check_skill_resources(skill: Path, text: str, problems: Problems) -> None:
         match = re.search(r"^  allow_implicit_invocation: (true|false)\s*$", policy.read_text(encoding="utf-8"), re.M)
         if not match or (match.group(1) == "true") == disabled:
             problems.add(f"{skill.name}: Codex and frontmatter invocation policies disagree")
-    for target in re.findall(r"\]\(([^)]+)\)", text):
+    # 代码块和行内代码里的链接是示例，不当成本地文件检查。
+    prose = re.sub(r"`[^`\n]*`", "", re.sub(r"```.*?```", "", text, flags=re.S))
+    for target in re.findall(r"\]\(([^)]+)\)", prose):
         if "://" in target or target.startswith("#"):
             continue
         local = target.split("#", 1)[0]

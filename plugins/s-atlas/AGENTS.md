@@ -21,6 +21,7 @@
 | 提交、开 PR | `commit-pr`（还没决定怎么集成用 `finishing-a-development-branch`） |
 | 审 PR、审分支、审本地改动、代码审查 | `s-review` |
 | 中英翻译 | `translate` |
+| 画架构图、流程图、时序图、ER 图 | `archify` |
 | 教我、这块代码怎么工作 | `how` |
 | 界面卡顿、掉帧、滚动慢、INP 高 | `impeccable`（optimize） |
 | 界面设计、样式、交互 | `impeccable` |

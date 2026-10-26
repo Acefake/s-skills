@@ -48,6 +48,7 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 - 写或改 Word、幻灯片、表格、PDF → `docx`、`pptx`、`xlsx`、`pdf`。README、写文档、RFC 用 `technical-writing`。中英翻译用 `translate`。
 - 写提交说明或开 PR → `commit-pr`。还没决定分支怎么集成时用 `finishing-a-development-branch`。
 - 审 PR、分支、diff 或本地改动 → `s-review`。默认只出报告。每条发现带文件:行和 P0/P1/P2。
+- 画架构图、流程图、时序图、数据流图、ER 图、类图，或把回答做成一页 → `archify`。架构重构评审仍用 `refactor-architecture`。
 - 教我、讲讲这块代码怎么工作 → `how`。已删除的 teach 不要加载。
 
 ## 危险信号

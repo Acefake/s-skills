@@ -1,0 +1,5 @@
+interface:
+  display_name: "Archify"
+  short_description: "画架构图、流程图、时序图，出可交互的单文件 HTML"
+policy:
+  allow_implicit_invocation: true

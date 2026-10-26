@@ -4,14 +4,14 @@
     "name": "S"
   },
   "metadata": {
-    "description": "S 的中文 AI 技能市场。现在只有 s-atlas 这一个插件，72 个活跃中文技能。",
+    "description": "S 的中文 AI 技能市场。现在只有 s-atlas 这一个插件，73 个活跃中文技能。",
     "icon": "plugins/s-atlas/icon.png"
   },
   "plugins": [
     {
       "name": "s-atlas",
       "source": "plugins/s-atlas",
-      "description": "s-atlas 的 72 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及译好的 Superpowers 流程。"
+      "description": "s-atlas 的 73 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及译好的 Superpowers 流程。"
     }
   ]
 }
