@@ -2,9 +2,11 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.7.1。插件名是 `s-atlas`，不依赖其他插件。技能 **73** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明以用户会说的中文触发词起头，这些词放在前 100 个字里，中文句号后接英文 `Use when`；正文是中文。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.2，共 **73** 个技能。
 
-旧中文名对照见 [RENAMES.md](RENAMES.md)。
+它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Claude Code、Codex、Cursor、Hermes 等宿主会按你说的话自动挑对应的技能。
+
+技能目录名和 frontmatter 的 `name` 一致，都是英文小写 kebab-case。描述以中文触发词开头，正文全中文。
 
 ## 安装
 
@@ -49,7 +51,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 短规则在 [`plugins/s-atlas/AGENTS-snippet.md`](plugins/s-atlas/AGENTS-snippet.md)。把它贴进全局指令：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。规则要求动手前先看可用技能，用对得上的那个；拿不准就用 `s-router`。
 
-要按任务查表，贴同目录的 [`plugins/s-atlas/AGENTS.md`](plugins/s-atlas/AGENTS.md)。用 DeepSeek V4.1 Flash 跑同样 10 条请求，Codex 不加时 7 条用对技能，加了 8 条；Hermes 不加时 5 条，加了 10 条。那次测量里 Codex 没用对的两条是 `how` 和 `technical-writing`。`how` 仍是手点。`technical-writing` 从 1.5.0 起按描述自动选用。
+要按任务查表，贴同目录的 [`plugins/s-atlas/AGENTS.md`](plugins/s-atlas/AGENTS.md)，选中率会更高。
 
 ## 技能怎么被选中
 
@@ -189,8 +191,8 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 |---|---|
 | `frontend-design` | 点名时给一份有主见的视觉方向，不带检查脚本 |
 | `s-mode` | 点名才走的加强工作流 |
-| `s-agent` | 派出去写代码的子智能体 |
-| `comment-sicko` | 被清注释技能派去删注释 |
+| `s-agent` | `s-mode` 派出去写代码的子智能体 |
+| `comment-sicko` | 专门删注释的子智能体 |
 | `how` | 改之前讲清代码怎么串 |
 | `why` | 查为什么这样设计 |
 | `architect` | 动手前定类型和模块边界 |
@@ -221,13 +223,13 @@ claude plugin validate plugins/s-atlas
 npx skills add . --list
 ```
 
-要发 1.2.0 这种非补丁版本，先改锁文件和四份清单里的版本号，再跑 `scripts/check_marketplace.py`。补丁版本用 `bump_plugin_version.py`。
+要发 1.8.0 这种非补丁版本，先改锁文件和四份清单里的版本号，再跑 `scripts/check_marketplace.py`。补丁版本用 `bump_plugin_version.py`。
 
 校验覆盖市场清单、版本锁、技能名称、调用策略和本地链接。技能是否实际触发、模型是否按配置委派，仍需通过真实会话验证。
 
-## 来源与许可证
+## 许可证
 
-本插件包含的部分技能沿用了第三方开源许可证，许可证与声明文件见：
+s-atlas 按 [LICENSE](plugins/s-atlas/LICENSE) 发布。个别技能附带的组件许可证：
 
 - [`brainstorming`、`writing-plans` 等开发流程技能：许可证](plugins/s-atlas/LICENSE-dev-workflow)
 - [`frontend-design`：许可证](plugins/s-atlas/LICENSE-frontend-design)
@@ -237,4 +239,3 @@ npx skills add . --list
 - [`impeccable`：许可证](plugins/s-atlas/LICENSE-impeccable)
 - [`impeccable`：声明](plugins/s-atlas/NOTICE-impeccable.md)
 - [`archify`：许可证与声明](plugins/s-atlas/skills/archify/)
-- [插件自身许可证](plugins/s-atlas/LICENSE)
