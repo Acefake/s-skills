@@ -101,7 +101,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 | 问为什么这样设计 | `why` |
 | 做页面、改界面、看卡顿 | `impeccable` |
 | 点名要一份有主见的视觉方向 | `frontend-design` |
-| 按影盒 / Apple TV 风格做界面 | `yingbox-ui` |
+| 按影盒 / Apple TV 风格做界面 | `apple-glass` |
 | 文件放哪、文档注释、代码质量 | `code-style` |
 | 决定在哪一层测 | `test-strategy` |
 | 写或修 Playwright 端到端测试 | `e2e-testing` |
@@ -136,7 +136,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 | `using-git-worktrees` | 用 worktree 隔开工作 |
 | `finishing-a-development-branch` | 收尾开发分支 |
 | `impeccable` | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
-| `yingbox-ui` | 影盒的界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
+| `apple-glass` | 影盒的界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
 | `docx` | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
 | `pptx` | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
 | `xlsx` | 带公式的工作簿，保存后用 LibreOffice 重算 |

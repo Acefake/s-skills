@@ -1,5 +1,5 @@
 ---
-name: yingbox-ui
+name: apple-glass
 description: "「影盒风格」「按 yingbox 的 UI 做」「Apple TV 风格界面」「用我那套 UI」。按影盒（yingbox）的设计语言做界面：深色优先、纯黑底、实色卡片、玻璃只给浮动控件、8pt 间距、令牌化、组件化。Use when building or restyling UI in yingbox, or when the owner asks for the yingbox / Apple TV look in another web or Vue project."
 ---
 ## 运行环境适配
