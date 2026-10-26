@@ -3,8 +3,8 @@
 1.2.0 把技能目录和 `name` 改成英文小写 kebab-case，文件夹名等于 `name`。
 技能在 `plugins/s-atlas/skills/`，随插件分发。1.3.0 删掉了原来放在 `archive/s/` 的 39 个归档技能，名字留在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`。
 
-活跃 61：原来的 50 个（含 frontend-design）加上 11 个译好的 Superpowers 技能。
-归档 38：原来的 35 个，加上 3 个和 poteto 重叠、因此不进 `skills/` 的 Superpowers 技能。
+活跃 61：原来的 50 个（含 frontend-design）加上 11 个开发流程技能。
+归档 38：原来的 35 个，加上 3 个和现有技能重叠、因此不进 `skills/` 的开发流程技能。
 
 `frontend-design`（原「有主见的界面」）保留为手点技能，`disable-model-invocation: true`。日常做界面仍自动用 `impeccable`。
 
@@ -25,7 +25,6 @@
 
 | 旧名 | 新名 | 状态 |
 |---|---|---|
-| poteto工作模式 | s-mode（1.4.0 前叫 poteto-mode） | 活跃 |
 | s助手 | s-agent | 活跃 |
 | 专挑注释 | comment-sicko | 活跃 |
 | 设置s模型 | setup-s-models | 活跃 |
@@ -110,20 +109,20 @@
 | 说人话重讲 | plain-language | 已删 |
 | 自我改进 | self-improvement | 已删 |
 | s使用帮助 | s-help | 已删 |
-| （无旧中文名，上游 Superpowers） | s-router（1.4.0 前叫 using-superpowers） | 活跃 |
-| （无旧中文名，上游 Superpowers） | brainstorming | 活跃 |
-| （无旧中文名，上游 Superpowers） | writing-plans | 活跃 |
-| （无旧中文名，上游 Superpowers） | executing-plans | 活跃 |
-| （无旧中文名，上游 Superpowers） | subagent-driven-development | 活跃 |
-| （无旧中文名，上游 Superpowers） | systematic-debugging | 活跃 |
-| （无旧中文名，上游 Superpowers，与 principle-prove-it-works 重叠） | verification-before-completion | 已删 |
-| （无旧中文名，上游 Superpowers） | requesting-code-review | 活跃 |
-| （无旧中文名，上游 Superpowers） | receiving-code-review | 活跃 |
-| （无旧中文名，上游 Superpowers） | using-git-worktrees | 活跃 |
-| （无旧中文名，上游 Superpowers） | finishing-a-development-branch | 活跃 |
-| （无旧中文名，上游 Superpowers，与 tdd 重叠） | test-driven-development | 已删 |
-| （无旧中文名，上游 Superpowers，与 swarm 重叠） | dispatching-parallel-agents | 已删 |
-| （无旧中文名，上游 Superpowers，与 author-skill 重叠） | writing-skills | 已删 |
+| （无旧中文名） | s-router | 活跃 |
+| （无旧中文名） | brainstorming | 活跃 |
+| （无旧中文名） | writing-plans | 活跃 |
+| （无旧中文名） | executing-plans | 活跃 |
+| （无旧中文名） | subagent-driven-development | 活跃 |
+| （无旧中文名） | systematic-debugging | 活跃 |
+| （无旧中文名，与 principle-prove-it-works 重叠） | verification-before-completion | 已删 |
+| （无旧中文名） | requesting-code-review | 活跃 |
+| （无旧中文名） | receiving-code-review | 活跃 |
+| （无旧中文名） | using-git-worktrees | 活跃 |
+| （无旧中文名） | finishing-a-development-branch | 活跃 |
+| （无旧中文名，与 tdd 重叠） | test-driven-development | 已删 |
+| （无旧中文名，与 swarm 重叠） | dispatching-parallel-agents | 已删 |
+| （无旧中文名，与 author-skill 重叠） | writing-skills | 已删 |
 
 ## 删除原因
 
@@ -135,11 +134,11 @@
 | design-system | 和 impeccable 的令牌、设计系统重叠 |
 | ui-ux-pro-max | 查表用，和 impeccable 抢同一句「做个页面」 |
 | web-design-guidelines | 检查清单，impeccable 已覆盖审查 |
-| apple-design | 单一风格，poteto 不读 |
+| apple-design | 单一风格，s-mode 不读 |
 | shadcn | 只有项目用 shadcn 才需要 |
 | pick-frontend-lib | 偶尔选型 |
 | break-ui | 偶发 |
-| prototype | poteto 读的是原则 principle-exhaust-the-design-space，不读这份 |
+| prototype | s-mode 读的是原则 principle-exhaust-the-design-space，不读这份 |
 | native-mobile-feel | 只做手机网页手感时才用 |
 | make-bot-ui | 只做 webhook 机器人界面 |
 | animate | 动画整批删掉；要恢复时先从 git 历史拿这一份 |
@@ -151,20 +150,20 @@
 | expo-animate | 只做 Expo |
 | emil-design | 和动画审查重复 |
 | ask-sonner | 只服务一个 toast 库 |
-| sharpen | poteto 不读；日常用 brainstorming |
-| correct | poteto 不读 |
-| blast-radius | poteto 不读 |
-| recall | poteto 不读 |
-| in-your-own-words | poteto 不读 |
-| automate-me | poteto 不读 |
-| create-verification-skill | poteto 不读 |
-| maintain-verification-skill | poteto 不读 |
-| typescript-best-practices | poteto 不读；写 TS 多时优先从 git 历史拿回 |
-| teach | poteto 不读；how 和 why 已覆盖 |
+| sharpen | s-mode 不读；日常用 brainstorming |
+| correct | s-mode 不读 |
+| blast-radius | s-mode 不读 |
+| recall | s-mode 不读 |
+| in-your-own-words | s-mode 不读 |
+| automate-me | s-mode 不读 |
+| create-verification-skill | s-mode 不读 |
+| maintain-verification-skill | s-mode 不读 |
+| typescript-best-practices | s-mode 不读；写 TS 多时优先从 git 历史拿回 |
+| teach | s-mode 不读；how 和 why 已覆盖 |
 | plain-language | 普通对话可以代替 |
-| self-improvement | 和 reflect 重叠，poteto 只读 reflect |
-| s-help | poteto 不读；目录改由 README 表格承担 |
-| test-driven-development | 与 poteto 点名的 tdd 重叠，只留 tdd |
-| dispatching-parallel-agents | 与 poteto 点名的 swarm 重叠，只留 swarm |
-| writing-skills | 与 poteto 点名的 author-skill 重叠，只留 author-skill |
-| verification-before-completion | 与 poteto 点名的 principle-prove-it-works 重叠，只留 principle-prove-it-works |
+| self-improvement | 和 reflect 重叠，s-mode 只读 reflect |
+| s-help | s-mode 不读；目录改由 README 表格承担 |
+| test-driven-development | 与 s-mode 点名的 tdd 重叠，只留 tdd |
+| dispatching-parallel-agents | 与 s-mode 点名的 swarm 重叠，只留 swarm |
+| writing-skills | 与 s-mode 点名的 author-skill 重叠，只留 author-skill |
+| verification-before-completion | 与 s-mode 点名的 principle-prove-it-works 重叠，只留 principle-prove-it-works |

@@ -6,8 +6,6 @@ description: "「在这个会话里派子智能体做」「按计划逐个任务
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 子代理驱动开发
 
 按任务派发全新的实现者子代理来执行计划：每项任务之后做一次任务评审（规格符合性 + 代码质量），最后再做一次覆盖整个分支的宽泛评审。
@@ -169,7 +167,7 @@ digraph process {
 对话记忆撑不过压缩。在真实会话中，丢失位置的控制者会把已经完成的整段任务序列重新派发一遍——这是观察到的最昂贵的单次失败。在台账文件中跟踪进度，而不只是待办。
 
 - 技能开始时，检查是否已有台账：
-  `cat "$(git rev-parse --show-toplevel)/.superpowers/sdd/progress.md"`。其中列为完成的任务就是 DONE——不要重新派发；从第一个未标为完成的任务继续。
+  `cat "$(git rev-parse --show-toplevel)/.s-atlas/sdd/progress.md"`。其中列为完成的任务就是 DONE——不要重新派发；从第一个未标为完成的任务继续。
 - 当某项任务的评审干净返回时，在你做其他簿记的同一条消息里给台账追加一行：
   `Task N: complete (commits <base7>..<head7>, review clean)`。
 - 台账是你的恢复地图：它点名的提交存在于 git 中，即使你的上下文已经不记得创建过它们。压缩之后，相信台账和 `git log`，而不是你自己的回忆。
@@ -186,7 +184,7 @@ digraph process {
 ```
 You: I'm using Subagent-Driven Development to execute this plan.
 
-[Read plan file once: docs/superpowers/plans/feature-plan.md]
+[Read plan file once: docs/s-atlas/plans/feature-plan.md]
 [Create todos for all tasks]
 
 Task 1: Hook installation script
@@ -195,7 +193,7 @@ Task 1: Hook installation script
 
 Implementer: "Before I begin - should the hook be installed at user or system level?"
 
-You: "User level (~/.config/superpowers/hooks/)"
+You: "User level (~/.config/s-atlas/hooks/)"
 
 Implementer: "Got it. Implementing now..."
 [Later] Implementer:

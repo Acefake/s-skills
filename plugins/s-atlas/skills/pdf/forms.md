@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # 填写 PDF 表单
 
 `<skill>` 是这个技能的目录。每条命令都从用户的工作目录运行。先弄清你拿到的是哪一种表单：

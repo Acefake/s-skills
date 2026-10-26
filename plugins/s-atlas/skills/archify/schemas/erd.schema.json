@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tt-a1i/archify/schemas/erd.schema.json",
+  "$id": "https://github.com/Acefake/s-skills/plugins/s-atlas/skills/archify/schemas/erd.schema.json",
   "title": "Archify Entity-Relationship Diagram",
   "type": "object",
   "additionalProperties": false,

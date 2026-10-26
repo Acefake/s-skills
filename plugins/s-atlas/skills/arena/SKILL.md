@@ -55,7 +55,7 @@ disable-model-invocation: true
 
 参赛者读 `arena runners`，交叉评审读 `arena cross-judge pool` 并从中选一个，优先和父级不同系列。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。
 
-### Cursor（原版参数）
+### Cursor
 
 阶段 B：一条消息里 N 个 `Task`，`run_in_background: true`，`subagent_type: generalPurpose`（参赛者要写到自己的输出目录），`model` 为该条目。`auto` 或 `inherit-parent` 省略 `model`。
 
@@ -69,7 +69,7 @@ disable-model-invocation: true
 
 阶段 B：每个参赛者一次 `subagent`，`background: true`。agent ID 用 `s-arena-runners-1`、`s-arena-runners-2`（`mode: subagent`，各自的 `model`）。没有这些文件时用内置 `general`，并说明继承了父级模型。
 
-阶段 C：等后台子会话都通知完成之后，再派一个只读评审。agent ID 用池里选中的那一个 `s-arena-cross-judge-pool-<n>`。没有文件时用内置 `explore`。不要在调用上传 `model`（工具页没有这个参数；未核实的 issue 写法见 poteto 文末）。
+阶段 C：等后台子会话都通知完成之后，再派一个只读评审。agent ID 用池里选中的那一个 `s-arena-cross-judge-pool-<n>`。没有文件时用内置 `explore`。不要在调用上传 `model`（工具页没有这个参数；未核实的 issue 写法见 s-mode 文末）。
 
 ### Codex
 

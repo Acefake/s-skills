@@ -6,8 +6,6 @@ description: "「写个 Word」「做一份 docx」「改修订」「加批注�
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # Word 文档
 
 Word 的功能你已经会用。这个技能补上代码里看不到的部分：一套能正确做修订和批注的库、能抓住未跟踪修改的校验、按读者看到的样子查看页面的办法，以及 docx-js 和 OOXML 里会静默生成坏文件的行为。

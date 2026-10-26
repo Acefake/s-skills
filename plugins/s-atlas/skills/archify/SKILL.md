@@ -4,13 +4,10 @@ description: "「画架构图」「架构图」「流程图」「时序图」「
 license: Apache-2.0
 metadata:
   version: "3.2"
-  author: tt-a1i
 ---
 ## 运行环境适配
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
-
-本技能译自 tt-a1i 的 Archify（Apache-2.0，上游 commit 81c6be8）。许可证见同目录 LICENSE 和 NOTICE。
 
 # Archify
 

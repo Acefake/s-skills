@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "s-atlas",
-  "version": "1.7.0",
-  "description": "s-atlas 的 73 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及译好的 Superpowers 流程。",
+  "version": "1.7.1",
+  "description": "s-atlas 的 73 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及计划、调试、代码审查等开发流程。",
   "author": {
     "name": "S",
     "url": "https://github.com/Acefake"
@@ -14,15 +14,14 @@
     "chinese",
     "skills",
     "design",
-    "animation",
-    "superpowers"
+    "animation"
   ],
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "s-atlas 中文技能",
-        "shortDescription": "73 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及 Superpowers 流程。",
-        "longDescription": "s-atlas 的 73 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及译好的 Superpowers 流程。",
+        "shortDescription": "73 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及计划、调试、代码审查等开发流程。",
+        "longDescription": "s-atlas 的 73 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及计划、调试、代码审查等开发流程。",
         "developerName": "S",
         "category": "Productivity",
         "websiteURL": "https://github.com/Acefake/s-skills"

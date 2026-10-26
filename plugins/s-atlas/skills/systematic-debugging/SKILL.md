@@ -2,8 +2,6 @@
 name: systematic-debugging
 description: "「修 bug」「报错了」「测试失败」「结果不对」「按钮没反应」。先查根因再改。bug-fix 和 fix bug 也走这里。Use when you hit any bug, test failure, or unexpected behavior before proposing a fix, including 修 bug, 报错, bug-fix, and fix bug."
 ---
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 系统化调试
 
 ## 概述

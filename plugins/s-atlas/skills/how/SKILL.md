@@ -43,7 +43,7 @@ disable-model-invocation: true
 
 探索读 `how explorer`，讲解读 `how explainer`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。复杂情况先并行派探索者，等齐再派一个讲解者。
 
-### Cursor（原版参数）
+### Cursor
 
 每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: true`。探索者的 `model` 是 `how explorer`，没有这行时用 `grok-4.7-xhigh-fast`。讲解者的 `model` 是 `how explainer`，没有这行时用 `claude-opus-5-5-xhigh`。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。
 

@@ -2,8 +2,6 @@
 name: finishing-a-development-branch
 description: "「做完了怎么合」「开 PR 还是合并」「收尾这个分支」。测试过了、还没定集成方式时，给出合并、PR 或清理的选项。Use when implementation is done, tests pass, and you need to decide how to integrate the work."
 ---
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 收尾开发分支
 
 ## 概述
@@ -171,7 +169,7 @@ WORKTREE_PATH=$(git rev-parse --show-toplevel)
 
 **如果 `GIT_DIR == GIT_COMMON`：** 普通仓库，没有要清理的 worktree。完成。
 
-**如果 worktree 路径位于 `.worktrees/` 或 `worktrees/` 之下：** 这个 worktree 由 Superpowers 创建——清理归我们。
+**如果 worktree 路径位于 `.worktrees/` 或 `worktrees/` 之下：** 这个 worktree 由本技能流程创建——清理归我们。
 
 ```bash
 MAIN_ROOT=$(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-toplevel)

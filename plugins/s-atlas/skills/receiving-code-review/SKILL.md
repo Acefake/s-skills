@@ -2,8 +2,6 @@
 name: receiving-code-review
 description: "「收到评审意见」「这条评论对不对」「先核实再改」。落实前先核验，含糊或可疑的不要照单全收。Use when you received code review feedback, before applying it, especially when the feedback is vague or technically suspicious."
 ---
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 接收代码评审
 
 ## 概述

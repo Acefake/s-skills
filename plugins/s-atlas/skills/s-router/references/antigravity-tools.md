@@ -1,5 +1,3 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../../LICENSE-superpowers)。
-
 # Antigravity CLI（`agy`）工具对照
 
 技能用动作来表达（"dispatch a subagent"、"create a todo"、"read a file"）。在 Antigravity CLI（`agy`）上，这些动作对应下面的工具。

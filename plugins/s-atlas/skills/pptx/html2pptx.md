@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # html2pptx
 
 `scripts/html2pptx.js` 在 Chromium 里渲染一张 HTML 幻灯片，读出每个东西落在哪，再用 PptxGenJS 把它重建成原生 PowerPoint 对象。文字保持可编辑，位置和浏览器一致。写幻灯片之前先读 `design.md`。

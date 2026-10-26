@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # 编辑幻灯片 XML
 
 只在 python-pptx 到不了的地方改 XML：主题颜色和字体、版式和母版、切换和动画、项目符号和编号的细节、图表内部、隐藏的幻灯片。文字和形状用 python-pptx，加、复制、重排或删除幻灯片用 `scripts/rearrange.py`，演讲者备注用 `scripts/notes.py`。这些会替你保持包的一致。

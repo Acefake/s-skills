@@ -105,7 +105,7 @@ disable-model-invocation: true
 
 调查读 `why investigators`，综合读 `why synthesizer`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。调查者要能用 MCP，提示词里仍然禁止它写文件。
 
-### Cursor（原版参数）
+### Cursor
 
 每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: false`。不要用 `readonly: true`，它会去掉 MCP，调查者和综合者的引用抽查会失效。
 

@@ -1,12 +1,10 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 规格文档审查者提示模板
 
 派发规格文档审查子代理时使用这个模板。
 
 **目的：** 确认规格完整、一致，并且可以进入实现计划。
 
-**在此之后派发：** 规格文档已经写入 docs/superpowers/specs/
+**在此之后派发：** 规格文档已经写入 docs/s-atlas/specs/
 
 ```
 Subagent (general-purpose):

@@ -82,12 +82,12 @@ class SkillResourcesTest(unittest.TestCase):
 
 
 class SkillReferenceTest(unittest.TestCase):
-    def test_old_prefix_and_archived_names_are_reported(self):
+    def test_archived_names_are_reported(self):
         active = {'tdd', 'swarm'}
         archived = {'test-driven-development', 'swarm'}
-        text = '用 superpowers:tdd，再看 `test-driven-development` 和 `swarm`。'
+        text = '用 `tdd`，再看 `test-driven-development` 和 `swarm`。'
         problems = skill_reference_problems(text, active, archived)
-        self.assertEqual(len(problems), 2, problems)
+        self.assertEqual(len(problems), 1, problems)
         self.assertEqual(skill_reference_problems('用 `tdd` 和 `swarm`。', active, archived), [])
 
     def test_principle_without_prefix_is_reported(self):

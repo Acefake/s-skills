@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.7.0。插件名是 `s-atlas`，不需要再装上游插件。技能 **73** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明以用户会说的中文触发词起头，这些词放在前 100 个字里，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.7.1。插件名是 `s-atlas`，不依赖其他插件。技能 **73** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明以用户会说的中文触发词起头，这些词放在前 100 个字里，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -227,4 +227,14 @@ npx skills add . --list
 
 ## 来源与许可证
 
-保留仍在使用的来源的许可证。Superpowers 译文见 [LICENSE-superpowers](plugins/s-atlas/LICENSE-superpowers)。`frontend-design` 来自 Anthropic skills 的 Apache 2.0，见 [LICENSE-anthropics-skills](plugins/s-atlas/LICENSE-anthropics-skills)。`refactor-architecture` 来自 Matt Pocock（MIT），见 [LICENSE-mattpocock-skills](plugins/s-atlas/LICENSE-mattpocock-skills)。`archify` 译自 tt-a1i 的 Archify（Apache-2.0），许可证和 NOTICE 在 [archify 目录](plugins/s-atlas/skills/archify/)。`impeccable` 见 [LICENSE-impeccable](plugins/s-atlas/LICENSE-impeccable) 和 [NOTICE-impeccable.md](plugins/s-atlas/NOTICE-impeccable.md)。`deslop`、`control-cli`、`control-ui` 改自 Cursor team kit，见 [LICENSE-cursor-team-kit](plugins/s-atlas/LICENSE-cursor-team-kit)。文档四技能见 [LICENSE-document-skills](plugins/s-atlas/LICENSE-document-skills)。插件自己的许可证是 [LICENSE](plugins/s-atlas/LICENSE)。
+本插件包含的部分技能沿用了第三方开源许可证，许可证与声明文件见：
+
+- [`brainstorming`、`writing-plans` 等开发流程技能：许可证](plugins/s-atlas/LICENSE-superpowers)
+- [`frontend-design`：许可证](plugins/s-atlas/LICENSE-anthropics-skills)
+- [`refactor-architecture`：许可证](plugins/s-atlas/LICENSE-mattpocock-skills)
+- [`deslop`、`control-cli`、`control-ui`：许可证](plugins/s-atlas/LICENSE-cursor-team-kit)
+- [`docx`、`pptx`、`xlsx`、`pdf`：许可证](plugins/s-atlas/LICENSE-document-skills)
+- [`impeccable`：许可证](plugins/s-atlas/LICENSE-impeccable)
+- [`impeccable`：声明](plugins/s-atlas/NOTICE-impeccable.md)
+- [`archify`：许可证与声明](plugins/s-atlas/skills/archify/)
+- [插件自身许可证](plugins/s-atlas/LICENSE)

@@ -86,7 +86,7 @@ Arena 会返回一份综合好的设计包。它的综合决定，用来填写�
 
 这个 skill 把 [arena](../arena/SKILL.md) 的派法拿来画草图。角色行换成 `architect runners`，代替 `arena runners`。拒绝规则、后台、只读评审，都按竞技场文末同一软件的那一节。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。
 
-### Cursor（原版参数）
+### Cursor
 
 没有 `architect runners` 时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。别名条目和被拒绝的条目，按竞技场 Cursor 一节的系列规则处理：`claude-*` 一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 一个系列；被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`；找不到系列就用 `claude-opus-5-5-xhigh`。
 

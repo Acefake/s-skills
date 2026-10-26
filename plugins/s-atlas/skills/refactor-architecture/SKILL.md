@@ -12,8 +12,6 @@ disable-model-invocation: true
 
 找出架构上的摩擦，提出**加深（deepening）机会**：把浅模块变成深模块的重构。目的是好测、好让 AI 读懂。
 
-译自 Matt Pocock 的 [improve-codebase-architecture](https://github.com/mattpocock/skills/tree/main/skills/engineering/improve-codebase-architecture) 和 codebase-design（MIT），见 [LICENSE-mattpocock-skills](../../LICENSE-mattpocock-skills)。
-
 这件事建立在项目自己的领域模型和一套共用的设计词汇上：
 
 - 架构词汇和原则在 [VOCABULARY.md](VOCABULARY.md)：**模块**、**接口**、**实现**、**深度**、**接缝**、**适配器**、**杠杆**、**局部性**，以及删除测试、「接口就是测试面」、「一个适配器是假想的接缝，两个才是真的」。每条建议都严格用这些词，不要漂移成「组件」「服务」「API」「边界」。

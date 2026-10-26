@@ -1,5 +1,3 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../../LICENSE-superpowers)。
-
 # Pi 工具对照
 
 技能用动作来表达（"dispatch a subagent"、"create a todo"、"read a file"）。在 Pi 上，这些动作对应下面的工具。
@@ -15,4 +13,4 @@ Pi 核心不自带标准子代理工具。`pi-subagents` 包是一个很合适�
 
 ## 任务列表
 
-Pi 核心不自带标准任务列表工具。如果安装了待办/任务扩展，使用它文档中的工具。否则用 Superpowers 的计划文件、Markdown 清单，或仓库本地的 `TODO.md` 来跟踪任务。较旧的 Superpowers 文档可能提到 `TodoWrite`；把它当作上面说的任务跟踪动作。
+Pi 核心不自带标准任务列表工具。如果安装了待办/任务扩展，使用它文档中的工具。否则用 writing-plans 的计划文件、Markdown 清单，或仓库本地的 `TODO.md` 来跟踪任务。较旧的文档可能提到 `TodoWrite`；把它当作上面说的任务跟踪动作。
