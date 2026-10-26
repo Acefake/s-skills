@@ -229,10 +229,10 @@ npx skills add . --list
 
 本插件包含的部分技能沿用了第三方开源许可证，许可证与声明文件见：
 
-- [`brainstorming`、`writing-plans` 等开发流程技能：许可证](plugins/s-atlas/LICENSE-superpowers)
-- [`frontend-design`：许可证](plugins/s-atlas/LICENSE-anthropics-skills)
-- [`refactor-architecture`：许可证](plugins/s-atlas/LICENSE-mattpocock-skills)
-- [`deslop`、`control-cli`、`control-ui`：许可证](plugins/s-atlas/LICENSE-cursor-team-kit)
+- [`brainstorming`、`writing-plans` 等开发流程技能：许可证](plugins/s-atlas/LICENSE-dev-workflow)
+- [`frontend-design`：许可证](plugins/s-atlas/LICENSE-frontend-design)
+- [`refactor-architecture`：许可证](plugins/s-atlas/LICENSE-refactor-architecture)
+- [`deslop`、`control-cli`、`control-ui`：许可证](plugins/s-atlas/LICENSE-deslop-control)
 - [`docx`、`pptx`、`xlsx`、`pdf`：许可证](plugins/s-atlas/LICENSE-document-skills)
 - [`impeccable`：许可证](plugins/s-atlas/LICENSE-impeccable)
 - [`impeccable`：声明](plugins/s-atlas/NOTICE-impeccable.md)
