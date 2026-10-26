@@ -27,7 +27,7 @@
 
 | 组件 | 用途与要点 |
 |---|---|
-| `UiPosterCard` + `.ui-poster-grid` | 海报卡和海报网格。圆角 `--radius-card`（18）。悬停时封面上移 4px 并放大 1.02，操作按钮淡入；`hover: none` 的设备上一直显示。`thumb` 走缩略图协议，加载失败回落原图。`preview` 接悬停预览。网格是 `repeat(auto-fill, minmax(--poster-min-width, 1fr))`，横版加 `.is-landscape`（最小 260）。 |
+| `UiPosterCard` + `.ui-poster-grid` | 海报卡和海报网格。圆角 `--radius-card`（18）。悬停时封面上移 4px 并放大 1.02，操作按钮淡入；`hover: none` 的设备上一直显示。`thumb` 走缩略图协议，加载失败回落原图。`preview` 接悬停预览。网格是 `repeat(auto-fill, minmax(var(--poster-min-width), 1fr))`，横版加 `.is-landscape`（最小 260）。 |
 | `UiEpisodeCard` | 剧集或预告横卡：剧照铺满，下半 `.yb-pblur` 渐进模糊加暗化，标题、副标题、进度条、底部说明压在上面，右下角「更多」。 |
 | `UiMediaRow` | 影片结果行：海报、标题、元信息、规格标签、★评分、备注，可带进度。`dense` 给搜索行。AI 助手的结果卡和统一搜索的结果行都用它。 |
 | `UiShelf` | 横向货架：`UiSectionHeader` 加一排可横滚的卡片，溢出时右上角出左右滚动键；也可切成网格。 |

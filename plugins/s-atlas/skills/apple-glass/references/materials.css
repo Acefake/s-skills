@@ -63,7 +63,7 @@
   border-color: transparent;
   background: var(--bg-glass);
 }
-:where(.ui-field.is-filled):hover:not(:where(.is-disabled)) {
+:where(.ui-field.is-filled):hover:not(:where(.is-disabled, :disabled)) {
   border-color: transparent;
   background: var(--bg-glass-hover);
 }

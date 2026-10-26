@@ -530,7 +530,10 @@
   --border-glass: rgba(255, 255, 255, 0.08);
   --separator: rgba(255, 255, 255, 0.08);
   --accent: #0a84ff;
-  --glass-light-bg: rgba(255, 255, 255, 0.16);
+  --accent-hover: #409cff;
+  --accent-soft: rgba(10, 132, 255, 0.16);
+  --accent-glow: rgba(10, 132, 255, 0.4);
+  /* --glass-light-bg 两套主题同值，不在这里重声明，降低透明度时根节点的实色才能传下来 */
 }
 
 /* 外壳控件在主题玻璃与画面玻璃之间切换时的颜色过渡（不用 @property，只过渡最终计算值） */
@@ -576,5 +579,6 @@
     --duration-normal: 0ms;
     --duration-slow: 0ms;
     --duration-assistant: 0ms;
+    --duration-assistant-sheet: 0ms;
   }
 }

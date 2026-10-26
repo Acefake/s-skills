@@ -8,9 +8,9 @@
  *   - 数字 z-index（0、1、-1 除外）
  *   - 令牌文件以外的颜色字面量（#hex、rgb()、rgba()、hsl()）
  *   - font-weight 不在 400 / 500 / 600 / 令牌里
- * 查 .vue / .jsx / .tsx 模板（组件库目录除外）：
+ * 查 .vue 模板和 .jsx / .tsx 文件（组件库目录除外；注释和字符串里的标签不算）：
  *   - 原生 <button>、<select>、<textarea>，以及 type 不是 file / range / hidden 的 <input>
- *   - 静态 style="..."（动态 :style 不受限）
+ *   - 静态 style="..."（动态 :style 不受限），JSX 里只含字面量的 style={{...}}
  * 同一行写 `style-tokens:` 注释就跳过那一行。
  *
  *   node check-style.mjs --src src --tokens src/styles/tokens.css --ui src/components/ui
@@ -75,42 +75,90 @@ function checkDeclaration(line, isTokens) {
   return found
 }
 
+/** 把匹配到的内容换成等长空白，保留换行，行号不变 */
+function blank(text, re) {
+  return text.replace(re, m => m.replace(/[^\n]/g, ' '))
+}
+
+/** 按顶层分号切分声明：括号和引号里的分号（data URI、url()）不切 */
+function splitDeclarations(line) {
+  const parts = []
+  let depth = 0
+  let quote = ''
+  let start = 0
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i]
+    if (quote) {
+      if (c === quote && line[i - 1] !== '\\') quote = ''
+    } else if (c === '"' || c === "'") quote = c
+    else if (c === '(') depth++
+    else if (c === ')') depth--
+    else if (c === ';' && depth === 0) {
+      parts.push(line.slice(start, i))
+      start = i + 1
+    }
+  }
+  parts.push(line.slice(start))
+  return parts
+}
+
 /** 检查一段 CSS 文本，startLine 是它在文件里的起始行号；一行可以有多条声明 */
 function checkCss(text, startLine, isTokens) {
   const out = []
-  text.split('\n').forEach((line, i) => {
-    if (line.includes('style-tokens:')) return
-    const clean = line.replace(/\/\*.*?\*\//g, '').replace(/^[^{]*\{/, '').replace(/\}.*$/, '')
-    for (const decl of clean.split(';'))
+  const raw = text.split('\n')
+  // 先整段去掉注释（含跨行注释），豁免标记仍按原文行判断
+  blank(text, /\/\*[\s\S]*?\*\//g).split('\n').forEach((line, i) => {
+    if (raw[i].includes('style-tokens:')) return
+    const clean = line.replace(/^[^{]*\{/, '').replace(/\}.*$/, '')
+    for (const decl of splitDeclarations(clean))
       for (const msg of checkDeclaration(decl, isTokens)) out.push([startLine + i, msg])
   })
   return out
 }
 
-/** 检查模板文本里的原生控件和静态 style（标签可以跨行） */
-function checkTemplate(text, startLine) {
+// JSX 里只含字面量的样式对象：style={{ color: 'red', padding: 12 }}
+const STATIC_STYLE_OBJECT =
+  /style=\{\{\s*[\w-]+\s*:\s*('[^'`$]*'|"[^"`$]*"|-?\d+\.?\d*)(\s*,\s*[\w-]+\s*:\s*('[^'`$]*'|"[^"`$]*"|-?\d+\.?\d*))*\s*,?\s*\}\}/g
+
+/** 检查模板文本里的原生控件和静态 style（标签可以跨行）；jsx 为真时也查样式对象 */
+function checkTemplate(text, startLine, jsx = false) {
   const out = []
   const lines = text.split('\n')
-  const lineOf = index => text.slice(0, index).split('\n').length - 1
+  // 去掉注释；标签前面是引号的（字符串里的 '<button>'）不算
+  const body = blank(blank(text, /<!--[\s\S]*?-->|\/\*[\s\S]*?\*\//g), jsx ? /(^|[^:])\/\/[^\n]*/g : /$^/g)
+  const lineOf = index => body.slice(0, index).split('\n').length - 1
   const exempt = i => lines[i]?.includes('style-tokens:')
-  for (const m of text.matchAll(/<(button|select|textarea|input)\b[^>]*>/g)) {
+  for (const m of body.matchAll(/(?<!['"`])<(button|select|textarea|input)\b[^>]*>/g)) {
     const i = lineOf(m.index)
     if (exempt(i)) continue
     if (m[1] === 'input' && /type=["'](file|range|hidden)["']/.test(m[0])) continue
     out.push([startLine + i, `手写了原生 <${m[1]}>，改用组件库里的对应组件`])
   }
-  for (const m of text.matchAll(/(?<![:\w-])style=["']/g)) {
+  for (const m of body.matchAll(/(?<![:\w-])style=["']/g)) {
     const i = lineOf(m.index)
     if (!exempt(i)) out.push([startLine + i, '静态 style="..."，改用类名和令牌'])
   }
+  if (jsx)
+    for (const m of body.matchAll(STATIC_STYLE_OBJECT)) {
+      const i = lineOf(m.index)
+      if (!exempt(i)) out.push([startLine + i, '静态 style={{...}}，改用类名和令牌'])
+    }
   return out.sort((x, y) => x[0] - y[0])
+}
+
+/** 取出 .vue 文件的模板块：先抹掉 script / style 块（行号不变），再取第一个开标签到最后一个闭标签，容得下嵌套 <template> */
+function templateBlock(text) {
+  const masked = blank(text, /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/g)
+  const open = masked.match(/<template\b[^>]*>/)
+  const close = masked.lastIndexOf('</template>')
+  if (!open || close < 0) return null
+  const start = open.index + open[0].length
+  return { body: masked.slice(start, close), line: masked.slice(0, start).split('\n').length }
 }
 
 /** 取出 .vue 文件里的某类块及其起始行号 */
 function blocks(text, tag) {
-  // 模板里会嵌套 <template>，取第一个开标签到最后一个闭标签；style 块不嵌套，逐个取
-  const lazy = tag === 'template' ? '' : '?'
-  const re = new RegExp(`<${tag}[^>]*>([\\s\\S]*${lazy})</${tag}>`, 'g')
+  const re = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, 'g')
   return [...text.matchAll(re)].map(m => ({
     body: m[1],
     line: text.slice(0, m.index + m[0].indexOf(m[1])).split('\n').length,
@@ -128,9 +176,10 @@ for (const file of walk(srcDir)) {
   if (ext === '.css') add(checkCss(text, 1, isTokens))
   if (ext === '.vue') {
     for (const b of blocks(text, 'style')) add(checkCss(b.body, b.line, false))
-    if (!inUi) for (const b of blocks(text, 'template')) add(checkTemplate(b.body, b.line))
+    const tpl = inUi ? null : templateBlock(text)
+    if (tpl) add(checkTemplate(tpl.body, tpl.line))
   }
-  if ((ext === '.jsx' || ext === '.tsx') && !inUi) add(checkTemplate(text, 1))
+  if ((ext === '.jsx' || ext === '.tsx') && !inUi) add(checkTemplate(text, 1, true))
 }
 
 if (problems.length) {
