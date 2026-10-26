@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-一个独立维护的中文 AI 技能插件，版本 1.6.1。插件名是 `s-atlas`，不需要再装上游插件。技能 **72** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明以用户会说的中文触发词起头，这些词放在前 100 个字里，中文句号后接英文 `Use when`；正文是中文。
+一个独立维护的中文 AI 技能插件，版本 1.7.0。插件名是 `s-atlas`，不需要再装上游插件。技能 **73** 个，全部随插件分发。目录名和 frontmatter 的 `name` 都是英文小写 kebab-case，两者相同。说明以用户会说的中文触发词起头，这些词放在前 100 个字里，中文句号后接英文 `Use when`；正文是中文。
 
 旧中文名对照见 [RENAMES.md](RENAMES.md)。
 
@@ -104,6 +104,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 | 写或修 Playwright 端到端测试 | `e2e-testing` |
 | 点名走加强工作流 | `s-mode` |
 | 找浅模块、出架构报告 | `refactor-architecture` |
+| 画架构图、流程图、时序图、ER 图 | `archify` |
 | 提交前清代码里的 AI 味 | `deslop` |
 | 做事时的取舍（能删就删、先验证、别卡着等人等） | 24 条 `principle-*`，按描述自动选用 |
 
@@ -182,6 +183,7 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 | `why` | 手点 | 查为什么这样设计 |
 | `architect` | 手点 | 动手前定类型和模块边界 |
 | `refactor-architecture` | 手点 | 找浅模块和耦合，出 HTML 报告，再逐个追问定案（译自 Matt Pocock） |
+| `archify` | 自动 | 画架构图、流程图、时序图、ER 图等，出可交互单文件 HTML，需要 Node 18+（译自 tt-a1i/Archify） |
 | `swarm` | 手点 | 并行覆盖、比赛、分片验证 |
 | `arena` | 手点 | 同一任务多方案再嫁接 |
 | `interrogate` | 手点 | 多模型对抗审查 |
@@ -253,4 +255,4 @@ npx skills add . --list
 
 ## 来源与许可证
 
-保留仍在使用的来源的许可证。Superpowers 译文见 [LICENSE-superpowers](plugins/s-atlas/LICENSE-superpowers)。`frontend-design` 来自 Anthropic skills 的 Apache 2.0，见 [LICENSE-anthropics-skills](plugins/s-atlas/LICENSE-anthropics-skills)。`refactor-architecture` 来自 Matt Pocock（MIT），见 [LICENSE-mattpocock-skills](plugins/s-atlas/LICENSE-mattpocock-skills)。`impeccable` 见 [LICENSE-impeccable](plugins/s-atlas/LICENSE-impeccable) 和 [NOTICE-impeccable.md](plugins/s-atlas/NOTICE-impeccable.md)。`deslop`、`control-cli`、`control-ui` 改自 Cursor team kit，见 [LICENSE-cursor-team-kit](plugins/s-atlas/LICENSE-cursor-team-kit)。文档四技能见 [LICENSE-document-skills](plugins/s-atlas/LICENSE-document-skills)。插件自己的许可证是 [LICENSE](plugins/s-atlas/LICENSE)。
+保留仍在使用的来源的许可证。Superpowers 译文见 [LICENSE-superpowers](plugins/s-atlas/LICENSE-superpowers)。`frontend-design` 来自 Anthropic skills 的 Apache 2.0，见 [LICENSE-anthropics-skills](plugins/s-atlas/LICENSE-anthropics-skills)。`refactor-architecture` 来自 Matt Pocock（MIT），见 [LICENSE-mattpocock-skills](plugins/s-atlas/LICENSE-mattpocock-skills)。`archify` 译自 tt-a1i 的 Archify（Apache-2.0），许可证和 NOTICE 在 [archify 目录](plugins/s-atlas/skills/archify/)。`impeccable` 见 [LICENSE-impeccable](plugins/s-atlas/LICENSE-impeccable) 和 [NOTICE-impeccable.md](plugins/s-atlas/NOTICE-impeccable.md)。`deslop`、`control-cli`、`control-ui` 改自 Cursor team kit，见 [LICENSE-cursor-team-kit](plugins/s-atlas/LICENSE-cursor-team-kit)。文档四技能见 [LICENSE-document-skills](plugins/s-atlas/LICENSE-document-skills)。插件自己的许可证是 [LICENSE](plugins/s-atlas/LICENSE)。
