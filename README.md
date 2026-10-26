@@ -76,7 +76,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 支持插件命令的宿主也可以使用 `/s-atlas:技能名`，例如 `/s-atlas:s-mode`。Codex 可在技能选择器中选择相应技能。
 
-原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及译入的 Superpowers 流程可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
+原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及开发流程技能（`brainstorming` 到 `finishing-a-development-branch`）可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
 
 ## 我想做什么
 
@@ -120,47 +120,41 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 ### 自动选用（53 个）
 
-| 分类 | 技能 | 用途 |
-|---|---|---|
-| Superpowers | `s-router` | 日常先查该用哪个技能 |
-| Superpowers | `brainstorming` | 做功能前先把方案磨清 |
-| Superpowers | `writing-plans` | 把活写成可执行计划 |
-| Superpowers | `executing-plans` | 按写好的计划做 |
-| Superpowers | `subagent-driven-development` | 用子智能体推进计划 |
-| Superpowers | `systematic-debugging` | 按证据排错 |
-| Superpowers | `requesting-code-review` | 发起代码审查 |
-| Superpowers | `receiving-code-review` | 处理审查意见 |
-| Superpowers | `using-git-worktrees` | 用 worktree 隔开工作 |
-| Superpowers | `finishing-a-development-branch` | 收尾开发分支 |
-| 界面 | `impeccable` | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
-| 文档文件 | `docx` | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
-| 文档文件 | `pptx` | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
-| 文档文件 | `xlsx` | 带公式的工作簿，保存后用 LibreOffice 重算 |
-| 文档文件 | `pdf` | 提取、填表、合并拆分、OCR 和新建 PDF |
-| 代码规范 | `code-style` | 按模块就近放文件、写文档注释、质量底线；覆盖 TS/React、Vue、Go、Java |
-| 测试 | `test-strategy` | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java |
-| 测试 | `e2e-testing` | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |
-| 测试 | `tdd` | 修 bug 时有便宜的测试点就先写失败测试 |
-| 工作流程 | `setup-s-models` | 给各角色配模型和预算 |
-| 工作流程 | `archify` | 画架构图、流程图、时序图、ER 图等，出可交互单文件 HTML，需要 Node 18+（译自 tt-a1i/Archify） |
-| 工作流程 | `deslop` | 提交前清掉代码里的 AI 味 |
-| 工作流程 | `technical-writing` | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
-| 工作流程 | `commit-pr` | 看 diff，写提交说明，推送并开 PR。集成方式还没定用 `finishing-a-development-branch` |
-| 工作流程 | `translate` | 中英翻译，可中英对照。代码、命令、路径不译 |
-| 工作流程 | `s-proposal` | 写中文方案：先问清目标，列提纲，再按固定结构起草打磨 |
-| 工作流程 | `s-review` | 中文代码审查：审 PR、分支或本地改动，带出处和严重程度，给合并结论 |
-| 工作流程 | `control-ui` | 在真浏览器里操作界面取证 |
-| 工作流程 | `control-cli` | 在本地操作命令行或 TUI |
-
-Superpowers 一组译自 Jesse Vincent 的 Superpowers（MIT），见 [LICENSE-superpowers](plugins/s-atlas/LICENSE-superpowers)。和 poteto 重叠、因此删掉的四份是 `test-driven-development`、`dispatching-parallel-agents`、`writing-skills`、`verification-before-completion`。留下的是 `tdd`、`swarm`、`author-skill`、`principle-prove-it-works`。
-
-文档文件一组译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文是 [LICENSE-document-skills](plugins/s-atlas/LICENSE-document-skills)。没有复制 anthropics/skills 里的 docx、pptx、xlsx、pdf。
+| 技能 | 用途 |
+|---|---|
+| `s-router` | 日常先查该用哪个技能 |
+| `brainstorming` | 做功能前先把方案磨清 |
+| `writing-plans` | 把活写成可执行计划 |
+| `executing-plans` | 按写好的计划做 |
+| `subagent-driven-development` | 用子智能体推进计划 |
+| `systematic-debugging` | 按证据排错 |
+| `requesting-code-review` | 发起代码审查 |
+| `receiving-code-review` | 处理审查意见 |
+| `using-git-worktrees` | 用 worktree 隔开工作 |
+| `finishing-a-development-branch` | 收尾开发分支 |
+| `impeccable` | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
+| `docx` | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
+| `pptx` | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
+| `xlsx` | 带公式的工作簿，保存后用 LibreOffice 重算 |
+| `pdf` | 提取、填表、合并拆分、OCR 和新建 PDF |
+| `code-style` | 按模块就近放文件、写文档注释、质量底线；覆盖 TS/React、Vue、Go、Java |
+| `test-strategy` | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java |
+| `e2e-testing` | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |
+| `tdd` | 修 bug 时有便宜的测试点就先写失败测试 |
+| `setup-s-models` | 给各角色配模型和预算 |
+| `archify` | 画架构图、流程图、时序图、ER 图等，出可交互单文件 HTML，需要 Node 18+ |
+| `deslop` | 提交前清掉代码里的 AI 味 |
+| `technical-writing` | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
+| `commit-pr` | 看 diff，写提交说明，推送并开 PR。集成方式还没定用 `finishing-a-development-branch` |
+| `translate` | 中英翻译，可中英对照。代码、命令、路径不译 |
+| `s-proposal` | 写中文方案：先问清目标，列提纲，再按固定结构起草打磨 |
+| `s-review` | 中文代码审查：审 PR、分支或本地改动，带出处和严重程度，给合并结论 |
+| `control-ui` | 在真浏览器里操作界面取证 |
+| `control-cli` | 在本地操作命令行或 TUI |
 
 Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录里 `npm install` 一次）。看页面需要 LibreOffice 和 poppler。docx 阅读需要 pandoc。中文渲染检查要安装 Noto CJK（Debian/Ubuntu：`fonts-noto-cjk`）。PDF 的扫描件 OCR 另要 Tesseract。
 
 #### 原则（24 个）
-
-poteto 的原则索引会点名读它们。
 
 | 技能 | 用途 |
 |---|---|
@@ -191,28 +185,28 @@ poteto 的原则索引会点名读它们。
 
 ### 手点（20 个）
 
-| 分类 | 技能 | 用途 |
-|---|---|---|
-| 界面 | `frontend-design` | 点名时给一份有主见的视觉方向，不带检查脚本 |
-| 工作流程 | `s-mode` | 点名才走的加强工作流 |
-| 工作流程 | `s-agent` | poteto 派出去写代码的子智能体 |
-| 工作流程 | `comment-sicko` | 被清注释技能派去删注释 |
-| 工作流程 | `how` | 改之前讲清代码怎么串 |
-| 工作流程 | `why` | 查为什么这样设计 |
-| 工作流程 | `architect` | 动手前定类型和模块边界 |
-| 工作流程 | `refactor-architecture` | 找浅模块和耦合，出 HTML 报告，再逐个追问定案（译自 Matt Pocock） |
-| 工作流程 | `swarm` | 并行覆盖、比赛、分片验证 |
-| 工作流程 | `arena` | 同一任务多方案再嫁接 |
-| 工作流程 | `interrogate` | 多模型对抗审查 |
-| 工作流程 | `unslop` | 去掉文字里的 AI 腔 |
-| 工作流程 | `no-comments` | 审查前删掉不该留的注释 |
-| 工作流程 | `author-skill` | 按规范写或大改 SKILL.md |
-| 工作流程 | `benchmark-checklist` | 报告性能数字前先审核 |
-| 工作流程 | `show-me-your-work` | 长时间运行留下决定记录 |
-| 工作流程 | `figure-it-out` | 没有现成 playbook 时现做一套 |
-| 工作流程 | `timed-loop` | 按通过/失败条件反复醒来 |
-| 工作流程 | `reflect` | 把这次对话的教训改进技能 |
-| 工作流程 | `ketchup` | 补上你离开后这次对话的变化 |
+| 技能 | 用途 |
+|---|---|
+| `frontend-design` | 点名时给一份有主见的视觉方向，不带检查脚本 |
+| `s-mode` | 点名才走的加强工作流 |
+| `s-agent` | 派出去写代码的子智能体 |
+| `comment-sicko` | 被清注释技能派去删注释 |
+| `how` | 改之前讲清代码怎么串 |
+| `why` | 查为什么这样设计 |
+| `architect` | 动手前定类型和模块边界 |
+| `refactor-architecture` | 找浅模块和耦合，出 HTML 报告，再逐个追问定案 |
+| `swarm` | 并行覆盖、比赛、分片验证 |
+| `arena` | 同一任务多方案再嫁接 |
+| `interrogate` | 多模型对抗审查 |
+| `unslop` | 去掉文字里的 AI 腔 |
+| `no-comments` | 审查前删掉不该留的注释 |
+| `author-skill` | 按规范写或大改 SKILL.md |
+| `benchmark-checklist` | 报告性能数字前先审核 |
+| `show-me-your-work` | 长时间运行留下决定记录 |
+| `figure-it-out` | 没有现成 playbook 时现做一套 |
+| `timed-loop` | 按通过/失败条件反复醒来 |
+| `reflect` | 把这次对话的教训改进技能 |
+| `ketchup` | 补上你离开后这次对话的变化 |
 
 ## 维护
 
