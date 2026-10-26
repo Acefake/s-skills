@@ -6,8 +6,6 @@ description: "「按计划在新会话做」「执行这份实现计划」。有
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 执行计划
 
 ## 概述
@@ -16,7 +14,7 @@ description: "「按计划在新会话做」「执行这份实现计划」。有
 
 **开始时宣布：**「我正在使用 executing-plans 技能来实现这份计划。」
 
-**注意：** 告诉你的人类协作者，Superpowers 在能够使用子代理时效果好得多。如果运行在支持子代理的平台上，工作质量会高很多（Claude Code、Codex CLI、Codex App 和 Copilot CLI 都算；各平台工具参考见 `../s-router/references/`）。如果子代理可用，使用 subagent-driven-development，而不是本技能。
+**注意：** 告诉你的人类协作者，这套技能在能够使用子代理时效果好得多。如果运行在支持子代理的平台上，工作质量会高很多（Claude Code、Codex CLI、Codex App 和 Copilot CLI 都算；各平台工具参考见 `../s-router/references/`）。如果子代理可用，使用 subagent-driven-development，而不是本技能。
 
 ## 流程
 

@@ -2,8 +2,6 @@
 name: using-git-worktrees
 description: "「开个 worktree」「和当前工作区分开」「动手前先隔离」。用 git worktree 做隔离工作区，再开始做功能或执行计划。Use when you are starting feature work that must be isolated from the current workspace, or before executing an implementation plan."
 ---
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 使用 Git Worktree
 
 ## 概述

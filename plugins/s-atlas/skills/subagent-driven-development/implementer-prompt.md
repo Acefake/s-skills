@@ -1,5 +1,3 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 实现者子代理提示词模板
 
 派发实现者子代理时使用此模板。

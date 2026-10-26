@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # 扫描版 PDF 的 OCR
 
 `pdftotext` 或 `page.extract_text()` 对肉眼能看到文字的页面几乎什么都返回不了时，这份 PDF 需要 OCR。这需要 Tesseract 引擎（`brew install tesseract`，或 `apt-get install tesseract-ocr`），以及英语以外的语言数据（`brew install tesseract-lang`，中文简体例如 `apt-get install tesseract-ocr-chi-sim`）。用 `tesseract --list-langs` 检查。

@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # PDF 参考
 
 明显的 API 调用会做错的地方。Python 用 `uv run --with pypdf script.py` 跑，按需要加上包。

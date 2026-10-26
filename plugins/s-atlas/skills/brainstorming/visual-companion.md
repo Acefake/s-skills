@@ -1,5 +1,3 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 视觉伴侣指南
 
 基于浏览器的视觉头脑风暴伴侣，用来展示草图、示意图和选项。
@@ -41,17 +39,17 @@ scripts/start-server.sh --project-dir /path/to/project --open
 
 # Returns: {"type":"server-started","port":52341,
 #           "url":"http://localhost:52341/?key=ab12…",
-#           "screen_dir":"/path/to/project/.superpowers/brainstorm/12345-1706000000/content",
-#           "state_dir":"/path/to/project/.superpowers/brainstorm/12345-1706000000/state"}
+#           "screen_dir":"/path/to/project/.s-atlas/brainstorm/12345-1706000000/content",
+#           "state_dir":"/path/to/project/.s-atlas/brainstorm/12345-1706000000/state"}
 ```
 
 从响应里保存 `screen_dir` 和 `state_dir`。加上 `--open` 时，你推送第一屏之后浏览器会自己打开——你不需要请用户去打开它，但仍然要把 URL 作为后备发给用户（无界面或远程环境不会自动打开）。
 
 **URL 里含有会话密钥（`?key=…`）。** 没有它的请求，服务器会拒绝，所以始终把 `url` 字段里的**完整** URL 给用户——不要去掉查询字符串，也不要只给一个只有主机和端口的 `http://host:port`。这个密钥同时把守 HTTP 和 WebSocket，这样一个随便打开的浏览器标签，或同一网络上的另一台机器，就不能读取画面或注入事件。第一次加载之后，浏览器通过 cookie 记住密钥，所以刷新和 `/files/*` 资源不必再带一次。
 
-**查找连接信息：** 服务器把自己的启动 JSON 写到 `$STATE_DIR/server-info`。如果你在后台启动了服务器，又没有捕获标准输出，读这个文件来拿到 URL 和端口。使用 `--project-dir` 时，到 `<project>/.superpowers/brainstorm/` 里找会话目录。
+**查找连接信息：** 服务器把自己的启动 JSON 写到 `$STATE_DIR/server-info`。如果你在后台启动了服务器，又没有捕获标准输出，读这个文件来拿到 URL 和端口。使用 `--project-dir` 时，到 `<project>/.s-atlas/brainstorm/` 里找会话目录。
 
-**注意：** 把项目根目录作为 `--project-dir` 传进去，这样草图会持久留在 `.superpowers/brainstorm/` 里，服务器重启之后还在。不传的话，文件会进 `/tmp`，然后被清掉。如果 `.gitignore` 里还没有，提醒用户把 `.superpowers/` 加进去。
+**注意：** 把项目根目录作为 `--project-dir` 传进去，这样草图会持久留在 `.s-atlas/brainstorm/` 里，服务器重启之后还在。不传的话，文件会进 `/tmp`，然后被清掉。如果 `.gitignore` 里还没有，提醒用户把 `.s-atlas/` 加进去。
 
 **按平台启动服务器：**
 
@@ -279,7 +277,7 @@ scripts/start-server.sh \
 scripts/stop-server.sh $SESSION_DIR
 ```
 
-如果这次会话用了 `--project-dir`，草图文件会留在 `.superpowers/brainstorm/` 里，以后还能看。只有 `/tmp` 里的会话会在停止时被删掉。
+如果这次会话用了 `--project-dir`，草图文件会留在 `.s-atlas/brainstorm/` 里，以后还能看。只有 `/tmp` 里的会话会在停止时被删掉。
 
 ## 参考
 

@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # 用 docx-js 创建 Word 文档
 
 docx-js（npm 包 `docx`，v9）用 JavaScript 对象构建 `.docx`。这份文件写的是它的 API 里，靠猜会产出坏掉或出乎意料结果的部分。

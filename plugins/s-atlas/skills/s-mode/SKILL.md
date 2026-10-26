@@ -1,6 +1,6 @@
 ---
 name: s-mode
-description: "「/s-mode」「用 s-mode」「按 poteto 风格做」。点名才走的加强工作流：子智能体、去掉 AI 腔、简单代码、做完要验证。Use when the user names s-mode or asks to work in that stricter style."
+description: "「/s-mode」「用 s-mode」「按 s-mode 风格做」。点名才走的加强工作流：子智能体、去掉 AI 腔、简单代码、做完要验证。Use when the user names s-mode or asks to work in that stricter style."
 disable-model-invocation: true
 icon: crown
 color: yellow
@@ -10,7 +10,7 @@ color: yellow
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
 
-# Poteto 模式
+# s-mode 工作模式
 
 附带的 skill 位于从这个文件出发的 `../<name>/SKILL.md`，所以在每一个子智能体提示词里都要写上这个文件的绝对路径。
 
@@ -155,9 +155,9 @@ color: yellow
 
 ## 在不同软件里怎么用
 
-这一套 skill 会在好几个软件里用，正文只写通用说法。下面这张表说明，正文里的通用说法在各个软件里具体对应什么。Cursor 一列是原版的写法。OpenCode 和 Codex 两列按各自当前的官方文档写，链接在格子里。WorkBuddy 的工具名来自以前在 WorkBuddy 里适配的结果。Claude Code 是短兜底。Hermes 一列按 Hermes Agent 官方文档写。模型配置写到哪，以 [setup-s-models](../setup-s-models/SKILL.md) 为准。没有文档支撑的格子写「不确定」。和官方工具页不一致、只在 issue 里出现的做法，标「未核实」。
+这一套 skill 会在好几个软件里用，正文只写通用说法。下面这张表说明，正文里的通用说法在各个软件里具体对应什么。OpenCode 和 Codex 两列按各自当前的官方文档写，链接在格子里。WorkBuddy 的工具名来自以前在 WorkBuddy 里适配的结果。Claude Code 是短兜底。Hermes 一列按 Hermes Agent 官方文档写。模型配置写到哪，以 [setup-s-models](../setup-s-models/SKILL.md) 为准。没有文档支撑的格子写「不确定」。和官方工具页不一致、只在 issue 里出现的做法，标「未核实」。
 
-| 正文里的说法 | Cursor（原版） | WorkBuddy | Claude Code | Codex | OpenCode | Hermes |
+| 正文里的说法 | Cursor | WorkBuddy | Claude Code | Codex | OpenCode | Hermes |
 |---|---|---|---|---|---|---|
 | 派一个子智能体 | `Task` 工具 | `Agent` 工具（`TaskCreate` 是待办清单，不是派子智能体，别混用） | `Agent` 工具（旧版叫 `Task`，现在 `Task` 仍可当别名用） | 用话派。当前版本默认开启。直接说 “spawn two agents”、“delegate this work in parallel” 或 “use one agent per point”，并写明等齐再汇总。CLI 用 `/subagents` 看线程。IDE 有后台面板时，面板在输入框上方。也听从 `AGENTS.md` 和 skill 里要求分派的句子。[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) | `subagent` 工具。传入 agent ID、短 `description`、完整 `prompt`。只能派 `mode: subagent` 的智能体。默认嵌套一层。[Tools](https://opencode.ai/v2/docs/tools) | `delegate_task` 工具。子智能体看不到对话，`goal` 写目标，`context` 写全它要的信息。多个用 `tasks=[...]` 一次派，并发上限在 `config.yaml` 里配。[Delegation](https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation) |
 | 能写文件的通用类型 | `subagent_type: "s-agent"`，定义在 `agents/s-agent.md`。提示词要求先完整读本 SKILL.md。软件不认这个类型时，退回 `generalPurpose`，提示词写上同样的阅读要求 | `subagent_type: "general-purpose"`。提示词的第一句要求先完整读本 SKILL.md。这个软件没有 `s-agent` 这个类型名 | `subagent_type: "general-purpose"`。提示词的第一句要求先完整读本 SKILL.md。这个软件没有 `s-agent` 这个类型名 | 内置 `worker`（实现和修复）。提示词的第一句要求先完整读本 SKILL.md。要固定模型就写 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录）。必填 `name`、`description`、`developer_instructions`。同名盖过内置。自定义智能体继承父级的权限、provider 和 MCP，不能改沙箱 | 内置 `general`（工具面宽，不能再派子智能体）。提示词的第一句要求先完整读本 SKILL.md。要固定模型就写 `~/.config/opencode/agents/<name>.md`，`mode: subagent`。漏写 `mode` 时新智能体默认是 `primary`，派不出去。[Agents](https://opencode.ai/v2/docs/agents/) | 没有类型名，子智能体继承父级的工具集。`context` 的第一句要求先完整读本 SKILL.md |

@@ -48,7 +48,7 @@ disable-model-invocation: true
 
 角色行是 `swarm workers`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。一条消息里把 N 个工作者都派出去。
 
-### Cursor（原版参数）
+### Cursor
 
 每个工作者一个 `Task`：`subagent_type: generalPurpose`，`environment: "cloud"`，`run_in_background: true`，`model` 用第 4 步选的名字。`auto` 或 `inherit-parent` 省略 `model`。没有这行配置、并且 `grok-4.7-xhigh-fast` 这次真能传给 `Task` 时，用这个名字。
 
@@ -60,7 +60,7 @@ disable-model-invocation: true
 
 每个工作者调一次 `subagent`，`background: true`。agent ID 用 `s-swarm-workers`（`~/.config/opencode/agents/s-swarm-workers.md`，`mode: subagent`，`model` 等于角色行）。没有这个文件时用内置 `general`。`general` 不能再派子智能体，提示词里也要写明工作者不要再往下派。
 
-工具页没有 `environment` 和 `cloud_base_branch`。全在本机子会话里跑，SHA 写在 prompt 里。不要在调用上传 `model`（工具页没有这个参数；issue 里的写法未核实，见 poteto 文末）。
+工具页没有 `environment` 和 `cloud_base_branch`。全在本机子会话里跑，SHA 写在 prompt 里。不要在调用上传 `model`（工具页没有这个参数；issue 里的写法未核实，见 s-mode 文末）。
 
 ### Codex
 

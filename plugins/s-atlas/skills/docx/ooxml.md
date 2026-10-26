@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # 编辑 Word 文档：Document 库和 OOXML
 
 这份文件讲怎么改一份解包后的 `.docx`：做修订和批注的 Python `Document` 库，以及它底下的 XML 写法。

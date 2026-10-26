@@ -1,5 +1,3 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 基于条件的等待
 
 ## 概述

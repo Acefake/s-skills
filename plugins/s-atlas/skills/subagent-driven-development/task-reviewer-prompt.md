@@ -1,5 +1,3 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 任务评审者提示词模板
 
 派发任务评审者子代理时使用此模板。评审者把该任务的 diff 读一遍，并返回两项裁决：规格符合性与代码质量。

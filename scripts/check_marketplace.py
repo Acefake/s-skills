@@ -381,7 +381,6 @@ def check_skill_resources(skill: Path, text: str, problems: Problems) -> None:
             problems.add(f"{skill.name}: broken local link {target}")
 
 
-UPSTREAM_PREFIX_RE = re.compile(r"\bsuperpowers:([a-z0-9-]+)")
 # A skill is named in backticks, in bold, or as a /s-atlas: command.
 SKILL_NAME_RES = (
     re.compile(r"`([a-z0-9]+(?:-[a-z0-9]+)+)`"),
@@ -391,10 +390,8 @@ SKILL_NAME_RES = (
 
 
 def skill_reference_problems(text: str, active: set[str], archived: set[str]) -> list[str]:
-    """Return references to the old upstream prefix, retired skills, or principles missing their prefix."""
+    """Return references to retired skills, or principles missing their prefix."""
     found: list[str] = []
-    for match in UPSTREAM_PREFIX_RE.finditer(text):
-        found.append(f"uses old prefix superpowers:{match.group(1)}")
     for pattern in SKILL_NAME_RES:
         for match in pattern.finditer(text):
             name = match.group(1)

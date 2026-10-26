@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tt-a1i/archify/schemas/lifecycle.schema.json",
+  "$id": "https://github.com/Acefake/s-skills/plugins/s-atlas/skills/archify/schemas/lifecycle.schema.json",
   "title": "Archify Lifecycle Diagram",
   "type": "object",
   "additionalProperties": false,

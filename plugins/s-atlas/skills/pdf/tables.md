@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # 用 pdfplumber 提取表格
 
 脚本用 `uv run --with pdfplumber script.py` 运行。pdfplumber 从页面的**左上角**量起（`top` 向下增大），和 pypdf、reportlab 的左下角原点不同。

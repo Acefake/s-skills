@@ -1,5 +1,3 @@
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # 设计一套幻灯片
 
 写 HTML 之前先读这份。幻灯片是隔着房间、几秒内读完的。下面每个选择都为那个读者服务。不为他服务的选择就是装饰，去掉。

@@ -6,8 +6,6 @@ description: "「做表格」「做个 Excel」「写 xlsx」「加公式」「C
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # Excel 工作簿
 
 openpyxl 和 pandas 你已经会用。这个技能补上代码里看不到的部分：一步重算，报告工作簿里实际错了什么，以及 openpyxl 和 LibreOffice 会静默弄坏文件的行为。

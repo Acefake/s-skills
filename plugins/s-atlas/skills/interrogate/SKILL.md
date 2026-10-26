@@ -81,7 +81,7 @@ disable-model-invocation: true
 
 角色行是 `interrogate reviewers`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。工具名以 [s-mode](../s-mode/SKILL.md) 文末的表为准。一条消息里把审查者都派出去。
 
-### Cursor（原版参数）
+### Cursor
 
 用 `Task`。每个审查者：`subagent_type: generalPurpose`，`readonly: true`，`model` 设为那一行的对应条目。`auto` 或 `inherit-parent` 省略 `model`。
 
@@ -93,7 +93,7 @@ disable-model-invocation: true
 
 每个审查者调一次 `subagent`。agent ID 用 [setup-s-models](../setup-s-models/SKILL.md) 写的 `s-interrogate-reviewers-1`、`s-interrogate-reviewers-2`（文件在 `~/.config/opencode/agents/`，`mode: subagent`，`model` 是该条目）。prompt 用填好的审查模板。这两个智能体的 `permissions` 应对 `edit` 和 `shell` 设 `deny`。
 
-没有这些文件时，用内置 `explore`（不改文件），并说明子会话会继承父级模型，这次没有拉开差异。不要把 Cursor 的模型名写进 `model`。不要在调用上传 `model`：工具页没有这个参数，issue 里的写法标为未核实，见 poteto 文末。
+没有这些文件时，用内置 `explore`（不改文件），并说明子会话会继承父级模型，这次没有拉开差异。不要把 Cursor 的模型名写进 `model`。不要在调用上传 `model`：工具页没有这个参数，issue 里的写法标为未核实，见 s-mode 文末。
 
 ### Codex
 

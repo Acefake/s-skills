@@ -6,8 +6,6 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 把想法头脑风暴成设计
 
 通过自然的协作对话，把想法变成充分成形的设计与规格。
@@ -31,7 +29,7 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 3. **提出澄清问题** — 一次一个，弄清目的、约束、成功标准
 4. **提出 2-3 种做法** — 带上取舍和你的推荐
 5. **呈现设计** — 按各部分的复杂度分节呈现，每一节之后取得用户批准
-6. **写设计文档** — 保存到 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` 并提交
+6. **写设计文档** — 保存到 `docs/s-atlas/specs/YYYY-MM-DD-<topic>-design.md` 并提交
 7. **规格自检** — 就地快速检查占位符、矛盾、含糊和范围（见下文）
 8. **用户审阅写好的规格** — 继续之前，请用户审阅规格文件
 9. **过渡到实现** — 调用 writing-plans 技能来创建实现计划
@@ -108,7 +106,7 @@ digraph brainstorming {
 
 **文档：**
 
-- 把已经确认的设计（规格）写到 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+- 把已经确认的设计（规格）写到 `docs/s-atlas/specs/YYYY-MM-DD-<topic>-design.md`
   - （用户对规格存放位置的偏好覆盖这个默认值）
 - 如果有 elements-of-style:writing-clearly-and-concisely 技能，就使用它
 - 把设计文档提交到 git

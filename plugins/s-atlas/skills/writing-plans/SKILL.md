@@ -6,8 +6,6 @@ description: "「写个实现计划」「先拆步骤」「动手改代码之前
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 编写计划
 
 ## 概述
@@ -20,7 +18,7 @@ description: "「写个实现计划」「先拆步骤」「动手改代码之前
 
 **上下文：** 若在隔离的 worktree 中工作，它应在执行时已通过 `using-git-worktrees` 技能创建。
 
-**计划保存到：** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
+**计划保存到：** `docs/s-atlas/plans/YYYY-MM-DD-<feature-name>.md`
 - （用户对计划存放位置的偏好覆盖此默认值）
 
 ## 范围检查
@@ -157,7 +155,7 @@ git commit -m "feat: add specific feature"
 
 保存计划后，给出执行方式供选择：
 
-**「计划已完成并保存到 `docs/superpowers/plans/<filename>.md`。两种执行方式：**
+**「计划已完成并保存到 `docs/s-atlas/plans/<filename>.md`。两种执行方式：**
 
 **1. 子代理驱动（推荐）** - 我为每个任务派发一个全新子代理，任务之间做评审，迭代快
 

@@ -74,7 +74,7 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 判断、发散和综合读 `reflect judgment, divergent, synthesizer`，工具视角读 `reflect tooling`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。WorkBuddy、Claude Code、Codex、OpenCode 按那份 skill 文末的目录说明放置。
 
-### Cursor（原版参数）
+### Cursor
 
 三个 `Task`，外加综合时再一个 `Task`。每个都是 `subagent_type: generalPurpose`，`readonly: false`。`readonly: true` 会去掉 MCP。
 

@@ -48,8 +48,8 @@ export function availableNodeTextWidth(width) {
   return width - nodeTextFit.horizontalPadding;
 }
 
-// Adapted from Souptik Chakraborty's #220: shift only labels which reach a
-// corner icon. Unlike the original hard gate, a narrow valid node uses a
+// Shift only labels which reach a
+// corner icon. Unlike a hard gate, a narrow valid node uses a
 // separate text row; its authored bounds and acceptance remain unchanged.
 export function nodeLabelLayout({ width, height, rows, side = 'left', brand = false, source = false, step = '' }) {
   const result = { x: width / 2, ys: rows.map(row => row.y), sigilY: SEMANTIC_SIGIL_INSET, sigilSize: SEMANTIC_SIGIL_SIZE };

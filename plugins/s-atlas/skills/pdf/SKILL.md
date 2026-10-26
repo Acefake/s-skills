@@ -6,8 +6,6 @@ description: "「读这份 PDF」「填 PDF 表」「合并 PDF」「拆分 PDF�
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # PDF
 
 pypdf、pdfplumber 和 reportlab 你已经会用。这个技能补上它们不提供的部分：会检查自己输入的填表脚本、按读者看到的样子查看页面的办法，以及会把内容静默放错位置的 PDF 行为。

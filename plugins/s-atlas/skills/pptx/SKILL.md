@@ -6,8 +6,6 @@ description: "「做幻灯片」「做一份 PPT」「写 pptx」「改演示文
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 [appautomaton/document-SKILLs](https://github.com/appautomaton/document-SKILLs)（MIT）。该仓库说明写明，内容改编自 Anthropic 的 skills。许可证全文见 [LICENSE-document-skills](../../LICENSE-document-skills)。
-
 # PowerPoint
 
 python-pptx 和 PptxGenJS 你已经会用。这个技能补上一个转换器，把 HTML 幻灯片变成可编辑的原生 PowerPoint 对象，一组让套模板可靠的脚本，以及检查文稿是否合法、看起来是否正确的步骤。

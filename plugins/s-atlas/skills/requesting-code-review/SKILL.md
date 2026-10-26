@@ -6,8 +6,6 @@ description: "「做完了帮我审查」「合并前核验一下」。完成任
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 # 请求代码评审
 
 派发代码评审子代理，在问题扩散之前把它们抓住。评审者得到的是专门撰写的评估上下文——绝不是你这次会话的历史。这样评审者聚焦于工作产物，而不是你的思考过程，也把你自己的上下文留给后续工作。
@@ -62,7 +60,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 [Dispatch code reviewer subagent]
   DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/superpowers/plans/deployment-plan.md
+  PLAN_OR_REQUIREMENTS: Task 2 from docs/s-atlas/plans/deployment-plan.md
   BASE_SHA: a7981ec
   HEAD_SHA: 3df7661
 

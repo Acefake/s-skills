@@ -6,8 +6,6 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 
 在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
 
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../LICENSE-superpowers)。
-
 <SUBAGENT-STOP>
 如果你是被派来执行一项具体任务的子代理，忽略本技能。
 </SUBAGENT-STOP>
@@ -41,7 +39,7 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 
 ## 技能优先级
 
-多项技能同时适用时，流程技能优先——它们确定做法，然后由实现技能（frontend-design 等）去执行。Brainstorming 和 systematic-debugging 是 Superpowers 最常用的流程技能，但这条规则对任何流程技能都成立。
+多项技能同时适用时，流程技能优先——它们确定做法，然后由实现技能（frontend-design 等）去执行。Brainstorming 和 systematic-debugging 是最常用的流程技能，但这条规则对任何流程技能都成立。
 
 - 「我们来做 X」→ 先 brainstorming，然后是实现技能（小改动见上一节）。
 - 「修这个 bug」→ 先 systematic-debugging，然后是领域技能。修 bug、报错、bug-fix、fix bug 都走它。

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tt-a1i/archify/schemas/waterfall.schema.json",
+  "$id": "https://github.com/Acefake/s-skills/plugins/s-atlas/skills/archify/schemas/waterfall.schema.json",
   "title": "Archify Execution Waterfall",
   "type": "object",
   "additionalProperties": false,

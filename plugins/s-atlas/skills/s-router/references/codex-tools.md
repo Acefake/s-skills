@@ -1,5 +1,3 @@
-本技能译自 Jesse Vincent 的 Superpowers（MIT）。许可证见 [LICENSE-superpowers](../../../LICENSE-superpowers)。
-
 ## 派发子代理需要多智能体支持
 
 把下面的内容加到你的 Codex 配置（`~/.codex/config.toml`）里：

@@ -127,7 +127,7 @@ Cursor 和 WorkBuddy 的规则文件还要带该软件的 frontmatter，见文�
 
 | | 写到哪里 | 会不会自动读 | 依据 |
 |---|---|---|---|
-| Cursor | `~/.cursor/rules/s-models.mdc`。frontmatter 写 `description: s per-role model choices (overrides skill defaults)` 和 `alwaysApply: true`，下面接第 5 步的正文 | 会。新对话生效 | Cursor 的用户规则目录。这是原版的写法 |
+| Cursor | `~/.cursor/rules/s-models.mdc`。frontmatter 写 `description: s per-role model choices (overrides skill defaults)` 和 `alwaysApply: true`，下面接第 5 步的正文 | 会。新对话生效 | Cursor 的用户规则目录 |
 | WorkBuddy | `~/.codebuddy/rules/s-models.md`。frontmatter 写 `alwaysApply: true`，下面接正文。Windows 路径是 `%USERPROFILE%\.codebuddy\rules\s-models.md` | 公开文档说会。新对话生效。当前这个 WorkBuddy 如果读不到 `.md`，再写同名的 `s-models.mdc`，或在设置里的「用户规则」粘贴正文 | CodeBuddy / WorkBuddy 的公开文档：用户规则在 `~/.codebuddy/rules/`，CLI 文档写的是 `.md`，IDE 文档的例子是 `.mdc`。不要写到 `~/.cursor/rules/`。这次没有在 Windows 上重新测过写入 |
 | Claude Code | `~/.claude/rules/s-models.md`。只要第 5 步的正文，不要套 Cursor 的 frontmatter。Windows 是 `%USERPROFILE%\.claude\rules\` | 会。官方文档说这个目录里的个人规则对所有项目生效 | [Claude Code 的记忆文档](https://code.claude.com/docs/en/memory)。不要写到 `~/.cursor/rules/` |
 | Codex | 在 `~/.codex/AGENTS.md` 里维护 `# s model configuration` 到 `# end s model configuration` 这一段。设过 `CODEX_HOME` 就用那个目录。同目录已有 `AGENTS.override.md` 时，Codex 读的是 override 而不是 `AGENTS.md`，就改 override 里的同一段。需要单独模型的角色，再写 `~/.codex/agents/s-<角色>.toml`，见下面 Codex 一节 | 会读 `AGENTS.md` 这一段，也会读 `agents/` 里的自定义智能体。只替换标记之间的内容，只覆盖 `s-` 开头的智能体文件 | [AGENTS.md](https://developers.openai.com/codex/guides/agents-md)，[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
@@ -136,7 +136,7 @@ Cursor 和 WorkBuddy 的规则文件还要带该软件的 frontmatter，见文�
 
 派不出子智能体、或不能给子智能体单独指定模型的软件，仍然可以运行这个 skill：把角色行写成 `inherit-parent`，并说明多样性这步做不到。
 
-### Cursor（原版设计）
+### Cursor
 
 这次对话在 Cursor 里时，按下面做。模型名通过 `Task` 的 `model` 参数传给子智能体。`inherit-parent` 和 `auto` 省略 `model`。
 
