@@ -83,7 +83,7 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 
 ## 平台适配
 
-如果你的运行环境出现在这里，阅读它的参考文件以获取特别说明：
+只在要派子代理、建工作树或收尾分支时，才读对应运行环境的参考文件：
 
 - Codex: `references/codex-tools.md`
 - Pi: `references/pi-tools.md`
