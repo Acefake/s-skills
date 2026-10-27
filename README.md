@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.3，共 **74** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.5，共 **75** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Claude Code、Codex、Cursor、Hermes 等宿主会按你说的话自动挑对应的技能。
 
@@ -102,6 +102,8 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 | 做页面、改界面、看卡顿 | `impeccable` |
 | 点名要一份有主见的视觉方向 | `frontend-design` |
 | 按影盒 / Apple TV 风格做界面 | `apple-glass` |
+| `html-mockup` | 手写 HTML/CSS 出静态设计稿，Playwright 截图交付；真实界面截图用 `control-ui` |
+| 改界面前先出设计图、做固定尺寸素材 | `html-mockup` |
 | 文件放哪、文档注释、代码质量 | `code-style` |
 | 决定在哪一层测 | `test-strategy` |
 | 写或修 Playwright 端到端测试 | `e2e-testing` |
@@ -121,7 +123,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 「自动」是模型按描述自己选用；「手点」是 frontmatter 里有 `disable-model-invocation: true`，要点名才会加载。
 
-### 自动选用（54 个）
+### 自动选用（55 个）
 
 | 技能 | 用途 |
 |---|---|
