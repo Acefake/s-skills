@@ -57,6 +57,7 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 - 「我们来做 X」→ 先 brainstorming，然后是实现技能（小改动见上一节）。
 - 「修这个 bug」→ 先 systematic-debugging，然后是领域技能。修 bug、报错、bug-fix、fix bug 都走它。
 - 写或改 Word、幻灯片、表格、PDF → `docx`、`pptx`、`xlsx`、`pdf`。README、写文档、RFC 用 `technical-writing`。中英翻译用 `translate`。
+- 写技术交底书、做专利挖掘或查新 → `patent-disclosure`。写发明专利申请文件（摘要、权利要求书、说明书、附图）→ `patent-application`。
 - 写提交说明或开 PR → `commit-pr`。还没决定分支怎么集成时用 `finishing-a-development-branch`。
 - 审 PR、分支、diff 或本地改动 → `s-review`。默认只出报告。每条发现带文件:行和 P0/P1/P2。
 - 画架构图、流程图、时序图、数据流图、ER 图、类图，或把回答做成一页 → `archify`。架构重构评审仍用 `refactor-architecture`。
