@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.5，共 **75** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.6，共 **77** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Claude Code、Codex、Cursor、Hermes 等宿主会按你说的话自动挑对应的技能。
 
@@ -78,7 +78,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 支持插件命令的宿主也可以使用 `/s-atlas:技能名`，例如 `/s-atlas:s-mode`。Codex 可在技能选择器中选择相应技能。
 
-原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及开发流程技能（`brainstorming` 到 `finishing-a-development-branch`）可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
+原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`patent-disclosure`、`patent-application`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及开发流程技能（`brainstorming` 到 `finishing-a-development-branch`）可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
 
 ## 我想做什么
 
@@ -95,6 +95,8 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 | 做幻灯片（.pptx） | `pptx` |
 | 做表格、公式（.xlsx） | `xlsx` |
 | 读、填或生成 PDF | `pdf` |
+| 写技术交底书、专利挖掘、查新 | `patent-disclosure` |
+| 写发明专利申请文件、权利要求书、说明书 | `patent-application` |
 | 写 README、写文档、RFC、PR 说明的句子 | `technical-writing` |
 | 中文和英文互译，或中英对照 | `translate` |
 | 教我这块代码怎么工作 | `how` |
@@ -123,7 +125,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 「自动」是模型按描述自己选用；「手点」是 frontmatter 里有 `disable-model-invocation: true`，要点名才会加载。
 
-### 自动选用（55 个）
+### 自动选用（57 个）
 
 | 技能 | 用途 |
 |---|---|
@@ -143,6 +145,8 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 | `pptx` | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
 | `xlsx` | 带公式的工作簿，保存后用 LibreOffice 重算 |
 | `pdf` | 提取、填表、合并拆分、OCR 和新建 PDF |
+| `patent-disclosure` | 做中国发明专利挖掘、查新、写技术交底书，输出 Markdown 和 Word。改编自 [cn-patent](https://github.com/Zaoqu-Liu/cn-patent)（MIT） |
+| `patent-application` | 起草中国发明专利申请文件（摘要、权利要求书、说明书、附图）并输出 Word。改编自 [cnipa-patent-writer](https://github.com/fnjialun/cnipa-patent-writer)（MIT） |
 | `code-style` | 按模块就近放文件、写文档注释、质量底线；覆盖 TS/React、Vue、Go、Java |
 | `test-strategy` | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java |
 | `e2e-testing` | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |
@@ -243,3 +247,5 @@ s-atlas 按 [LICENSE](plugins/s-atlas/LICENSE) 发布。个别技能附带的组
 - [`impeccable`：许可证](plugins/s-atlas/LICENSE-impeccable)
 - [`impeccable`：声明](plugins/s-atlas/NOTICE-impeccable.md)
 - [`archify`：许可证与声明](plugins/s-atlas/skills/archify/)
+- [`patent-disclosure`：许可证](plugins/s-atlas/skills/patent-disclosure/LICENSE)（改编自 [cn-patent](https://github.com/Zaoqu-Liu/cn-patent)，MIT，Copyright (c) 2026 Zaoqu Liu）
+- [`patent-application`：许可证](plugins/s-atlas/skills/patent-application/LICENSE)（改编自 [cnipa-patent-writer](https://github.com/fnjialun/cnipa-patent-writer)，MIT，Copyright (c) 2026 fnjialun）

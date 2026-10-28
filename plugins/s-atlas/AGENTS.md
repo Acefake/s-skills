@@ -20,6 +20,8 @@
 | 幻灯片、pptx | `pptx` |
 | 表格、xlsx、公式 | `xlsx` |
 | PDF | `pdf` |
+| 专利交底书、专利挖掘、查新 | `patent-disclosure` |
+| 发明专利申请文件、权利要求书、说明书、专利附图 | `patent-application` |
 | 提交、开 PR | `commit-pr`（还没决定怎么集成用 `finishing-a-development-branch`） |
 | 审 PR、审分支、审本地改动、代码审查 | `s-review` |
 | 中英翻译 | `translate` |
