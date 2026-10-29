@@ -1,0 +1,2 @@
+# 保留 Archify 已校验的生成字节，仅豁免导出模板的行尾空白。
+s-atlas.html whitespace=-blank-at-eol
