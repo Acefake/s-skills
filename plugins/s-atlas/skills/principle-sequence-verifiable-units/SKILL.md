@@ -3,6 +3,8 @@ name: principle-sequence-verifiable-units
 description: "「拆成小步」「一步一验」「按什么顺序交」。批量清理、迁移或一串相似改动，每步停在可验证的状态。Use when multi-step work should be split into units you can verify one at a time."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 把工作排成可验证的单元
 
 把工作排成一连串小单元，每个单元结束时都处在一个你能检查的状态；当前单元没变绿（通过）之前，不要往前走。

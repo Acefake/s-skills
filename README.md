@@ -2,9 +2,9 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.8，共 **77** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.13，共 **78** 个技能。
 
-它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Claude Code、Codex、Cursor、Hermes 等宿主会按你说的话自动挑对应的技能。
+它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor会按你说的话自动挑对应的技能。
 
 技能目录名和 frontmatter 的 `name` 一致，都是英文小写 kebab-case。描述以中文触发词开头，正文全中文。
 
@@ -24,7 +24,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1
 
 ### 插件市场
 
-Claude Code 和 WorkBuddy 在聊天中运行：
+Claude Code 在聊天中运行：
 
 ```text
 /plugin marketplace add Acefake/s-skills
@@ -37,21 +37,17 @@ Codex 在终端添加市场，再在应用的插件管理入口安装 `s-atlas`�
 codex plugin marketplace add Acefake/s-skills
 ```
 
-Hermes 克隆仓库后，在 `~/.hermes/config.yaml` 加外部技能目录，详见 [HOSTS.md](plugins/s-atlas/HOSTS.md#hermes)：
-
-```yaml
-skills:
-  external_dirs:
-    - ~/s-skills/plugins/s-atlas/skills
-```
-
 Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-atlas`。各宿主的命令支持与入口以实际界面为准。安装或更新后开启新会话，确认技能路径和版本。
 
 ### 让技能自动生效
 
-短规则在 [`plugins/s-atlas/AGENTS-snippet.md`](plugins/s-atlas/AGENTS-snippet.md)。把它贴进全局指令：Claude Code 是 `~/.claude/CLAUDE.md`，Codex 是 `~/.codex/AGENTS.md`，OpenCode 是 `~/.config/opencode/AGENTS.md`，Cursor 建一条 Always 规则。Hermes 没有全局指令文件，放进项目根的 `AGENTS.md`，或追加到 `~/.hermes/SOUL.md`。规则要求动手前先看可用技能，用对得上的那个；拿不准就用 `s-router`。
+安装后显式调用 `setup-s-instructions`，初始化当前宿主的全局技能提示词。Codex 在技能选择器中选择它；支持插件命令的宿主可用 `/s-atlas:setup-s-instructions`。
 
-要按任务查表，贴同目录的 [`plugins/s-atlas/AGENTS.md`](plugins/s-atlas/AGENTS.md)，选中率会更高。
+Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`，默认 `~/.claude/CLAUDE.md`。初始化保留已有内容，首改备份，只维护 s-atlas 标记块，重复执行不会重复添加。Cursor 使用全局 User Rules；没有可用的设置编辑工具时，技能给出完整提示词供粘贴，并标记尚未配置。
+
+日常使用技能时，每个主会话只读检查一次；缺失、过期或无法确认时提醒，继续原任务。安装与普通技能调用不会自动改写全局配置。全局规则通常在新会话生效。
+
+提示词正文见 [`AGENTS-snippet.md`](plugins/s-atlas/AGENTS-snippet.md)，完整任务路由表见 [`AGENTS.md`](plugins/s-atlas/AGENTS.md)。
 
 ## 技能怎么被选中
 
@@ -119,7 +115,7 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 - [工作模式](plugins/s-atlas/skills/s-mode/SKILL.md)
 - [模型设置](plugins/s-atlas/skills/setup-s-models/SKILL.md)
 - [改名对照与回滚](RENAMES.md)
-- [Codex、Cursor、Hermes 等宿主适配规则](plugins/s-atlas/HOSTS.md)
+- [Codex、Claude Code、Cursor 宿主适配规则](plugins/s-atlas/HOSTS.md)
 
 ## 活跃技能
 
@@ -193,10 +189,11 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 | `principle-never-block-on-the-human` | 可撤销的事先做再给人看 |
 | `principle-encode-lessons-in-structure` | 第二次出现的教训写成检查 |
 
-### 手点（20 个）
+### 手点（21 个）
 
 | 技能 | 用途 |
 |---|---|
+| `setup-s-instructions` | 显式初始化、检查或修复当前宿主的全局技能提示词 |
 | `frontend-design` | 点名时给一份有主见的视觉方向，不带检查脚本 |
 | `s-mode` | 点名才走的加强工作流 |
 | `s-agent` | `s-mode` 派出去写代码的子智能体 |
@@ -231,7 +228,7 @@ claude plugin validate plugins/s-atlas
 npx skills add . --list
 ```
 
-要发 1.8.0 这种非补丁版本，先改锁文件和四份清单里的版本号，再跑 `scripts/check_marketplace.py`。补丁版本用 `bump_plugin_version.py`。
+要发 1.8.0 这种非补丁版本，先改锁文件和已登记的清单里的版本号，再跑 `scripts/check_marketplace.py`。补丁版本用 `bump_plugin_version.py`。
 
 校验覆盖市场清单、版本锁、技能名称、调用策略和本地链接。技能是否实际触发、模型是否按配置委派，仍需通过真实会话验证。
 

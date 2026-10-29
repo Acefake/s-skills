@@ -3,6 +3,8 @@ name: principle-minimize-reader-load
 description: "「这代码绕」「层数太多」「读者记不住」。审查难追的代码时，去掉只有一个调用方的包装，缩小可变状态。Use when code is hard to follow and the reader is carrying too many layers or hidden state."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 减轻读者负担
 
 可维护性就是读者为了看懂代码所要做的工作。要盯住两个维度：**要追踪的层数**（从问题到答案之间隔了多少层间接调用）和**要记住的状态**（读者必须记在脑子里的隐藏或可变的上下文）。代码行数、圈复杂度和“整洁架构”都只是替代指标。读者负担才是真正重要的。这两个维度是相互独立的。一个有 50 个全局变量的扁平文件，可能和一个 6 层的适配器堆栈一样难以推理。两个都要守住。这是 [Guard the Context Window](../principle-guard-the-context-window/SKILL.md)（守住上下文窗口）在人身上的对应版本。读者的工作记忆也是有限的。

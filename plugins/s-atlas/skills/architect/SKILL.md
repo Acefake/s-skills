@@ -3,9 +3,11 @@ name: architect
 description: "「/architect」「给这个做架构」「先定模块边界」。写代码前勾勒类型、函数签名和模块结构，实现过程中一直参与。Use when you should sketch types, signatures, and module boundaries before writing a non-trivial change."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 架构设计
@@ -82,27 +84,11 @@ Arena 会返回一份综合好的设计包。它的综合决定，用来填写�
 
 先写调用方的用法，再从中推导出类型草图。小改动就是一个包含新类型和签名的文件。较大的工作是一份模块地图加上类型定义。设计理由随之一起交付，按照 `references/rationale-template.md` 的形状来写，包括用法草图和综合决定。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-这个 skill 把 [arena](../arena/SKILL.md) 的派法拿来画草图。角色行换成 `architect runners`，代替 `arena runners`。拒绝规则、后台、只读评审，都按竞技场文末同一软件的那一节。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。
+这个 skill 把 [arena](../arena/SKILL.md) 的派法拿来画草图。角色行换成 `architect runners`，代替 `arena runners`。拒绝规则、后台、只读评审，按[宿主适配](../../HOSTS.md)中当前平台参考的 arena 章节执行。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。
 
-### Cursor
-
-没有 `architect runners` 时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。别名条目和被拒绝的条目，按竞技场 Cursor 一节的系列规则处理：`claude-*` 一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 一个系列；被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`；找不到系列就用 `claude-opus-5-5-xhigh`。
-
-参赛者是 `Task`，`run_in_background: true`，`subagent_type: generalPurpose`，`model` 为该条目。
-
-### OpenCode
-
-agent ID 用 `s-architect-runners-1`、`s-architect-runners-2`，`subagent` 加 `background: true`。没有这些文件时用内置 `general`，并说明继承了父级模型。
-
-### Codex
-
-提示词里点名 `s-architect-runners-1` 和 `s-architect-runners-2`，或点名两个这次账号里真有的模型，写明等齐再汇总。
-
-### WorkBuddy 和 Claude Code
-
-WorkBuddy 能拉开差异时用 `"lite"` 和 `"reasoning"`。Claude Code 用 `opus` 和 `sonnet`，或完整 ID。两边都用能写文件的通用类型，后台运行。不要填 Cursor 的模型名。
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 

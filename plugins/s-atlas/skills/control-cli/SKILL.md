@@ -2,9 +2,11 @@
 name: control-cli
 description: "「驱动这个命令行」「看看这个 TUI」「终端卡住了」。搭本地驾驭装置，不依赖外部服务，也可录一段终端演示。Use when you need to drive a local CLI or TUI and inspect what it does."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 操作命令行
@@ -112,8 +114,10 @@ os.close(master_fd)
 - 不要写死别的仓库的路径。命令按当前仓库的脚本和运行时改。
 - 做完清掉 tmux 会话、临时目录、inspector 进程和演示产物。用户要求留下的除外。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-装置跑在有这个命令行的那台机器上。Cursor、OpenCode、Codex 都用上面的 `tmux` 或 PTY。聊天软件如果把子智能体放在另一台机器上，而命令行只在用户电脑上，就在用户这台机器上跑装置，并在回复里写明跑在哪。
+装置跑在有这个命令行的那台机器上。Codex、Claude Code、Cursor 都用上面的 `tmux` 或 PTY。聊天软件如果把子智能体放在另一台机器上，而命令行只在用户电脑上，就在用户这台机器上跑装置，并在回复里写明跑在哪。
 
-WorkBuddy 和 Claude Code 同样用本机的 `tmux` 或 PTY。没有 `tmux` 时用上面的 Python。不要发明一个聊天软件里的“control-cli”参数。
+Claude Code 同样用本机的 `tmux` 或 PTY。没有 `tmux` 时用上面的 Python。不要发明一个聊天软件里的“control-cli”参数。
+
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

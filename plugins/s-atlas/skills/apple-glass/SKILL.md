@@ -2,9 +2,11 @@
 name: apple-glass
 description: "「影盒风格」「按 yingbox 的 UI 做」「Apple TV 风格界面」「用我那套 UI」。按影盒（yingbox）的设计语言做界面：深色优先、纯黑底、实色卡片、玻璃只给浮动控件、8pt 间距、令牌化、组件化。Use when building or restyling UI in yingbox, or when the owner asks for the yingbox / Apple TV look in another web or Vue project."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # 影盒界面语言
 

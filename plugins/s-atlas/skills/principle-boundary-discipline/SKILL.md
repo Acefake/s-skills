@@ -3,6 +3,8 @@ name: principle-boundary-discipline
 description: "「校验放在边界上」「别在内部到处防御」。防护集中在命令行、配置、网络和外部 API，业务放纯函数。Use when validation, error handling, or a framework adapter is being added."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 守住边界
 
 把校验、类型收窄和错误处理放在系统边界上。对内部代码无条件信任。业务逻辑放在纯函数里。外壳（shell）要薄，而且只做机械的事。

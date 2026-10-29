@@ -3,9 +3,11 @@ name: show-me-your-work
 description: "「/show-me-your-work」「留下决定记录」「通宵跑完我回来看」。长时间或无人值守的工作，每个决定记一行。Use when a long or unattended run needs a decision log."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 把你的过程摆出来
@@ -79,17 +81,12 @@ ts	phase	decision	why	evidence	result
 
 对于产生了记录的运行，每条回复都以一个“Attention”（注意）部分结尾。第一行单独写审查者的模型（`reviewed by <model>`），然后列出每一个标记，指向具体的行或时刻。“No flags”（没有标记）是一个有效的值。模型名不是。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-这个审查者要和做这份工作的模型不同系列。具体派法以 [s-mode](../s-mode/SKILL.md) 文末为准。
+这个审查者要和做这份工作的模型不同系列。具体派法见[宿主适配](../../HOSTS.md)。
 
-Cursor：一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`model` 选和父级不同系列的名字。这次能用时，父级是 `grok-*` 就用 `claude-opus-5-5-xhigh`，父级是 `claude-*` 就用 `grok-4.7-xhigh-fast`。
 
-OpenCode：`subagent` 派一个 `mode: subagent` 的智能体，`model` 用另一个系列。没有现成文件时用内置 `explore`，并说明继承了父级模型、这次没有换系列。不要在调用上传 `model`（工具页没有这个参数）。
-
-Codex：提示词里点名另一个这次账号里真有的模型，或点名一个已经写好、模型不同的自定义智能体。`default_subagent_model` 拉不开系列。
-
-WorkBuddy：能拉开差异时，父级是 `"lite"` 就用 `"reasoning"`，反过来也一样。Claude Code：父级是 `sonnet` 就用 `opus`，或换一个完整 ID。派不出子智能体时，在主对话里换一种角度再看一遍日志，并说一句没有换模型。
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ## 审阅这条记录
 

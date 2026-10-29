@@ -3,6 +3,8 @@ name: benchmark-checklist
 description: "「跑了基准测试」「这个加速靠谱吗」「报告性能数字之前」。先审核限制因素、调优、误差、可重复性，以及量的是不是那项工作。Use when you are about to report or act on a performance number."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 基准测试清单
 
 当你产出一个性能数字时使用：一个 PR 的前后对比、一个性能退化的说法、一个爬坡优化（hillclimb）用的测试工具，或者在库或配置之间做选择。每个问题都要用一次运行得到的证据来回答，而不是对代码的猜测。

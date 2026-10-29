@@ -3,6 +3,8 @@ name: principle-prove-it-works
 description: "「跑一遍证明它好了」「别只说编译过了」。宣布完成前，对照真实产物核验。Use when you are about to claim something is done and need to check the real result."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 证明它真的能用
 
 每一项任务的产出，都要直接检查真实的东西来验证。不要从替代指标、自我汇报或“能编译通过”去推断。

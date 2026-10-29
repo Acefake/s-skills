@@ -3,6 +3,8 @@ name: principle-subtract-before-you-add
 description: "「先删再加」「死代码先清掉」。新增、重构或重写之前，先删掉死代码、多余校验和空壳引用。Use when sequencing an addition, refactor, or rewrite and you should delete the extra first."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 先做减法，再做加法
 
 演进一个系统时，先去掉复杂度，再搭建。默认做减法。

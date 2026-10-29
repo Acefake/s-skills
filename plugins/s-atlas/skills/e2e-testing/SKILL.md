@@ -2,6 +2,8 @@
 name: e2e-testing
 description: "「写端到端测试」「Playwright 偶发失败」「e2e 挂了」。给 React 或 Vue 写稳定的浏览器测试，后端可以是 Node、Go 或 Java。Use when writing, running, or fixing end-to-end browser tests for a web app, including flaky Playwright tests."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 端到端测试
 
 端到端测试最贵、最慢、最容易不稳定，所以只给最关键的几条用户路径写，而且每条都要稳。其余行为放到更低的层，见 `test-strategy`。

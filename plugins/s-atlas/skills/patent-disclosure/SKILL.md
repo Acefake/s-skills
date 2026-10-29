@@ -2,6 +2,8 @@
 name: patent-disclosure
 description: "「写专利交底书」「专利挖掘」「查新」「保护点」。做中国发明专利挖掘、查新、写技术交底书，或修改已有交底书，按国知局质量要求输出 Markdown 和 Word。Use when mining Chinese invention patent points, searching prior art, or writing and revising a technical disclosure."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 > 来源：开源项目 [cn-patent](https://github.com/Zaoqu-Liu/cn-patent)（MIT 许可）。
 > 本 skill 的辅助文件（`prompts/`、`references/`、`tools/`、`requirements*.txt`）放在本 skill 所在的文件夹里。执行前先设置：`SKILL_DIR="<本 skill 文件夹的绝对路径>"`，下文所有 `${SKILL_DIR}` 都指它。
 

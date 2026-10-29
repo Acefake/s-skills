@@ -3,9 +3,11 @@ name: s-agent
 description: "「派一个 s-agent」「让子智能体去写」。s-mode 派出去写代码或打杂。动手前读完 s-mode，不要派它跑 playbook。Use when a parent conversation dispatches s-agent to write code or do chores, after it has read s-mode and not to run a playbook itself."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # s 助手
@@ -18,20 +20,7 @@ disable-model-invocation: true
 
 每次新任务派一个新的 s-agent。只有 s-mode “子智能体” 一节写明的那几种情况，才恢复一个已经在跑的。用通用类型代替本文件，会跳过这次全文阅读，然后慢慢跑偏。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-### Cursor
 
-本插件在 `agents/s-agent.md` 注册了这个子智能体，`is_background: true`。父对话用 `Task`，`subagent_type: "s-agent"`。软件不认这个类型时，用 `generalPurpose`，提示词的第一句要求先完整读 `s-mode` 的 `SKILL.md`。不要派 s-agent 去运行 playbook 本身。
-
-### OpenCode
-
-`subagent` 派内置 `general`，或一个 `mode: subagent` 的自定义智能体。提示词的第一句要求先完整读 `s-mode` 的 `SKILL.md`。`general` 不能再派子智能体。需要再分派时，回到父对话。
-
-### Codex
-
-用话派一个子智能体，点名内置 `worker`，或一个自定义智能体。提示词的第一句要求先完整读 `s-mode` 的 `SKILL.md`。不要派它去运行 playbook 本身。
-
-### WorkBuddy 和 Claude Code
-
-`Agent`，`subagent_type: "general-purpose"`。提示词的第一句要求先完整读 `s-mode` 的 `SKILL.md`。
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

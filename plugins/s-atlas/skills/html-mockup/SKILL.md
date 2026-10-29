@@ -2,6 +2,8 @@
 name: html-mockup
 description: "「先出图」「做个设计图」「效果图」「mockup」「美化一下给我看看」。改界面前用手写 HTML/CSS 画静态设计稿，无头 Chromium 截成 PNG/JPG 交付；也用于固定尺寸素材（安装器侧栏、横幅、OG 图、图标预览）。只出静态稿，驱动真实应用截图用 control-ui，按稿落地实现用 impeccable。Use when the owner wants a visual mockup before UI work, or a pixel-exact static asset."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # HTML 设计图（mockup）
 
 用一页静态 HTML/CSS 画设计稿，无头 Chromium 截图成 PNG/JPG 给用户看。比生成图片可控：像素级对齐、真文字、真图片、能改一处重截。

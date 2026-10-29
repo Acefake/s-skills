@@ -7,8 +7,7 @@ Schemas copied into scripts/schemas/:
   (fetched 2026-10-18 from raw.githubusercontent.com/cursor/plugins/main/schemas/)
 - portable plugin: https://agent-plugins.org/schemas/1.0.0/plugin.schema.json
 
-Claude Code and CodeBuddy do not publish a machine-readable marketplace
-schema. Those checks follow the field rules in the official docs.
+Claude Code checks follow the field rules in its official documentation.
 """
 
 from __future__ import annotations
@@ -230,7 +229,6 @@ def check_plugin_manifests(problems: Problems) -> None:
     for name in PLUGIN_ORDER:
         cursor_path = plugin_dir(name) / ".cursor-plugin" / "plugin.json"
         claude_path = plugin_dir(name) / ".claude-plugin" / "plugin.json"
-        codebuddy_path = plugin_dir(name) / ".codebuddy-plugin" / "plugin.json"
         portable_path = plugin_dir(name) / "plugin.json"
         cursor = read_json(cursor_path)
         validate_schema(problems, f"{name} cursor plugin", cursor_schema, cursor)
@@ -238,7 +236,6 @@ def check_plugin_manifests(problems: Problems) -> None:
         validate_schema(problems, f"{name} portable plugin", agent_schema, portable)
         for label, path in (
             ("claude", claude_path),
-            ("codebuddy", codebuddy_path),
             ("cursor", cursor_path),
             ("portable", portable_path),
         ):
@@ -256,9 +253,6 @@ def check_plugin_manifests(problems: Problems) -> None:
             schema_id = portable.get("$schema")
             if schema_id != "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json":
                 problems.add(f"{name} portable $schema is {schema_id!r}")
-        # Claude and CodeBuddy manifests stay in lockstep, apart from nothing.
-        if read_json(claude_path) != read_json(codebuddy_path):
-            problems.add(f"{name}: claude and codebuddy plugin.json differ")
 
 
 DESCRIPTION_RE = re.compile(
@@ -371,14 +365,19 @@ def check_skill_resources(skill: Path, text: str, problems: Problems) -> None:
         match = re.search(r"^  allow_implicit_invocation: (true|false)\s*$", policy.read_text(encoding="utf-8"), re.M)
         if not match or (match.group(1) == "true") == disabled:
             problems.add(f"{skill.name}: Codex and frontmatter invocation policies disagree")
+    check_local_links(skill, text, problems, skill.name)
+
+
+def check_local_links(directory: Path, text: str, problems: Problems, label: str) -> None:
+    """Check authored Markdown links relative to their actual document location."""
     # 代码块和行内代码里的链接是示例，不当成本地文件检查。
     prose = re.sub(r"`[^`\n]*`", "", re.sub(r"```.*?```", "", text, flags=re.S))
     for target in re.findall(r"\]\(([^)]+)\)", prose):
         if "://" in target or target.startswith("#"):
             continue
         local = target.split("#", 1)[0]
-        if local and not (skill / local).exists():
-            problems.add(f"{skill.name}: broken local link {target}")
+        if local and not (directory / local).exists():
+            problems.add(f"{label}: broken local link {target}")
 
 
 # A skill is named in backticks, in bold, or as a /s-atlas: command.
@@ -412,18 +411,39 @@ def check_skill_references(problems: Problems) -> None:
             problems.add(f"{path.relative_to(ROOT)}: {problem}")
 
 
+def check_supported_hosts(problems: Problems) -> None:
+    """Reject retired adapters in maintained entry points and platform guides."""
+    retired = re.compile(r"\b(?:T3(?:\s+Code)?|OpenCode|Hermes|WorkBuddy|CodeBuddy|Antigravity|Pi)\b", re.I)
+    for relative in (".codebuddy-plugin/marketplace.json", "plugins/s-atlas/.codebuddy-plugin/plugin.json"):
+        if (ROOT / relative).exists():
+            problems.add(f"unsupported host adapter: {relative}")
+    plugin = ROOT / "plugins/s-atlas"
+    paths = [ROOT / "README.md", plugin / "HOSTS.md", plugin / "AGENTS.md", plugin / "AGENTS-snippet.md"]
+    paths.extend((plugin / "skills").glob("*/SKILL.md"))
+    paths.extend((plugin / "skills/s-router/references").glob("*.md"))
+    for path in paths:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if path.name != "SKILL.md":
+            check_local_links(path.parent, text, problems, str(path.relative_to(ROOT)))
+        for number, line in enumerate(text.splitlines(), 1):
+            if match := retired.search(line):
+                problems.add(f"{path.relative_to(ROOT)}:{number}: unsupported host {match.group(0)}")
+
+
 def main() -> int:
     problems = Problems()
     try:
         check_versions(problems)
         check_cursor_marketplace(problems)
         check_host_marketplace(problems, ".claude-plugin/marketplace.json", "claude")
-        check_host_marketplace(problems, ".codebuddy-plugin/marketplace.json", "codebuddy")
         check_codex_marketplace(problems)
         check_plugin_manifests(problems)
         check_skills(problems)
         check_skill_references(problems)
         check_agent_descriptions(problems)
+        check_supported_hosts(problems)
     except FileNotFoundError as exc:
         problems.add(f"missing file: {exc.filename}")
     except json.JSONDecodeError as exc:

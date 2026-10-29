@@ -3,6 +3,8 @@ name: principle-separate-before-serializing-shared-state
 description: "「别一起写同一个文件」「先去掉共享」。多个并发参与者可能写同一文件、分支、键或对象时，先消除共享。Use when concurrent writers might share a file, branch, key, or object."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 先分开，再考虑让共享状态串行
 
 当并发的参与者可能共享可变状态时，先问它们是否真的需要同一个可变对象。如果不需要，就消除共享。当共享是真实需要的，就用结构化的方式强制串行：锁文件、按顺序的阶段、独占的归属。指示和约定都不算并发控制。

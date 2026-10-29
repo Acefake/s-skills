@@ -2,9 +2,11 @@
 name: commit-pr
 description: "「提交」「帮我 commit」「开个 PR」「写提交说明」。看 diff，写 conventional commit，需要时推送并开 PR。分支怎么集成还没定，用 finishing-a-development-branch。Use when writing a commit message, making a commit, or opening a pull request."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 提交并开 PR
@@ -93,6 +95,8 @@ EOF
 - 不改产品代码来让检查变绿。
 - 不把某个聊天软件的按钮或菜单写进步骤。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-步骤在 Cursor、OpenCode、Codex、Claude Code、WorkBuddy 里相同。都用本机的 git。某个软件没有终端或没有 `gh` 时，说明缺了哪一步，把标题和正文写出来交给用户，不要换成那个软件自己的一套说法。
+步骤在 Codex、Claude Code、Cursor 里相同。都用本机的 git。某个软件没有终端或没有 `gh` 时，说明缺了哪一步，把标题和正文写出来交给用户，不要换成那个软件自己的一套说法。
+
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

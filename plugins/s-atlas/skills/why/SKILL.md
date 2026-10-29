@@ -3,9 +3,11 @@ name: why
 description: "「为什么是这样」「我们为什么选了这个」「这个阈值哪来的」。查设计理由和取舍，带引用。运行时怎么走用 how。Use when you need the reason a design, choice, regression, or threshold is the way it is."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 为什么（Why）
@@ -101,31 +103,11 @@ disable-model-invocation: true
 
 - **近因偏差**。以为最近的那次提交就是权威。现在的形状，常常是许多更早的决定一层层累积起来的。要往前追溯。
 
-## 在不同软件里怎么用
+## 宿主适配
 
 调查读 `why investigators`，综合读 `why synthesizer`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。调查者要能用 MCP，提示词里仍然禁止它写文件。
 
-### Cursor
-
-每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: false`。不要用 `readonly: true`，它会去掉 MCP，调查者和综合者的引用抽查会失效。
-
-调查者的 `model` 是 `why investigators`，没有这行时用 `grok-4.7-xhigh-fast`。综合者的 `model` 是 `why synthesizer`，没有这行时用 `claude-opus-5-5-xhigh`。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。拒绝了某个名字，就改用该角色的默认；连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
-
-### OpenCode
-
-调查者用 `s-why-investigators`，综合者用 `s-why-synthesizer`。没有这些文件时用内置 `general`，并说明继承了父级模型。不要用 `explore`：它不改文件，但是否带得上 MCP 未核实。`general` 不能再派子智能体，符合一个调查者只查一个来源。自定义智能体不要禁 `execute`。一条消息里对每个来源调一次 `subagent`，`background: true`，等齐再派综合者。不要在调用上传 `model`。
-
-### Codex
-
-自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`，或 `s-why-investigators`。综合点名 `s-why-synthesizer`。提示词写成：Spawn one subagent per evidence source. Each uses model \<why investigators\>. Wait for all, then spawn one synthesizer on model \<why synthesizer\>. Do not edit files. 模型名用这次账号里真有的。提示词禁止改文件，不会变成单独的只读沙箱。
-
-### WorkBuddy
-
-`Agent`，`subagent_type: "general-purpose"`。不要改派 `Explore` 或 `Plan`，那两个对不上需要 MCP 的调查。能拉开差异时调查用 `"lite"`，综合用 `"reasoning"`。
-
-### Claude Code
-
-`Agent`，`subagent_type: "general-purpose"`。调查的 `model` 用 `sonnet`，综合用 `opus`，或完整 ID。需要 MCP 时不要改用 `Explore`。
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 

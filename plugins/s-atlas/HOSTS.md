@@ -1,63 +1,37 @@
-# 宿主适配与使用入口
+# 宿主适配
 
-本仓库统一使用插件名 `s-atlas`，市场名为 `s-skills`，源文件位于 `plugins/s-atlas/`。当前插件版本 1.6.0，活跃技能 72 个，其中包括中文代码审查技能 `s-review`（默认只出报告）。不依赖其他插件。以本次会话技能目录中的实际路径为准；能看到文件不代表已自动触发。
+本仓库只支持 **Codex、Claude Code、Cursor**。插件名为 `s-atlas`，仓库和市场名为 `s-skills`。版本以插件清单为准，技能以当前会话实际发现的目录为准。
 
-## Codex 本地开发
+## 按需读取当前宿主
 
-在仓库根目录运行 `powershell -NoProfile -File scripts/install_local_skills.ps1`，将 72 个活跃技能以目录链接安装到本项目的 `.agents/skills/`。重复运行不会复制技能正文或覆盖同名的其他技能。适配文档和许可证作为辅助文件随安装更新。重新打开项目的新会话，确认技能路径指向本仓库。项目链接只对本项目生效；其他项目使用市场中的 `s-atlas` 插件。项目目录链接和市场缓存是同一插件的两种安装方式，开发时以项目目录为准。
+任务只涉及通用逻辑、文字或技能规则时，不必加载平台教程。需要安装配置、子代理、模型选择、浏览器、工作区或定时能力时，只读当前宿主对应的参考：
 
-原则类、setup-s-models、impeccable、s-review，以及计划、调试、代码审查等开发流程允许按描述自动选择。`s-review` 审 PR、分支或本地改动，默认只出报告，不改代码。frontend-design 只在点名时使用。工作模式与并行审查等复杂流程通过名字调用。各技能的声明决定具体策略。自动选择不是保证每轮运行。Codex 可用 `$技能名` 或自然语言点名，Cursor 可用 `/技能名`。`agents/openai.yaml` 为 Codex 声明调用策略，frontmatter 为支持该字段的宿主声明策略。
+| 宿主 | 平台参考 |
+|---|---|
+| Codex | [Codex 工具和配置](skills/s-router/references/codex-tools.md) |
+| Claude Code | [Claude Code 工具和配置](skills/s-router/references/claude-code-tools.md) |
+| Cursor | [Cursor 工具和配置](skills/s-router/references/cursor-tools.md) |
 
-## Hermes
+技能正文负责任务步骤、角色职责、输入输出和验收；平台参考负责工具参数、配置位置和能力差异。已有用户配置与本次授权优先，不用示例模型覆盖用户选择。
 
-Hermes Agent 读 agentskills.io 格式的 SKILL.md，本插件的技能不用改就能用。克隆仓库，在 `~/.hermes/config.yaml` 里把技能目录加进外部目录：
+## 共同行为
 
-```yaml
-skills:
-  external_dirs:
-    - ~/s-skills/plugins/s-atlas/skills
-```
+- 不编造当前会话没有的工具、参数、模型或代理类型。使用实际可用的等价能力，并说明替代方式。
+- 模型配置只修改用户选定作用域内属于本技能的标记段或角色文件，保留其他内容。具体路径和模型字段按平台参考，不在各技能重复定义。
+- 无法委派时能顺序完成的任务继续，报告缺少独立审查或并行；不把主线程自查称为独立审查。
+- 原生工具创建的工作区由原生工具管理和归档；操作前确认实际路径、分支与归属。
+- 浏览器截图和真实操作证明界面行为；文件检查或编译不能替代实际运行证据。
+- 持久定时任务只有在宿主调度工具保存成功后才算建立；后台等待或会话内循环不是持久任务。
+- 安装、发布、合并、发送消息和付费服务遵循当前任务授权。技能本身不扩大权限。
 
-用外部目录，不要用 `hermes skills install` 一个个装：Hub 安装只复制 SKILL.md 引用到的 `references/`、`scripts/` 等子目录，技能之间互相点名的相对路径（如 `../s-mode/SKILL.md`）会断。更新时在仓库里 `git pull`。Hermes 的自动维护可能改写可写的外部目录，`git status` 能看出来；要防就把目录设成只读。
+## 项目技能安装与验证
 
-每个技能自动成为 `/技能名` 命令。Hermes 只在项目里读 `AGENTS.md`（还有 `.hermes.md`、`CLAUDE.md`，先找到哪个用哪个），没有全局指令文件；全局只有 `~/.hermes/SOUL.md`。子智能体、提问和模型对应关系见 s-mode 文末的表。
+Codex 本项目开发可在仓库根运行 `powershell -NoProfile -File scripts/install_local_skills.ps1`。脚本将技能链接到项目 `.agents/skills/`，并将本文件复制到 `.agents/HOSTS.md`。平台参考位于技能内，随目录链接一起提供，无需额外复制平台资料。重新打开会话确认实际发现路径。
 
-## 模型与委派
+分发入口以仓库 README 为准。运行 `python scripts/check_marketplace.py` 核对清单、版本锁、调用政策、公共引用和支持范围；运行 `python -m unittest discover -s scripts -p "test_*.py"` 检查发布与适配逻辑。
 
-先使用当前会话已加载的 `# s model configuration` 角色配置。已有用户选择持续有效，不要反复询问或用示例里的默认模型覆盖。Codex 将模型 ID 和 `reasoning_effort` 分开传递，不要拼接推理强度到模型 ID。
+验证状态分别记录：文件校验、会话发现、实际读取、行为验证。一个阶段通过不代表其他阶段也已通过。真实宿主未运行时明确标记“未验证”。
 
-设置模型时，Codex 在项目 `AGENTS.md` 更新对应配置块，保留其他内容，并检查 `AGENTS.override.md` 是否覆盖它。Cursor 才使用 `~/.cursor/rules/s-models.mdc`。写入后读回只能证明保存成功；实际委派结果才证明模型选择生效。
+## 全局技能提示词
 
-T3 Code 委派前查询 `orchestrator_capabilities` 获取实时 provider/model。遵循宿主委派规则；需要独立检出或跨 provider 时使用 `delegate_task`，保存 taskId，通过状态工具管理。每轮审查重新委派，带上前轮证据与未决意见。不要用顶层新会话代替子任务。原生 Codex 工具支持指定模型时可使用原生委派；显式指定模型的子任务遵循宿主对上下文继承的限制。
-
-缺少原文提到的 Cursor 子智能体类型时，把其职责和相关技能路径写进通用子任务说明。不得假装某个 Cursor 类型存在。委派不可用时，说明缺少独立审查，按顺序完成能完成的工作；不能把主线程自查称为独立审查。
-
-## 浏览器、定时与外部动作
-
-T3 优先使用 `preview_status`，没有可操作页时尝试 `preview_open`，然后按宿主规定决定是否切换工具。其他宿主使用实际可用的浏览器接口。截图和真实操作才证明界面行为。
-
-Cursor 的 Custom Mode、`/loop` 不适用于所有宿主。T3 持久定时任务使用 `schedule_task` 并传结构化 schedule；仅在用户要求定时任务时创建。没有持久调度能力时说明限制，不要用终端后台睡眠冒充任务调度。
-
-技能不扩大用户授权。发布、合并、发送消息及付费服务按当前任务授权执行；密钥使用宿主私密输入工具。T3 的 PR 链接注册与监控遵循宿主规则。
-
-## 验证
-
-运行 `python scripts/check_marketplace.py` 检查清单、版本锁、调用策略和本地链接。它不证明模型实际选择了技能。
-
-新会话中用以下场景检查行为，并记录技能读取路径和实际输出：
-
-- 提供一个 `.ts` 文件并要求解释：应按需读取 principle-type-system-discipline。
-- 提供可复现错误并要求诊断：应按需读取 principle-fix-root-causes；没有证据时不宣称修复。
-- 普通问候：不应启动 arena 或并行工作流。
-- 点名interrogate并提供 diff：应按已配置模型委派，保存实际任务与结论；不可用时明确说明。
-- 要求解释一小段文字：不应仅因技能安装就修改模型配置。
-
-验证状态分为文件检查通过、会话已发现、实际已读取、行为已通过；逐项记录，不互相替代。
-
-## 官方文档
-
-技能正文里提到宿主的智能体、工具和配置时，以这些文档为准：
-
-- OpenCode：[Agents](https://opencode.ai/v2/docs/agents/)、[Tools](https://opencode.ai/v2/docs/tools)、[Commands](https://opencode.ai/v2/docs/commands)、[从 V1 迁移](https://opencode.ai/v2/docs/migrate-v1/)
-- Hermes：[Skills](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills)、[Context Files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files)、[Delegation](https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation)
-- Codex：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)
+显式调用 [setup-s-instructions](skills/setup-s-instructions/SKILL.md) 初始化当前宿主的全局指令，保留其他配置并幂等更新。普通技能只按[日常自检](skills/setup-s-instructions/references/daily-check.md)提醒，每会话一次，不自动写入。Cursor 使用真正的全局 User Rules；项目 Always 规则不能替代全局配置。

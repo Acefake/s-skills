@@ -2,171 +2,53 @@
 name: writing-plans
 description: "「写个实现计划」「先拆步骤」「动手改代码之前列计划」。已有规格、要做多步任务时，先写成可执行计划。Use when you have a spec or requirements for a multi-step task, before changing code."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
-# 编写计划
+# 编写实现计划
 
-## 概述
+把已确认的规格写成工程师无需了解对话历史也能执行的计划。提供实际文件、接口、操作、测试命令与预期结果，避免重复、无用设计和含糊指令。遵循 DRY、YAGNI、TDD，保持频繁且单一目的的提交。
 
-撰写全面的实现计划。假定工程师对我们的代码库毫无背景，对好坏的判断也未必可靠。把他们需要知道的一切写清楚：每个任务要动哪些文件、代码、测试、可能要核对的文档、如何测试。把整份计划拆成一口大小的任务交给他们。DRY。YAGNI。TDD。频繁提交。
+开始时说明正在使用 writing-plans。计划保存到 `docs/s-atlas/plans/YYYY-MM-DD-<feature-name>.md`；用户指定路径优先。在隔离工作区执行时，执行前通过[using-git-worktrees](../using-git-worktrees/SKILL.md)准备。
 
-假定他们是熟练的开发者，但对我们的工具集或问题领域几乎一无所知。假定他们对良好的测试设计也并不熟悉。
+## 先确定范围和文件结构
 
-**开始时宣布：**「我正在使用 writing-plans 技能来创建实现计划。」
+1. 检查规格是否覆盖多个独立子系统；需要时拆成可独立交付和验证的子项目计划。
+2. 列出要新增、修改和测试的精确文件路径。沿用已有目录模式，让一起变化的内容就近放置；职责已经过多时才纳入必要拆分。
+3. 定义单元的输入、输出与接口，确保任务间使用的名称、签名和约束一致。
+4. 按可独立验收的改动划任务。设置、脚手架和文档并入对应交付物，不为了步骤数量拆任务。
 
-**上下文：** 若在隔离的 worktree 中工作，它应在执行时已通过 `using-git-worktrees` 技能创建。
+## 写任务
 
-**计划保存到：** `docs/s-atlas/plans/YYYY-MM-DD-<feature-name>.md`
-- （用户对计划存放位置的偏好覆盖此默认值）
+按[计划与任务模板](references/task-template.md)写完整计划，包括目标、架构、技术栈、全局约束和每个任务的文件、接口、步骤。
 
-## 范围检查
+- 假定执行者熟练，但不了解当前代码库，也不能指望其自行补足测试设计。
+- 每步一个动作，通常 2–5 分钟：写失败测试、确认失败、写最小实现、确认通过、提交。
+- 代码修改步骤给出实际代码，测试给出精确命令及预期输出。后续任务不能靠“同任务 N”补上下文。
+- 全局要求如版本、依赖、命名和文案规范逐条写明；所有任务继承，不在每个任务重复。
 
-如果规格覆盖多个相互独立的子系统，它本应在头脑风暴阶段被拆成子项目规格。如果当时没有拆，建议把这件事拆成多份计划——每个子系统一份。每份计划都应能独立产出可工作、可测试的软件。
+## 不允许的占位
 
-## 文件结构
-
-定义任务之前，先勾勒哪些文件会被创建或修改，以及每个文件负责什么。分解决策在这里定下来。
-
-- 设计边界清晰、接口明确的单元。每个文件只承担一项清晰职责。
-- 你对能一次放进上下文的代码推理得最好，文件聚焦时修改也更可靠。优先选择更小、更聚焦的文件，而不是承担过多职责的大文件。
-- 一起变更的文件应当放在一起。按职责拆分，不按技术分层拆分。
-- 在已有代码库中遵循既有模式。如果代码库使用大文件，不要单方面重组；但如果正在修改的文件已经变得难以驾驭，在计划中加入一次拆分是合理的。
-
-这一结构决定任务如何分解。每个任务应产出独立成立的变更。
-
-## 合适的任务规模
-
-任务是自带一轮测试周期、并且值得一道全新评审关卡的最小单位。划定任务边界时：把初始化、配置、脚手架和文档步骤并入其交付物所需要的那个任务；只在评审者可以有意义地否决其中一个任务、同时批准相邻任务的地方拆分。每个任务结束时都有可独立测试的交付物。
-
-## 一口大小的任务粒度
-
-**每一步只做一个动作（2-5 分钟）：**
-- 「编写失败的测试」——一步
-- 「运行它，确认它失败」——一步
-- 「实现让测试通过的最少代码」——一步
-- 「运行测试，确认它们通过」——一步
-- 「提交」——一步
-
-## 计划文档头部
-
-**每份计划都必须以这个头部开始：**
-
-```markdown
-# [Feature Name] Implementation Plan
-
-> **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-driven-development (recommended) or executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
-
-**Goal:** [One sentence describing what this builds]
-
-**Architecture:** [2-3 sentences about approach]
-
-**Tech Stack:** [Key technologies/libraries]
-
-## Global Constraints
-
-[The spec's project-wide requirements — version floors, dependency limits,
-naming and copy rules, platform requirements — one line each, with exact
-values copied verbatim from the spec. Every task's requirements implicitly
-include this section.]
-
----
-```
-
-## 任务结构
-
-````markdown
-### Task N: [Component Name]
-
-**Files:**
-- Create: `exact/path/to/file.py`
-- Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
-
-**Interfaces:**
-- Consumes: [what this task uses from earlier tasks — exact signatures]
-- Produces: [what later tasks rely on — exact function names, parameter
-  and return types. A task's implementer sees only their own task; this
-  block is how they learn the names and types neighboring tasks use.]
-
-- [ ] **Step 1: Write the failing test**
-
-```python
-def test_specific_behavior():
-    result = function(input)
-    assert result == expected
-```
-
-- [ ] **Step 2: Run test to verify it fails**
-
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
-
-- [ ] **Step 3: Write minimal implementation**
-
-```python
-def function(input):
-    return expected
-```
-
-- [ ] **Step 4: Run test to verify it passes**
-
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add tests/path/test.py src/path/file.py
-git commit -m "feat: add specific feature"
-```
-````
-
-## 禁止占位
-
-每一步都必须包含工程师需要的实际内容。下面这些属于**计划失败**——绝不要写出来：
-- 「TBD」「TODO」「以后再实现」「补上细节」
-- 「加上适当的错误处理」/「加上校验」/「处理边界情况」
-- 「为上面的内容写测试」（没有实际测试代码）
-- 「与任务 N 类似」（把代码再写一遍——工程师可能不按顺序读任务）
-- 只描述做什么、不展示怎么做的步骤（涉及代码的步骤必须有代码块）
-- 引用任何任务都没有定义的类型、函数或方法
-
-## 记住
-- 始终给出精确文件路径
-- 每一步都给出完整代码——如果某一步修改代码，就把代码展示出来
-- 给出精确命令以及预期输出
-- DRY、YAGNI、TDD、频繁提交
+不写 TBD、TODO、“以后实现”“加适当校验”“补测试”等不能直接执行的指示；不引用未定义的接口，不只描述要改什么而不展示改法。
 
 ## 自检
 
-写完整份计划之后，用新的眼光看规格，并对照它检查计划。这是你自己执行的检查清单——不是派发子代理。
+写完后自己检查，不派子代理：
 
-**1. 规格覆盖：** 浏览规格中的每一节、每一条需求。你能指出实现它的任务吗？列出所有缺口。
+1. **规格覆盖。** 每条需求都有对应任务，缺口补进计划。
+2. **完整性。** 文件、实现代码、检查和预期输出齐全，没有占位。
+3. **一致性。** 类型、方法、参数和全局约束在任务间一致。
 
-**2. 占位扫描：** 在计划中搜索危险信号——上面「禁止占位」一节中的任何模式。把它们修掉。
-
-**3. 类型一致性：** 后面任务里使用的类型、方法签名和属性名，是否与前面任务中定义的一致？任务 3 里的函数叫 `clearLayers()`，任务 7 里却叫 `clearFullLayers()`，这就是缺陷。
-
-如果发现问题，就地修掉。不必重新审查——修完继续即可。如果发现某条规格需求没有对应任务，把任务补上。
+发现问题就地修正，不另开审查循环。
 
 ## 执行交接
 
-保存计划后，给出执行方式供选择：
+给出保存路径，并让用户选择：
 
-**「计划已完成并保存到 `docs/s-atlas/plans/<filename>.md`。两种执行方式：**
+1. **子代理驱动（推荐）。** 使用[subagent-driven-development](../subagent-driven-development/SKILL.md)，每任务新实现者，按两阶段评审推进。
+2. **会话内执行。** 使用[executing-plans](../executing-plans/SKILL.md)，分批执行并设检查点。
 
-**1. 子代理驱动（推荐）** - 我为每个任务派发一个全新子代理，任务之间做评审，迭代快
-
-**2. 会话内执行** - 在本次会话中使用 executing-plans 执行任务，分批执行并设检查点
-
-**用哪种方式？」**
-
-**若选择子代理驱动：**
-- **必需子技能：** 使用 subagent-driven-development
-- 每个任务一个全新子代理 + 两阶段评审
-
-**若选择会话内执行：**
-- **必需子技能：** 使用 executing-plans
-- 分批执行，并为评审设置检查点
+等待用户选择后进入对应流程，不把写计划本身当作开始实现的授权。

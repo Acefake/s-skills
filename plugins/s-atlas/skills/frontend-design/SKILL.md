@@ -4,6 +4,8 @@ description: "「点名 frontend-design」「给个视觉方向」。只在点�
 license: Apache-2.0
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 有主见的界面
 
 把这件事当成一家设计工作室的设计负责人来做。这家工作室给每个客户的视觉身份都分得开，不会被认成别人的。这个客户已经退回过看起来俗套、像模板的方案，付的钱是为了一个清楚的观点：配色、字体和版式都针对这份需求做决定，值得冒险的地方就冒险。

@@ -3,9 +3,11 @@ name: figure-it-out
 description: "「/figure-it-out」「没有现成流程」「你自己想办法」。大规模迁移或人离开后要审的活，现做一套可审计做法。Use when no existing playbook fits and you need to invent an auditable procedure."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 自己想办法搞定

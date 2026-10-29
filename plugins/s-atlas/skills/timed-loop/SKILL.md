@@ -3,9 +3,11 @@ name: timed-loop
 description: "「/timed-loop」「/loop」「每隔一阵看 CI」「通宵盯到过」。按通过或失败条件反复醒来。一段时长不算完成。Use when work should wake repeatedly until a pass/fail condition is met or it is truly stuck."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 定时循环
@@ -16,24 +18,7 @@ disable-model-invocation: true
 
 卡住的出口：试过几轮、证据说明再试同一种做法不会变，就停下来写明为什么，不要改写目标。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-### Cursor
 
-用 Cursor 内置的 `/loop`。它的原文没有公开。公开文档写的是：`/loop` 按给定间隔反复运行一条提示词或一个 skill；不写固定间隔时，由智能体决定何时醒来；想停就停。可以和 `/goal` 一起用。来源：[Agent Skills](https://cursor.com/docs/skills)、[Agent 概览](https://cursor.com/docs/agent/overview)。
-
-斜杠菜单里有 `/loop` 时，把这次的提示词和间隔交给它，例如 `/loop 1h` 配上检查提示，或 `/loop until <完成条件>`。动态模式是不写死间隔、让它自己决定何时醒来。内置命令负责叫醒主对话。本技能不另做一套计时器。
-
-菜单里没有 `/loop` 时，按下面 OpenCode 一节做，并说明这次没有用到内置命令。
-
-### OpenCode
-
-OpenCode 没有文档化的、能按时叫醒主对话的 `/loop`。派一个后台子智能体盯着完成条件（`subagent`，`background: true`），或者你自己过一会儿再跑同一条检查。回复里写明用的是哪一种。不要假装主对话会被按时叫醒。
-
-### Codex
-
-Codex 的子智能体文档没有按时叫醒主对话的命令。在提示词里写明完成条件和“做完这一轮就停，由父对话再决定要不要再派”。需要守着时，用一个子智能体反复跑检查，父对话等它返回再决定。CLI 的 `/subagents` 用来看线程，不是计时器。
-
-### WorkBuddy 和 Claude Code
-
-两处都没有核对到和 Cursor `/loop` 等价的内置命令。用一个后台盯梢的子智能体，或自己过一会儿再跑同一条检查，并写明用了哪一种。
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

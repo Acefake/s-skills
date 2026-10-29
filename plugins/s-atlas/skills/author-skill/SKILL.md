@@ -3,9 +3,11 @@ name: author-skill
 description: "「/author-skill」「新建一个 skill」「大改 SKILL.md」。按目录、name、description 和步骤写技能说明。文字写完用 /unslop。Use when creating or substantially editing a SKILL.md."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 编写 skill
@@ -41,24 +43,7 @@ description: "「用户会说的这句话」。做什么。Use when <the English
 ---
 ```
 
-## 在不同软件里怎么用
+## 宿主适配
 
-### Cursor
 
-斜杠菜单里如果有内置的 `/create-skill`，用它起草、测试、迭代。它认得 Cursor 自己的目录和校验。没有这条内置命令时，按上面的步骤写。
-
-项目级放 `.cursor/skills/<技能名>/` 或 `.agents/skills/<技能名>/`。个人级放 `~/.cursor/skills/<技能名>/`。文档还写 Cursor 会为了兼容去读 `.claude/skills/`、`.codex/skills/`、`~/.claude/skills/`、`~/.codex/skills/`。
-
-`name` 用小写英文、数字和连字符，并且等于目录名。本插件的技能名都是这种英文 kebab-case。新 skill 也按这个写，不要再用中文目录名。
-
-### OpenCode
-
-按上面的步骤写。个人 skill 不要假设写进某个家目录就会被自动加载。项目里可以放 `.opencode/skills/<技能名>/SKILL.md`（V2 也认旧的 `.opencode/skill/`）。写完告诉用户怎么让这次会话读到它。
-
-### Codex
-
-按上面的步骤写。文档化的项目位置包括 `.agents/skills/<技能名>/SKILL.md`。个人目录没有在这次核对的 Codex 文档里写成唯一路径时，先放仓库里的 `skills/<技能名>/SKILL.md`，并告诉用户。
-
-### WorkBuddy 和 Claude Code
-
-Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目级放 `.claude/skills/`。WorkBuddy 的个人目录这次没有单独的文档，先放仓库的 `skills/<技能名>/SKILL.md`，并告诉用户怎么加载。两处都用上面的 frontmatter。
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

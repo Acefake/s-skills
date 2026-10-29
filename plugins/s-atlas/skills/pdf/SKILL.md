@@ -2,9 +2,11 @@
 name: pdf
 description: "「读这份 PDF」「填 PDF 表」「合并 PDF」「拆分 PDF」「扫描件 OCR」。提取文字和表格、填写表单，以及压平、旋转、盖章和加密。Use when a task takes a .pdf as input or must produce one."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # PDF
 
@@ -63,8 +65,10 @@ uv run <skill>/scripts/convert_pdf_to_images.py out.pdf check --pages 1-3
 | `flatten_form.py <pdf> <out.pdf>` | 把填好的值画进页面，使其不能再改 |
 | `pdf_coords.py <pdf> <page> <WxH> --to-pdf/--to-image <box>` | 在页面图像素和 PDF 点之间转换框 |
 
-## 在不同软件里怎么用
+## 宿主适配
 
-步骤在 Cursor、OpenCode、Codex、Claude Code、WorkBuddy 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
+步骤在 Codex、Claude Code、Cursor 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
 
 依赖：Python 3.12（推荐 `uv`）和 poppler。扫描件 OCR 另要 Tesseract 和对应语言包，中文简体是 `tesseract-ocr-chi-sim`。
+
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

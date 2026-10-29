@@ -2,9 +2,11 @@
 name: pptx
 description: "「做幻灯片」「做一份 PPT」「写 pptx」「改演示文稿」。用 HTML 或模板创建、修改、阅读 PowerPoint，含备注。中文指定 CJK 字体并留余量。Use when a task produces or modifies a .pptx, or needs its text, layout, or notes read."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # PowerPoint
 
@@ -154,8 +156,10 @@ JSON 把幻灯片键映射到纯文本，一行一段。空字符串清掉该张
 - 用手复制一张幻灯片的 XML 会丢掉图表，并让多张幻灯片共用备注。用 `rearrange.py`。
 - 除了 markitdown 的输出，幻灯片下标到处都从 0 开始。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-步骤在 Cursor、OpenCode、Codex、Claude Code、WorkBuddy 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
+步骤在 Codex、Claude Code、Cursor 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
 
 依赖：Python 3.12（推荐 `uv`）、Node.js、LibreOffice、poppler。本机没有 Chrome 时，html2pptx 还要按 [html2pptx.md](html2pptx.md) 装一次 Chromium。看中文渲染还要 Noto CJK。
+
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

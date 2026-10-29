@@ -3,6 +3,8 @@ name: principle-outcome-oriented-execution
 description: "「直接改到目标结构」「别搞过渡兼容」。有阶段边界的重写和迁移，直接走向目标架构。Use when a planned rewrite or migration should move directly to the target structure."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 以结果为导向地执行
 
 优化的目标是预期中、可验证的最终状态，而不是维持平稳的中间状态。

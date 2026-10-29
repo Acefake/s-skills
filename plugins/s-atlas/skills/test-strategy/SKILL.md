@@ -2,6 +2,8 @@
 name: test-strategy
 description: "「测什么」「放在哪一层测」「补测试方案」。给功能或项目定每层用什么工具、哪些不测，并写出命令。覆盖 TypeScript、React、Vue、Go、Java。Use when deciding what to test and at which layer for a feature, change, or codebase in TypeScript, React, Vue, Go, or Java."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 测试方案
 
 先回答「哪个行为坏了会让用户或调用方吃亏」，再决定测试放在哪一层。测试是为了让改动敢合，不是为了覆盖率数字。

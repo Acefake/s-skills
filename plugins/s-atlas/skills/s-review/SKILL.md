@@ -2,6 +2,8 @@
 name: s-review
 description: "「审这个 PR」「审一下分支」「审本地改动」「做代码审查」。先写意图摘要，按风险列发现，给出能不能合并。默认只出报告。Use when the user asks to review a PR, a branch, a diff, or local changes."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # s-review
 
 审一份代码改动，输出一份中文审查报告。全程中文，说人话，只报有依据的问题。

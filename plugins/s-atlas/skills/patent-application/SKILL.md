@@ -2,9 +2,11 @@
 name: patent-application
 description: "「写专利申请」「权利要求书」「说明书」「专利附图」。起草中国发明专利申请文件（摘要、权利要求书、说明书和附图）并输出 Word，或套用模板版式、修页眉页码、重画专利配图。Use when drafting a Chinese invention patent application, matching a template layout, fixing headers and page numbers, or redrawing patent figures."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 > 来源：开源项目 [cnipa-patent-writer](https://github.com/fnjialun/cnipa-patent-writer)。
 > 本 skill 的辅助文件（`references/`、`scripts/`）放在本 skill 所在的文件夹里，下文路径都相对于这个文件夹。

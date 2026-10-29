@@ -3,6 +3,8 @@ name: principle-attack-the-premise
 description: "「同一前提修了两次都不对」「先验证这个前提」。写下这个前提并直接验证，再写下一个默认它成立的修复。Use when two or more fixes that share a premise fail the same check."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 质疑前提
 
 当两个或更多基于同一个前提的修复，都没能通过同一道检查（gate）时，要怀疑的是前提，而不是这些修复。

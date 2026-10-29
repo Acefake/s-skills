@@ -3,6 +3,8 @@ name: principle-test-behavior-not-implementation
 description: "「测行为别测实现」「内部改了测试不该挂」。断言使用者能看到的东西。Use when writing, changing, or keeping a test."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 测试行为，而不是实现
 
 一个测试，是对代码为它的使用者做了什么的一个断言。使用者可以是调用方、最终用户或另一个服务。行为，就是这些使用者通过他们所用的接口能观察到的东西。包括返回值、错误、他们能读回来的状态，以及对代码之外系统的影响，比如发出的一个请求、写入的一行数据、发出的一条消息。实现，是他们观察不到的东西：私有的辅助函数、内部的调用顺序、中间数据，以及是哪个内部协作者干的活。

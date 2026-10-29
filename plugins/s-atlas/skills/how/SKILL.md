@@ -3,9 +3,11 @@ name: how
 description: "「这是怎么工作的」「教我这块代码」「走读一下」「这个该放哪」。讲子系统的架构和运行流程。问动机用 why。Use when you need to explain how code works, walk a subsystem before changing it, or decide where something belongs."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 怎么工作（How）
@@ -39,33 +41,11 @@ disable-model-invocation: true
 
 讲解使用 `references/explainer-prompt.md` 里规定的几个部分，不适用的就去掉：Overview（概览）、Key Concepts（关键概念）、How It Works（怎么工作）、Where Things Live（东西在哪里）、Gotchas（容易踩的坑）。
 
-## 在不同软件里怎么用
+## 宿主适配
 
 探索读 `how explorer`，讲解读 `how explainer`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。复杂情况先并行派探索者，等齐再派一个讲解者。
 
-### Cursor
-
-每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: true`。探索者的 `model` 是 `how explorer`，没有这行时用 `grok-4.7-xhigh-fast`。讲解者的 `model` 是 `how explainer`，没有这行时用 `claude-opus-5-5-xhigh`。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。
-
-`Task` 拒绝了某个名字，就改用该角色的默认并说一句。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。`readonly: true` 会去掉 MCP。需要 MCP 时不要用这个只读参数，改成提示词里禁止写文件。
-
-### OpenCode
-
-探索者用 `s-how-explorer`，讲解者用 `s-how-explainer`。没有这些文件时，探索用内置 `explore`，讲解也用 `explore`（讲解只产出文字）。复杂情况能并行就在一条消息里多次调用 `subagent`，并加 `background: true`，等通知到齐再派讲解者。未核实：一次回复里的多次 `subagent` 是否保证同时跑。官方只写了单次调用可以前台等待，或 `background: true` 后通知父级。
-
-需要 MCP 时不要用 `explore`。未核实：`explore` 能不能调用 MCP。改用 `general` 或自定义智能体，提示词里禁止写文件，并且不要禁 `execute`。不要在调用上传 `model`。
-
-### Codex
-
-探索用内置 `explorer`，或 `s-how-explorer`。讲解用 `s-how-explainer`，或在提示词里点名模型。复杂情况写成：Spawn one explorer subagent per angle. Each uses model \<how explorer\> with model_reasoning_effort \<档位\>. Wait for all, then spawn one explainer on model \<how explainer\>. 没有 toml、也点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
-
-### WorkBuddy
-
-探索派 `Explore` 或 `Plan`。讲解用 `Agent`，`subagent_type: "general-purpose"`，提示词里禁止写文件。能拉开差异时探索用 `"lite"`，讲解用 `"reasoning"`。
-
-### Claude Code
-
-探索派 `Explore`。讲解用 `Agent`，`model` 为 `opus` 或完整 ID；探索用 `sonnet` 或 `haiku`。需要 MCP 时不要用 `Explore`。
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 

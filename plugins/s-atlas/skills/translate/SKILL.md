@@ -2,9 +2,11 @@
 name: translate
 description: "「翻译成英文」「译成中文」「中英对照」「帮我翻译这段」。代码、命令、路径和 Markdown 结构保持原样，中文用白话。Use when translating text or documents between Chinese and English, including a bilingual version."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 中英翻译
@@ -39,6 +41,8 @@ description: "「翻译成英文」「译成中文」「中英对照」「帮我
 - 不把翻译和改写混成一次。用户要的是改写，就先说明你改了哪一层意思。
 - 产品界面上的文案不是这里的文档翻译。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-Cursor、OpenCode、Codex、Claude Code、WorkBuddy 都在对话里给出译文。不要依赖某个软件自带的翻译命令。
+Codex、Claude Code、Cursor 都在对话里给出译文。不要依赖某个软件自带的翻译命令。
+
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

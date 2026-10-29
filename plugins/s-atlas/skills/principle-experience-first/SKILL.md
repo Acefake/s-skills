@@ -3,6 +3,8 @@ name: principle-experience-first
 description: "「为用户着想」「别为了好写而将就」。产品和范围上的取舍，选让人用着顺的，少做但做好。Use when a product, UX, or scope tradeoff should favor the person using it."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 体验优先
 
 当实现上的方便和让用户满意冲突时，选让用户满意。

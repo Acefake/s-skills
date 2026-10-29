@@ -3,6 +3,8 @@ name: principle-make-operations-idempotent
 description: "「崩溃重试」「做成幂等」「再跑一遍结果一样」。命令、生命周期或循环中断后续跑，要落到同一结果。Use when a command, lifecycle step, or loop must land on the same result after a crash and retry."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 让操作幂等
 
 设计操作时，要让它不管运行多少次、上一次运行停在哪里，都能收敛到正确的状态。每个会改变状态的操作都应该回答：“如果它运行两次会怎样？如果上一次运行在中途崩溃了会怎样？”

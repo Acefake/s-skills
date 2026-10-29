@@ -2,9 +2,11 @@
 name: docx
 description: "「写个 Word」「做一份 docx」「改修订」「加批注」「读这份 Word」。创建、修改、审阅 Word，含脚注、表格、图片和页面设置。中文必须设置 w:eastAsia。Use when a task produces or modifies a .docx, reviews or redlines one, or needs its text, comments, or tracked changes read."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # Word 文档
 
@@ -77,8 +79,10 @@ uv run <skill>/ooxml/scripts/unpack.py contract.docx unpacked
 - **改到别人修订的中间。** 要删掉别人插入内容里的一段，把你的 `<w:del>` 嵌进去。不要直接改他们的文字。
 - **用 pandoc 当编辑器。** 它会重写整篇文档，丢掉格式、批注和修订。只用它来读，不要用它产出交付文件。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-步骤在 Cursor、OpenCode、Codex、Claude Code、WorkBuddy 里相同。脚本在本机终端跑，不依赖某个聊天软件的专用工具。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
+步骤在 Codex、Claude Code、Cursor 里相同。脚本在本机终端跑，不依赖某个聊天软件的专用工具。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
 
 依赖：Python 3.12（推荐 `uv`）、Node.js（新建文档时）、LibreOffice、poppler、pandoc。看中文渲染还要 Noto CJK。
+
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

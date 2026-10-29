@@ -3,9 +3,11 @@ name: ketchup
 description: "「/ketchup」「我离开之后变了什么」。用几句平话和小图补上这次对话里要你处理的变化。Use when the user returns and needs what changed in this conversation since they left."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 补进度

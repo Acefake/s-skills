@@ -2,9 +2,11 @@
 name: control-ui
 description: "「打开浏览器点一遍」「截个图」「复现这个界面 bug」。用本地浏览器或 CDP 驱动网页、IDE 或 Electron。Use when you need to drive a real browser or desktop UI to collect evidence."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 操作界面
@@ -112,8 +114,10 @@ await browser.close();
 - 不要写死别的仓库的选择器、端口或脚本路径。用当前仓库自己的标记。
 - 做完关掉开发服务器、调试会话和临时配置。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-装置跑在能打开这个界面的那台机器上。Cursor、OpenCode、Codex 都用上面的 Playwright 或 CDP。子智能体在另一台机器上、而界面只在用户电脑上时，就在用户这台机器上跑，并写明跑在哪。
+装置跑在能打开这个界面的那台机器上。Codex、Claude Code、Cursor 都用上面的 Playwright 或 CDP。子智能体在另一台机器上、而界面只在用户电脑上时，就在用户这台机器上跑，并写明跑在哪。
 
-WorkBuddy 和 Claude Code 同样用本机浏览器工具。没有 Playwright 时，用环境里已经有的浏览器工具，不要为了这一次新加依赖。
+Claude Code 同样用本机浏览器工具。没有 Playwright 时，用环境里已经有的浏览器工具，不要为了这一次新加依赖。
+
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

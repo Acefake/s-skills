@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Bump plugin versions after skill files change.
 
-Claude Code and CodeBuddy keep the installed copy until the version string
+Plugin hosts keep the installed copy until the version string
 in plugin.json changes. Run this after editing a plugin, then commit the
 manifest and plugin-versions.lock.json updates together.
 
@@ -9,7 +9,7 @@ manifest and plugin-versions.lock.json updates together.
     python3 scripts/bump_plugin_version.py --all
 
 The script adds 1 to the last number: 1.0.0 becomes 1.0.1. To publish
-1.1.0 or 2.0.0, edit the version in the lock file and in all four manifests
+1.1.0 or 2.0.0, edit the version in the lock file and in all registered manifests
 for that plugin, then run scripts/check_marketplace.py.
 """
 

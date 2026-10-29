@@ -3,6 +3,8 @@ name: principle-fix-root-causes
 description: "「别打补丁」「找到第一次出错的地方」「修根因」。调试时把症状追到系统第一次出错的地方。Use when debugging, and the fix should land where the system first went wrong."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 修根本原因
 
 调试时，修的是故障本身，而不是它露出来的地方。症状是错误状态变得可见的地方。根本原因是系统第一次做了不该做的事、或者没处理好本该处理的状态的地方。

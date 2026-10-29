@@ -1,7 +1,7 @@
 """Shared layout rules for the s-skills plugin marketplace.
 
 Plugin versions live only in each plugin's manifest files. Marketplace
-entries do not repeat the version: Claude Code and CodeBuddy use the copy
+entries do not repeat the version: supported hosts use the copy
 in plugin.json, and they warn if the two disagree.
 """
 
@@ -19,7 +19,7 @@ LOCK_PATH = ROOT / "plugin-versions.lock.json"
 PLUGIN_ORDER = ("s-atlas",)
 
 EXPECTED_SKILL_COUNTS = {
-    "s-atlas": 77,
+    "s-atlas": 78,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.
@@ -69,7 +69,6 @@ MANIFEST_REL_PATHS = (
     "plugin.json",
     ".cursor-plugin/plugin.json",
     ".claude-plugin/plugin.json",
-    ".codebuddy-plugin/plugin.json",
 )
 
 SEMVER_RE = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
@@ -98,7 +97,7 @@ def write_json(path: Path, data: object) -> None:
 
 
 def content_hash(name: str) -> str:
-    """Hash everything in the plugin except the four manifest files.
+    """Hash everything in the plugin except its registered manifest files.
 
     Manifests hold the version string. Leaving them out means a version bump
     does not look like a content change, and a content change does not hide

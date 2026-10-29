@@ -3,9 +3,11 @@ name: tdd
 description: "「先写失败测试」「补个回归测试」「用 TDD 修」。有便宜的本地测试点就先写会失败的测试再修。路径贵或说不清就跳过。Use when fixing a bug that has a cheap local test point, or when the user asks for TDD, a failing test first, or a regression test."
 disable-model-invocation: false
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 用 TDD 修 bug

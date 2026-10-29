@@ -5,9 +5,11 @@ disable-model-invocation: true
 icon: crown
 color: yellow
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # s-mode 工作模式
@@ -22,7 +24,7 @@ color: yellow
 
 - 不简单的改动、架构决定，或者“我们确定吗？” → **how** skill。
 - 教我这个、讲讲这个子系统、帮我弄懂一块代码 → **how**（要动机再用 **why**）。已删除的 teach 不要再加载。
-- 正要就“用哪种做法”、“我该怎么做”或“这个该做什么”这样的岔路去用向用户提问的工具（各软件里的名字见文末“在不同软件里怎么用”）→ 问之前先分类。如果答案是一个你运行点什么就能观察到的事实（行为、时间、布局、输出、性能，甚至一个评估能不能区分出差别），那就不该由人来回答。按 Prototype playbook（`playbooks/prototype.md`）画个草图，让结果来决定。如果任务是一次只读的 Investigation（调查），交付物是一个带引用的答案，那就留在调查里，根据证据回答，而不是去做草图。只有在遇到任何实验都定不下来的、真正属于产品或偏好上的决定时，才去提问。在获得完全自主授权的情况下，对授权范围内的决定，直接做决定、照着做、并汇报，不要求回复，也不提供选项。在授权下，对于只有操作者才能做的决定，采用一个默认值，汇报时给出完整的解释，并用平实的话说明操作者可以让你改做什么。操作者用自己的话来回答。永远不要给一个让他照着输回来的简写口令。操作者点名的关卡，以及 Autonomy（自主）一节里“Always pause”（总要暂停）清单上的事，仍然需要操作者。
+- 正要就“用哪种做法”、“我该怎么做”或“这个该做什么”这样的岔路去用向用户提问的工具（各软件里的名字见宿主适配参考）→ 问之前先分类。如果答案是一个你运行点什么就能观察到的事实（行为、时间、布局、输出、性能，甚至一个评估能不能区分出差别），那就不该由人来回答。按 Prototype playbook（`playbooks/prototype.md`）画个草图，让结果来决定。如果任务是一次只读的 Investigation（调查），交付物是一个带引用的答案，那就留在调查里，根据证据回答，而不是去做草图。只有在遇到任何实验都定不下来的、真正属于产品或偏好上的决定时，才去提问。在获得完全自主授权的情况下，对授权范围内的决定，直接做决定、照着做、并汇报，不要求回复，也不提供选项。在授权下，对于只有操作者才能做的决定，采用一个默认值，汇报时给出完整的解释，并用平实的话说明操作者可以让你改做什么。操作者用自己的话来回答。永远不要给一个让他照着输回来的简写口令。操作者点名的关卡，以及 Autonomy（自主）一节里“Always pause”（总要暂停）清单上的事，仍然需要操作者。
 - 任何代码 → 先说出数据形状，并按 **principle-model-the-domain** 选择它的组织结构。
 - 跨函数边界的代码 → **architect** skill，在实现之前做并行的设计探索。
 - 并行分派 → 覆盖矩阵、比赛、连环检验和探索分区用 **swarm** skill。需要选基础、做嫁接的设计或代码比拼用 **arena**。
@@ -95,9 +97,9 @@ color: yellow
 
 ## 子智能体
 
-**在 playbook 的某一步里派出的任何子智能体（subagent，派出去干活的小助手，比如写代码的代理、临时的帮手），都用能读写文件、能用全部工具的通用类型。** 每个子智能体的提示词里都写上这个 SKILL.md 的绝对路径，要求它动手前先完整读一遍（包括上面的原则索引），用到哪条原则，就去读那条原则的 skill。收到 `/s-mode` 的那个对话负责运行 playbook。永远不要派一个子智能体去运行 playbook 本身。被分派到的工作流程 skill（`how`、`why`、`interrogate`、`reflect`、`swarm`）会为了多模型审查自己选子智能体的类型和模型。尊重 skill 的规定，不要强行统一。各软件里这个通用类型叫什么，见文末“在不同软件里怎么用”。
+**在 playbook 的某一步里派出的任何子智能体（subagent，派出去干活的小助手，比如写代码的代理、临时的帮手），都用能读写文件、能用全部工具的通用类型。** 每个子智能体的提示词里都写上这个 SKILL.md 的绝对路径，要求它动手前先完整读一遍（包括上面的原则索引），用到哪条原则，就去读那条原则的 skill。收到 `/s-mode` 的那个对话负责运行 playbook。永远不要派一个子智能体去运行 playbook 本身。被分派到的工作流程 skill（`how`、`why`、`interrogate`、`reflect`、`swarm`）会为了多模型审查自己选子智能体的类型和模型。尊重 skill 的规定，不要强行统一。各软件里这个通用类型叫什么，见宿主适配参考。
 
-**每次派子智能体的默认设置。** 后台运行（不用干等它，做完再取结果）。用能写文件的通用模式。只做只读探索时可以用只读类型，但有的软件的只读模式会去掉 MCP 工具，需要 MCP 的活别用只读。给文件路径，而不是把上下文整段贴进去。每个角色明确指定模型：默认写代码用快速的写代码模型，文字和判断用判断力最强的模型（各软件里的具体模型名和配置方法见文末）。写代码的代理按难度分档。最难的改动（横跨多处的设计、棘手的并发、精妙的算法）交给你判断力最强的模型，不管这个任务是需要对模糊的意图做判断，还是一串要一字不差执行的、规定得很精确的步骤。简单的机械性修改交给你的快速写代码模型。如果你的软件里有 s 的模型规则（`/setup-s-models` 生成的，见文末），规则里每个角色的那一行，会覆盖这些默认值，以及被分派到的 skill（`how`、`why`、`arena`、`swarm`、`architect`、`interrogate`、`reflect`）里的模型选择。没有对应行的角色保持默认值；角色行写的是 `inherit-parent` 或 `auto` 的，那个角色用父级聊天的模型运行（派的时候不指定模型）。每个写代码类 playbook 配置的模型，来自它对应的那一行（`feature, refactoring`、`bug-fix`、`perf-issue` 或 `hillclimb`），最难的改动读 `hardest tasks`。文字和判断读 `judgment and prose`。软件里没有这份规则时，按文末的对应关系选模型；选不了就不指定，让它继承父级。
+**每次派子智能体的默认设置。** 后台运行（不用干等它，做完再取结果）。用能写文件的通用模式。只做只读探索时可以用只读类型，但有的软件的只读模式会去掉 MCP 工具，需要 MCP 的活别用只读。给文件路径，而不是把上下文整段贴进去。每个角色明确指定模型：默认写代码用快速的写代码模型，文字和判断用判断力最强的模型（具体模型名和配置方法见宿主适配参考）。写代码的代理按难度分档。最难的改动（横跨多处的设计、棘手的并发、精妙的算法）交给你判断力最强的模型，不管这个任务是需要对模糊的意图做判断，还是一串要一字不差执行的、规定得很精确的步骤。简单的机械性修改交给你的快速写代码模型。如果你的软件里有 s 的模型规则（`/setup-s-models` 生成的，见宿主适配参考），规则里每个角色的那一行，会覆盖这些默认值，以及被分派到的 skill（`how`、`why`、`arena`、`swarm`、`architect`、`interrogate`、`reflect`）里的模型选择。没有对应行的角色保持默认值；角色行写的是 `inherit-parent` 或 `auto` 的，那个角色用父级聊天的模型运行（派的时候不指定模型）。每个写代码类 playbook 配置的模型，来自它对应的那一行（`feature, refactoring`、`bug-fix`、`perf-issue` 或 `hillclimb`），最难的改动读 `hardest tasks`。文字和判断读 `judgment and prose`。软件里没有这份规则时，按文末的对应关系选模型；选不了就不指定，让它继承父级。
 
 **让模型和工作相匹配。** 每次派出之前，从这个角色的那一行或默认值出发，挑选这项工作需要的推理等级和速度。`/setup-s-models` 的预算决定每个角色的起始等级，默认是 xhigh。对最难或最精细的工作，提高一级，最高到 max。判断类工作降低一级，常规工作降低两级或更多。只有在工作很紧急时才用快速模式，紧急的意思是 CI 或主干是红的，或者有人正卡着等这个结果。否则用标准速度，也就是同一个模型的非快速版。验证是例外，保持用 `swarm workers` 的模型和速度（各软件的默认值见文末）。只改推理强度和是否为快速版，保持角色指定的系列不变，这样一个多样化的审查组仍然是多样化的。如果这个系列在那个等级和速度上没有模型名，就用它最接近的那个。用 `auto` 或 `inherit-parent` 的角色保持用父级的模型。如果派子智能体的工具拒绝了调整后的模型名，不要再试另一个调整后的模型名。用这个角色的那一行或默认值，并说明一下。软件不能调推理等级或快速版的，这一段只当作“难活用强模型、简单活用快模型”的提示。
 
@@ -153,45 +155,14 @@ color: yellow
 - **Worktree and simulator cleanup**（清理 worktree 和模拟器）。通过清理已合并或被放弃的 git worktree 和过时的 iOS 模拟器来回收本地磁盘空间（“what's using my disk”（什么占了我的磁盘）、“clean up worktrees”（清理 worktree）、“prune safe-to-prune worktrees”（清理可以安全清理的 worktree）、“free up space”（腾出空间）、“delete old simulators”（删除旧的模拟器））。文件：`playbooks/worktree-cleanup.md`。
 - **Opening a PR**（开 PR）。在其他每个 playbook 的结尾调用。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-这一套 skill 会在好几个软件里用，正文只写通用说法。下面这张表说明，正文里的通用说法在各个软件里具体对应什么。OpenCode 和 Codex 两列按各自当前的官方文档写，链接在格子里。WorkBuddy 的工具名来自以前在 WorkBuddy 里适配的结果。Claude Code 是短兜底。Hermes 一列按 Hermes Agent 官方文档写。模型配置写到哪，以 [setup-s-models](../setup-s-models/SKILL.md) 为准。没有文档支撑的格子写「不确定」。和官方工具页不一致、只在 issue 里出现的做法，标「未核实」。
+角色与模型选择遵循本技能前文；具体派发工具、配置位置和模型参数见[宿主适配](../../HOSTS.md)。找不到工具或模型时，使用当前宿主实际支持的替代并说明；不能派子代理时按顺序执行，不声称已并行。
 
-| 正文里的说法 | Cursor | WorkBuddy | Claude Code | Codex | OpenCode | Hermes |
-|---|---|---|---|---|---|---|
-| 派一个子智能体 | `Task` 工具 | `Agent` 工具（`TaskCreate` 是待办清单，不是派子智能体，别混用） | `Agent` 工具（旧版叫 `Task`，现在 `Task` 仍可当别名用） | 用话派。当前版本默认开启。直接说 “spawn two agents”、“delegate this work in parallel” 或 “use one agent per point”，并写明等齐再汇总。CLI 用 `/subagents` 看线程。IDE 有后台面板时，面板在输入框上方。也听从 `AGENTS.md` 和 skill 里要求分派的句子。[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) | `subagent` 工具。传入 agent ID、短 `description`、完整 `prompt`。只能派 `mode: subagent` 的智能体。默认嵌套一层。[Tools](https://opencode.ai/v2/docs/tools) | `delegate_task` 工具。子智能体看不到对话，`goal` 写目标，`context` 写全它要的信息。多个用 `tasks=[...]` 一次派，并发上限在 `config.yaml` 里配。[Delegation](https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation) |
-| 能写文件的通用类型 | `subagent_type: "s-agent"`，定义在 `agents/s-agent.md`。提示词要求先完整读本 SKILL.md。软件不认这个类型时，退回 `generalPurpose`，提示词写上同样的阅读要求 | `subagent_type: "general-purpose"`。提示词的第一句要求先完整读本 SKILL.md。这个软件没有 `s-agent` 这个类型名 | `subagent_type: "general-purpose"`。提示词的第一句要求先完整读本 SKILL.md。这个软件没有 `s-agent` 这个类型名 | 内置 `worker`（实现和修复）。提示词的第一句要求先完整读本 SKILL.md。要固定模型就写 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录）。必填 `name`、`description`、`developer_instructions`。同名盖过内置。自定义智能体继承父级的权限、provider 和 MCP，不能改沙箱 | 内置 `general`（工具面宽，不能再派子智能体）。提示词的第一句要求先完整读本 SKILL.md。要固定模型就写 `~/.config/opencode/agents/<name>.md`，`mode: subagent`。漏写 `mode` 时新智能体默认是 `primary`，派不出去。[Agents](https://opencode.ai/v2/docs/agents/) | 没有类型名，子智能体继承父级的工具集。`context` 的第一句要求先完整读本 SKILL.md |
-| 只读探索 | 同一个 `Task` 加 `readonly: true`（会去掉 MCP 工具） | 没有 `readonly` 参数，改派 `Explore`（只读探索）或 `Plan`（只读规划） | 派 `Explore`（只读探索）或 `Plan`（只读规划） | 内置 `explorer`。提示词里可以要求不改文件。文档写明这不会变成单独的只读沙箱，子智能体继承父级这一轮的沙箱和审批 | 内置 `explore`（搜索和读，不改文件）。自定义智能体可以在 `permissions` 里对 `edit` 和 `shell` 设 `effect: deny`。需要 MCP 时用 `general`，不要用 `explore` 代替。未核实：`explore` 能不能调用 MCP | 没有只读类型。在 `context` 里要求不改文件，这只是要求，不是沙箱 |
-| 向用户提问的工具 | `AskQuestion` | `AskUserQuestion` | `AskUserQuestion` | `request_user_input`（只有主对话能用，子智能体不能问） | `question` 工具。每个问题有短标题、提示和选项，总有自由输入。[Tools](https://opencode.ai/v2/docs/tools) | `clarify`（子智能体不能用） |
-| 后台运行和取结果 | `run_in_background: true`；做完结果回到主对话 | `run_in_background: true`；取结果用 `TaskOutput` | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 | 提示词里写 “Wait for all, then summarize”。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`），不写时由 Codex 自己选默认。没有文档化的单独取结果工具名 | `subagent` 的 `background: true` 立刻返回，做完通知父级。用返回的 `sessionID` 继续同一个子会话。命令文件可以写 `subagent: true`，父级保持自己的模型和智能体。[Commands](https://opencode.ai/v2/docs/commands) | 主对话里派出的子智能体自动在后台跑，立刻返回句柄，做完结果作为新消息回来 |
-| 指定模型 | `model` 写具体模型名。写代码和 `swarm workers` 在这些名字确实可用时用 `grok-4.7-xhigh-fast`，文字、判断和最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级。这两个名字不要拿到别的软件里用 | 没有具体模型名可填。省略 `model` 就继承父级；要拉开差异时，交替用 `"lite"`（快、省）和 `"reasoning"`（推理强） | `model` 写别名 `sonnet`、`opus`、`haiku`，或完整模型 ID；不写或写 `inherit` 就继承父级 | 见下面「Codex 怎么指定模型」。不要把 Cursor 的模型名写进来 | 见下面「OpenCode 怎么指定模型」。不要把 Cursor 的模型名写进来 | 不能按次指定。`~/.hermes/config.yaml` 的 `delegation.model` 和 `delegation.provider` 给所有子智能体一个模型，不写就继承父级 |
-| s 模型规则（`/setup-s-models`） | `~/.cursor/rules/s-models.mdc`，`alwaysApply: true`。frontmatter 的 description 是 `s per-role model choices (overrides skill defaults)` | `~/.codebuddy/rules/s-models.md`（读不到再试同名 `.mdc`）。不要写 Cursor 的目录 | `~/.claude/rules/s-models.md` | `~/.codex/AGENTS.md` 里标记的那一段；有 `AGENTS.override.md` 就改那个。单独模型再写 `~/.codex/agents/s-<角色>.toml` | `~/.config/opencode/AGENTS.md` 里标记的那一段。V2 不认 `CLAUDE.md`。单独模型再写 `~/.config/opencode/agents/s-<角色>.md` | 不确定。Hermes 没有全局 `AGENTS.md`，项目根的 `AGENTS.md` 会读 |
-| 子智能体在哪里跑 | `environment: "cloud"` 放到云端；从非默认的已推送分支开始用 `cloud_base_branch`。需要用户电脑上的文件、界面或登录态时用 `environment: "local"`。云端状态在 Cursor 的后台面板看 | 没有这个参数，全在本机跑 | 不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里 | 子智能体文档没有 `environment` 或 `cloud_base_branch`。本地 Codex 跟父级同一套沙箱，在本机跑。ChatGPT Work 是另一套托管环境，不要套过来。从别的分支开始：把 SHA 写进提示词 | 工具页没有云端参数，`subagent` 开的是本机子会话。从别的分支开始：把 SHA 写进提示词。`worktree_create` 再 `session_move` 是把会话挪到 worktree，不是放到另一台机器 | 本机，每个子智能体有自己的终端会话。从别的分支开始：把 SHA 写进 `context` |
-| 让主对话定时醒来 | 跑 `/timed-loop`。菜单里有 `/loop` 时交给它：`/loop 1h`、`/loop until <检查>`，或不写间隔的动态模式。本技能不另做计时器 | 跑 `/timed-loop`。没有文档化的叫醒命令，按那份 skill 用后台盯梢或自己再查，并写明用了哪一种 | 同 WorkBuddy | 同 WorkBuddy | 同 WorkBuddy | 同 WorkBuddy |
-| 写 SKILL.md | 跑 `/author-skill`。菜单里有内置 `/create-skill` 时用它起草 | 跑 `/author-skill`。目录按那份 skill 文末的说明 | 跑 `/author-skill`。个人 skill 可以放在 `~/.claude/skills/<名字>/SKILL.md` | 跑 `/author-skill`。目录按那份 skill 文末的说明 | 同 Codex。不要假设写进某个家目录就会自动生效 | 跑 `/author-skill`。个人 skill 放 `~/.hermes/skills/<名字>/SKILL.md` |
+### 通用回退
 
-### Codex 怎么指定模型
+找不到工具、类型或模型时，按[宿主适配](../../HOSTS.md)选择实际可用的替代并说明，不声称已经检测或执行。不能派子代理时由主对话顺序完成独立步骤并自行审查，说明没有独立审查；复杂步骤可在宿主支持时换更强模型再核验。
 
-派出时在提示词里点名模型和推理档位，例如 “Spawn one subagent using model \<模型\> with model_reasoning_effort \<档位\>”。模型名用这次账号里真有的。文档举例是 `gpt-6.1-sol`（重活）和 `gpt-6-luna`（快、窄），账号没有就不要写。档位只有该模型支持才能写：`ultra`、`max`、`xhigh`、`high`、`medium`、`low`。文档建议 GPT-6 Luna 从 `high` 起，GPT-6 Astra 从 `low` 起。
+正文和playbook中的Cursor模型名只用于当前确实可用的Cursor能力；其他宿主使用各自参考。“Subagents section”指本文“子智能体”一节。
 
-自定义文件 `~/.codex/agents/<name>.toml` 里如果写了 `model` 或 `model_reasoning_effort`，文件优先。文件应用前，每个字段先按「这次派出时点名的值 → `[agents]` 的对应默认 → 父级」解析。文件只写 `model`、没写推理档位时，会保留刚才解析到的档位；模型不支持那个档位，就要在文件里把 `model_reasoning_effort` 一起写上。两个字段都没配，子智能体继承父级。
-
-`~/.codex/config.toml` 的 `[agents]` 里，`default_subagent_model` 和 `default_subagent_reasoning_effort` 是全体一个默认，拉不开多个角色。`agents.enabled` 默认 `true`。
-
-profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/config.toml`，再盖上 `~/.codex/<name>.config.toml` 的顶层键。Codex 0.134.0 起不再读 `[profiles.<name>]`，也不再支持顶层 `profile = "..."`。未核实：能不能给一个被派的子智能体单独选 profile。文档没有这么写，不要这么做。
-
-### OpenCode 怎么指定模型
-
-把模型写在智能体的 `model` 字段，格式 `provider/model`，档位接在 `#` 后面，例如 `anthropic/claude-sonnet-4-5#high`。没写 `model` 的子智能体继承父会话的模型。命令的优先级是：命令自己的 `model`，否则所选智能体的 `model`，否则当前会话的模型。
-
-官方工具页没有给 `subagent` 调用写 `model` 参数。未核实：调用时再传 `model`。维护者在 [issue 6651](https://github.com/anomalyco/opencode/issues/6651)（2026-10-01，关单，称 [#49194](https://github.com/anomalyco/opencode/pull/49194) 已加上）和仍开放的 [issue 51071](https://github.com/anomalyco/opencode/issues/51071) 里写了可选参数，优先级是调用参数、然后智能体配置、然后父会话。按工具页来：不要传这个参数，用 [setup-s-models](../setup-s-models/SKILL.md) 写的 `s-<角色>.md` 钉住模型。
-
-新文件用 V2 字段。不要新写单数 `agent`、分开的 `variant`、`prompt`、`permission`、`tools`、`disable`、`maxSteps`。
-
-几条总规则：
-
-- **找不到就用最接近的。** 某个工具名、类型名或模型名在你的软件里找不到时，用本软件里最接近的那个，并在回复里说一句用了什么替代。不要卡住，也不要假装有这个工具，或者假装检测到了这个模型。
-- **正文和 playbook 里出现的 Cursor 名字。** playbook 里如果还出现 `grok-4.7-xhigh-fast` 这类名字，或者 “Subagents section” 这种说法，按上面这张表换成你的软件里的对应写法。“Subagents section” 指的就是本文的“子智能体”一节。不要把 Cursor 的模型名填进别的软件。
-- **派不了子智能体的软件。** 就在主对话里按顺序自己做，把原本要派出去的那部分当成一个独立的步骤，结果照样自己审查。软件支持的话，难的步骤换一个更强的模型再做一遍。
-- **其他 s skill 里的模型设置。** `how`、`why`、`interrogate`、`swarm`、`reflect`、`arena`、`architect` 读的是 `/setup-s-models` 为**当前软件**写的那份配置，不是 `~/.cursor/rules/`。读不到配置，或软件不能给子智能体指定模型，就省略模型，让它跟父对话走，并说一句。
-- **五个软件都对不上。** `/setup-s-models` 会把正文写到 `~/s-models.md`。那个文件不会自动生效。
+how、why、interrogate、swarm、reflect、arena、architect读取setup-s-models为当前宿主写的角色配置，不固定读Cursor路径；缺少配置或无法单独选模型时继承父会话并说明。

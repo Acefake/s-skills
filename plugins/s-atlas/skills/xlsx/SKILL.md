@@ -2,9 +2,11 @@
 name: xlsx
 description: "「做表格」「做个 Excel」「写 xlsx」「加公式」「CSV 转成表」。创建、修改、分析 .xlsx 和 .xlsm。派生数字写成单元格公式，保存后用 LibreOffice 重算。Use when a task produces or modifies a spreadsheet, turns CSV or TSV into one, or needs its values, formulas, or formatting read."
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # Excel 工作簿
 
@@ -87,8 +89,10 @@ uv run <skill>/scripts/recalc.py model.xlsx
 - **结构：** 每个假设单独占一个标了名的单元格，被引用，不要写进公式里。每一期预测用和前一期相同的公式。
 - **来源：** 每个手写数字都在单元格批注或相邻单元格里给出处，例如 "Source: Company 10-K, FY2025, p. 45"。
 
-## 在不同软件里怎么用
+## 宿主适配
 
-步骤在 Cursor、OpenCode、Codex、Claude Code、WorkBuddy 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
+步骤在 Codex、Claude Code、Cursor 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
 
 依赖：Python 3.12（推荐 `uv`）和 LibreOffice。看中文时还要 Noto CJK。
+
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

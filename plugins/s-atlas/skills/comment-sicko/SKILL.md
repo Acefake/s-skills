@@ -3,9 +3,11 @@ name: comment-sicko
 description: "「派 comment-sicko」「删掉不该留的注释」「标成 MUST KILL」。被 /no-comments 派去读 diff。不要当主对话跑。Use when no-comments dispatches comment-sicko to delete comments that should not stay and mark surprises in our own code MUST KILL."
 disable-model-invocation: true
 ---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 专挑注释
@@ -36,22 +38,8 @@ disable-model-invocation: true
 
 只交报告。写出动过的文件、删除数量、每条 `MUST KILL` 一行，以及跳过了什么。
 
-## 在不同软件里怎么用
+## 宿主适配
 
 这是子智能体的提示词，不是主对话的流程。主对话走 `/no-comments`。派的时候把范围传进来，不要把上面的规则再复述一遍。
 
-### Cursor
-
-本插件在 `agents/comment-sicko.md` 注册了这个子智能体。用 `Task`，`subagent_type: "comment-sicko"`，`readonly: true`。软件不认这个类型时，用 `generalPurpose`，`readonly: true`，提示词只写：先完整读本文件，再审范围。
-
-### OpenCode
-
-`subagent` 派一个 `mode: subagent` 的智能体。提示词要求它先完整读本文件，并且不要改应用代码。内置 `explore` 可以读。没有单独的只读沙箱时，在提示词里禁止写应用代码。
-
-### Codex
-
-用话派一个只读的子智能体，点名内置 `explorer`，或一个自定义智能体。提示词写明先完整读本文件，不要改应用代码。这句话不会变成单独的只读沙箱。
-
-### WorkBuddy 和 Claude Code
-
-派一个只读子智能体（WorkBuddy 用 `Explore`，Claude Code 用 `Explore`）。提示词要求先完整读本文件。没有只读类型时，用通用类型，并在提示词里禁止写应用代码。
+Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

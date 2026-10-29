@@ -1,10 +1,8 @@
-"""Apply the repository's invocation policy and host entry point."""
+"""Synchronize Codex invocation metadata without rewriting skill instructions."""
 from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-# Bodies that mention models, delegation, browsers, schedules or Cursor get the host note.
-HOST_SPECIFIC = re.compile(r'cursor|subagent|子智能体|模型|浏览器|定时|Task\(|model', re.I)
 
 
 def main():
@@ -13,13 +11,7 @@ def main():
         text = path.read_text(encoding='utf-8')
         end = text.index('\n---', 3)
         implicit = not bool(re.search(r'^disable-model-invocation:\s*true\s*$', text[3:end], re.M))
-        implicit = implicit or path.parent.name.startswith('principle-') or path.parent.name == 'setup-s-models'
         if implicit:
-            text = text.replace('disable-model-invocation: true', 'disable-model-invocation: false')
-            text = text.replace(
-                '`disable-model-invocation: false` 表示这个 skill 只能由用户主动调用，AI 不会自己调用它。',
-                '本技能允许按描述匹配任务并自动加载，也可以主动点名调用。'
-            )
             automatic += 1
         policy = path.parent / 'agents/openai.yaml'
         policy.parent.mkdir(exist_ok=True)
@@ -32,14 +24,6 @@ def main():
         else:
             metadata = metadata.rstrip() + '\npolicy:\n' + setting + '\n'
         policy.write_text(metadata.lstrip('\n'), encoding='utf-8')
-        marker = '\n## 运行环境适配\n\n在 Codex 或 T3 Code 中，执行前先阅读[宿主适配规则](../../HOSTS.md)；其中的模型、委派、浏览器和定时任务规则优先于下文的 Cursor 专用示例。\n'
-        body = text.replace(marker, '')
-        end = body.index('\n---', 3) + 4
-        if HOST_SPECIFIC.search(body[end:]):
-            text = body[:end] + marker + body[end:]
-        else:
-            text = body
-        path.write_text(text, encoding='utf-8')
     print(f'Automatic skills: {automatic}')
 
 
