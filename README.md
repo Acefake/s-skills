@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.14，共 **78** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.16，共 **78** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor会按你说的话自动挑对应的技能。
 
@@ -43,11 +43,11 @@ Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-a
 
 安装后显式调用 `setup-s-instructions`，初始化当前宿主的全局技能提示词。Codex 在技能选择器中选择它；支持插件命令的宿主可用 `/s-atlas:setup-s-instructions`。
 
-Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`，默认 `~/.claude/CLAUDE.md`。初始化保留已有内容，首改备份，只维护 s-atlas 标记块，重复执行不会重复添加。Cursor 使用全局 User Rules；没有可用的设置编辑工具时，技能给出完整提示词供粘贴，并标记尚未配置。
+Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`，默认 `~/.claude/CLAUDE.md`。初始化从当前插件的 `AGENTS.md` 和 `plugin.json` 生成带版本的完整规则。已知旧规则原位迁移，保留用户其他内容和首份备份，重复执行不会重复添加。版本或正文变化时只读检查报告过期，显式初始化或更新后同步。Cursor 使用全局 User Rules；没有可用的设置编辑工具时，技能给出完整提示词供粘贴，并标记尚未配置。
 
 日常使用技能时，每个主会话只读检查一次；缺失、过期或无法确认时提醒，继续原任务。安装与普通技能调用不会自动改写全局配置。全局规则通常在新会话生效。
 
-提示词正文见 [`AGENTS-snippet.md`](plugins/s-atlas/AGENTS-snippet.md)，完整任务路由表见 [`AGENTS.md`](plugins/s-atlas/AGENTS.md)。
+初始化提示词的当前正文见 [`AGENTS.md`](plugins/s-atlas/AGENTS.md)；[`AGENTS-snippet.md`](plugins/s-atlas/AGENTS-snippet.md) 仅作手动引导及旧配置识别。
 
 ## 技能怎么被选中
 
@@ -100,6 +100,7 @@ flowchart TD
 ### 代码质量原则
 
 - 复用已有实现和项目约定，先选能解决问题的最小改动。
+- 每次代码交付前自审完整任务差异和关键调用方，报告发现与剩余风险。小改动、不提交、不跑测试都不跳过；自审、测试、清理和独立评审各自完成。
 - 输入格式在入口校验；业务不变量、权限和可变状态由负责的操作保证，不逐层复制检查，也不无条件信任内部状态。
 - 抽象是否保留取决于职责和理解成本，不取决于文件数、调用方数或适配器数量。局部清楚的分支无需改成框架。
 - 合并模块先说明共享领域知识、耦合问题与收益，再按依赖选择验证方式。存在测试替身不代表应该合并。

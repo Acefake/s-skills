@@ -26,7 +26,7 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 
 - 跳过 brainstorming、writing-plans和设计审批。
 - 只加载对口技能：bug用systematic-debugging，有便宜测试点时用tdd；代码用code-style，界面用impeccable。
-- 提交前过deslop，验证按下表。
+- 代码交付前按 code-style 自审；不提交和不跑测试也不跳过。提交前过deslop，验证按下表。
 - 做着发现范围超过上述条件，转回完整流程。
 
 ## 验证分档
@@ -61,6 +61,8 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 | 教我、解释代码怎么工作 | 点名how时加载；未点名时直接讲解，不自动加载显式技能 |
 
 ## 共用执行规则
+
+- 所有代码修改交付前按 [code-style](../code-style/SKILL.md)「交付前自审」检查完整任务差异和关键调用方，简述发现及未解决风险。测试和清理不替代自审；独立评审按已有流程与授权执行。
 
 - 任务路由不覆盖调用政策。标有 `disable-model-invocation: true` 的技能仅在用户点名或已授权工作流明确派发时使用。
 - 提交、推送、rebase、发布与清理按已有任务授权执行；写设计、计划或完成验证本身不授权这些操作。提交步骤统一按[commit-pr](../commit-pr/SKILL.md)。

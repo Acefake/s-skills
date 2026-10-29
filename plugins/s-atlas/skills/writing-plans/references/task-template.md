@@ -70,7 +70,11 @@ def function(input):
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
 
-- [ ] **Step 5: Commit only when authorized**
+- [ ] **Step 5: Self-review before delivery**
+
+按 code-style 审阅本任务完整差异和关键调用方，核对需求、逻辑、边界、回归、重复、抽象和防御；修复任务内问题后复查，记录结论与未解决风险。不提交、不跑测试也不跳过。独立评审按既定流程另行完成。
+
+- [ ] **Step 6: Commit only when authorized**
 
 仅在用户已授权提交时执行；否则保留工作区修改并报告。
 

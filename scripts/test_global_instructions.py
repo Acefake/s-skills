@@ -35,6 +35,72 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         self.home = Path(self.directory.name)
 
+    def test_template_follows_current_full_rules(self):
+        self.assertEqual(self.module.load_template(), full_rules().strip())
+
+    def test_plugin_upgrade_marks_block_outdated_without_writing(self):
+        path = self.home / '.codex/AGENTS.md'
+        self.module.sync_global('codex', home=self.home, apply=True)
+        original = path.read_bytes()
+        with patch.object(self.module, 'plugin_version', return_value='99.0.0'):
+            result = self.module.sync_global('codex', home=self.home)
+            self.assertEqual(result['status'], 'outdated')
+            self.assertEqual(path.read_bytes(), original)
+            self.module.sync_global('codex', home=self.home, apply=True)
+            self.assertIn('99.0.0', path.read_text(encoding='utf-8'))
+            self.assertFalse(self.module.sync_global('codex', home=self.home, apply=True)['changed'])
+
+    def test_old_full_rules_are_migrated_in_place(self):
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        old = (SCRIPT.parent.parent / 'references/full-instructions-v1.txt').read_text(encoding='utf-8').strip()
+        original = ('用户前缀\n' + old + '\n用户后缀\n').encode('utf-8')
+        path.write_bytes(original)
+        self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated')
+        self.assertEqual(path.read_bytes(), original)
+        self.module.sync_global('codex', home=self.home, apply=True)
+        result = path.read_text(encoding='utf-8')
+        self.assertEqual(result, '用户前缀\n' + self.module.managed_block() + '\n用户后缀\n')
+        self.assertEqual(path.with_name(path.name + '.s-atlas.bak').read_bytes(), original)
+
+    def test_rule_change_with_same_version_is_detected(self):
+        self.module.sync_global('claude-code', home=self.home, apply=True)
+        with patch.object(self.module, 'load_template', return_value='New canonical rules'):
+            self.assertEqual(self.module.sync_global('claude-code', home=self.home)['status'], 'outdated')
+            self.module.sync_global('claude-code', home=self.home, apply=True)
+            self.assertEqual(self.module.sync_global('claude-code', home=self.home)['status'], 'configured')
+
+    def test_legacy_short_rules_migrate_without_duplicate(self):
+        source = (ROOT / 'plugins/s-atlas/AGENTS-snippet.md').read_text(encoding='utf-8')
+        short = source.split('```text\n', 1)[1].split('\n```', 1)[0]
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        path.write_text('before\n' + short + '\nafter', encoding='utf-8')
+        self.module.sync_global('codex', home=self.home, apply=True)
+        self.assertEqual(path.read_text(encoding='utf-8'), 'before\n' + self.module.managed_block() + '\nafter')
+
+    def test_duplicate_unmarked_blocks_do_not_write(self):
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        original = (full_rules() + '\n' + full_rules()).encode('utf-8')
+        path.write_bytes(original)
+        with self.assertRaises(self.module.ConfigurationError):
+            self.module.sync_global('codex', home=self.home, apply=True)
+        self.assertEqual(path.read_bytes(), original)
+
+    def test_pre_self_review_rules_upgrade_in_place(self):
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        old = (SCRIPT.parent.parent / 'references/full-instructions-v2.txt').read_text(encoding='utf-8').strip()
+        original = ('prefix\n' + old + '\nsuffix\n').encode('utf-8')
+        path.write_bytes(original)
+        self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated')
+        self.assertEqual(path.read_bytes(), original)
+        self.module.sync_global('codex', home=self.home, apply=True)
+        self.assertEqual(path.read_text(encoding='utf-8'), 'prefix\n' + self.module.managed_block() + '\nsuffix\n')
+        self.assertIn('代码交付前自审', path.read_text(encoding='utf-8'))
+        self.assertFalse(self.module.sync_global('codex', home=self.home, apply=True)['changed'])
+
     def test_check_missing_does_not_create_files(self):
         result = self.module.sync_global('codex', home=self.home)
         self.assertEqual(result['status'], 'missing')
@@ -63,43 +129,65 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.module.sync_global('claude-code', home=self.home, apply=True)
         self.assertEqual(path.read_bytes(), first)
 
-    def test_existing_unmarked_template_is_not_duplicated(self):
+    def test_existing_unmarked_template_is_migrated_once(self):
         path = self.home / '.codex/AGENTS.md'
         path.parent.mkdir()
         original = ('User rules\n\n' + self.module.load_template() + '\n').encode('utf-8')
         path.write_bytes(original)
+        self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated')
         result = self.module.sync_global('codex', home=self.home, apply=True)
-        self.assertFalse(result['changed'])
-        self.assertEqual(path.read_bytes(), original)
+        self.assertTrue(result['changed'])
+        self.assertEqual(path.read_text(encoding='utf-8'), 'User rules\n\n' + self.module.managed_block() + '\n')
+        self.assertFalse(self.module.sync_global('codex', home=self.home, apply=True)['changed'])
 
-    def test_complete_full_rules_are_configured_without_writing_or_backup(self):
+    def test_complete_full_rules_migrate_preserving_bom_crlf_and_user_content(self):
         for host, relative in (('codex', '.codex/AGENTS.md'), ('claude-code', '.claude/CLAUDE.md')):
             for legacy in (False, True):
                 with self.subTest(host=host, legacy=legacy):
                     path = self.home / relative
                     path.parent.mkdir(exist_ok=True)
-                    rules = full_rules(legacy).replace('\n', '\r\n')
-                    original = ('\ufeff用户偏好\r\n\r\n' + rules + '\r\n其他配置\r\n').encode('utf-8')
+                    original = ('\ufeff用户偏好\r\n\r\n' + full_rules(legacy).strip().replace('\n', '\r\n') + '\r\n其他配置\r\n').encode('utf-8')
                     path.write_bytes(original)
-                    for apply in (False, True, True):
-                        result = self.module.sync_global(host, home=self.home, apply=apply)
-                        self.assertEqual(result['status'], 'configured')
-                        self.assertFalse(result['changed'])
-                        self.assertEqual(path.read_bytes(), original)
-                    self.assertFalse(path.with_name(path.name + '.s-atlas.bak').exists())
+                    self.assertEqual(self.module.sync_global(host, home=self.home)['status'], 'outdated')
+                    self.assertEqual(path.read_bytes(), original)
+                    self.module.sync_global(host, home=self.home, apply=True)
+                    expected = ('\ufeff用户偏好\r\n\r\n' + self.module.managed_block().replace('\n', '\r\n') + '\r\n其他配置\r\n').encode('utf-8')
+                    self.assertEqual(path.read_bytes(), expected)
+                    self.assertFalse(self.module.sync_global(host, home=self.home, apply=True)['changed'])
+                    self.assertTrue(path.with_name(path.name + '.s-atlas.bak').exists())
 
-    def test_cli_recognizes_existing_legacy_full_rules_for_both_hosts(self):
+    def test_cli_migrates_existing_legacy_full_rules_for_both_hosts(self):
         for host, relative in (('codex', '.codex/AGENTS.md'), ('claude-code', '.claude/CLAUDE.md')):
             with self.subTest(host=host):
                 path = self.home / relative
                 path.parent.mkdir()
                 original = full_rules(legacy=True).encode('utf-8')
                 path.write_bytes(original)
-                for apply in (False, True, True):
-                    code, result = self.run_cli(host, apply=apply)
-                    self.assertEqual((code, result['status'], result['changed']), (0, 'configured', False))
-                    self.assertEqual(path.read_bytes(), original)
-                self.assertFalse(path.with_name(path.name + '.s-atlas.bak').exists())
+                code, result = self.run_cli(host)
+                self.assertEqual((code, result['status'], result['changed']), (2, 'outdated', False))
+                self.assertEqual(path.read_bytes(), original)
+                for changed in (True, False):
+                    code, result = self.run_cli(host, apply=True)
+                    self.assertEqual((code, result['status'], result['changed']), (0, 'configured', changed))
+                self.assertEqual(path.with_name(path.name + '.s-atlas.bak').read_bytes(), original)
+
+    def test_previous_how_route_is_replaced_with_current_policy(self):
+        current = '| 教我、这块代码怎么工作 | 点名 how 时加载；未点名时直接讲解，保持显式调用政策 |'
+        previous = '| 教我、这块代码怎么工作 | how |'
+        for legacy in (False, True):
+            with self.subTest(legacy=legacy):
+                text = (SCRIPT.parent.parent / 'references/full-instructions-v2.txt').read_text(encoding='utf-8')
+                if legacy:
+                    text = '\n'.join(line for line in text.splitlines() if 'patent-disclosure' not in line and 'patent-application' not in line)
+                text = text.replace('`', '')
+                self.assertIn(current, text)
+                path = self.home / '.codex/AGENTS.md'
+                path.parent.mkdir(exist_ok=True)
+                path.write_bytes(text.replace(current, previous).encode('utf-8'))
+                self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated')
+                self.module.sync_global('codex', home=self.home, apply=True)
+                self.assertIn(current, path.read_text(encoding='utf-8').replace('`', ''))
+                self.assertFalse(self.module.sync_global('codex', home=self.home, apply=True)['changed'])
 
     def test_incomplete_or_changed_full_rules_are_not_treated_as_configured(self):
         complete = full_rules(legacy=True)

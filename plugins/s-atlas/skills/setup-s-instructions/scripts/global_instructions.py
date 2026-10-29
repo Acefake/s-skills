@@ -15,16 +15,23 @@ class ConfigurationError(Exception):
     """Existing configuration cannot safely be updated."""
 
 
+def plugin_version():
+    source = Path(__file__).resolve().parents[3] / 'plugin.json'
+    return json.loads(source.read_text(encoding='utf-8'))['version']
+
+
 def load_template():
-    source = Path(__file__).resolve().parents[3] / 'AGENTS-snippet.md'
-    match = re.search(r'```text\s*\n(.*?)\n```', source.read_text(encoding='utf-8'), re.S)
-    if not match:
-        raise ConfigurationError('Canonical instruction block not found')
-    return match.group(1).strip()
+    source = Path(__file__).resolve().parents[3] / 'AGENTS.md'
+    introduction = '收到任务后，在读文件、跑命令、提问或作答之前：'
+    _, found, body = source.read_text(encoding='utf-8').partition(introduction)
+    if not found:
+        raise ConfigurationError('Canonical full instruction body not found')
+    return (introduction + body).strip()
 
 
 def managed_block():
-    return f'{START}\n## s-atlas 全局技能规则\n\n{load_template()}\n{END}'
+    return (f'{START}\n## s-atlas 全局技能规则\n'
+            f'<!-- s-atlas:version: {plugin_version()} -->\n\n{load_template()}\n{END}')
 
 
 def instruction_path(host, home, codex_home=None, claude_config_dir=None):
@@ -40,24 +47,40 @@ def instruction_path(host, home, codex_home=None, claude_config_dir=None):
     raise ValueError(f'Unsupported host: {host}')
 
 
-def has_known_instructions(text):
-    def normalize(value):
-        return re.sub(r'[\s`]+', '', value)
-
-    candidate = normalize(text)
-    if normalize(load_template()) in candidate:
-        return True
-    source = Path(__file__).resolve().parents[3] / 'AGENTS.md'
-    introduction = '收到任务后，在读文件、跑命令、提问或作答之前：'
-    _, found, body = source.read_text(encoding='utf-8').partition(introduction)
-    if not found:
-        raise ConfigurationError('Canonical full instruction body not found')
-    full = introduction + body
-    # Existing full rules may omit the two patent routes. Keep every other rule.
-    legacy = '\n'.join(line for line in full.splitlines()
-                       if not (line.startswith('|') and any(
-                           f'`{skill}`' in line for skill in ('patent-disclosure', 'patent-application'))))
-    return any(normalize(template) in candidate for template in (full, legacy))
+def known_instruction_span(text):
+    """Locate an intact known unmarked template without consuming user text."""
+    source = Path(__file__).resolve().parents[3] / 'AGENTS-snippet.md'
+    short = re.search(r'```text\s*\n(.*?)\n```', source.read_text(encoding='utf-8'), re.S)
+    if not short:
+        raise ConfigurationError('Legacy short instruction block not found')
+    references = Path(__file__).resolve().parents[1] / 'references'
+    previous = [path.read_text(encoding='utf-8')
+                for path in sorted(references.glob('full-instructions-v*.txt'))]
+    templates = [short.group(1)]
+    for full in [load_template(), *previous]:
+        templates.extend((full, '\n'.join(line for line in full.splitlines()
+                         if not (line.startswith('|') and any(
+                             f'`{skill}`' in line for skill in ('patent-disclosure', 'patent-application'))))))
+    # Retain offsets so whitespace and backtick normalization never changes surrounding content.
+    offsets = [i for i, char in enumerate(text) if not char.isspace() and char != '`']
+    candidate = ''.join(text[i] for i in offsets)
+    spans = set()
+    for template in templates:
+        normalized = re.sub(r'[\s`]+', '', template)
+        at = candidate.find(normalized)
+        while at != -1:
+            start, end = offsets[at], offsets[at + len(normalized) - 1] + 1
+            before = text[text.rfind('\n', 0, start) + 1:start]
+            after = text[end:].split('\n', 1)[0]
+            if not before.strip() and not after.strip():
+                spans.add((start, end))
+            at = candidate.find(normalized, at + 1)
+    # An older template may be an intact prefix of a newer one. Migrate the full block.
+    spans = {span for span in spans if not any(
+        other != span and other[0] <= span[0] and span[1] <= other[1] for other in spans)}
+    if len(spans) > 1:
+        raise ConfigurationError('Multiple unmarked instruction blocks; reconcile them before applying')
+    return next(iter(spans), None)
 
 
 def merge_instructions(text):
@@ -72,8 +95,10 @@ def merge_instructions(text):
                 or text[end + len(END):].split('\n', 1)[0].strip()):
             raise ConfigurationError('Invalid s-atlas marker boundaries')
         return text[:start] + block + text[end + len(END):]
-    if has_known_instructions(text):
-        return text
+    span = known_instruction_span(text)
+    if span:
+        start, end = span
+        return text[:start] + block + text[end:]
     newline = '\r\n' if '\r\n' in text else '\n'
     separator = (newline if text.endswith(newline) else newline * 2) if text else ''
     return text + separator + block + newline
@@ -106,7 +131,7 @@ def write_preserving(path, original, updated):
 
 def sync_global(host, *, home, codex_home=None, claude_config_dir=None, apply=False):
     if host == 'cursor':
-        return dict(status='user_rules_verification_required', changed=False, target='Cursor User Rules', block=managed_block())
+        return dict(status='user_rules_verification_required', changed=False, target='Cursor User Rules', version=plugin_version(), block=managed_block())
     path = instruction_path(host, Path(home), codex_home, claude_config_dir)
     if path.is_symlink():
         raise ConfigurationError('Global instruction file is a symlink; inspect its destination before updating')
@@ -116,11 +141,11 @@ def sync_global(host, *, home, codex_home=None, claude_config_dir=None, apply=Fa
     if original is not None and original.startswith(b'\xef\xbb\xbf'):
         updated = b'\xef\xbb\xbf' + updated
     changed = updated != original
-    status = 'configured' if not changed else ('outdated' if START in text else 'missing')
+    status = 'configured' if not changed else ('outdated' if START in text or known_instruction_span(text) else 'missing')
     if apply and changed:
         write_preserving(path, original, updated)
         status = 'configured'
-    return dict(status=status, changed=bool(apply and changed), target=str(path))
+    return dict(status=status, changed=bool(apply and changed), target=str(path), version=plugin_version())
 
 
 def main():

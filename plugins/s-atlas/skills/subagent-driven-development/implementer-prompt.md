@@ -80,7 +80,7 @@ Subagent (general-purpose):
 
     ## Before Reporting Back: Self-Review
 
-    Review your work with fresh eyes. Ask yourself:
+    Review the full task diff, including relevant commits, staged and unstaged changes, new files, and key callers. Preserve unrelated pre-existing work. Self-review applies even when no commit or tests are requested; tests and cleanup do not replace it. Report the reviewed scope, findings and remaining risks. Keep any separately required independent review. Ask yourself:
 
     **Completeness:**
     - Did I fully implement everything in the spec?
@@ -120,7 +120,7 @@ Subagent (general-purpose):
       - RED: command run, relevant failing output before implementation, and why the failure was expected
       - GREEN: command run and relevant passing output after implementation
     - Files changed
-    - Self-review findings (if any)
+    - Self-review scope, findings and fixes (or no findings), and unresolved risks
     - Any issues or concerns
 
     Then report back with ONLY (under 15 lines — the detail lives in the
