@@ -19,7 +19,7 @@ LOCK_PATH = ROOT / "plugin-versions.lock.json"
 PLUGIN_ORDER = ("s-atlas",)
 
 EXPECTED_SKILL_COUNTS = {
-    "s-atlas": 78,
+    "s-atlas": 77,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.
@@ -56,6 +56,7 @@ RETIRED_SKILLS = frozenset({
     "sharpen",
     "taste-skill",
     "teach",
+    "test-driven-development",
     "typescript-best-practices",
     "ui-ux-pro-max",
     "verification-before-completion",
