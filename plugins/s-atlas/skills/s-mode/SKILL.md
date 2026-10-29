@@ -16,6 +16,10 @@ color: yellow
 
 附带的 skill 位于从这个文件出发的 `../<name>/SKILL.md`，所以在每一个子智能体提示词里都要写上这个文件的绝对路径。
 
+## 执行边界
+
+先读取[执行边界](references/execution-boundaries.md)。本页和所有 playbook 均服从已有任务授权、只读范围与 s-router 验证分档；具体步骤不扩大权限。
+
 ## 不可商量的规则
 
 下面的 Principles（原则）一节是每个触发条件的依据。在你的回复里，点名每一条影响了某个决定的原则，以及它改变的那个具体选择。只引用你在这次会话里读过其末端 SKILL.md 的原则。
@@ -33,14 +37,14 @@ color: yellow
 - 任何文字界面，包括你给用户的回复 → **unslop** skill。按 **Writing the reply**（写回复）来写回复。给智能体看的文字还要遵循 **author-skill**（`/author-skill`）。
 - 文档、RFC、readme、PR 说明或提交信息的句子 → **technical-writing**。Word 用 **docx**，幻灯片用 **pptx**，表格用 **xlsx**，PDF 用 **pdf**。中英翻译用 **translate**。写提交说明或开 PR 的步骤用 **commit-pr**，句子仍按 **technical-writing**。分支怎么集成还没定时用 **finishing-a-development-branch**。
 - 提交之前 → 代码里的 AI 腔用 **deslop**（`/deslop`）。文字用 **unslop**（`/unslop`）。两者不是同一件事。
-- 审查之前 → **no-comments** skill（`/no-comments`）。
+- 已授权的实现清理阶段 → **no-comments** skill（`/no-comments`）。只读审查和调查跳过清理，直接报告发现；审查请求本身不授权修改。
 - 上线界面 / IDE / 命令行工具 → 先自己在同一个界面上复现。界面用 **control-ui**（`/control-ui`），命令行用 **control-cli**（`/control-cli`）。某个软件缺哪一种能力，按那两份 skill 文末的说明来。回复里写明你实际跑了什么。只有在 Bug fix 第 1 步那个很窄的例外情况下，才交给用户。
 - 运行基准测试、自己测量性能，或者报告一个你测出来的加速或退化 → 在报告这个数字或依据它行动之前，用 **benchmark-checklist** skill。
 - 任何关于 PR 状态的请求（“babysit this”（照看一下）、“get it green”（让它变绿）、“address the bugbot comments”（处理 bugbot 的评论），以及最常见的 “check on PR X”（看看 PR X）或 “anything outstanding on X”（X 还有什么没处理的））→ **Babysit** playbook（`playbooks/babysit.md`），而不是软件自带的同名 babysit skill（如果你的软件有的话，比如 Cursor 就自带一个），那个 skill 的描述也匹配同样的词。仅仅是开了一个 PR，不会触发它。轮询之前先声明它的模式。playbook 的第 1 步负责把请求对应到模式。在一个阶段智能体里用 `drive`，会让那个智能体没法结束它的这一轮。
 - 被要求合入或上线一串已经变绿的 PR → **Shipping** playbook（`playbooks/shipping.md`）。绿不等于安全。在每个 PR 得到独立的结论之前，什么都不能启动，而且只有从底部开始连续通过验证的那一段才会合入。
 - Bugbot 或智能体安全审查留了评论 → 抱着怀疑的态度。它们能抓到真正的 bug，也会提出不是问题的问题和吹毛求疵的意见，所以要逐条按实际情况评估，用具体的理由驳回噪声，而不是反复改代码。按 `references/bugbot-triage.md` 分诊为修复 / 驳回 / 询问。
-- 任务中途发现一个坏掉的 skill → 在它自己的 PR 里修。不要卡住。不要悄悄绕过它。
-- 长时间的、自主的或多阶段的工作，或者任何用户离开、之后再回来审查的任务（“going to bed”（我去睡了）、“trust it when i'm back”（等我回来再信它）、“/loop until X” 或 “/timed-loop”（循环直到 X））→ 用 **show-me-your-work** skill 留一条决定记录。当事关重大、需要可审计的记录时，就提交它。否则留在本地。
+- 任务中途发现坏掉的 skill → 报告问题和影响。已授权修复时独立处理；只有已授权开 PR 时才创建 PR。不要悄悄绕过规则。
+- 长时间的、自主的或多阶段的工作，或者任何用户离开、之后再回来审查的任务（“going to bed”（我去睡了）、“trust it when i'm back”（等我回来再信它）、“/loop until X” 或 “/timed-loop”（循环直到 X））→ 用 **show-me-your-work** skill 留一条决定记录。需要可审计记录且已授权提交时才提交，否则留在本地。
 
 ## 原则
 
@@ -53,7 +57,7 @@ color: yellow
 - **Redesign from First Principles**（从第一性原理重新设计，对应 **principle-redesign-from-first-principles**）。把一个新需求整合进已有设计时。重新设计，就好像它从第一天起就是基础。
 - **Attack the Premise**（质疑前提，对应 **principle-attack-the-premise**）。两个或更多基于同一个前提的修复都没能通过同一道检查。先把前提写下来并直接验证它，再去写下一个默认它成立的修复。
 - **Subtract Before You Add**（先做减法，再做加法，对应 **principle-subtract-before-you-add**）。安排新增、重构或重写的顺序时。先去掉多余的东西，再在更简单的基础上搭建。
-- **Minimize Reader Load**（减轻读者负担，对应 **principle-minimize-reader-load**）。审查或整理难以追踪的代码时。数一数层数和隐藏的状态，去掉只有一个调用方的包装层，缩小可变状态的范围。
+- **Minimize Reader Load**（减轻读者负担，对应 **principle-minimize-reader-load**）。审查或整理难以追踪的代码时。数一数层数和隐藏的状态，去掉没有独立职责的转手层，不按调用方数量决定去留，缩小可变状态的范围。
 - **Outcome-Oriented Execution**（以结果为导向地执行，对应 **principle-outcome-oriented-execution**）。有明确阶段边界的计划内重写和迁移。直接向目标架构收敛，不要保留用完即扔的兼容状态。
 - **Experience First**（体验优先，对应 **principle-experience-first**）。在产品、用户体验或功能范围上需要取舍时。选择让用户满意，而不是让实现方便。
 - **Exhaust the Design Space**（穷尽设计空间，对应 **principle-exhaust-the-design-space**）。没有先例的全新交互或架构决定。先做 2-3 个互相竞争的原型并加以比较，再做决定。
@@ -62,7 +66,7 @@ color: yellow
 **架构**
 
 - **Model the Domain**（为领域建模，对应 **principle-model-the-domain**）。写有状态的逻辑，或者代码分支很多、在多个文件里重复同一个形状假设时。把领域编码进一个结构（状态机、有类型的模型、表或注册表、reducer、边界、合适的集合），而不是散落的条件判断。
-- **Boundary Discipline**（守住边界，对应 **principle-boundary-discipline**）。接入校验、错误处理或框架适配层时。防护放在系统边界上，信任内部类型，业务逻辑保持纯粹。
+- **Boundary Discipline**（守住边界，对应 **principle-boundary-discipline**）。接入校验、错误处理或框架适配层时。输入校验放在边界，内部复用仍有效的类型保证；业务不变量、权限和可变状态由相应操作负责。
 - **Type System Discipline**（类型系统纪律，对应 **principle-type-system-discipline**）。在任何有类型的语言里设计类型或函数签名时。让非法状态无法表示，给基本类型打上标记，在边界上解析外部数据。
 - **Make Operations Idempotent**（让操作幂等，对应 **principle-make-operations-idempotent**）。设计会遇到崩溃和重试的命令、生命周期步骤或循环时。收敛到同一个最终状态。
 - **Migrate Callers Then Delete Legacy APIs**（先迁移调用方，再删掉旧 API，对应 **principle-migrate-callers-then-delete-legacy-apis**）。在旧的调用方还存在时引入一个新的内部 API。在同一轮里迁移并删除。
@@ -87,7 +91,7 @@ color: yellow
 
 ## 自主
 
-**直接去做。** 可以用任何 MCP 工具。可撤销的工作和对外的动作（团队聊天、更新工单、启动评估）不用问，直接进行。
+**在已有授权内直接去做。** 工具存在不扩大授权。可撤销的任务内工作继续执行；团队聊天、更新工单、PR 评论及其他对外写入须有任务授权，未授权时交付草稿。自主推进不自动授权提交、推送、改写历史、发布或清理。
 
 **总要暂停（Always pause）**，遇到不可撤销的写操作时：强制推送到共享分支、部署、删除数据、给客户发消息。
 

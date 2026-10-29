@@ -5,7 +5,7 @@
 **目的：** 在已完成的工作扩散成更多工作之前，对照需求与代码质量标准进行评审。
 
 ```
-Subagent (general-purpose):
+Subagent (available read-only reviewer role):
   description: "Review code changes"
   prompt: |
     You are a Senior Code Reviewer with expertise in software architecture,
@@ -28,11 +28,20 @@ Subagent (general-purpose):
     ```bash
     git diff --stat [BASE_SHA]..[HEAD_SHA]
     git diff [BASE_SHA]..[HEAD_SHA]
+    git status --short
+    git diff
+    git diff --cached
     ```
+
+    ## Working Tree Supplement
+
+    [WORKING_TREE_FILES_AND_CONTENTS]
+
+    Review relevant staged, unstaged, and untracked files as well as the commit range. Separate unrelated changes that existed before the task. Do not treat the commit diff alone as the complete implementation.
 
     ## Read-Only Review
 
-    Your review is read-only on this checkout. Do not mutate the working tree, the index, HEAD, or branch state in any way. Use tools like `git show`, `git diff`, and `git log` to inspect history. If you need a working copy of a different revision, check it out into a separate temporary directory (e.g. `git worktree add /tmp/review-[SHA] [SHA]`) — never move HEAD on this checkout.
+    Your review is read-only. Do not mutate files, the index, HEAD, branches, or worktree registrations. Use `git show`, `git diff`, and `git log` to inspect history. Report missing evidence instead of creating another checkout. Reuse existing verification results and follow s-router verification levels; a read-only review does not run tests.
 
     ## What to Check
 

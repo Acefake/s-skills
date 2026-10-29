@@ -26,7 +26,7 @@
 | 审 PR、审分支、审本地改动、代码审查 | `s-review` |
 | 中英翻译 | `translate` |
 | 画架构图、流程图、时序图、ER 图 | `archify` |
-| 教我、这块代码怎么工作 | `how` |
+| 教我、这块代码怎么工作 | 点名 `how` 时加载；未点名时直接讲解，保持显式调用政策 |
 | 界面卡顿、掉帧、滚动慢、INP 高 | `impeccable`（optimize） |
 | 界面设计、样式、交互 | `impeccable` |
 | 补测试、测什么 | `test-strategy`；写实现时 `tdd` |

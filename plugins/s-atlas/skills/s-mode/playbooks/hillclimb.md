@@ -1,5 +1,7 @@
 ### Hillclimb
 
+先读取并遵守[执行边界](../references/execution-boundaries.md)。以下步骤仅在已有任务授权和验证档位内执行。
+
 **You own the metric and the experiment's integrity. Supervise and review. Delegate the attempts.** For sustained, iterative improvement of one measurable thing against a target. A one-off fix is Bug fix or Perf issue. This is the loop.
 
 Core discipline: one change, one measurement, keep or revert. Never stack untested changes, and never claim a win from code inspection (the **principle-prove-it-works** principle skill).
@@ -12,10 +14,10 @@ Core discipline: one change, one measurement, keep or revert. Never stack untest
    - Hand the change to a subagent using your configured hillclimb model (the `hillclimb` line in the s model config from setup-s-models; if the app cannot set a sub-agent model, omit it and say so. Do not paste a Cursor model slug into another app) with a tight scope. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section. Supervise and review the diff rather than typing it (the **principle-guard-the-context-window** principle skill). When several independent hypotheses are live, fan them to parallel subagents, each in its own worktree (the **principle-separate-before-serializing-shared-state** principle skill).
    - Measure before and after with the frozen harness, and run the regression gate.
    - Accept only when the metric moves past noise and the gate stays green. Otherwise revert the change in full. A tweak that "might help" is not kept.
-   - One commit per accepted fix, staging only the files you changed (`git add <files>`, never `-A`). Log the row either way, kept or reverted.
+   - Only when committing is authorized, one commit per accepted fix, staging only the files you changed (`git add <files>`, never `-A`). Log the row either way, kept or reverted.
    Each iteration ends in a check before the next begins (the **principle-sequence-verifiable-units** principle skill). If the run is unattended, borrow only the wake mechanism from the Autonomous run playbook (`playbooks/autonomous-run.md`), not its stop rule.
 6. Push past the first plateau. On a stall, several rejects in a row, pivot category, combine near-misses, re-read the source, or try something more radical before concluding the hill is climbed. Correctness and simplicity outrank the number. Revert a win that breaks behavior, and keep a simplification that holds the number (the **principle-laziness-protocol** principle skill).
 7. Stop when the predicate is met, or when the remaining ideas are marginal and not worth their cost. Don't relax the predicate to meet it, and don't quit while cheap untried hypotheses remain. If you are stuck, surface it instead of spinning.
-8. Run **Opening a PR** with the accepted commits stacked in the order they landed.
+8. Run **Opening a PR** only when authorized, preserving the order of accepted units; otherwise deliver local changes and results.
 
 **Reply:** the metric and target, baseline to final with the percent delta, iterations run (kept vs reverted), each accepted fix on one line, the `decision.tsv` path, and the best idea you would try next if pushed further.

@@ -1,5 +1,7 @@
 ### Shipping
 
+先读取并遵守[执行边界](../references/execution-boundaries.md)。以下步骤仅在已有任务授权和验证档位内执行。
+
 **You own what lands. Verify each PR independently, land only the verified run from the root, then keep your hands off the stack.**
 
 1. **Resolve the forge, then verify each PR independently before it lands.** GitHub CLI (`gh`) is the default. If `command -v origin` succeeds and Origin can resolve the repository, use `origin pr` for every PR operation. Otherwise stay on `gh` and record the fallback. Never require Graphite (`gt`). One verifier per PR runs the change the way a user would. Put it on another machine when the app can (Cursor: a cloud agent). Otherwise run it locally. Drive the surface with `/control-ui` or `/control-cli`, and name what you ran. The verifier posts `PASS`, `PASS+NOTES`, or `FAIL` on that PR. Only a verdict from an agent that did not write the code counts, because an author checks what it meant to build. Green CI and an approving bot review are not verdicts, because neither runs the change as a user would.

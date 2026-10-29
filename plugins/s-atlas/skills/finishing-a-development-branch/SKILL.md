@@ -1,242 +1,82 @@
 ---
 name: finishing-a-development-branch
-description: "「做完了怎么合」「开 PR 还是合并」「收尾这个分支」。测试过了、还没定集成方式时，给出合并、PR 或清理的选项。Use when implementation is done, tests pass, and you need to decide how to integrate the work."
+description: "「做完了怎么合」「开 PR 还是合并」「收尾这个分支」。完成适用验证、还没定集成方式时，给出合并、PR 或清理的选项。Use when implementation and applicable verification are complete, and you need to decide how to integrate the work."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+
 # 收尾开发分支
 
-## 概述
+核验适用检查，记录来源，再按已有授权执行集成或保留工作。提交和 PR 步骤统一按[commit-pr](../commit-pr/SKILL.md)，工作区归属遵守[HOSTS](../../HOSTS.md)。
 
-通过呈现清晰选项并处理所选工作流，引导开发工作收尾。
+开始时说明正在使用 finishing-a-development-branch。
 
-**核心原则：** 核验测试 → 检测环境 → 呈现选项 → 执行选择 → 清理。
+## 1. 核验适用检查
 
-**开始时宣布：** 「我正在使用 finishing-a-development-branch 技能来完成这项工作。」
+按[s-router 验证分档](../s-router/SKILL.md)判断，不把“收尾”当作自动升级理由。第0档只检查 diff，不运行测试；其他档位核对所需结果。相同代码已有结果时直接引用，不重跑。未运行的检查明确标注，不宣称通过。
 
-## 流程
+适用检查失败或证据不足时，不合并或发布。报告失败、影响和下一步；仍可按用户要求保留当前工作，不强迫修复无关问题后才允许保留。
 
-### 步骤 1：核验测试
+## 2. 记录来源和归属
 
-**在呈现选项之前，核验测试通过。** 本轮已在当前代码上跑过全量且之后没改，直接引用结果，不重跑（`s-router`「验证分档」）。
+切换目录前记录来源绝对路径 `SOURCE_WORKTREE_PATH`、来源分支或分离 HEAD 的 SHA、当前任务基线、已有修改，以及工作区创建方式和归属。
 
-```bash
-# Run project's test suite
-npm test / cargo test / pytest / go test ./...
-```
+读取 `git status --short`、`git worktree list --porcelain`，核实主工作区绝对路径并保存为 `MAIN_ROOT`。暂存、未暂存、未跟踪和被忽略文件均需保留；不凭目录名认定归属。先排除子模块，再判断是否为链接 worktree。
 
-**如果测试失败：**
-```
-Tests failing (<N> failures). Must fix before completing:
+确定目标分支时沿用用户要求和仓库约定，再用 merge-base 核实。没有足够证据时询问，不默认把 main 当作所有任务的目标。
 
-[Show failures]
+## 3. 确定动作
 
-Cannot proceed with merge/PR until tests pass.
-```
+已有明确要求时直接执行该动作，例如“不提交不推送”对应保留工作，不重复展示菜单。集成方式尚未确定时，呈现适用选项并等待选择。
 
-停下。不要进入步骤 2。
+使用下表将用户选择转换为动作名称。后续只按动作名称分派，不能直接复用编号。
 
-**如果测试通过：** 继续步骤 2。
+| 工作区状态 | 菜单编号 | 动作名称 | 含义 |
+|---|---|---|---|
+| 具名分支 | 1 | 本地合并 | 合并到已确定的目标分支 |
+| 具名分支 | 2 | 创建 PR | 提交、推送并创建 PR |
+| 具名分支 | 3 | 保留 | 保留分支和工作区 |
+| 具名分支 | 4 | 丢弃 | 核实对象后按明确批准的范围处理 |
+| 分离 HEAD | 1 | 创建 PR | 先为当前 SHA 创建具名分支，再按授权创建 PR |
+| 分离 HEAD | 2 | 保留 | 保留当前 SHA 和工作区 |
+| 分离 HEAD | 3 | 丢弃 | 核实对象后按明确批准的范围处理 |
 
-### 步骤 2：检测环境
+分离 HEAD 不提供本地合并选项，不执行具名分支的编号分支，也不能在来源分支为空时运行分支删除命令。
 
-**在呈现选项之前确定工作区状态：**
+## 4. 按动作执行
 
-```bash
-GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
-GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
-```
+### 本地合并
 
-这决定展示哪一份菜单，以及清理如何进行：
+仅适用于具名分支和已授权合并的任务。先核实来源分支、目标分支、主工作区状态及任务修改是否已形成所需提交。存在未处理修改时先保留并报告，不自动提交或清理。
 
-| 状态 | 菜单 | 清理 |
-|-------|------|---------|
-| `GIT_DIR == GIT_COMMON`（普通仓库） | 标准 4 个选项 | 没有要清理的 worktree |
-| `GIT_DIR != GIT_COMMON`，具名分支 | 标准 4 个选项 | 基于来源（见步骤 6） |
-| `GIT_DIR != GIT_COMMON`，分离 HEAD | 缩减为 3 个选项（不含合并） | 不清理（由外部管理） |
+在核实的目标工作区合并。更新目标分支或处理冲突须符合已有授权；不以 rebase 或 reset 清理无关工作。合并后按验证分档核验实际结果。合并或核验失败时不清理来源。
 
-### 步骤 3：确定基线分支
+成功后，只有已授权清理且满足第 5 节条件时才清理工作区和来源分支。分支仍被其他 worktree 使用时保留并报告，不强删。
 
-```bash
-# Try common base branches
-git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
-```
+### 创建 PR
 
-或询问：「这个分支是从 main 分出来的——对吗？」
+分离 HEAD 时先记录原 SHA，再按用户、仓库与当前宿主的命名约定创建具名分支。创建后核实分支指向原 SHA；保留所有已有文件修改。
 
-### 步骤 4：呈现选项
+按 commit-pr 执行已授权的提交、推送和 PR 创建。取得实际 PR URL 后才报告创建完成；仅推送成功或 PR 创建失败时，分别报告实际状态。保留工作区，便于后续迭代。
 
-**普通仓库和具名分支 worktree——精确呈现这 4 个选项：**
+### 保留
 
-```
-Implementation complete. What would you like to do?
+保留文件、分支或分离 HEAD 状态以及工作区。报告绝对路径、分支或 SHA、验证状态和未提交内容。不提交、不推送、不切分支、不清理。
 
-1. Merge back to <base-branch> locally
-2. Push and create a Pull Request
-3. Keep the branch as-is (I'll handle it later)
-4. Discard this work
+### 丢弃
 
-Which option?
-```
+先列明来源路径、分支或 SHA、任务提交、暂存和未暂存修改、未跟踪及被忽略文件，以及会丢失什么。已有授权没有明确覆盖具体丢弃对象时，展示清单并等待确认。
 
-**分离 HEAD——精确呈现这 3 个选项：**
+只处理明确批准的对象；无关工作始终保留。未确认、归属不明或存在未处理文件时保持原样。分离 HEAD 不执行分支删除；宿主创建的工作区仅按宿主工具支持的方式归档。普通 checkout 不作为目录删除对象。
 
-```
-Implementation complete. You're on a detached HEAD (externally managed workspace).
+## 5. 按来源清理
 
-1. Push as new branch and create a Pull Request
-2. Keep as-is (I'll handle it later)
-3. Discard this work
+仅“本地合并”成功后或“丢弃”已明确批准时，才考虑清理。其他动作不清理。
 
-Which option?
-```
+- 使用第 2 节记录，不在切换目录后重新推断来源。
+- 再核实绝对路径、分支、归属、使用状态和文件清单。仍在使用、有未处理文件或归属未知时保留。
+- 原生宿主创建的工作区只使用宿主归档工具。工具不可用时保留并报告，不用 Git 强制移除替代。
+- 本任务手工创建且已授权移除的 Git worktree，先切到核实的 `MAIN_ROOT`，再用不带强制选项的 `git worktree remove` 处理已核实的 `SOURCE_WORKTREE_PATH`。失败时报告原因，不追加强制删除或递归删除。
+- 只有工作区清理结果已确认，且来源分支不再被引用、删除也在授权范围内时，才删除该分支。普通 checkout 先安全切离待删除分支，目标工作区有无关修改时不得强行切换。
 
-**不要添加解释**——选项保持简短。
-
-### 步骤 5：执行选择
-
-#### 选项 1：本地合并
-
-```bash
-# Get main repo root for CWD safety
-MAIN_ROOT=$(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-toplevel)
-cd "$MAIN_ROOT"
-
-# Merge first — verify success before removing anything
-git checkout <base-branch>
-git pull
-git merge <feature-branch>
-
-# Verify tests on merged result
-<test command>
-
-# Only after merge succeeds: cleanup worktree (Step 6), then delete branch
-```
-
-然后：清理 worktree（步骤 6），再删除分支：
-
-```bash
-git branch -d <feature-branch>
-```
-
-#### 选项 2：推送并创建 PR
-
-```bash
-# Push branch
-git push -u origin <feature-branch>
-```
-
-**不要清理 worktree**——用户需要它保持可用，以便根据 PR 反馈迭代。
-
-#### 选项 3：保持原样
-
-报告：「保留分支 <name>。Worktree 保留在 <path>。」
-
-**不要清理 worktree。**
-
-#### 选项 4：丢弃
-
-**先确认：**
-```
-This will permanently delete:
-- Branch <name>
-- All commits: <commit-list>
-- Worktree at <path>
-
-Type 'discard' to confirm.
-```
-
-等待精确确认。
-
-如果已确认：
-```bash
-MAIN_ROOT=$(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-toplevel)
-cd "$MAIN_ROOT"
-```
-
-然后：清理 worktree（步骤 6），再强制删除分支：
-```bash
-git branch -D <feature-branch>
-```
-
-### 步骤 6：清理工作区
-
-**只对选项 1 和 4 运行。** 选项 2 和 3 始终保留 worktree。
-
-```bash
-GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
-GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
-WORKTREE_PATH=$(git rev-parse --show-toplevel)
-```
-
-**如果 `GIT_DIR == GIT_COMMON`：** 普通仓库，没有要清理的 worktree。完成。
-
-**如果 worktree 路径位于 `.worktrees/` 或 `worktrees/` 之下：** 这个 worktree 由本技能流程创建——清理归我们。
-
-```bash
-MAIN_ROOT=$(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-toplevel)
-cd "$MAIN_ROOT"
-git worktree remove "$WORKTREE_PATH"
-git worktree prune  # Self-healing: clean up any stale registrations
-```
-
-**否则：** 宿主环境（harness）拥有这个工作区。不要移除它。如果你的平台提供退出工作区的工具，就用它。否则，把工作区留在原地。
-
-## 速查
-
-| 选项 | 合并 | 推送 | 保留 Worktree | 清理分支 |
-|--------|-------|------|---------------|----------------|
-| 1. 本地合并 | 是 | - | - | 是 |
-| 2. 创建 PR | - | 是 | 是 | - |
-| 3. 保持原样 | - | - | 是 | - |
-| 4. 丢弃 | - | - | - | 是（强制） |
-
-## 常见错误
-
-**跳过测试核验**
-- **问题：** 合并损坏的代码，创建会失败的 PR
-- **修复：** 在提供选项之前始终核验测试
-
-**开放式问题**
-- **问题：** 「接下来我该做什么？」含糊不清
-- **修复：** 精确呈现 4 个结构化选项（分离 HEAD 则为 3 个）
-
-**为选项 2 清理 worktree**
-- **问题：** 移除用户在 PR 迭代中需要的 worktree
-- **修复：** 只为选项 1 和 4 清理
-
-**在移除 worktree 之前删除分支**
-- **问题：** `git branch -d` 失败，因为 worktree 仍引用该分支
-- **修复：** 先合并，移除 worktree，再删除分支
-
-**从 worktree 内部运行 git worktree remove**
-- **问题：** 当 CWD 位于将被移除的 worktree 内部时，命令会静默失败
-- **修复：** 在 `git worktree remove` 之前始终 `cd` 到主仓库根目录
-
-**清理 harness 拥有的 worktree**
-- **问题：** 移除 harness 创建的 worktree 会造成幽灵状态
-- **修复：** 只清理 `.worktrees/` 或 `worktrees/` 之下的 worktree
-
-**丢弃时没有确认**
-- **问题：** 意外删除工作
-- **修复：** 要求键入 "discard" 确认
-
-## 危险信号
-
-**绝不：**
-- 在测试失败时继续
-- 未在结果上核验测试就合并
-- 未经确认就删除工作
-- 没有明确请求就强制推送
-- 在确认合并成功之前移除 worktree
-- 清理不是你创建的 worktree（来源检查）
-- 从 worktree 内部运行 `git worktree remove`
-
-**始终：**
-- 在提供选项之前核验测试
-- 在呈现菜单之前检测环境
-- 精确呈现 4 个选项（分离 HEAD 则为 3 个）
-- 对选项 4 取得键入确认
-- 只为选项 1 和 4 清理 worktree
-- 在移除 worktree 之前 `cd` 到主仓库根目录
-- 移除之后运行 `git worktree prune`
+报告实际完成的动作、验证证据、保留的工作和未完成事项。不能把推送当作 PR 创建，把排队当作合并，或把失败的清理当作已删除。

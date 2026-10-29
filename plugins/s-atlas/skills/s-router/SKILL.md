@@ -31,7 +31,7 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 
 ## 验证分档
 
-先按改动定档，拿不准取高一档。各技能要求验证时，强度统一按这里：
+先按改动定档；明确符合第0档时优先按第0档，即使涉及多份文档、提交或收尾也不自动升级。其他改动拿不准取高一档。各技能要求验证时，强度统一按这里：
 
 | 档 | 适用 | 验证 |
 |---|---|---|
@@ -58,7 +58,14 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 | 提交说明、提交、PR | commit-pr；集成方式未定用finishing-a-development-branch |
 | 审PR、分支、本地改动 | s-review，只读报告，含位置与P0/P1/P2 |
 | 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | archify；架构重构评审用refactor-architecture |
-| 教我、解释代码怎么工作 | how，不加载已删除的teach |
+| 教我、解释代码怎么工作 | 点名how时加载；未点名时直接讲解，不自动加载显式技能 |
+
+## 共用执行规则
+
+- 任务路由不覆盖调用政策。标有 `disable-model-invocation: true` 的技能仅在用户点名或已授权工作流明确派发时使用。
+- 提交、推送、rebase、发布与清理按已有任务授权执行；写设计、计划或完成验证本身不授权这些操作。提交步骤统一按[commit-pr](../commit-pr/SKILL.md)。
+- 测试强度按验证分档；TDD 是否适用按[tdd](../tdd/SKILL.md)。只读方案不执行测试，不新增测试文件。
+- 主任务可在当前或接续会话用[executing-plans](../executing-plans/SKILL.md)执行。用户要求或已授权工作流明确采用子代理时，才用[subagent-driven-development](../subagent-driven-development/SKILL.md)，不因工具可用而自动切换。
 
 ## 平台参考与用户指示
 

@@ -26,27 +26,29 @@ description: "「在这个会话里派子智能体做」「按计划逐个任务
 digraph when_to_use {
     "Have implementation plan?" [shape=diamond];
     "Tasks mostly independent?" [shape=diamond];
-    "Stay in this session?" [shape=diamond];
+    "Delegation authorized and available?" [shape=diamond];
     "subagent-driven-development" [shape=box];
     "executing-plans" [shape=box];
     "Manual execution or brainstorm first" [shape=box];
 
     "Have implementation plan?" -> "Tasks mostly independent?" [label="yes"];
     "Have implementation plan?" -> "Manual execution or brainstorm first" [label="no"];
-    "Tasks mostly independent?" -> "Stay in this session?" [label="yes"];
-    "Tasks mostly independent?" -> "Manual execution or brainstorm first" [label="no - tightly coupled"];
-    "Stay in this session?" -> "subagent-driven-development" [label="yes"];
-    "Stay in this session?" -> "executing-plans" [label="no - parallel session"];
+    "Tasks mostly independent?" -> "Delegation authorized and available?" [label="yes"];
+    "Tasks mostly independent?" -> "executing-plans" [label="no - main agent executes"];
+    "Delegation authorized and available?" -> "subagent-driven-development" [label="yes"];
+    "Delegation authorized and available?" -> "executing-plans" [label="no"];
 }
 ```
 
-**对比 Executing Plans（并行会话）：**
+**与主任务执行的区别：**
 - 同一会话（无需切换上下文）
 - 每项任务使用全新子代理（避免上下文污染）
 - 每项任务之后评审（规格符合性 + 代码质量），最后做宽泛评审
 - 迭代更快（任务之间没有人在回路中）
 
 ## 流程
+
+下文的测试、提交和台账要求服从 s-router 验证分档与已有任务授权。未授权提交时，报告未提交状态和改动文件，不为生成评审包而提交。`scripts/review-package BASE HEAD` 仅含提交差异，必须另附暂存、未暂存和相关新文件内容；基线时已有的无关修改单独标明并保留。
 
 ```dot
 digraph process {
@@ -108,7 +110,7 @@ digraph process {
 
 **评审任务**：按 diff 的规模、复杂度和风险，用同样的判断来选模型。一小段机械性 diff 不需要最强模型；一处微妙的并发改动则需要。
 
-**派发子代理时始终明确指定模型。** 省略模型会继承你本次会话的模型——往往是最强也最贵的——从而悄悄抵消本节的用意。
+**按角色配置和宿主能力选择模型。** 先沿用 setup-s-models 的角色配置；值为 `auto` 或 `inherit-parent` 时省略模型参数。宿主不能单独指定模型时也省略，并说明继承父模型。其余情况只指定当前可用的模型，不为满足模板而猜测模型名。
 
 **轮次比 token 单价更要紧。** 墙钟时间和上下文成本随子代理所用轮次增长，最便宜的模型在多步工作上经常要花 2-3 倍的轮次——总体上更贵。评审者，以及根据散文式描述工作的实现者，下限用中档模型。当任务的计划正文已经包含要写的完整代码时，实现就是誊写加上测试：这类实现者用最便宜的档位。单文件的机械性修复也用最便宜的档位。
 
@@ -147,6 +149,7 @@ digraph process {
 - 不要要求评审者重跑实现者已经在同一份代码上跑过的测试——实现者的报告承载测试证据
 - 不要替评审者预判发现——绝不要指示评审者忽略或不标记某个具体问题。如果你认为某条发现会是误报，让评审者提出来，再在评审循环里裁决。如果你正在写的提示词里包含「do not flag」「don't treat X as a defect」「at most Minor」或「the plan chose」——停下来：你在预判，通常是为了给自己省掉一轮评审。
 - 你交给评审者的 global-constraints 块是它的注意力透镜。从计划的 Global Constraints 一节或规格中逐字复制有约束力的要求：精确的值、精确的格式，以及组件之间写明的关系（「same layout as X」「matches Y」）。评审者的模板已经带有流程规则（YAGNI、测试卫生、评审方法）——约束块只放本项目规格所要求的内容。
+- 评审模板必须填入 `{WORKING_TREE_FILES_AND_CONTENTS}`：交接暂存、未暂存及相关新文件的实际内容或可读文件路径，无补充时明确写无。允许只读核对状态和补读相关文件，不能把提交 diff 当作全部工作。
 - 把 diff 作为文件交给评审者：运行本技能的 `scripts/review-package BASE HEAD`，把打印出的文件路径传给评审者（或者，在没有 bash 时：把该范围的 `git log --oneline`、`git diff --stat` 和 `git diff -U10` 重定向到一个唯一命名的文件）。输出绝不进入你自己的上下文，评审者在一次 Read 调用里就能看到提交列表、stat 摘要和带上下文的完整 diff。使用你在派发实现者之前记录的 BASE——绝不要用 `HEAD~1`，它会悄悄截断多提交任务。
 - 一次派发提示词描述一项任务，而不是本会话的历史。不要把累积的先前任务摘要（「state after Tasks 1-3」）粘贴进后续派发——真实会话里有一次派发达 42k 字符，其中 99% 是粘贴的历史。全新子代理需要的是它的任务、它触及的接口，以及全局约束。除此之外什么都不要。
 - 针对 Critical 和 Important 发现派发修复子代理。Minor 发现随手记入进度台账，并让覆盖整个分支的终审对着这份清单做分诊，判断哪些必须在合并前修复。一份没人读的汇总等于静默丢弃。
@@ -247,7 +250,7 @@ Done!
 ## 优势
 
 **对比手工执行：**
-- 子代理会自然遵循 TDD
+- 子代理按 tdd 判断适用性，并按 s-router 的验证分档执行检查
 - 每项任务都是全新上下文（不会混淆）
 - 可并行且安全（子代理互不干扰）
 - 子代理可以提问（工作之前以及工作期间）
@@ -317,7 +320,7 @@ Done!
 - **finishing-a-development-branch** - 全部任务完成后收尾开发
 
 **子代理应当使用：**
-- **tdd** - 子代理对每项任务遵循 TDD
+- **tdd** - 有便宜、稳定测试点时使用；不适用时写明替代验证，不强制每项任务新增测试
 
 **替代工作流：**
-- **executing-plans** - 用于并行会话，而不是同一会话内执行
+- **executing-plans** - 主任务在当前或接续会话按检查点执行，不因工具可用而自动改用子代理

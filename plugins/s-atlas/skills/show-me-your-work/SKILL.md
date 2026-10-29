@@ -53,7 +53,7 @@ ts	phase	decision	why	evidence	result
 
 默认情况下，日志是一份工作用的产物，不提交。把它放在工作目录里的 `decisions.tsv`，或者在同时进行好几项工作时放在 `.audit/<task-slug>.tsv`，并且不放进 git。
 
-只有当工作足够有野心、审查者需要这条记录才能信任结果时，才提交它。
+只有审查需要该记录且用户已授权提交时，才按 commit-pr 提交它；否则保留本地记录并提供路径。
 
 ## 规则
 

@@ -2,11 +2,11 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.13，共 **78** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.14，共 **78** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor会按你说的话自动挑对应的技能。
 
-技能目录名和 frontmatter 的 `name` 一致，都是英文小写 kebab-case。描述以中文触发词开头，正文全中文。
+技能目录名和 frontmatter 的 `name` 一致，都是英文小写 kebab-case。描述以中文触发词开头，主要正文使用中文，部分模板和 playbook 使用英文。
 
 ## 安装
 
@@ -51,16 +51,60 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 ## 技能怎么被选中
 
-![s-atlas 技能路由图：从一句话开始，经 AGENTS.md 和 s-router 走到四条路径。图表示路由形状，当前有哪些技能以下面的对照表为准](docs/s-skills-route.png)
+框架图直接维护在 README 中，由 GitHub 渲染 Mermaid。技能数量和调用策略以当前清单、frontmatter 与任务授权为准。
 
-一句话进来后，宿主先读 `AGENTS.md`，再由 `s-router` 从上往下判断：
+```mermaid
+flowchart TD
+    A[用户任务与已有授权] --> B[读取项目约定与可用技能描述]
+    B --> C{是否已有明确匹配}
+    C -->|点名或描述匹配| D[加载对口技能]
+    C -->|不明确或跨模块| R[s-router 路由] --> D
+    D --> E{任务类型}
+    E -->|小改动| F[直接处理并保持范围]
+    E -->|新功能或改行为| G[brainstorming → writing-plans]
+    E -->|故障| H[systematic-debugging 定位根因]
+    E -->|只读审查或方案| I[读取证据并交付报告]
+    E -->|已授权加强流程| J[s-mode 选择 playbook]
+    G --> K[按已确认方式执行]
+    H --> K
+    J --> K
+    K --> L[code-style 与质量原则]
+    F --> L
+    L --> M[按验证档位与适用性检查]
+    M --> N[完整任务差异评审]
+    N --> O{是否授权 Git 操作}
+    O -->|否| P[交付本地修改与验证说明]
+    O -->|是| Q[commit-pr 或分支收尾]
+    I --> P
+```
 
-1. 点名了技能：直接加载它。手点技能只有这样才会用。
-2. 小改动（意图明确、只动 1–2 个文件、不改接口、数据结构或依赖）：走快路，跳过 `brainstorming` 和计划，只加载对口的能力技能，交付前实际验证。
-3. 新功能或改行为：走主流程，`brainstorming` → `writing-plans` → `using-git-worktrees` → `executing-plans` 或 `subagent-driven-development` → 代码审查 → `finishing-a-development-branch`。
-4. 跨模块、大迁移或要并行：点名 `s-mode`，按需配 `figure-it-out`、`refactor-architecture`、`swarm`、`arena`。
+- 任务有明确匹配时直接加载对应技能；拿不准才用 `s-router`。标记为显式调用的技能，需要用户点名或已授权工作流明确派发。
+- 小改动跳过方案和计划。已有计划按确认的执行方式处理；子代理执行需要对应授权，不因工具可用自动开启。
+- 优先复用当前合适的工作区。需要隔离时使用 `using-git-worktrees`，保留已有暂存、未暂存及新文件。
+- `architect`、`arena` 用于实质未决的职责、状态或接口选择，不因存在多种写法就强制多方案探索。独立评审不等于多个实现。
+- 计划、执行、子代理与定时复查沿用记录的技能来源和版本，不假定业务仓库的主干包含技能库。
 
-都不是时，按描述自动选能力技能。图下半部分列出每个技能何时用、做什么；彩色底是自动选用，白底虚线是手点。
+### 验证与交付边界
+
+| 档位 | 适用情况 | 验证方式 |
+|---|---|---|
+| 0 | 文案、注释、文档措辞、样式数值、配置值；只读任务；用户说不用测 | 不跑测试，修改内容后检查 diff |
+| 1 | 意图明确、1–2 个文件且不改接口、数据结构或依赖的小改动 | lint 或类型检查，加改动文件已有测试 |
+| 2 | 修 bug、加功能、改行为 | 有便宜稳定测试点时使用 TDD，再验证所在模块 |
+| 3 | 跨模块、改接口或依赖、迁移；非第 0 档的提交或合并前 | 全量测试一次 |
+
+复用同一代码上仍有效的验证结果。明确属于第 0 档的任务不因提交而升级。live 场景和性能检查按需安排，不适用时注明原因；人工验收沿用已有要求，不强制同时提供截图和视频。
+
+只读审查不改文件、不清理代码、不运行测试。任务验收覆盖相关提交、暂存、未暂存和新文件。提交、推送、改写历史、外部消息及工作区清理均遵循已有授权，完成实现本身不授权这些操作。
+
+### 代码质量原则
+
+- 复用已有实现和项目约定，先选能解决问题的最小改动。
+- 输入格式在入口校验；业务不变量、权限和可变状态由负责的操作保证，不逐层复制检查，也不无条件信任内部状态。
+- 抽象是否保留取决于职责和理解成本，不取决于文件数、调用方数或适配器数量。局部清楚的分支无需改成框架。
+- 合并模块先说明共享领域知识、耦合问题与收益，再按依赖选择验证方式。存在测试替身不代表应该合并。
+- 删除旧测试前核对正常行为、边界、失败路径和回归覆盖，只删除被等效替代或绑定旧实现细节的部分。
+- `deslop` 在实现范围内清理冗余；注释审查保留必要契约和约束，由父任务核实后修改。
 
 ## 使用
 
@@ -119,7 +163,7 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 ## 活跃技能
 
-「自动」是模型按描述自己选用；「手点」是 frontmatter 里有 `disable-model-invocation: true`，要点名才会加载。
+「自动」是模型按描述选用；「手点」是 frontmatter 里有 `disable-model-invocation: true`，由用户点名或已授权工作流明确派发。
 
 ### 自动选用（57 个）
 
@@ -175,7 +219,7 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 | `principle-exhaust-the-design-space` | 没先例时先做几个方案再选 |
 | `principle-build-the-lever` | 不简单的活做成可再跑的工具 |
 | `principle-model-the-domain` | 把领域写进一个结构 |
-| `principle-boundary-discipline` | 校验放在系统边界 |
+| `principle-boundary-discipline` | 区分输入校验与业务约束，避免重复防御 |
 | `principle-type-system-discipline` | 让非法状态无法表示 |
 | `principle-make-operations-idempotent` | 崩溃重试后仍落到同一结果 |
 | `principle-migrate-callers-then-delete-legacy-apis` | 迁完调用方再删旧 API |
@@ -197,16 +241,16 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 | `frontend-design` | 点名时给一份有主见的视觉方向，不带检查脚本 |
 | `s-mode` | 点名才走的加强工作流 |
 | `s-agent` | `s-mode` 派出去写代码的子智能体 |
-| `comment-sicko` | 专门删注释的子智能体 |
+| `comment-sicko` | 只读审查注释的子智能体，交由父任务核实修改 |
 | `how` | 改之前讲清代码怎么串 |
 | `why` | 查为什么这样设计 |
 | `architect` | 动手前定类型和模块边界 |
 | `refactor-architecture` | 找浅模块和耦合，出 HTML 报告，再逐个追问定案 |
 | `swarm` | 并行覆盖、比赛、分片验证 |
-| `arena` | 同一任务多方案再嫁接 |
+| `arena` | 实质设计选择下比较候选，按需采纳长处 |
 | `interrogate` | 多模型对抗审查 |
 | `unslop` | 去掉文字里的 AI 腔 |
-| `no-comments` | 审查前删掉不该留的注释 |
+| `no-comments` | 只读审查注释，由父任务核实后修改 |
 | `author-skill` | 按规范写或大改 SKILL.md |
 | `benchmark-checklist` | 报告性能数字前先审核 |
 | `show-me-your-work` | 长时间运行留下决定记录 |

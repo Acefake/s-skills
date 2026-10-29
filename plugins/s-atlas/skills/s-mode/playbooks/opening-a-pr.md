@@ -1,12 +1,14 @@
 ### Opening a PR
 
-Invoked at the end of every other playbook.
+先读取并遵守[执行边界](../references/execution-boundaries.md)。以下步骤仅在已有任务授权和验证档位内执行。
 
-**Worktree.** Work from a git worktree off main. Subagents inherit it. Multiple subagents on the same branch each get their own worktree, or `git fetch && git reset --hard origin/<branch>` between them. Dirty branch with unrelated work: patch out, fresh worktree, apply. Snarled worktree: reset from main, redo minimally.
+Run only when the task authorizes opening a PR. Otherwise deliver the local changes and verification summary without committing, pushing, rebasing, or creating a PR.
 
-**Commits.** Commit liberally. Rebase into small, ordered commits before opening PRs. Each commit is a future PR: landable, ordered to tell the story. Amend when the fix belongs in a just-made commit. New commit when separable. Commit bodies don't restate the subject.
+**Worktree.** Reuse the suitable current checkout or an existing isolated worktree. Record its path, branch, ownership, and pre-existing changes. Separate concurrent writers by file ownership or isolated worktrees. Preserve staged, unstaged, untracked, and ignored files. Never synchronize or recover by hard-resetting, cleaning, or discarding work. If isolation is needed, use the host worktree tool and carry only the task changes; leave unrelated work intact.
 
-**PRs.** Check the diff against **code-style** (module layout, doc comments, quality floor) and confirm the tests **test-strategy** calls for are in it. Run `/deslop` on the diff before commit and `/no-comments` before review. Write every PR title, description, and commit body with `/technical-writing` (every layer except Diátaxis, and apply the STE vocabulary rules: one word per action, keep articles, a plain verb over `-ing` where one works), then apply `/unslop`.
+**Commits.** Follow commit-pr and the existing task authorization. Commit only task files when authorized. Rebase or amend only when history editing is authorized; do not rewrite shared work by default. Otherwise preserve the local diff. Commit bodies do not restate the subject.
+
+**PRs.** Check the diff against **code-style** (module layout, doc comments, quality floor) and confirm the tests **test-strategy** calls for are in it. During authorized implementation cleanup, run `/deslop` before commit and `/no-comments` before handing off for review. A read-only reviewer skips both cleanup actions. Verification follows s-router, including level 0. Write every PR title, description, and commit body with `/technical-writing` (every layer except Diátaxis, and apply the STE vocabulary rules: one word per action, keep articles, a plain verb over `-ing` where one works), then apply `/unslop`.
 
 **Titles.** Conventional Commits `type(scope): subject`, no trailing period. Type such as `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, or `perf`. Scope is the area, such as `s-atlas` or `s-mode`. Subject is short, imperative, and names a real symbol when one carries the change, for example `fix(s-atlas): retarget opening-a-pr babysit trigger`.
 
@@ -25,7 +27,7 @@ After the sections, attach videos or screenshots when they prove a claim. Full S
 
 **Built-in PR tool.** When the run provides a built-in PR tool, create, edit, retarget, and mark ready through it, never through a forge CLI. A CLI-made PR misses what the tool tracks. Use the resolved forge for everything the tool does not cover, and for every PR operation when the run has no such tool.
 
-**Size and stacks.** Prefer five narrow PRs to one large PR. A stack is a base-branch chain. The root PR targets trunk. Each child branch rebases onto its parent's exact tip and its PR targets the parent branch. As a parent merges, move its child onto trunk per `playbooks/shipping.md` step 4. Without a built-in PR tool, per the resolved forge, create a child with `origin pr create --status open --base <parent-branch>` or `gh pr create --base <parent-branch>`, and retarget one with `origin pr edit <pr> --base <parent-branch>` or `gh pr edit <pr> --base <parent-branch>`. Branch from trunk only for independent work. Rebase on trunk before substantial stack work.
+**Size and stacks.** Prefer five narrow PRs to one large PR. A stack is a base-branch chain. The root PR targets trunk. Each child branch rebases onto its parent's exact tip and its PR targets the parent branch. As a parent merges, move its child onto trunk per `playbooks/shipping.md` step 4. Without a built-in PR tool, per the resolved forge, create a child with `origin pr create --status open --base <parent-branch>` or `gh pr create --base <parent-branch>`, and retarget one with `origin pr edit <pr> --base <parent-branch>` or `gh pr edit <pr> --base <parent-branch>`. Branch from trunk only for independent work. Rebase on trunk only when the task authorizes history editing. Otherwise report the stack state and leave its topology unchanged.
 
 **Readiness.** Open every PR ready, never as a draft. A built-in PR tool can default to draft, so set `draft: false` on every creation call through it. With Origin, pass `--status open`. With `gh`, omit `--draft`. If a PR still opens as a draft, mark it ready through the PR tool, or run `origin pr ready <number>` or `gh pr ready <number>` according to the resolved forge. Run `origin pr view <number>` or `gh pr view <number>` before you refer to PR status.
 

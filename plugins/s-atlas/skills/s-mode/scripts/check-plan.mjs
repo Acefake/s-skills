@@ -2,14 +2,12 @@
 import fs from "node:fs";
 import process from "node:process";
 
-const RULE =
-	"Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.";
-const LANES = /Ten lanes on `[^`<>]+` at the PR head/;
 const SUB_BLOCKS = [
 	"Depends on.",
 	"Files.",
 	"Build.",
 	"You see.",
+	"Verification level.",
 	"Verify, unit.",
 	"Verify, live.",
 	"Verify, perf.",
@@ -17,13 +15,13 @@ const SUB_BLOCKS = [
 	"Merge.",
 ];
 const PROGRAM_H3 = ["Arm the program", "Spawn owners", "PR mechanics", "Verdict and merge", "Boot recipe"];
-const PROGRAM_MARKERS = ["git show origin/main:", "/loop 1h", "status message"];
+const PROGRAM_MARKERS = ["/loop 1h", "status message"];
 const HOW_TO_READ_MARKERS = [
 	"One box is one unit of work",
 	"names the evidence",
 	"Check a box only when its evidence exists",
 	"playbooks/",
-	RULE,
+	"Skill source.",
 ];
 const PERF_ITEMS = ["Metric.", "Probe.", "Baseline.", "Rule."];
 const BOX = /^\s*- \[[ x]\] (.*)$/;
@@ -144,30 +142,41 @@ for (const pr of prSections) {
 
 	const depends = block("Depends on.");
 	if (depends && depends.rest === "") fail(depends.n, `${pr.title}: Depends on names nothing`);
-	for (const name of ["Files.", "Build.", "You see.", "Verify, unit.", "Merge."]) {
+	for (const name of ["Files.", "Build.", "You see.", "Merge."]) {
 		const b = block(name);
 		if (b && boxes(b.lines).length === 0) fail(b.n, `${pr.title}: ${name} has no box`);
 	}
-	for (const name of ["Verify, unit.", "Verify, live.", "Verify, perf."]) {
+	const level = block("Verification level.");
+	const levelMatch = level?.rest.match(/^([0-3])(?:\.\s|\s|$)/);
+	if (level && !levelMatch) fail(level.n, `${pr.title}: verification level must be 0, 1, 2, or 3`);
+	const checkApplicable = (name) => {
 		const b = block(name);
-		if (b && !b.rest.startsWith(RULE)) fail(b.n, `${pr.title}: ${name} does not open with the rule`);
-	}
-
-	const live = block("Verify, live.");
-	if (live) {
-		if (!LANES.test(live.rest)) fail(live.n, `${pr.title}: Verify, live lacks "Ten lanes on \`<swarm workers model>\` at the PR head" with the model filled in`);
+		if (!b) return false;
+		const entries = boxes(b.lines);
+		if (/^n\/a\b/i.test(b.rest)) {
+			if (!/^n\/a\.\s+\S/i.test(b.rest)) fail(b.n, `${pr.title}: ${name} n/a requires a reason`);
+			if (entries.length) fail(b.n, `${pr.title}: ${name} n/a must not schedule checks`);
+			return false;
+		}
+		if (levelMatch?.[1] === "0") fail(b.n, `${pr.title}: level 0 only reviews the diff; mark ${name} n/a with a reason`);
+		if (!b.rest) fail(b.n, `${pr.title}: ${name} needs a verification method`);
+		if (!entries.length) fail(b.n, `${pr.title}: ${name} has no check`);
+		return true;
+	};
+	checkApplicable("Verify, unit.");
+	if (checkApplicable("Verify, live.")) {
+		const live = block("Verify, live.");
 		const lanes = boxes(live.lines).map((b) => ({ ...b, m: b.text.match(/^Lane (\d+)\. /) }));
 		const numbers = lanes.filter((b) => b.m).map((b) => Number(b.m[1])).sort((a, b) => a - b);
-		if (numbers.join(",") !== "1,2,3,4,5,6,7,8,9,10") fail(live.n, `${pr.title}: lanes are [${numbers.join(",")}], expected 1 to 10`);
+		if (numbers.some((number, i) => number !== i + 1)) fail(live.n, `${pr.title}: live lane numbers must be unique and consecutive from 1`);
 		for (const lane of lanes) {
 			if (!lane.m) fail(lane.n, `${pr.title}: live box is not a lane`);
-			else if (!/Save `[^`]+`/.test(lane.text)) fail(lane.n, `${pr.title}: lane ${lane.m[1]} names no screenshot`);
+			else if (!/Save `[^`]+`/.test(lane.text)) fail(lane.n, `${pr.title}: lane ${lane.m[1]} names no evidence artifact`);
 			else if (!lane.text.includes("Pass when")) fail(lane.n, `${pr.title}: lane ${lane.m[1]} has no pass predicate`);
 		}
 	}
-
-	const perf = block("Verify, perf.");
-	if (perf) {
+	if (checkApplicable("Verify, perf.")) {
+		const perf = block("Verify, perf.");
 		const items = boxes(perf.lines).map((b) => b.text.split(" ")[0]);
 		if (items.join("|") !== PERF_ITEMS.join("|")) fail(perf.n, `${pr.title}: perf boxes are [${items.join(", ")}], expected [${PERF_ITEMS.join(", ")}]`);
 	}
@@ -178,11 +187,8 @@ for (const pr of prSections) {
 		if (gate.rest.startsWith("None.")) {
 			if (gateBoxes.length) fail(gate.n, `${pr.title}: Review gate says None but has boxes`);
 		} else {
-			const text = gate.lines.map((l) => l.text).join("\n");
+			if (!gate.rest) fail(gate.n, `${pr.title}: Review gate needs the agreed review requirement`);
 			if (gateBoxes.length === 0) fail(gate.n, `${pr.title}: Review gate has no box`);
-			for (const word of ["screenshot", "video", "operator"]) {
-				if (!text.includes(word)) fail(gate.n, `${pr.title}: Review gate lacks "${word}"`);
-			}
 		}
 	}
 

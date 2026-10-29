@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: "「按计划在新会话做」「执行这份实现计划」。有书面计划、要换会话按检查点做。当前会话里派子智能体，用 subagent-driven-development。Use when you have a written implementation plan to execute in a separate session with review checkpoints."
+description: "「按计划在新会话做」「执行这份实现计划」。主任务在当前或接续会话按书面计划和检查点执行。已授权派子智能体时用 subagent-driven-development。Use when the main agent executes a written implementation plan in the current or a follow-up session with review checkpoints."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
@@ -12,11 +12,11 @@ description: "「按计划在新会话做」「执行这份实现计划」。有
 
 ## 概述
 
-加载计划，批判性地审阅，执行全部任务，完成时汇报。
+加载计划，批判性地审阅，在已有授权内执行全部任务，完成时汇报。计划里的提交、推送和清理步骤仍需符合本次任务授权。
 
 **开始时宣布：**「我正在使用 executing-plans 技能来实现这份计划。」
 
-**注意：** 告诉你的人类协作者，这套技能在能够使用子代理时效果好得多。如果运行在支持子代理的平台上，工作质量会高很多（Claude Code、Codex CLI、Codex App 和 Copilot CLI 都算；各平台工具参考见 `../s-router/references/`）。如果子代理可用，使用 subagent-driven-development，而不是本技能。
+本技能由主任务在当前或接续会话按检查点执行。只有用户要求或已授权计划明确采用子代理时，才切换到 subagent-driven-development；工具可用本身不改变执行方式。
 
 ## 流程
 

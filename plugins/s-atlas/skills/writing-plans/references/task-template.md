@@ -9,13 +9,15 @@
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-driven-development (recommended) or executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **执行方式：** 按已确认方式使用 executing-plans；已授权子代理执行时使用 subagent-driven-development。仅要求写计划不授权实现。步骤使用复选框。
 
 **Goal:** [One sentence describing what this builds]
 
 **Architecture:** [2-3 sentences about approach]
 
 **Tech Stack:** [Key technologies/libraries]
+
+**验证与授权：** [验证档位、TDD 是否适用及替代检查、是否已授权提交。第0档只检查 diff。]
 
 ## Global Constraints
 
@@ -68,10 +70,14 @@ def function(input):
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Commit only when authorized**
+
+仅在用户已授权提交时执行；否则保留工作区修改并报告。
 
 ```bash
 git add tests/path/test.py src/path/file.py
 git commit -m "feat: add specific feature"
 ```
 ````
+
+上面的步骤示例仅用于适用 TDD 的实现任务。不适用时，将测试步骤替换为实际可行的复现和验证；第0档只保留修改与 diff 检查，不新增或运行测试。

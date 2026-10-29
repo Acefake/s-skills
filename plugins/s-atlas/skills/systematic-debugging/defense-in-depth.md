@@ -1,122 +1,27 @@
-# 纵深防御校验
+# 按风险分配校验职责
 
-## 概述
+找到无效数据的来源后，按 [边界原则](../principle-boundary-discipline/SKILL.md) 确定每个约束由哪里保证。不要沿调用链重复同一检查，也不要因为数据已经通过入口校验就删除业务检查。
 
-修掉由无效数据引起的 bug 时，在一处加上校验会让人觉得够了。但不同代码路径、重构或 mock 都能绕过这一处检查。
+## 区分检查的职责
 
-**核心原则：** 数据经过的每一层都要校验。让这个 bug 在结构上不可能发生。
+- **输入格式与类型。** 在外部数据进入系统时解析并校验，向内部传递满足约定的类型。内部调用不重复检查已经保证且仍然有效的条件。
+- **业务不变量。** 在拥有该规则的领域操作中检查余额、状态转换或资源归属。类型正确不代表操作在业务上合法。
+- **权限与独立信任边界。** 每个独立入口按自己的权限和信任约定检查。上游检查不能自动证明另一个入口安全。
+- **可变状态与危险副作用。** 在执行时保证约束仍然成立。并发场景优先使用事务、原子操作或版本条件；简单地再检查一次不能消除竞态。
+- **诊断。** 日志用于解释失败，不是防护层。按排查需要记录脱敏信息，不默认在每次调用中采集堆栈。
 
-## 为什么要多层
+## 修复步骤
 
-单层校验：「我们修好了这个 bug」
-多层校验：「我们让这个 bug 不可能发生」
+1. 追踪坏值和受影响的调用路径，列出必须成立的约束。
+2. 为每个约束确定负责的入口或领域操作，记录现有保证及其有效期。
+3. 修正首次违约的位置。只有存在独立入口、不同风险或状态变化时才增加另一处检查，并说明它负责什么。
+4. 根据验证档位核对真实失败路径和独立入口。测试 mock 绕过约束时先修测试准备，不据此给所有生产函数加防御。
+5. 删除被可靠保证替代的重复检查；无法确认保证或调用范围时保留并说明缺口。
 
-不同层抓住不同情况：
-- 入口校验抓住大多数 bug
-- 业务逻辑抓住边界情况
-- 环境保护阻止特定上下文中的危险操作
-- 调试日志在其他层失效时提供帮助
+## 示例：空路径导致在当前目录初始化 Git
 
-## 四层
+在接收工作目录的入口拒绝空路径，内部传递已解析的目标路径。负责执行 Git 的模块使用明确的 cwd，不把缺失路径静默替换为当前目录。
 
-### 第 1 层：入口校验
-**目的：** 在 API 边界拒绝明显无效的输入
+若该执行模块也是独立调用入口，它应履行自身的路径约定；若它只接收同一可信调用链的已验证路径，就无需再复制入口检查。测试隔离由临时工作目录和测试环境负责。执行时仍需处理权限变化、目录消失及 Git 命令失败，不能把这些运行时情况当作类型已保证的条件。
 
-```typescript
-function createProject(name: string, workingDirectory: string) {
-  if (!workingDirectory || workingDirectory.trim() === '') {
-    throw new Error('workingDirectory cannot be empty');
-  }
-  if (!existsSync(workingDirectory)) {
-    throw new Error(`workingDirectory does not exist: ${workingDirectory}`);
-  }
-  if (!statSync(workingDirectory).isDirectory()) {
-    throw new Error(`workingDirectory is not a directory: ${workingDirectory}`);
-  }
-  // ... proceed
-}
-```
-
-### 第 2 层：业务逻辑校验
-**目的：** 确保数据对这次操作是合理的
-
-```typescript
-function initializeWorkspace(projectDir: string, sessionId: string) {
-  if (!projectDir) {
-    throw new Error('projectDir required for workspace initialization');
-  }
-  // ... proceed
-}
-```
-
-### 第 3 层：环境保护
-**目的：** 在特定上下文中阻止危险操作
-
-```typescript
-async function gitInit(directory: string) {
-  // In tests, refuse git init outside temp directories
-  if (process.env.NODE_ENV === 'test') {
-    const normalized = normalize(resolve(directory));
-    const tmpDir = normalize(resolve(tmpdir()));
-
-    if (!normalized.startsWith(tmpDir)) {
-      throw new Error(
-        `Refusing git init outside temp dir during tests: ${directory}`
-      );
-    }
-  }
-  // ... proceed
-}
-```
-
-### 第 4 层：调试埋点
-**目的：** 捕获上下文，供事后排查
-
-```typescript
-async function gitInit(directory: string) {
-  const stack = new Error().stack;
-  logger.debug('About to git init', {
-    directory,
-    cwd: process.cwd(),
-    stack,
-  });
-  // ... proceed
-}
-```
-
-## 应用这个模式
-
-找到 bug 时：
-
-1. **追踪数据流** - 坏值从哪里来？在哪里被使用？
-2. **标出所有检查点** - 列出数据经过的每一处
-3. **在每一层加校验** - 入口、业务、环境、调试
-4. **测试每一层** - 试着绕过第 1 层，确认第 2 层能抓住它
-
-## 会话中的例子
-
-Bug：空的 `projectDir` 导致在源代码里执行了 `git init`
-
-**数据流：**
-1. 测试准备 → 空字符串
-2. `Project.create(name, '')`
-3. `WorkspaceManager.createWorkspace('')`
-4. `git init` 在 `process.cwd()` 中运行
-
-**加上的四层：**
-- 第 1 层：`Project.create()` 校验非空、存在、可写
-- 第 2 层：`WorkspaceManager` 校验 projectDir 非空
-- 第 3 层：`WorktreeManager` 在测试中拒绝 tmpdir 之外的 git init
-- 第 4 层：在 git init 之前记录堆栈跟踪
-
-**结果：** 全部 1847 个测试通过，这个 bug 无法再复现
-
-## 关键洞察
-
-四层都有必要。测试期间，每一层都抓住了其他层漏掉的 bug：
-- 不同代码路径绕过了入口校验
-- mock 绕过了业务逻辑检查
-- 不同平台上的边界情况需要环境保护
-- 调试日志识别出结构性误用
-
-**不要停在一个校验点。** 在每一层都加上检查。
+完成时说明每个检查防止哪种失败，以及哪些约束仍未得到验证。多层检查并不等于故障不可能发生。

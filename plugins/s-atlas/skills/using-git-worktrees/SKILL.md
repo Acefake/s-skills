@@ -84,7 +84,7 @@ git rev-parse --show-superproject-working-tree 2>/dev/null
 git check-ignore -q .worktrees 2>/dev/null || git check-ignore -q worktrees 2>/dev/null
 ```
 
-**如果未被忽略：** 加入 .gitignore，提交该改动，然后继续。
+**如果未被忽略：** 优先在本地 `.git/info/exclude` 中忽略选定目录，不改共享配置。仓库约定要求修改 `.gitignore` 时按约定修改；只有已授权提交时才提交，保留其他未提交修改。
 
 **为何关键：** 防止意外把 worktree 内容提交进仓库。
 
@@ -102,26 +102,13 @@ cd "$path"
 
 ## 步骤 2：项目设置
 
-自动检测并运行合适的设置：
+先检查已有依赖与项目约定。已有环境可用时直接复用；确需安装时使用仓库锁文件对应的包管理器和安装命令，不因文件存在就自动重装或构建。
 
-```bash
-# Node.js
-if [ -f package.json ]; then npm install; fi
-
-# Rust
-if [ -f Cargo.toml ]; then cargo build; fi
-
-# Python
-if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-if [ -f pyproject.toml ]; then poetry install; fi
-
-# Go
-if [ -f go.mod ]; then go mod download; fi
-```
+记录实际安装需求和执行结果。只读任务或第0档改动不为验证而安装依赖。
 
 ## 步骤 3：核验干净基线
 
-运行测试，确保工作区从干净状态开始：
+按 s-router 验证分档核验基线，复用当前代码上已有的结果；第0档不跑测试。记录工作区已有修改，不通过清理来制造“干净”状态。
 
 ```bash
 # Use project-appropriate command
@@ -152,7 +139,7 @@ Ready to implement <feature-name>
 | 存在 `worktrees/` | 使用它（核验已被忽略） |
 | 两者都存在 | 使用 `.worktrees/` |
 | 两者都不存在 | 检查指令文件，然后默认 `.worktrees/` |
-| 目录未被忽略 | 加入 .gitignore 并提交 |
+| 目录未被忽略 | 优先本地 exclude；共享忽略规则按约定和授权处理 |
 | 创建时出现权限错误 | 沙箱回退，就地工作 |
 | 基线期间测试失败 | 报告失败并询问 |
 | 没有 package.json/Cargo.toml | 跳过依赖安装 |
@@ -191,7 +178,7 @@ Ready to implement <feature-name>
 - 在已有原生 worktree 工具时使用 `git worktree add`（例如 `EnterWorktree`）。这是第一大错误——如果你有它，就用它。
 - 跳过步骤 1a，直接跳到步骤 1b 的 git 命令
 - 在未核验已被忽略的情况下创建 worktree（项目本地）
-- 跳过基线测试核验
+- 跳过当前验证档位要求的基线核验
 - 未询问就在测试失败时继续
 
 **始终：**
@@ -199,5 +186,5 @@ Ready to implement <feature-name>
 - 优先原生工具，而不是 git 回退
 - 遵循目录优先级：明确指令 > 已有的项目本地目录 > 默认
 - 对项目本地目录核验已被忽略
-- 自动检测并运行项目设置
+- 检查并复用已有环境，仅在必要时安装依赖
 - 核验干净的测试基线

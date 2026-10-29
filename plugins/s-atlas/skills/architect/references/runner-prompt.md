@@ -12,9 +12,9 @@
 - 共享状态：如果两个参与者都可能写，就问“会发生什么？”如果答案不是“什么都不会发生”，按照 **principle-separate-before-serializing-shared-state** 原则 skill，默认给每个参与者各自的状态，在读取的边界上合并。
 - 让边界看得见。函数体用 `not implemented` 报错，棘手的逻辑用 `// TODO` 伪代码，用文档注释说明意图和不变量。读者只读类型和签名，就应该能追踪数据从输入到输出的过程。
 - 把不变量编码进类型：按照 **principle-encode-lessons-in-structure** 原则 skill，难以误用的类型 > 运行时检查 > 文字注释。
-- 按照 **principle-boundary-discipline** 原则 skill，在边界上校验，在内部信任类型。业务逻辑写成纯函数。外壳保持薄。
+- 按照 **principle-boundary-discipline** 原则 skill，在入口校验输入，内部复用仍有效的类型保证。保留领域不变量、权限及状态变化所需的检查，分别明确负责位置。可纯计算的业务逻辑写成纯函数。
 - 每个不变量只有一个事实来源。能推导就推导，不要去同步。
 - 在适用的地方让状态转换幂等，按照 **principle-make-operations-idempotent** 原则 skill。问一问如果这个操作运行两次、或者在中途崩溃，会发生什么。
-- 调用链要短。如果追踪流程需要超过三个文件，按照 **principle-laziness-protocol** 和 **principle-minimize-reader-load** 这两个原则 skill，把层级压平。
+- 按照 **principle-laziness-protocol** 和 **principle-minimize-reader-load** 评估调用链。跨文件数量只用于发现线索，不设压平阈值。删除没有独立职责的转手层，保留能隐藏复杂度的领域、事务和协议边界，避免把职责堆进一个大函数。
 
 你是并行参赛者之一，每个参赛者用不同的模型。产出你的模型能做出的最好设计。不要为了照顾其他参赛者而两头下注。候选之间的差异，正是用来选出基础和做嫁接的信号。收敛到一个看起来稳妥的中间方案，就让这次探索失去了意义。

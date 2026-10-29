@@ -13,6 +13,16 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / 'plugins/s-atlas/skills/setup-s-instructions/scripts/global_instructions.py'
 
 
+def full_rules(legacy=False):
+    text = (ROOT / 'plugins/s-atlas/AGENTS.md').read_text(encoding='utf-8')
+    text = text[text.index('收到任务后，在读文件、跑命令、提问或作答之前：'):]
+    if legacy:
+        # Reproduce the existing user configuration: plain names, no patent rows.
+        text = '\n'.join(line for line in text.splitlines() if 'patent-disclosure' not in line and 'patent-application' not in line)
+        text = text.replace('`', '')
+    return text
+
+
 class GlobalInstructionsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -60,6 +70,72 @@ class GlobalInstructionsTest(unittest.TestCase):
         path.write_bytes(original)
         result = self.module.sync_global('codex', home=self.home, apply=True)
         self.assertFalse(result['changed'])
+        self.assertEqual(path.read_bytes(), original)
+
+    def test_complete_full_rules_are_configured_without_writing_or_backup(self):
+        for host, relative in (('codex', '.codex/AGENTS.md'), ('claude-code', '.claude/CLAUDE.md')):
+            for legacy in (False, True):
+                with self.subTest(host=host, legacy=legacy):
+                    path = self.home / relative
+                    path.parent.mkdir(exist_ok=True)
+                    rules = full_rules(legacy).replace('\n', '\r\n')
+                    original = ('\ufeff用户偏好\r\n\r\n' + rules + '\r\n其他配置\r\n').encode('utf-8')
+                    path.write_bytes(original)
+                    for apply in (False, True, True):
+                        result = self.module.sync_global(host, home=self.home, apply=apply)
+                        self.assertEqual(result['status'], 'configured')
+                        self.assertFalse(result['changed'])
+                        self.assertEqual(path.read_bytes(), original)
+                    self.assertFalse(path.with_name(path.name + '.s-atlas.bak').exists())
+
+    def test_cli_recognizes_existing_legacy_full_rules_for_both_hosts(self):
+        for host, relative in (('codex', '.codex/AGENTS.md'), ('claude-code', '.claude/CLAUDE.md')):
+            with self.subTest(host=host):
+                path = self.home / relative
+                path.parent.mkdir()
+                original = full_rules(legacy=True).encode('utf-8')
+                path.write_bytes(original)
+                for apply in (False, True, True):
+                    code, result = self.run_cli(host, apply=apply)
+                    self.assertEqual((code, result['status'], result['changed']), (0, 'configured', False))
+                    self.assertEqual(path.read_bytes(), original)
+                self.assertFalse(path.with_name(path.name + '.s-atlas.bak').exists())
+
+    def test_incomplete_or_changed_full_rules_are_not_treated_as_configured(self):
+        complete = full_rules(legacy=True)
+        incomplete = [
+            '先用 s-router，按需加载技能，测试按验证分档。',
+            complete.replace('2. 对照可用技能列表，加载对口的技能：任务落在它描述写的场景里。只是沾边的不加载。', ''),
+            complete.replace('| 中英翻译 | translate |', '| 中英翻译 | pptx |'),
+            complete[:complete.index('小改动（意图明确')],
+        ]
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        for text in incomplete:
+            with self.subTest(text=text[:50]):
+                original = text.encode('utf-8')
+                path.write_bytes(original)
+                result = self.module.sync_global('codex', home=self.home)
+                self.assertEqual(result['status'], 'missing')
+                self.assertEqual(path.read_bytes(), original)
+
+    def test_full_rules_do_not_hide_an_outdated_owned_block(self):
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        original = full_rules() + '\n' + self.module.START + '\nold\n' + self.module.END + '\n'
+        path.write_bytes(original.encode('utf-8'))
+        self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated')
+        self.module.sync_global('codex', home=self.home, apply=True)
+        self.assertTrue(path.read_text(encoding='utf-8').startswith(full_rules()))
+        self.assertEqual(path.read_text(encoding='utf-8').count(self.module.START), 1)
+
+    def test_full_rules_do_not_hide_malformed_markers(self):
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        original = (full_rules() + '\n' + self.module.START + '\nunclosed').encode('utf-8')
+        path.write_bytes(original)
+        with self.assertRaises(self.module.ConfigurationError):
+            self.module.sync_global('codex', home=self.home, apply=True)
         self.assertEqual(path.read_bytes(), original)
 
     def test_nonempty_override_is_the_effective_codex_target(self):

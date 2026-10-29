@@ -52,7 +52,7 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 把综合者完整的 Accepted / Rejected / Backlog 输出展示出来，在应用任何 Accepted 修改之前，等待用户明确批准。用户挑选其中一部分，也可能改变落实的去向。对 skill 的修改会影响组织里以后的每一个智能体。不要自动应用。
 
-把每个 Backlog 条目提交到你们团队的开发体验（devex）或待办跟踪系统里，不用等待。只有 Accepted 列表需要等批准。
+Backlog 默认输出为待办草稿。只有用户已授权写入指定跟踪系统时才创建条目，并报告实际链接；授权不足或工具不可用时保留草稿，不声称已提交。Accepted 的应用仍按上面的批准范围执行。
 
 严格按照每一条已批准条目的 Routing（去向）来做：
 

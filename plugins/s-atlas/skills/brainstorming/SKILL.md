@@ -25,7 +25,7 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 3. **澄清目标与约束。** 围绕目的、限制和成功标准提问；每条消息只问一个问题。
 4. **比较方案。** 提出 2–3 种做法，先说推荐项并解释取舍。
 5. **呈现设计。** 按复杂度分节，简单部分几句话，复杂部分最多约 200–300 词。覆盖架构、组件、数据流、错误处理和测试，每节取得用户确认；发现不一致就回到澄清。
-6. **写规格。** 将确认的设计保存到 `docs/s-atlas/specs/YYYY-MM-DD-<topic>-design.md` 并提交；用户指定路径优先。有 `elements-of-style:writing-clearly-and-concisely` 时使用它。
+6. **写规格。** 将确认的设计保存到 `docs/s-atlas/specs/YYYY-MM-DD-<topic>-design.md`，用户指定路径优先。只有用户已授权提交时，才按[commit-pr](../commit-pr/SKILL.md)提交规格。有 `elements-of-style:writing-clearly-and-concisely` 时使用它。
 7. **就地自检。** 按下节检查并修正，不另派一轮审查。
 8. **用户审阅。** 给出已写好的规格路径，请用户审阅；有修改就修订并重新自检，获批后才继续。
 9. **交接计划。** 调用[writing-plans](../writing-plans/SKILL.md)，不直接转入 frontend-design、mcp-builder 或其他实现技能。
@@ -44,7 +44,7 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 3. 确认能形成一份可执行计划；否则先拆范围。
 4. 消除会导致不同实现的歧义。
 
-修正后说明规格保存和提交的位置，请用户审阅；等待其回应。只有规格获批才调用 writing-plans。
+修正后说明规格保存路径；已获授权并执行提交时另报提交信息。请用户审阅，等待其回应。只有规格获批才调用 writing-plans。
 
 ## 视觉伴侣
 

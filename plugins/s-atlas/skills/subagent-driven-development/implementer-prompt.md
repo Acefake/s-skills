@@ -5,8 +5,8 @@
 ```
 Subagent (general-purpose):
   description: "Implement Task N: [task name]"
-  model: [MODEL — REQUIRED: choose per SKILL.md Model Selection; an omitted
-         model silently inherits the session's most expensive one]
+  # Omit model for auto/inherit-parent or when the host cannot select it.
+  model: [optional available model chosen from the role configuration]
   prompt: |
     You are implementing Task N: [task name]
 
@@ -33,9 +33,9 @@ Subagent (general-purpose):
 
     Once you're clear on requirements:
     1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
-    3. Verify implementation works
-    4. Commit your work
+    2. Follow the task's s-router verification level and tdd applicability; level 0 only reviews the diff
+    3. Verify implementation using the applicable checks and report limitations
+    4. Commit only when the parent task has authorized it; otherwise leave changes uncommitted
     5. Self-review (see below)
     6. Report back
 
@@ -44,8 +44,9 @@ Subagent (general-purpose):
     **While you work:** If you encounter something unexpected or unclear, **ask questions**.
     It's always OK to pause and clarify. Don't guess or make assumptions.
 
-    While iterating, run the focused test for what you're changing; run the
-    full suite once before committing, not after every edit.
+    Reuse verification already completed on the same code. Run focused checks
+    at the task's verification level, and the full suite only when that level
+    requires it. Do not add or run tests for level 0 changes.
 
     ## Code Organization
 

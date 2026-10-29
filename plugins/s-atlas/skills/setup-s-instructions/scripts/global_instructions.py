@@ -40,6 +40,26 @@ def instruction_path(host, home, codex_home=None, claude_config_dir=None):
     raise ValueError(f'Unsupported host: {host}')
 
 
+def has_known_instructions(text):
+    def normalize(value):
+        return re.sub(r'[\s`]+', '', value)
+
+    candidate = normalize(text)
+    if normalize(load_template()) in candidate:
+        return True
+    source = Path(__file__).resolve().parents[3] / 'AGENTS.md'
+    introduction = '收到任务后，在读文件、跑命令、提问或作答之前：'
+    _, found, body = source.read_text(encoding='utf-8').partition(introduction)
+    if not found:
+        raise ConfigurationError('Canonical full instruction body not found')
+    full = introduction + body
+    # Existing full rules may omit the two patent routes. Keep every other rule.
+    legacy = '\n'.join(line for line in full.splitlines()
+                       if not (line.startswith('|') and any(
+                           f'`{skill}`' in line for skill in ('patent-disclosure', 'patent-application'))))
+    return any(normalize(template) in candidate for template in (full, legacy))
+
+
 def merge_instructions(text):
     block = managed_block().replace('\n', '\r\n' if '\r\n' in text else '\n')
     if START in text or END in text:
@@ -52,9 +72,7 @@ def merge_instructions(text):
                 or text[end + len(END):].split('\n', 1)[0].strip()):
             raise ConfigurationError('Invalid s-atlas marker boundaries')
         return text[:start] + block + text[end + len(END):]
-    # An existing canonical unmarked snippet already fulfils the contract.
-    normalize = lambda value: re.sub(r'\s+', '', value)
-    if normalize(load_template()) in normalize(text):
+    if has_known_instructions(text):
         return text
     newline = '\r\n' if '\r\n' in text else '\n'
     separator = (newline if text.endswith(newline) else newline * 2) if text else ''

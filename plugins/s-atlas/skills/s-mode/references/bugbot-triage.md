@@ -2,12 +2,14 @@
 
 Use this reference when the Babysit playbook (`../playbooks/babysit.md`) handles Bugbot or review-automation comments. The goal is not to ignore Bugbot by default. The goal is to stop treating every comment as a required code change.
 
+先读取并遵守[执行边界](execution-boundaries.md)。只读分诊仅报告建议；修复、提交、回复和解决远程讨论分别以已有任务授权为准，未授权的消息保留为草稿。
+
 ## Decision rubric
 
 Classify each Bugbot thread before acting:
 
-- `fix`: The comment identifies a plausible correctness, security, privacy, data loss, auth, billing, migration, idempotency, race, or shipped-behavior issue. Fix it in the lowest owning PR, then reply with the commit SHA and resolve the thread.
-- `dismiss`: The comment matches a documented low-risk noisy pattern, and the current code/context proves the concern does not need a code change. Reply with a short reason and resolve the thread.
+- `fix`: The comment identifies a plausible correctness, security, privacy, data loss, auth, billing, migration, idempotency, race, or shipped-behavior issue. When authorized, fix it in the lowest owning PR; reply with the commit SHA and resolve the thread only when remote thread updates are authorized. Otherwise report the finding and proposed action.
+- `dismiss`: The comment matches a documented low-risk noisy pattern, and the current code/context proves the concern does not need a code change. Draft a short reason. Reply and resolve the thread only when authorized.
 - `ask`: The comment is novel, high-severity, security/privacy/data-related, or ambiguous. Ask the user instead of guessing.
 
 When in doubt, ask. Skipping a noisy code-quality comment is cheap; skipping a real data or security bug is not.

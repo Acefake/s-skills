@@ -28,21 +28,33 @@ description: "「做完了帮我审查」「合并前核验一下」。完成任
 
 ## 如何请求
 
-**1. 取得 git SHA：**
+**1. 确定完整审查范围：**
+
+- 任务验收使用开始实现前记录的基线 SHA；未记录时从计划、提交历史核实真实起点，不默认使用 `HEAD~1`。
+- 分支终审使用相对目标分支的 merge-base，覆盖全部任务提交。
+- 同时读取暂存、未暂存修改和相关未跟踪文件的实际内容，纳入评审材料。基线时已有的无关修改单独标明并保留。
+- 交接时列明基线、HEAD、工作区修改与新文件；提交范围的 diff 不能替代完整任务差异。
+
 ```bash
-BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
+# 分支终审示例，目标分支以实际任务为准
+BASE_SHA=$(git merge-base main HEAD)
 HEAD_SHA=$(git rev-parse HEAD)
+git diff "$BASE_SHA" "$HEAD_SHA"
+git status --short
+git diff
+git diff --cached
 ```
 
 **2. 派发代码评审子代理：**
 
-派发一个 `general-purpose` 子代理，填入 [code-reviewer.md](code-reviewer.md) 中的模板
+使用当前宿主实际可用的只读评审角色，填入 [code-reviewer.md](code-reviewer.md) 中的模板。没有委派能力时按 HOSTS 的回退规则自查，明确缺少独立审查。
 
 **占位符：**
 - `{DESCRIPTION}` - 你做了什么的简短摘要
 - `{PLAN_OR_REQUIREMENTS}` - 它应该做什么
 - `{BASE_SHA}` - 起始提交
 - `{HEAD_SHA}` - 结束提交
+- `{WORKING_TREE_FILES_AND_CONTENTS}` - 暂存、未暂存及相关新文件的实际内容，注明与任务的关系；无补充时明确写无
 
 **3. 按反馈行动：**
 - 立刻修复 Critical 问题
@@ -57,7 +69,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 You: Let me request code review before proceeding.
 
-BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
+BASE_SHA=<派发 Task 2 实现前记录的提交>
 HEAD_SHA=$(git rev-parse HEAD)
 
 [Dispatch code reviewer subagent]
