@@ -36,3 +36,7 @@ Codex 本项目开发可在仓库根运行 `powershell -NoProfile -File scripts/
 ## 全局技能提示词
 
 显式调用 [setup-s-instructions](skills/setup-s-instructions/SKILL.md) 初始化当前宿主的全局指令，保留其他配置并幂等更新。普通技能只按[日常自检](skills/setup-s-instructions/references/daily-check.md)提醒，每会话一次，不自动写入。Cursor 使用真正的全局 User Rules；项目 Always 规则不能替代全局配置。
+
+## 经确认的经验
+
+Codex、Claude Code、Cursor 均可按 [learn](skills/learn/SKILL.md) 使用本机 `~/.s-atlas/lessons`。这是插件自己的经验目录，不是任一宿主的原生记忆；不同项目按规范化根路径隔离，跨机器不自动同步。只读查询无需保存授权，每条经验写入或替换仍须明确确认。不编造自动加载、后台学习或其他客户端已经验收的结果。
