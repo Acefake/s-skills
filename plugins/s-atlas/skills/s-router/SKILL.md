@@ -62,10 +62,10 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 
 ## 共用执行规则
 
-- 所有代码修改交付前按 [code-style](../code-style/SKILL.md)「交付前自审」检查完整任务差异和关键调用方，简述发现及未解决风险。测试和清理不替代自审；按 code-style「按风险进行独立评审」判断是否派只读 subagent，不按文件数降低风险。
+- 所有代码修改交付前按 [code-style](../code-style/SKILL.md)「交付前自审」检查完整任务差异和关键调用方，简述发现及未解决风险。测试和清理不替代自审；按 code-style「交付前独立评审」派只读 subagent，按风险确定范围，不因改动小而省略。
 
 - 任务路由不覆盖调用政策。标有 `disable-model-invocation: true` 的技能仅在用户点名或已授权工作流明确派发时使用。
-- 风险评审委派已由全局规则授权；这不改变实现者执行方式，不自动启用子代理开发。
+- 代码独立评审委派已由全局规则授权；这不改变实现者执行方式，不自动启用子代理开发。
 - 提交、推送、rebase、发布与清理按已有任务授权执行；写设计、计划或完成验证本身不授权这些操作。提交步骤统一按[commit-pr](../commit-pr/SKILL.md)。
 - 测试强度按验证分档；TDD 是否适用按[tdd](../tdd/SKILL.md)。只读方案不执行测试，不新增测试文件。
 - 主任务可在当前或接续会话用[executing-plans](../executing-plans/SKILL.md)执行。用户要求或已授权工作流明确采用子代理时，才用[subagent-driven-development](../subagent-driven-development/SKILL.md)，不因工具可用而自动切换。
