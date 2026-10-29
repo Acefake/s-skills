@@ -39,6 +39,12 @@ Subagent (available read-only reviewer role):
 
     Review relevant staged, unstaged, and untracked files as well as the commit range. Separate unrelated changes that existed before the task. Do not treat the commit diff alone as the complete implementation.
 
+    ## Review Focus
+
+    [REVIEW_RISK_AND_SCOPE]
+
+    Read the actual changed code and key callers. Review only the assigned task and risk; do not delegate another review. When re-reviewing fixes, check the amended code and affected conclusions. Report missing evidence without inventing results.
+
     ## Read-Only Review
 
     Your review is read-only. Do not mutate files, the index, HEAD, branches, or worktree registrations. Use `git show`, `git diff`, and `git log` to inspect history. Report missing evidence instead of creating another checkout. Reuse existing verification results and follow s-router verification levels; a read-only review does not run tests.

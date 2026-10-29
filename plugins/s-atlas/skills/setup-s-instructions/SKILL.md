@@ -34,7 +34,7 @@ python scripts/global_instructions.py --host cursor
 
 提示词正文每次从当前插件的 [AGENTS.md](../../AGENTS.md) 读取，版本取自同一插件的 `plugin.json`，不从远端或其他缓存版本拼接。标记块同时记录版本和当前完整规则；版本或正文不同即为 `outdated`。检查返回的 `version` 表示本次期望版本，只有 `configured` 才表示目标已同步。
 
-[短规则](../../AGENTS-snippet.md) 和已登记的旧版完整规则（[v1](references/full-instructions-v1.txt)、[v2](references/full-instructions-v2.txt)） 仅用于识别迁移来源，包含省略两条专利路由的版本。识别允许空白、换行和行内代码反引号差异，但要求完整规则独占对应行。检查时报告 `outdated`，显式 `--apply` 后原位替换；保留块外内容、BOM、换行风格和首份备份。出现多个无标记规则块时停止写入，避免猜测该改哪一份。
+[短规则](../../AGENTS-snippet.md) 和已登记的旧版完整规则（[v1](references/full-instructions-v1.txt)、[v2](references/full-instructions-v2.txt)、[v3](references/full-instructions-v3.txt)） 仅用于识别迁移来源，包含省略两条专利路由的版本。识别允许空白、换行和行内代码反引号差异，但要求完整规则独占对应行。检查时报告 `outdated`，显式 `--apply` 后原位替换；保留块外内容、BOM、换行风格和首份备份。出现多个无标记规则块时停止写入，避免猜测该改哪一份。
 
 其他自定义改写不做关键词式替换。遇到相似但无法完整识别的规则，先比较冲突和归属，不把它当作最新版或直接叠加。Cursor 同样使用脚本返回的当前版本 block；只能通过真实 User Rules 读取和更新能力完成迁移，没有能力时交付替换内容并标记待操作。
 

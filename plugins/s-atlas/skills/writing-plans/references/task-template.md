@@ -72,9 +72,13 @@ Expected: PASS
 
 - [ ] **Step 5: Self-review before delivery**
 
-按 code-style 审阅本任务完整差异和关键调用方，核对需求、逻辑、边界、回归、重复、抽象和防御；修复任务内问题后复查，记录结论与未解决风险。不提交、不跑测试也不跳过。独立评审按既定流程另行完成。
+按 code-style 审阅本任务完整差异和关键调用方，核对需求、逻辑、边界、回归、重复、抽象和防御；修复任务内问题后复查，记录结论与未解决风险。不提交、不跑测试也不跳过。独立评审按下一步的风险条件完成。
 
-- [ ] **Step 6: Commit only when authorized**
+- [ ] **Step 6: Independent review when risk requires it**
+
+按 code-style 的风险条件判断。bug、新功能、多调用方及接口、状态、并发、权限、迁移改动默认派只读 subagent，使用 requesting-code-review 模板。评审读取实际代码和已有验证证据，不修改、不跑测试；实现者修复发现后复审。简单小代码改动只自审；无法委派时报告缺口，已有相同最终代码的有效评审可复用。
+
+- [ ] **Step 7: Commit only when authorized**
 
 仅在用户已授权提交时执行；否则保留工作区修改并报告。
 
