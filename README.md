@@ -57,41 +57,20 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 例如：`记住这次在当前项目保存后必须回读验证的经验`，或 `先查本项目以前关于 Vue 保存的经验`。安装新版后，全局提示词的新增规则仍通过显式调用 `setup-s-instructions` 同步，安装和普通技能调用不会自动改全局规则。
 
-## 技能怎么被选中
+## 架构与技能路由
 
-框架图直接维护在 README 中，由 GitHub 渲染 Mermaid。技能数量和调用策略以当前清单、frontmatter 与任务授权为准。
+[![s-atlas 架构：按需执行，确认后沉淀](docs/s-skills-route.png)](docs/architecture.md)
 
-```mermaid
-flowchart TD
-    A[用户任务与已有授权] --> B[读取项目约定与可用技能描述]
-    B --> C{是否已有明确匹配}
-    C -->|点名或描述匹配| D[加载对口技能]
-    C -->|不明确或跨模块| R[s-router 路由] --> D
-    D --> E{任务类型}
-    E -->|小改动| F[直接处理并保持范围]
-    E -->|新功能或改行为| G[brainstorming → writing-plans]
-    E -->|故障| H[systematic-debugging 定位根因]
-    E -->|只读审查或方案| I[读取证据并交付报告]
-    E -->|已授权加强流程| J[s-mode 选择 playbook]
-    G --> K[按已确认方式执行]
-    H --> K
-    J --> K
-    K --> L[code-style 与质量原则]
-    F --> L
-    L --> M[按验证档位与适用性检查]
-    M --> N[完整任务差异评审]
-    N --> V[代码改动由只读 subagent 独立评审]
-    V --> O{是否授权 Git 操作}
-    O -->|否| P[交付本地修改与验证说明]
-    O -->|是| Q[commit-pr 或分支收尾]
-    I --> P
-```
+[完整架构说明](docs/architecture.md) · [独立交互图](docs/architecture/s-atlas.html) · [可编辑图源](docs/architecture/s-atlas.architecture.json)
 
-- 任务有明确匹配时直接加载对应技能；拿不准才用 `s-router`。标记为显式调用的技能，需要用户点名或已授权工作流明确派发。
-- 小改动跳过方案和计划。已有计划按确认的执行方式处理；子代理执行需要对应授权，不因工具可用自动开启。
-- 优先复用当前合适的工作区。需要隔离时使用 `using-git-worktrees`，保留已有暂存、未暂存及新文件。
-- `architect`、`arena` 用于实质未决的职责、状态或接口选择，不因存在多种写法就强制多方案探索。独立评审不等于多个实现。
-- 计划、执行、子代理与定时复查沿用记录的技能来源和版本，不假定业务仓库的主干包含技能库。
+图中是技能、指令与本地脚本的协作关系，不是独立部署的服务。GitHub 可直接查看上面的预览；交互 HTML 下载后用浏览器打开，可追溯每个节点的固定提交源码。
+
+- **任务主线：** 当前宿主读取全局约定与技能描述。已有明确匹配就直接加载，拿不准才用 `s-router`；按任务进入直接处理、方案与计划、调试或只读交付。
+- **交付边界：** 验证强度按档位，代码改动先自审再做只读独立评审。已有验证结果可复用，Git 操作只按已有授权执行。
+- **经验支线：** `learn` 按需回读全局与当前项目经验；遇到纠正、重复错误或已验证的重要结论时，最多提出一条建议，逐条确认后才写入。
+- **两个显式入口：** `setup-s-instructions` 负责初始化与同步全局规则；`reflect` 负责深度复盘和技能修改。日常自检和学习建议不会自动替代这两个入口。
+
+小改动跳过方案和计划；子代理实现仍需授权，不能把代码独立评审授权扩展成并行开发授权。需要隔离时使用 `using-git-worktrees`，优先复用适合的现有工作区并保留已有修改。
 
 ### 验证与交付边界
 
@@ -128,13 +107,14 @@ flowchart TD
 
 支持插件命令的宿主也可以使用 `/s-atlas:技能名`，例如 `/s-atlas:s-mode`。Codex 可在技能选择器中选择相应技能。
 
-原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`patent-disclosure`、`patent-application`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及开发流程技能（`brainstorming` 到 `finishing-a-development-branch`）可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
+原则、`learn`、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`patent-disclosure`、`patent-application`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及开发流程技能（`brainstorming` 到 `finishing-a-development-branch`）可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
 
 ## 我想做什么
 
 | 我想做什么 | 用哪个 skill |
 |---|---|
 | 修 bug、报错、结果不对 | `systematic-debugging` |
+| 回读经验、记住纠正或重复错误的教训 | `learn`，保存前逐条确认 |
 | 有便宜的测试点，先写失败测试再修 | `tdd` |
 | 做新功能、改行为 | `brainstorming`，然后 `writing-plans` |
 | 按写好的计划做 | `executing-plans` 或 `subagent-driven-development` |
@@ -149,7 +129,7 @@ flowchart TD
 | 写发明专利申请文件、权利要求书、说明书 | `patent-application` |
 | 写 README、写文档、RFC、PR 说明的句子 | `technical-writing` |
 | 中文和英文互译，或中英对照 | `translate` |
-| 教我这块代码怎么工作 | `how` |
+| 点名 how 讲解代码 | `how`；未点名时直接讲解 |
 | 问为什么这样设计 | `why` |
 | 做页面、改界面、看卡顿 | `impeccable` |
 | 点名要一份有主见的视觉方向 | `frontend-design` |

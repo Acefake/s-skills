@@ -1,0 +1,417 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "s-atlas：按需执行，确认后沉淀",
+    "locale": "zh-CN",
+    "output": "docs/architecture/s-atlas.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/Acefake/s-skills.git",
+      "revision": "dab5ad11e14a8b8154b704d0006fc8d9171bd021"
+    },
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "代理会话"
+        },
+        "backend": {
+          "label": "技能与脚本"
+        },
+        "database": {
+          "label": "目录与记录"
+        },
+        "security": {
+          "label": "授权与约束"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "id": "setup",
+      "type": "backend",
+      "label": "setup-s-instructions",
+      "sublabel": "显式初始化与版本同步",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/setup-s-instructions/scripts/global_instructions.py",
+          "line": 132,
+          "end_line": 148
+        }
+      ]
+    },
+    {
+      "id": "rules",
+      "type": "security",
+      "label": "宿主全局规则",
+      "sublabel": "保留已有配置与任务授权",
+      "pos": [
+        320,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/setup-s-instructions/scripts/global_instructions.py",
+          "line": 32,
+          "end_line": 46
+        },
+        {
+          "path": "plugins/s-atlas/AGENTS.md",
+          "line": 5,
+          "end_line": 12
+        }
+      ]
+    },
+    {
+      "id": "catalog",
+      "type": "database",
+      "label": "79 个中文技能",
+      "sublabel": "frontmatter 与调用政策",
+      "pos": [
+        600,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/plugin.json",
+          "line": 3,
+          "end_line": 5
+        },
+        {
+          "path": "plugins/s-atlas/skills/s-router/SKILL.md",
+          "line": 69,
+          "end_line": 73
+        }
+      ]
+    },
+    {
+      "id": "session",
+      "type": "frontend",
+      "label": "当前代理会话",
+      "sublabel": "Codex · Claude Code · Cursor",
+      "pos": [
+        40,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/HOSTS.md",
+          "line": 3,
+          "end_line": 15
+        },
+        {
+          "path": "plugins/s-atlas/HOSTS.md",
+          "line": 19,
+          "end_line": 26
+        }
+      ]
+    },
+    {
+      "id": "router",
+      "type": "backend",
+      "label": "按需选择技能",
+      "sublabel": "直接匹配；拿不准才路由",
+      "pos": [
+        320,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/s-router/SKILL.md",
+          "line": 15,
+          "end_line": 30
+        },
+        {
+          "path": "plugins/s-atlas/AGENTS.md",
+          "line": 47,
+          "end_line": 49
+        }
+      ]
+    },
+    {
+      "id": "execution",
+      "type": "backend",
+      "label": "执行当前任务",
+      "sublabel": "能力技能与开发工作流",
+      "pos": [
+        600,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/s-router/SKILL.md",
+          "line": 47,
+          "end_line": 60
+        },
+        {
+          "path": "plugins/s-atlas/skills/s-router/SKILL.md",
+          "line": 69,
+          "end_line": 73
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "type": "security",
+      "label": "验证与交付",
+      "sublabel": "分档验证；代码双重评审",
+      "pos": [
+        880,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/s-router/SKILL.md",
+          "line": 32,
+          "end_line": 45
+        },
+        {
+          "path": "plugins/s-atlas/AGENTS.md",
+          "line": 41,
+          "end_line": 43
+        }
+      ]
+    },
+    {
+      "id": "learn",
+      "type": "backend",
+      "label": "learn：回读与建议",
+      "sublabel": "每个任务最多一条候选",
+      "pos": [
+        320,
+        430
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/learn/SKILL.md",
+          "line": 12,
+          "end_line": 34
+        },
+        {
+          "path": "plugins/s-atlas/skills/learn/SKILL.md",
+          "line": 50,
+          "end_line": 56
+        }
+      ]
+    },
+    {
+      "id": "approval",
+      "type": "security",
+      "label": "用户逐条确认",
+      "sublabel": "未确认的候选不写文件",
+      "pos": [
+        600,
+        430
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/learn/SKILL.md",
+          "line": 30,
+          "end_line": 46
+        }
+      ]
+    },
+    {
+      "id": "io",
+      "type": "backend",
+      "label": "lessons.py",
+      "sublabel": "查询；去重；保留替换历史",
+      "pos": [
+        880,
+        430
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/learn/scripts/lessons.py",
+          "line": 91,
+          "end_line": 138
+        },
+        {
+          "path": "plugins/s-atlas/skills/learn/scripts/lessons.py",
+          "line": 141,
+          "end_line": 169
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "type": "database",
+      "label": "本机经验目录",
+      "sublabel": "global / projects/<hash>",
+      "pos": [
+        880,
+        640
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "plugins/s-atlas/skills/learn/scripts/lessons.py",
+          "line": 49,
+          "end_line": 54
+        },
+        {
+          "path": "plugins/s-atlas/skills/learn/scripts/lessons.py",
+          "line": 141,
+          "end_line": 158
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "explicit-setup",
+      "from": "setup",
+      "to": "rules",
+      "label": "显式同步"
+    },
+    {
+      "id": "host-task",
+      "from": "session",
+      "to": "router",
+      "label": "任务与授权",
+      "variant": "emphasis"
+    },
+    {
+      "id": "global-rules",
+      "from": "rules",
+      "to": "router",
+      "label": "指令约束",
+      "variant": "security"
+    },
+    {
+      "id": "skill-selection",
+      "from": "router",
+      "to": "catalog",
+      "label": "按需读取"
+    },
+    {
+      "id": "run-skill",
+      "from": "router",
+      "to": "execution",
+      "label": "加载技能",
+      "variant": "emphasis"
+    },
+    {
+      "id": "verify-deliver",
+      "from": "execution",
+      "to": "delivery",
+      "label": "适用验证",
+      "variant": "emphasis"
+    },
+    {
+      "id": "learn-context",
+      "from": "router",
+      "to": "learn",
+      "label": "回读或纠正"
+    },
+    {
+      "id": "recall-context",
+      "from": "learn",
+      "to": "router",
+      "label": "相关经验≤3",
+      "fromSide": "left",
+      "toSide": "left"
+    },
+    {
+      "id": "propose-lesson",
+      "from": "learn",
+      "to": "approval",
+      "label": "一条建议"
+    },
+    {
+      "id": "approved-write",
+      "from": "approval",
+      "to": "io",
+      "label": "确认后写入",
+      "variant": "security"
+    },
+    {
+      "id": "readonly-search",
+      "from": "learn",
+      "to": "io",
+      "label": "只读查询",
+      "fromSide": "bottom",
+      "toSide": "bottom"
+    },
+    {
+      "id": "scoped-records",
+      "from": "io",
+      "to": "store",
+      "label": "分范围读写"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "技能按需加载",
+      "items": [
+        "已有明确匹配就直接加载；s-router 只在不明确时兜底。",
+        "58 个自动选用技能；21 个显式技能仍需点名或工作流授权。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "经验有确认边界",
+      "items": [
+        "查询只读全局与当前项目；其他项目不混入。",
+        "--confirmed 是调用方的确认声明，不独立验证聊天授权。"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "不是后台自动训练",
+      "items": [
+        "learn 只保存经确认的经验；reflect 仍是显式深度复盘。",
+        "文案和只读任务不跑测试；Git 操作仍遵循已有授权。"
+      ]
+    }
+  ]
+}
