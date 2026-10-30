@@ -59,11 +59,11 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 ## 架构与技能路由
 
-[![s-atlas 架构：按需执行，确认后沉淀](docs/s-skills-route.png)](docs/architecture.md)
+[![s-atlas 技能全景：任务路由与 79 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
 
-[完整架构说明](docs/architecture.md) · [独立交互图](docs/architecture/s-atlas.html) · [可编辑图源](docs/architecture/s-atlas.architecture.json)
+[全景卡片图源（HTML）](docs/architecture/s-atlas-panorama.html) · [完整说明](docs/architecture.md) · [组件关系补充图](docs/architecture/s-atlas.html)
 
-图中是技能、指令与本地脚本的协作关系，不是独立部署的服务。GitHub 可直接查看上面的预览；交互 HTML 下载后用浏览器打开，可追溯每个节点的固定提交源码。
+主图沿用白底全景卡片风格：上半部分展示从任务到技能的路由，下半部分按入口与配置、工作模式、开发主流程、专项技能和原则分栏，完整列出 79 个技能的触发例子与职责。浅色实底表示可自动选用，白底虚线表示需点名或已有授权派发。点击图片可放大，HTML 卡片链接到对应技能源码。
 
 - **任务主线：** 当前宿主读取全局约定与技能描述。已有明确匹配就直接加载，拿不准才用 `s-router`；按任务进入直接处理、方案与计划、调试或只读交付。
 - **交付边界：** 验证强度按档位，代码改动先自审再做只读独立评审。已有验证结果可复用，Git 操作只按已有授权执行。
