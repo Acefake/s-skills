@@ -86,7 +86,7 @@ ts	phase	decision	why	evidence	result
 这个审查者要和做这份工作的模型不同系列。具体派法见[宿主适配](../../HOSTS.md)。
 
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ## 审阅这条记录
 

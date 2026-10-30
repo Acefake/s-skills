@@ -1,8 +1,8 @@
 # s-atlas 技能全景：路由、职责与调用边界
 
-s-atlas 是一套由代理读取的技能与本地工具，不是独立运行的 Agent 服务。Codex、Claude Code、Cursor 提供会话和执行能力；本仓库提供技能描述、任务流程、宿主适配和确定性的配置、经验读写工具。
+s-atlas 是一套由代理读取的技能与本地工具，不是独立运行的 Agent 服务。Codex、Claude Code、Cursor、WorkBuddy 提供会话和执行能力；本仓库提供技能描述、任务流程、宿主适配和确定性的配置、经验读写工具。
 
-当前版本 **1.7.19**，共 **79** 个技能：**58** 个可按描述自动选用，**21** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
+当前版本 **1.7.20**，共 **79** 个技能：**58** 个可按描述自动选用，**21** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
 
 ![s-atlas 全景卡片图：任务路由与 79 个技能](s-skills-route.png)
 
@@ -26,7 +26,7 @@ s-atlas 是一套由代理读取的技能与本地工具，不是独立运行的
 
 | 层次 | 负责什么 | 主要位置 |
 |---|---|---|
-| 宿主会话 | 提供模型、文件、终端、浏览器和代理能力；能力是否可用以当前会话为准 | Codex、Claude Code、Cursor |
+| 宿主会话 | 提供模型、文件、终端、浏览器和代理能力；能力是否可用以当前会话为准 | Codex、Claude Code、Cursor、WorkBuddy |
 | 全局规则 | 指定如何匹配技能、何时验证、如何评审和确认经验 | [AGENTS.md](../plugins/s-atlas/AGENTS.md) |
 | 技能发现与路由 | 优先直接匹配；不明确时才由 s-router 判断；不覆盖显式调用政策 | [s-router](../plugins/s-atlas/skills/s-router/SKILL.md) 与各技能 frontmatter |
 | 执行流程与能力 | 按任务使用方案、计划、调试、文档、界面、测试等技能 | [skills/](../plugins/s-atlas/skills/) |
@@ -122,7 +122,7 @@ lessons/
 | 显式执行 `setup-s-instructions` | 将当前版本完整规则同步到受管标记块，保留其他内容 | 不清空用户配置，不自动保存经验 |
 | 日常全局自检 | 每个主会话只读检查一次，缺失或过期时提醒 | 不自动初始化，不阻塞任务 |
 
-Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`。Cursor 使用全局 User Rules，有真实设置编辑能力时才自动操作；否则提供待粘贴内容并标明尚未配置，项目 Always 规则不能冒充全局规则。
+Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`。WorkBuddy 使用兼容文件 `~/.codebuddy/CODEBUDDY.md`，项目技能安装到 `.codebuddy/skills/`；本机与云端分开。Cursor 使用全局 User Rules，有真实设置编辑能力时才自动操作；否则提供待粘贴内容并标明尚未配置，项目 Always 规则不能冒充全局规则。
 
 ## 五、源码证据和维护方式
 
@@ -130,4 +130,4 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 组件关系补充图单独维护 [JSON 图源](architecture/s-atlas.architecture.json)，使用 `archify finalize architecture` 生成其 HTML，并保留仓库证据校验、严格产物检查和浏览器检查。它与主图是两种视角，不共用 PNG 预览。
 
-经验学习功能已有 61 项自动测试、3 个隔离 Codex 行为场景及独立只读评审记录。测试覆盖确认、回读、项目隔离、幂等、替换链、并发、历史恢复和 Windows BOM 输入。隔离场景通过不代表 Claude Code、Cursor 客户端已经实测，也不代表模型参数会自动学习。
+经验学习功能已有 61 项自动测试、3 个隔离 Codex 行为场景及独立只读评审记录。测试覆盖确认、回读、项目隔离、幂等、替换链、并发、历史恢复和 Windows BOM 输入。隔离场景通过不代表 Claude Code、Cursor、WorkBuddy 客户端已经实测，也不代表模型参数会自动学习。

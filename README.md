@@ -2,9 +2,9 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.19，共 **79** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.20，共 **79** 个技能。
 
-它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor会按你说的话自动挑对应的技能。
+它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor、WorkBuddy会按你说的话自动挑对应的技能。
 
 技能目录名和 frontmatter 的 `name` 一致，都是英文小写 kebab-case。描述以中文触发词开头，主要正文使用中文，部分模板和 playbook 使用英文。
 
@@ -39,11 +39,21 @@ codex plugin marketplace add Acefake/s-skills
 
 Cursor 从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `s-atlas`。各宿主的命令支持与入口以实际界面为准。安装或更新后开启新会话，确认技能路径和版本。
 
+### WorkBuddy 本机项目安装
+
+克隆仓库后，在 Windows PowerShell 中运行：
+
+```powershell
+powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
+```
+
+脚本使用官方兼容的项目 `.codebuddy/skills/` 目录，链接完整源码；保留仓库位置，重新打开该项目会话确认发现技能。重复执行不重复创建，已有用户文件不会被覆盖。此入口只支持 Windows 本机项目；没有上架 WorkBuddy 市场，也不自动同步云端个人技能库。宿主工具与模型能力以当前会话为准，详见 [WorkBuddy 参考](plugins/s-atlas/skills/s-router/references/workbuddy-tools.md)。
+
 ### 让技能自动生效
 
 安装后显式调用 `setup-s-instructions`，初始化当前宿主的全局技能提示词。Codex 在技能选择器中选择它；支持插件命令的宿主可用 `/s-atlas:setup-s-instructions`。
 
-Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`，默认 `~/.claude/CLAUDE.md`。初始化从当前插件的 `AGENTS.md` 和 `plugin.json` 生成带版本的完整规则。已知旧规则原位迁移，保留用户其他内容和首份备份，重复执行不会重复添加。版本或正文变化时只读检查报告过期，显式初始化或更新后同步。Cursor 使用全局 User Rules；没有可用的设置编辑工具时，技能给出完整提示词供粘贴，并标记尚未配置。
+Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`，默认 `~/.claude/CLAUDE.md`。WorkBuddy 使用用户级兼容文件 `~/.codebuddy/CODEBUDDY.md`，脚本参数为 `--host workbuddy`，默认只读检查，明确初始化时加 `--apply`。初始化从当前插件的 `AGENTS.md` 和 `plugin.json` 生成带版本的完整规则。已知旧规则原位迁移，保留用户其他内容和首份备份，重复执行不会重复添加。版本或正文变化时只读检查报告过期，显式初始化或更新后同步。Cursor 使用全局 User Rules；没有可用的设置编辑工具时，技能给出完整提示词供粘贴，并标记尚未配置。
 
 日常使用技能时，每个主会话只读检查一次；缺失、过期或无法确认时提醒，继续原任务。安装与普通技能调用不会自动改写全局配置。全局规则通常在新会话生效。
 
@@ -53,7 +63,7 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 `learn` 在用户纠正、重复错误或已验证的重要结论出现时，先检查已有规则和经验，每个任务最多提出一条学习建议。普通成功、一次性要求和重复经验不记录。你确认具体内容与范围后才保存；未确认的候选不写文件。
 
-经验保存在本机 `~/.s-atlas/lessons`，全局与项目分开，三个支持的宿主可共用；实际项目任务按意图回读最多三条，其他项目的记录不会混入。重复保存不新增，修订须确认并引用被替代记录，旧文件保留为历史。经验不能覆盖当前指示和实际代码，不代表模型训练或后台自动学习。`reflect` 仍负责点名后的深度复盘与技能修改。
+经验保存在本机 `~/.s-atlas/lessons`，全局与项目分开，四个支持的宿主可共用；实际项目任务按意图回读最多三条，其他项目的记录不会混入。重复保存不新增，修订须确认并引用被替代记录，旧文件保留为历史。经验不能覆盖当前指示和实际代码，不代表模型训练或后台自动学习。`reflect` 仍负责点名后的深度复盘与技能修改。
 
 例如：`记住这次在当前项目保存后必须回读验证的经验`，或 `先查本项目以前关于 Vue 保存的经验`。安装新版后，全局提示词的新增规则仍通过显式调用 `setup-s-instructions` 同步，安装和普通技能调用不会自动改全局规则。
 
@@ -149,7 +159,7 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 - [工作模式](plugins/s-atlas/skills/s-mode/SKILL.md)
 - [模型设置](plugins/s-atlas/skills/setup-s-models/SKILL.md)
 - [改名对照与回滚](RENAMES.md)
-- [Codex、Claude Code、Cursor 宿主适配规则](plugins/s-atlas/HOSTS.md)
+- [Codex、Claude Code、Cursor、WorkBuddy 宿主适配规则](plugins/s-atlas/HOSTS.md)
 
 ## 活跃技能
 

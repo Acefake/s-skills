@@ -45,7 +45,7 @@ disable-model-invocation: true
 
 探索读 `how explorer`，讲解读 `how explainer`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。复杂情况先并行派探索者，等齐再派一个讲解者。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 

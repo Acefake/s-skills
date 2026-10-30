@@ -116,8 +116,8 @@ await browser.close();
 
 ## 宿主适配
 
-装置跑在能打开这个界面的那台机器上。Codex、Claude Code、Cursor 都用上面的 Playwright 或 CDP。子智能体在另一台机器上、而界面只在用户电脑上时，就在用户这台机器上跑，并写明跑在哪。
+装置跑在能打开这个界面的那台机器上。Codex、Claude Code、Cursor、WorkBuddy 都用上面的 Playwright 或 CDP。子智能体在另一台机器上、而界面只在用户电脑上时，就在用户这台机器上跑，并写明跑在哪。
 
 Claude Code 同样用本机浏览器工具。没有 Playwright 时，用环境里已经有的浏览器工具，不要为了这一次新加依赖。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

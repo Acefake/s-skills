@@ -78,7 +78,7 @@ Backlog 默认输出为待办草稿。只有用户已授权写入指定跟踪系
 
 判断、发散和综合读 `reflect judgment, divergent, synthesizer`，工具视角读 `reflect tooling`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Cursor 按那份 skill 文末的目录说明放置。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出三个子智能体
 

@@ -91,8 +91,8 @@ uv run <skill>/scripts/recalc.py model.xlsx
 
 ## 宿主适配
 
-步骤在 Codex、Claude Code、Cursor 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
+步骤在 Codex、Claude Code、Cursor、WorkBuddy 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
 
 依赖：Python 3.12（推荐 `uv`）和 LibreOffice。看中文时还要 Noto CJK。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

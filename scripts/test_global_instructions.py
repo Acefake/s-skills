@@ -107,6 +107,22 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.assertFalse(result['changed'])
         self.assertEqual(list(self.home.iterdir()), [])
 
+    def test_workbuddy_global_compatibility_file_is_readonly_until_apply(self):
+        code, result = self.run_cli('workbuddy')
+        self.assertEqual((code, result['status']), (2, 'missing'))
+        self.assertEqual(Path(result['target']), self.home/'.codebuddy/CODEBUDDY.md')
+        self.assertEqual(list(self.home.iterdir()), [])
+        path = self.home/'.codebuddy/CODEBUDDY.md'
+        path.parent.mkdir()
+        original = '用户的 WorkBuddy 规则\r\n'.encode('utf-8')
+        path.write_bytes(original)
+        for expected in (True, False):
+            code, result = self.run_cli('workbuddy', apply=True)
+            self.assertEqual((code, result['status'], result['changed']), (0, 'configured', expected))
+            self.assertTrue(path.read_bytes().startswith(original))
+        self.assertEqual(path.with_name(path.name+'.s-atlas.bak').read_bytes(), original)
+        self.assertFalse((self.home/'.workbuddy').exists())
+
     def test_create_global_codex_and_repeat_without_changes(self):
         result = self.module.sync_global('codex', home=self.home, apply=True)
         path = self.home / '.codex/AGENTS.md'

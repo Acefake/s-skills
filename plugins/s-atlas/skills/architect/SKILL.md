@@ -88,7 +88,7 @@ disable-model-invocation: true
 
 这个 skill 把 [arena](../arena/SKILL.md) 的派法拿来画草图。角色行换成 `architect runners`，代替 `arena runners`。拒绝规则、后台、只读评审，按[宿主适配](../../HOSTS.md)中当前平台参考的 arena 章节执行。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 

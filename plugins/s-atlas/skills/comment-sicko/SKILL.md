@@ -42,4 +42,4 @@ disable-model-invocation: true
 
 这是子智能体的提示词，不是主对话的流程。主对话走 `/no-comments`。派的时候把范围传进来，不要把上面的规则再复述一遍。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

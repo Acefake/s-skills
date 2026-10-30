@@ -67,8 +67,8 @@ uv run <skill>/scripts/convert_pdf_to_images.py out.pdf check --pages 1-3
 
 ## 宿主适配
 
-步骤在 Codex、Claude Code、Cursor 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
+步骤在 Codex、Claude Code、Cursor、WorkBuddy 里相同。脚本在本机终端跑。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
 
 依赖：Python 3.12（推荐 `uv`）和 poppler。扫描件 OCR 另要 Tesseract 和对应语言包，中文简体是 `tesseract-ocr-chi-sim`。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

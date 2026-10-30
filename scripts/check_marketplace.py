@@ -413,7 +413,7 @@ def check_skill_references(problems: Problems) -> None:
 
 def check_supported_hosts(problems: Problems) -> None:
     """Reject retired adapters in maintained entry points and platform guides."""
-    retired = re.compile(r"\b(?:T3(?:\s+Code)?|OpenCode|Hermes|WorkBuddy|CodeBuddy|Antigravity|Pi)\b", re.I)
+    retired = re.compile(r"\b(?:T3(?:\s+Code)?|OpenCode|Hermes|Antigravity|Pi)\b|(?<![./\\])\bCodeBuddy\b(?![./\\])", re.I)
     for relative in (".codebuddy-plugin/marketplace.json", "plugins/s-atlas/.codebuddy-plugin/plugin.json"):
         if (ROOT / relative).exists():
             problems.add(f"unsupported host adapter: {relative}")

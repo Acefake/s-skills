@@ -57,7 +57,7 @@ disable-model-invocation: true
 
 参赛者读 `arena runners`，交叉评审读 `arena cross-judge pool` 并从中选一个，优先和父级不同系列。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 

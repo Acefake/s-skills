@@ -74,6 +74,6 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 
 ## 平台参考与用户指示
 
-派子代理、建工作树或收尾分支时，只读当前平台参考：[Codex](references/codex-tools.md)、[Claude Code](references/claude-code-tools.md)、[Cursor](references/cursor-tools.md)。
+派子代理、建工作树或收尾分支时，只读当前平台参考：[Codex](references/codex-tools.md)、[Claude Code](references/claude-code-tools.md)、[Cursor](references/cursor-tools.md)、[WorkBuddy](references/workbuddy-tools.md)。
 
 用户的指令文件和直接要求优先于技能，技能优先于默认行为。只有用户明确要求时才跳过技能工作流或说明。

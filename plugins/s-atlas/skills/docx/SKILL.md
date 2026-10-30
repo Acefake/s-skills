@@ -81,8 +81,8 @@ uv run <skill>/ooxml/scripts/unpack.py contract.docx unpacked
 
 ## 宿主适配
 
-步骤在 Codex、Claude Code、Cursor 里相同。脚本在本机终端跑，不依赖某个聊天软件的专用工具。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
+步骤在 Codex、Claude Code、Cursor、WorkBuddy 里相同。脚本在本机终端跑，不依赖某个聊天软件的专用工具。某个软件没有终端时，说明缺了哪一步，不要改流程去迁就它。
 
 依赖：Python 3.12（推荐 `uv`）、Node.js（新建文档时）、LibreOffice、poppler、pandoc。看中文渲染还要 Noto CJK。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

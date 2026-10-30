@@ -116,8 +116,8 @@ os.close(master_fd)
 
 ## 宿主适配
 
-装置跑在有这个命令行的那台机器上。Codex、Claude Code、Cursor 都用上面的 `tmux` 或 PTY。聊天软件如果把子智能体放在另一台机器上，而命令行只在用户电脑上，就在用户这台机器上跑装置，并在回复里写明跑在哪。
+装置跑在有这个命令行的那台机器上。Codex、Claude Code、Cursor、WorkBuddy 都用上面的 `tmux` 或 PTY。聊天软件如果把子智能体放在另一台机器上，而命令行只在用户电脑上，就在用户这台机器上跑装置，并在回复里写明跑在哪。
 
 Claude Code 同样用本机的 `tmux` 或 PTY。没有 `tmux` 时用上面的 Python。不要发明一个聊天软件里的“control-cli”参数。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

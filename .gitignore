@@ -5,3 +5,9 @@ node_modules/
 .agents/HOSTS.md
 .agents/LICENSE*
 .agents/NOTICE*
+
+.codebuddy/skills/
+.codebuddy/HOSTS.md
+.codebuddy/LICENSE*
+.codebuddy/NOTICE*
+.codebuddy/.s-atlas-common-files.json

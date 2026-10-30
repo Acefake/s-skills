@@ -35,6 +35,8 @@ def managed_block():
 
 
 def instruction_path(host, home, codex_home=None, claude_config_dir=None):
+    if host == 'workbuddy':
+        return home / '.codebuddy' / 'CODEBUDDY.md'
     if host == 'claude-code':
         directory = Path(claude_config_dir).expanduser() if claude_config_dir is not None else home / '.claude'
         return directory / 'CLAUDE.md'
@@ -150,7 +152,7 @@ def sync_global(host, *, home, codex_home=None, claude_config_dir=None, apply=Fa
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--host', required=True, choices=('codex', 'claude-code', 'cursor'))
+    parser.add_argument('--host', required=True, choices=('codex', 'claude-code', 'cursor', 'workbuddy'))
     parser.add_argument('--apply', action='store_true', help='Explicitly initialize or update the owned block')
     parser.add_argument('--home', type=Path, default=Path.home())
     parser.add_argument('--codex-home', type=Path, default=os.environ.get('CODEX_HOME') or None)

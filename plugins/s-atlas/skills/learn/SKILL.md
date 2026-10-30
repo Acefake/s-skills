@@ -45,7 +45,7 @@ python scripts/lessons.py save --project /absolute/project/root --record /absolu
 
 `--confirmed` 只是调用方已获得确认的声明，不能用该参数替代实际确认。脚本拒绝没有声明的写入，精确重复保存返回 `changed=false`。语义重复由前一步判断，不声称脚本理解了任意改写。
 
-存储位于 `~/.s-atlas/lessons/global` 或 `~/.s-atlas/lessons/projects/<项目根路径哈希>`，Codex、Claude Code、Cursor 共用本机记录；不会写入项目 Git 文件。`--home <隔离目录>` 放在子命令前，仅用于明确指定的测试目录。受文件访问限制时停止保存并说明未完成，不绕过限制。
+存储位于 `~/.s-atlas/lessons/global` 或 `~/.s-atlas/lessons/projects/<项目根路径哈希>`，Codex、Claude Code、Cursor、WorkBuddy 共用本机记录；不会写入项目 Git 文件。`--home <隔离目录>` 放在子命令前，仅用于明确指定的测试目录。受文件访问限制时停止保存并说明未完成，不绕过限制。
 
 修订已有经验时，先展示新旧差异，获得针对替换的确认，在新记录中填写同作用域旧记录的 `supersedes` ID。旧文件保留为历史，回读不再返回被替代记录。不要悄悄覆盖、删掉用户经验；无法确定冲突时不追加两条互相矛盾的规则。
 

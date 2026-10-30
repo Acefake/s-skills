@@ -33,6 +33,6 @@ description: "「/deslop」「提交前清一下 AI 味」「去掉多余的 any
 
 做法不依赖聊天软件。对当前仓库跑 `git diff main`（或这次真正的基础分支），只动 diff 里新出现的代码腔。
 
-Codex、Claude Code、Cursor 都按上面的清单改。Claude Code 同样。没有 git diff 时，就看用户指出的文件。
+Codex、Claude Code、Cursor、WorkBuddy 都按上面的清单改。Claude Code 同样。没有 git diff 时，就看用户指出的文件。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

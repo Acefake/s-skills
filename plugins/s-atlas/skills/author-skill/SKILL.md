@@ -46,4 +46,4 @@ description: "「用户会说的这句话」。做什么。Use when <the English
 ## 宿主适配
 
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

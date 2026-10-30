@@ -97,6 +97,6 @@ EOF
 
 ## 宿主适配
 
-步骤在 Codex、Claude Code、Cursor 里相同。都用本机的 git。某个软件没有终端或没有 `gh` 时，说明缺了哪一步，把标题和正文写出来交给用户，不要换成那个软件自己的一套说法。
+步骤在 Codex、Claude Code、Cursor、WorkBuddy 里相同。都用本机的 git。某个软件没有终端或没有 `gh` 时，说明缺了哪一步，把标题和正文写出来交给用户，不要换成那个软件自己的一套说法。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

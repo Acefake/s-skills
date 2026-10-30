@@ -107,7 +107,7 @@ disable-model-invocation: true
 
 调查读 `why investigators`，综合读 `why synthesizer`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。调查者要能用 MCP，提示词里仍然禁止它写文件。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 

@@ -1,6 +1,6 @@
 # s-atlas 技能：动手前先查技能
 
-仅支持 Codex、Claude Code、Cursor。全局指令位置：Codex 是 `~/.codex/AGENTS.md`，Claude Code 是 `~/.claude/CLAUDE.md`，Cursor 使用全局 User Rules（项目 Always 规则只对项目生效）；也可以放进项目约定文件。
+仅支持 Codex、Claude Code、Cursor、WorkBuddy。全局指令位置：Codex 是 `~/.codex/AGENTS.md`，Claude Code 是 `~/.claude/CLAUDE.md`，Cursor 使用全局 User Rules（项目 Always 规则只对项目生效）；WorkBuddy 使用兼容目录 `~/.codebuddy/CODEBUDDY.md`。也可以放进项目约定文件。
 
 收到任务后，在读文件、跑命令、提问或作答之前：
 

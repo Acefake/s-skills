@@ -43,6 +43,6 @@ description: "「翻译成英文」「译成中文」「中英对照」「帮我
 
 ## 宿主适配
 
-Codex、Claude Code、Cursor 都在对话里给出译文。不要依赖某个软件自带的翻译命令。
+Codex、Claude Code、Cursor、WorkBuddy 都在对话里给出译文。不要依赖某个软件自带的翻译命令。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

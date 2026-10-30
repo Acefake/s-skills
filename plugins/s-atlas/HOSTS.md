@@ -1,6 +1,6 @@
 # 宿主适配
 
-本仓库只支持 **Codex、Claude Code、Cursor**。插件名为 `s-atlas`，仓库和市场名为 `s-skills`。版本以插件清单为准，技能以当前会话实际发现的目录为准。
+本仓库只支持 **Codex、Claude Code、Cursor、WorkBuddy**。插件名为 `s-atlas`，仓库和市场名为 `s-skills`。版本以插件清单为准，技能以当前会话实际发现的目录为准。
 
 ## 按需读取当前宿主
 
@@ -11,6 +11,7 @@
 | Codex | [Codex 工具和配置](skills/s-router/references/codex-tools.md) |
 | Claude Code | [Claude Code 工具和配置](skills/s-router/references/claude-code-tools.md) |
 | Cursor | [Cursor 工具和配置](skills/s-router/references/cursor-tools.md) |
+| WorkBuddy | [WorkBuddy 工具和配置](skills/s-router/references/workbuddy-tools.md) |
 
 技能正文负责任务步骤、角色职责、输入输出和验收；平台参考负责工具参数、配置位置和能力差异。已有用户配置与本次授权优先，不用示例模型覆盖用户选择。
 
@@ -29,6 +30,8 @@
 
 Codex 本项目开发可在仓库根运行 `powershell -NoProfile -File scripts/install_local_skills.ps1`。脚本将技能链接到项目 `.agents/skills/`，并将本文件复制到 `.agents/HOSTS.md`。平台参考位于技能内，随目录链接一起提供，无需额外复制平台资料。重新打开会话确认实际发现路径。
 
+WorkBuddy 本机项目安装使用同一脚本加 `-HostName workbuddy`，链接到 `.codebuddy/skills/`。共享说明采用哈希记录管理；可以更新未被用户修改的受管副本，已有其他内容则停止并保留。它不是市场插件安装，也不配置云端技能库。
+
 分发入口以仓库 README 为准。运行 `python scripts/check_marketplace.py` 核对清单、版本锁、调用政策、公共引用和支持范围；运行 `python -m unittest discover -s scripts -p "test_*.py"` 检查发布与适配逻辑。
 
 验证状态分别记录：文件校验、会话发现、实际读取、行为验证。一个阶段通过不代表其他阶段也已通过。真实宿主未运行时明确标记“未验证”。
@@ -39,4 +42,4 @@ Codex 本项目开发可在仓库根运行 `powershell -NoProfile -File scripts/
 
 ## 经确认的经验
 
-Codex、Claude Code、Cursor 均可按 [learn](skills/learn/SKILL.md) 使用本机 `~/.s-atlas/lessons`。这是插件自己的经验目录，不是任一宿主的原生记忆；不同项目按规范化根路径隔离，跨机器不自动同步。只读查询无需保存授权，每条经验写入或替换仍须明确确认。不编造自动加载、后台学习或其他客户端已经验收的结果。
+Codex、Claude Code、Cursor、WorkBuddy 均可按 [learn](skills/learn/SKILL.md) 使用本机 `~/.s-atlas/lessons`。这是插件自己的经验目录，不是任一宿主的原生记忆；不同项目按规范化根路径隔离，跨机器不自动同步。只读查询无需保存授权，每条经验写入或替换仍须明确确认。不编造自动加载、后台学习或其他客户端已经验收的结果。

@@ -50,7 +50,7 @@ disable-model-invocation: true
 
 角色行是 `swarm workers`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。一条消息里把 N 个工作者都派出去。
 
-Codex、Claude Code、Cursor 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 
