@@ -6,6 +6,7 @@ and how an existing block is replaced without touching the rest of the file.
 
     python s_models.py render --budget 省 --fast sonnet --strong opus
     python s_models.py check ~/.claude/rules/s-models.md
+    python s_models.py resolve ~/.claude/rules/s-models.md 审问审查者
     python s_models.py write ~/.claude/rules/s-models.md --budget 大 --fast sonnet --strong opus --role-effort
     python s_models.py write ... --apply      # only this flag writes
 
@@ -297,6 +298,36 @@ def check_text(text: str, models: list[str] | None = None) -> dict:
             'problems': problems, 'notes': notes}
 
 
+def resolve_role(text: str, role: str) -> dict:
+    """Split one role row into dispatchable (model, effort) pairs.
+
+    effort falls back to the budget level when the item carries none.
+    model is None for inherit-parent / auto: the caller omits the model.
+    """
+    key = OLD_TO_NEW.get(role, role)
+    if key not in ROLE_KEYS:
+        raise SModelsError(f'未知角色 {role!r}')
+    lines = text.splitlines()
+    span = find_block(lines)
+    if span is None:
+        raise SModelsError('没有 s 模型配置段')
+    raw_budget, rows, _ = parse_block(lines[span[0] + 1:span[1]])
+    if key not in rows:
+        raise SModelsError(f'配置里没有角色 {key}，用技能默认')
+    budget, _ = parse_budget_text(raw_budget)
+    _, budget_effort = parse_budget_text(raw_budget)
+    default = budget_effort or ('xhigh' if budget in (None, INHERIT) else BUDGETS[budget][0])
+    items = []
+    for part in rows[key].split(','):
+        name, level = split_item(part)
+        if not name:
+            raise SModelsError(f'{key} 有空项')
+        if level is not None and level not in EFFORTS:
+            raise SModelsError(f'{key} 的档位 {level} 不合法')
+        items.append({'model': None if name in FREE_VALUES else name, 'effort': level or default})
+    return {'role': key, 'items': items}
+
+
 # ---------- writing ----------
 
 def read_file(path: Path) -> tuple[str, str]:
@@ -384,11 +415,14 @@ def main(argv: list[str] | None = None) -> int:
     check = sub.add_parser('check', help='只读校验一个文件')
     check.add_argument('file')
     check.add_argument('--models', help='这次确认可用的模型，逗号分隔；给了就校验名字')
+    resolve = sub.add_parser('resolve', help='把一个角色行拆成可派发的 模型 + 档位')
+    resolve.add_argument('file')
+    resolve.add_argument('role', help='中文键或旧英文键')
     write = sub.add_parser('write', help='替换或追加标记段，默认只预览')
     write.add_argument('file')
     add_render_arguments(write)
     write.add_argument('--apply', action='store_true', help='真正写入；不加只报告会做什么')
-    for item in (render, check, write):
+    for item in (render, check, write, resolve):
         item.add_argument('--json', action='store_true', help='输出 JSON')
     args = parser.parse_args(argv)
     if hasattr(sys.stdout, 'reconfigure'):
@@ -411,6 +445,15 @@ def main(argv: list[str] | None = None) -> int:
                 for line in result['notes']:
                     print(f'提示: {line}')
             return 0 if result['status'] == 'ok' else 1
+        if args.command == 'resolve':
+            text, _ = read_file(Path(args.file).expanduser())
+            result = resolve_role(text, args.role)
+            if args.json:
+                print(json.dumps(result, ensure_ascii=False, indent=2))
+            else:
+                for item in result['items']:
+                    print(f'{item["model"] or "(不传模型)"}\t{item["effort"]}')
+            return 0
         block = block_from_args(args)
         result = write_file(Path(args.file).expanduser(), block, args.apply)
         result['block'] = block

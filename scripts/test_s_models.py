@@ -132,6 +132,46 @@ class RoleEffortTest(unittest.TestCase):
         self.assertIn('--role-effort', (SKILL / 'SKILL.md').read_text(encoding='utf-8'))
 
 
+class ResolveTest(unittest.TestCase):
+    def block(self, role_effort=True, budget='大'):
+        r = rows(budget)
+        if role_effort:
+            r = m.add_efforts(r, m.normalize_budget(budget), None)
+        return m.render_block(m.normalize_budget(budget), r)
+
+    def test_splits_model_and_level_per_item(self):
+        result = m.resolve_role(self.block(), '审问审查者')
+        self.assertEqual(result['items'], [{'model': 'sonnet', 'effort': 'xhigh'}, {'model': 'opus', 'effort': 'xhigh'}])
+
+    def test_plain_rows_fall_back_to_budget_level(self):
+        result = m.resolve_role(self.block(role_effort=False, budget='中'), '修 bug')
+        self.assertEqual(result['items'], [{'model': 'sonnet', 'effort': 'high'}])
+
+    def test_inherit_means_no_model_and_old_keys_work(self):
+        text = '# s model configuration\n# budget: small (medium)\nbug-fix: inherit-parent\n# end s model configuration\n'
+        self.assertEqual(m.resolve_role(text, 'bug-fix')['items'], [{'model': None, 'effort': 'medium'}])
+
+    def test_missing_budget_defaults_to_xhigh_and_errors_are_clear(self):
+        text = '# s 模型配置\n修 bug: sonnet\n# s 模型配置结束\n'
+        self.assertEqual(m.resolve_role(text, '修 bug')['items'][0]['effort'], 'xhigh')
+        with self.assertRaises(m.SModelsError):
+            m.resolve_role(text, '审问审查者')
+        with self.assertRaises(m.SModelsError):
+            m.resolve_role('没有配置\n', '修 bug')
+
+    def test_cli_resolve_prints_model_and_level(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'r.md'
+            path.write_text(self.block(), encoding='utf-8')
+            code, out, _ = run('resolve', str(path), '最难的任务')
+        self.assertEqual((code, out.strip()), (0, 'opus\tmax'))
+
+    def test_claude_code_doc_does_not_promise_unverified_full_ids(self):
+        tools = (ROOT / 'plugins/s-atlas/skills/s-router/references/claude-code-tools.md').read_text(encoding='utf-8')
+        self.assertNotIn('，或完整 ID。', tools)
+        self.assertIn('InputValidationError', tools)
+
+
 class CheckTest(unittest.TestCase):
     def test_rendered_blocks_pass_their_own_check(self):
         for budget in ('省', '中', '大', '不限', 'skip'):

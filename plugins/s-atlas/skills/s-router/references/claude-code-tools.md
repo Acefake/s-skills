@@ -30,7 +30,7 @@
 | 只读探索 | 派 `Explore`（只读探索）或 `Plan`（只读规划） |
 | 向用户提问的工具 | `AskUserQuestion` |
 | 后台运行和取结果 | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 |
-| 指定模型 | `model` 写别名 `sonnet`、`opus`、`haiku`，或完整模型 ID；不写或写 `inherit` 就继承父级 |
+| 指定模型 | `model` 只能写这次 `Agent` 定义里列出的取值（本会话验证过：`sonnet`、`opus`、`haiku`、`fable`；带括号如 `sonnet（medium）` 会被 `InputValidationError` 拒绝）。完整模型 ID 是否可用以工具定义为准，定义里没有就不要写；不写就继承父级 |
 | 指定推理档位 | `effort` 字段（`low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的 `Agent` 定义里有才传。取角色行值括号里的档位，没有括号取 `# 预算` 括号里的，再按 `s-mode` 的子智能体规则调整。**每次派发都要传，不要依赖父会话的档位** |
 | s 模型规则（`/setup-s-models`） | `~/.claude/rules/s-models.md` |
 | 子智能体在哪里跑 | 不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里 |
@@ -40,7 +40,7 @@
 
 ## arena
 
-参赛者用 `Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `opus` 和 `sonnet`，或完整 ID。交叉评审用 `Explore`。不写模型或写 `inherit` 就跟父级。
+参赛者用 `Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `opus` 和 `sonnet`（完整 ID 仅当 `Agent` 定义允许）。交叉评审用 `Explore`。不写模型或写 `inherit` 就跟父级。
 
 ## author-skill
 
@@ -52,15 +52,15 @@ Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目
 
 ## how
 
-探索派 `Explore`。讲解用 `Agent`，`model` 为 `opus` 或完整 ID；探索用 `sonnet` 或 `haiku`。需要 MCP 时不要用 `Explore`。
+探索派 `Explore`。讲解用 `Agent`，`model` 为 `opus` （完整 ID 仅当 `Agent` 定义允许）；探索用 `sonnet` 或 `haiku`。需要 MCP 时不要用 `Explore`。
 
 ## interrogate
 
-`Agent`，`subagent_type: "general-purpose"`。`model` 用 `opus` 和 `sonnet`，或两个完整 ID。不写或写 `inherit` 就跟父级。需要 MCP 时不要改用会丢掉 MCP 的 `Explore`。
+`Agent`，`subagent_type: "general-purpose"`。`model` 用 `opus` 和 `sonnet`（完整 ID 仅当 `Agent` 定义允许）。不写或写 `inherit` 就跟父级。需要 MCP 时不要改用会丢掉 MCP 的 `Explore`。
 
 ## reflect
 
-`Agent`，`subagent_type: "general-purpose"`。判断、发散和综合的 `model` 用 `opus`，工具视角用 `sonnet`，或完整 ID。需要 MCP 时不要改用 `Explore`。
+`Agent`，`subagent_type: "general-purpose"`。判断、发散和综合的 `model` 用 `opus`，工具视角用 `sonnet`（完整 ID 仅当 `Agent` 定义允许）。需要 MCP 时不要改用 `Explore`。
 
 ## s-agent
 
@@ -85,13 +85,13 @@ Claude Code 的模型名没有 `-medium` 这类档位后缀，别名只有 `sonn
 
 预算映射：不限 → `max`，大 → `xhigh`，中 → `high`，省 → `medium`。目标档不在这次工具声明的取值里时，改到不超过目标的最高档，`# 预算` 括号里写实际档位。没有 `effort` 字段就不传，`# 预算` 仍写用户选的档名和映射后的档位，并说明这次派发不会带档位。
 
-只有 `effort` 能随单次派发携带这一点已从会话的 `Agent` 工具定义确认。`/effort` 命令、`effortLevel` 设置和子代理 frontmatter 的 `effort` 字段是否可用，以当前版本的官方文档为准，未核实前不要写进配置。
+`model: sonnet` 加 `effort: medium` 的派发已在本会话实测成功。`/effort` 命令、`effortLevel` 设置和子代理 frontmatter 的 `effort` 字段是否可用，以当前版本的官方文档为准，未核实前不要写进配置。
 
-Claude Code 拉差异时，判断类用 `opus`，写代码类用 `sonnet`（或这次账号里的完整模型 ID）。派的时候不写模型或写 `inherit`，就跟父对话走。
+Claude Code 拉差异时，判断类用 `opus`，写代码类用 `sonnet`（完整 ID 仅当 `Agent` 定义允许）。派的时候不写模型或写 `inherit`，就跟父对话走。
 
 ## swarm
 
-`Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `sonnet` 或完整 ID，不写就跟父级。不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里。
+`Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `sonnet`（完整 ID 仅当 `Agent` 定义允许），不写就跟父级。不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里。
 
 ## timed-loop
 
@@ -99,11 +99,11 @@ Claude Code 拉差异时，判断类用 `opus`，写代码类用 `sonnet`（或�
 
 ## why
 
-`Agent`，`subagent_type: "general-purpose"`。调查的 `model` 用 `sonnet`，综合用 `opus`，或完整 ID。需要 MCP 时不要改用 `Explore`。
+`Agent`，`subagent_type: "general-purpose"`。调查的 `model` 用 `sonnet`，综合用 `opus`（完整 ID 仅当 `Agent` 定义允许）。需要 MCP 时不要改用 `Explore`。
 
 ## show-me-your-work
 
-父级是 `sonnet` 就用 `opus`，或换一个完整 ID。派不出子智能体时，在主对话里换一种角度再看一遍日志，并说一句没有换模型。
+父级是 `sonnet` 就用 `opus`。派不出子智能体时，在主对话里换一种角度再看一遍日志，并说一句没有换模型。
 
 ## no-comments
 
