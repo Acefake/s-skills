@@ -104,7 +104,7 @@
 
 这次对话在 Cursor 里时，按下面做。模型名通过 `Task` 的 `model` 参数传给子智能体。`inherit-parent` 和 `auto` 省略 `model`。
 
-预算和确认用 `AskQuestion`。四个选项用 setup-s-models 的中文标签：省、中、大、不限，并带上该技能里的额度提示。检测不到模型时，请用户把有权限的名字贴过来。
+预算和确认用 `AskQuestion`。四个选项用 setup-s-models 里那四行原文，标签和说明都放进卡片。额度有限的提示放在这道题里。检测不到模型时，请用户把有权限的名字贴过来。
 
 写入 `~/.cursor/rules/s-models.mdc`，覆盖整个文件。frontmatter 用这两行：
 
@@ -115,7 +115,7 @@ alwaysApply: true
 
 `grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只有这次真的能传给 `Task` 才写进文件。两个都在、预算是「大」时，角色行就是下面这份，评审列表 2 项。其他档按 setup-s-models 改列表长度和后缀，改完的名字必须仍在检测结果里。
 
-写出的键用中文。文件里已有的旧英文键按 setup-s-models 的对照表改写，模型值不动。
+写出的键用中文。文件里已有的旧英文键按 [角色键对照](../../setup-s-models/references/role-keys.md) 改写，模型值不动。
 
 ```
 # s 模型配置
