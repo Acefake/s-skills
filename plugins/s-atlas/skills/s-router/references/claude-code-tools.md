@@ -76,6 +76,14 @@ Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目
 Claude Code 只写角色行，不另做智能体文件。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，角色键用中文。旧标记 `# s model configuration` 到 `# end s model configuration` 和旧英文键仍然可读；重写时换成中文。中文键优先。
 
 
+### 推理档位
+
+Claude Code 的模型名没有 `-medium` 这类档位后缀，别名只有 `sonnet`、`opus`、`haiku`，档位是另一个独立参数。`Agent` 工具有 `effort` 字段（取值 `low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的工具定义里真有这个字段才传。
+
+预算映射：不限 → `max`，大 → `xhigh`，中 → `high`，省 → `medium`。目标档不在这次工具声明的取值里时，改到不超过目标的最高档，`# 预算` 括号里写实际档位。没有 `effort` 字段就不传，`# 预算` 仍写用户选的档名和映射后的档位，并说明这次派发不会带档位。
+
+只有 `effort` 能随单次派发携带这一点已从会话的 `Agent` 工具定义确认。`/effort` 命令、`effortLevel` 设置和子代理 frontmatter 的 `effort` 字段是否可用，以当前版本的官方文档为准，未核实前不要写进配置。
+
 Claude Code 拉差异时，判断类用 `opus`，写代码类用 `sonnet`（或这次账号里的完整模型 ID）。派的时候不写模型或写 `inherit`，就跟父对话走。
 
 ## swarm
