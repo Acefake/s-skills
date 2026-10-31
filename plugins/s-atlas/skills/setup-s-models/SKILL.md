@@ -45,6 +45,16 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
 4. **确认后写入。** 展示完整标记段。用户同意才写。明确的「写入」「确认」才算同意；沉默、「随便」、「都行」只算跳过当前这步，不算同意，此时再问一次是否写入。写完说明路径、会不会自动读到、要不要新开对话。
 
+## 用脚本生成、写入和校验
+
+17 行由 [`scripts/s_models.py`](scripts/s_models.py) 按上面的规则生成，不要手工推导。命令用 `python`（没有就用 `python3`）。脚本路径相对本技能目录，配置文件路径按宿主参考。
+
+- 第 3 步：`python scripts/s_models.py render --budget <省|中|大|不限|inherit-parent> --fast <快模型> --strong <强模型>`，把输出原样贴给用户。有第三个系列加 `--third`；宿主不能按次传模型加 `--inherit`；宿主没有目标档加 `--effort <实际档>`（只能下调）；用户改某一行用 `--set 角色=值`，可重复。脚本拒绝不合项数的改动，把错误原文告诉用户再问。
+- 第 4 步：先跑 `write <文件> 同样的参数` 预览会做什么（create、append、replace 或 unchanged），用户明确同意后加 `--apply` 再跑一次。脚本只替换标记段，保留其他内容和换行风格，首次覆盖时留 `.s-models.bak` 备份；标记段不完整时拒绝写入。
+- 写完跑 `check <文件> --models <这次确认的模型，逗号分隔>`，通过才说完成。日常只读自检也用 `check`。
+
+Codex、Cursor、WorkBuddy 的模型名后缀先按宿主参考选定，再作为 `--fast`、`--strong` 传入。Cursor 的 frontmatter 和 Codex 的 toml 不归脚本管，仍按各自参考处理。
+
 `# 预算` 写成 `省（medium）`、`中（high）`、`大（xhigh）`、`不限（max）`，宿主下调档位时括号里写实际档位，跳过则写 `inherit-parent`。旧行 `# budget` 以及 `small (medium)`、`medium (high)`、`large (xhigh)`、`unlimited (max)` 与这四档相同。重写时英文档名换成省、中、大、不限，括号里的档位照抄。
 
 arena、architect、interrogate 按列表有几项就派几个。swarm、reflect、why、how 不读预算行来决定人数。这些技能认中文键，也认[角色键对照](references/role-keys.md)里的旧英文键。
