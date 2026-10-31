@@ -19,3 +19,9 @@ setup-s-models 写出配置时用左列。各技能读取时左列优先，没�
 | 群体作战的工作者 | swarm workers |
 | 架构设计参赛者 | architect runners |
 | 审问审查者 | interrogate reviewers |
+
+## 行值格式
+
+每一项可以是 `模型`，也可以是 `模型（档位）`，例如 `sonnet（medium）`、`opus（high）`、`inherit-parent（high）`。档位只能是 `low`、`medium`、`high`、`xhigh`、`max`。逗号分隔的列表里，每一项各带各的档位。
+
+读取时先去掉括号里的档位，剩下的当模型名用，括号里的档位当这个角色的起始推理等级。带括号的整串传给宿主会被直接拒绝（Claude Code 的 `Agent` 对 `model` 做取值校验，会报 `InputValidationError`）。拿不准时运行 `python scripts/s_models.py resolve <配置文件> <角色>`（路径相对 `setup-s-models` 技能目录），它输出每一项的模型和档位，模型为空表示不传。宿主能随派发传推理档位时（Claude Code 的 `Agent` 工具有 `effort`）必须传；不能传就只用模型名，不要把括号原样当模型名交给宿主。没有括号时，起始等级取 `# 预算` 括号里的档位。

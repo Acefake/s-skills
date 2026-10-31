@@ -34,7 +34,7 @@ disable-model-invocation: true
 
 先判断职责归属、状态模型或接口是否存在实质未决选择。已有模式明确、只是机械移动或局部提取时，记录沿用的约定和最小草图即可，不运行 arena。存在实质选择时，用设计草图任务和阶段 A 的摸底产物运行 **arena**，把 `references/runner-prompt.md` 作为每个参赛者的提示词传进去。
 
-参赛者从当前软件的 s 模型配置里「架构设计参赛者」那一行取，没有再读旧键 `architect runners`。这一行代替竞技场的「竞技场参赛者」（旧键 `arena runners`）。路径见文末。没有这一行，就按 **arena** 的默认：一个更强的模型，一个较快的写代码模型。软件不能指定模型就省略。别名条目和被拒绝的条目，按 **arena** 阶段 A 的参赛者规则处理。Cursor 的 `claude-opus-5-5-xhigh` 和 `grok-4.7-xhigh-fast` 只在 Cursor 上、并且这次确实可用时才用。
+参赛者从当前软件的 s 模型配置里「架构设计参赛者」那一行取，没有再读旧键 `architect runners`。这一行代替竞技场的「竞技场参赛者」（旧键 `arena runners`）。路径见文末。没有这一行，就按 **arena** 的默认：一个更强的模型，一个较快的写代码模型。软件不能指定模型就省略。别名条目和被拒绝的条目，按 **arena** 阶段 A 的参赛者规则处理。Cursor 的 `claude-opus-5-5-xhigh` 和 `grok-4.7-xhigh-fast` 只在 Cursor 上、并且这次确实可用时才用。行值带括号时（如 `sonnet（medium）`），按[行值格式](../setup-s-models/references/role-keys.md)拆开：括号前是模型，括号里的档位当起始推理等级传给宿主，不要把括号连模型名一起传。
 
 存在多个可行设计时，比较至少两个有实际取舍的候选，按 **principle-exhaust-the-design-space** 探索。约束已确定唯一合理形状时，记录依据并沿用，不为了凑候选制造额外层级或抽象。
 
