@@ -36,7 +36,7 @@ class HostSupportTest(unittest.TestCase):
     def test_adding_workbuddy_does_not_enable_other_retired_products(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for name in ('T3 Code', 'OpenCode', 'Hermes', 'CodeBuddy', 'Antigravity', 'Pi'):
+            for name in ('T3 Code', 'OpenCode', 'CodeBuddy', 'Antigravity', 'Pi'):
                 (root/'README.md').write_text('Supported: '+name, encoding='utf-8')
                 with self.subTest(name=name), patch.object(check_marketplace, 'ROOT', root):
                     problems = check_marketplace.Problems()
@@ -93,6 +93,26 @@ class HostSupportTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(existing.read_text(encoding='utf-8'), 'user content')
             self.assertFalse((root/'.codebuddy/skills/one').exists())
+
+    def test_hermes_agent_name_is_allowed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            plugin = root / 'plugins/s-atlas'
+            skill = plugin / 'skills/setup-s-models'
+            skill.mkdir(parents=True)
+            (root / 'README.md').write_text('模型配置识别 Hermes agent。\n', encoding='utf-8')
+            (plugin / 'HOSTS.md').write_text(
+                '[Hermes](skills/s-router/references/hermes-tools.md)\n',
+                encoding='utf-8',
+            )
+            guide = plugin / 'skills/s-router/references/hermes-tools.md'
+            guide.parent.mkdir(parents=True)
+            guide.write_text('# Hermes agent\n', encoding='utf-8')
+            (skill / 'SKILL.md').write_text('确认宿主时包含 Hermes agent。\n', encoding='utf-8')
+            with patch.object(check_marketplace, 'ROOT', root):
+                problems = check_marketplace.Problems()
+                check_marketplace.check_supported_hosts(problems)
+                self.assertTrue(problems.ok(), problems.items)
 
     def test_only_supported_manifests_are_versioned(self):
         self.assertEqual(set(marketplace_lib.MANIFEST_REL_PATHS), {
@@ -161,7 +181,7 @@ class HostSupportTest(unittest.TestCase):
             installed = Path(directory) / '.agents'
             installed.mkdir()
             (installed / 'HOSTS.md').write_bytes((source / 'HOSTS.md').read_bytes())
-            for filename in ('codex-tools.md', 'claude-code-tools.md', 'cursor-tools.md', 'workbuddy-tools.md'):
+            for filename in ('codex-tools.md', 'claude-code-tools.md', 'cursor-tools.md', 'workbuddy-tools.md', 'dsh-tools.md', 'hermes-tools.md'):
                 original = source / 'skills/s-router/references' / filename
                 self.assertTrue(original.is_file(), str(original))
                 destination = installed / 'skills/s-router/references' / filename
@@ -170,7 +190,7 @@ class HostSupportTest(unittest.TestCase):
                 self.assertTrue(destination.is_file())
             # Project installation places HOSTS beside skills/, as plugin packaging does.
             text = (installed / 'HOSTS.md').read_text(encoding='utf-8')
-            for filename in ('codex-tools.md', 'claude-code-tools.md', 'cursor-tools.md', 'workbuddy-tools.md'):
+            for filename in ('codex-tools.md', 'claude-code-tools.md', 'cursor-tools.md', 'workbuddy-tools.md', 'dsh-tools.md', 'hermes-tools.md'):
                 relative = 'skills/s-router/references/' + filename
                 self.assertIn('(' + relative + ')', text)
                 self.assertTrue((installed / relative).is_file())
