@@ -36,15 +36,15 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 | 视角 | 角色行 | 没有配置、而且软件能指定模型时 | 提示词模板 |
 |---|---|---|---|
-| 判断（Judgment） | `reflect judgment, divergent, synthesizer` | 判断力最强的模型。Cursor 上、并且 `claude-opus-5-5-xhigh` 可用时可以用这个名字 | `references/judgment-reviewer.md` |
-| 工具（Tooling） | `reflect tooling` | 较快的写代码模型。Cursor 上、并且 `grok-4.7-xhigh-fast` 可用时可以用这个名字 | `references/tooling-reviewer.md` |
-| 发散（Divergent） | `reflect judgment, divergent, synthesizer` | 同判断 | `references/divergent-reviewer.md` |
+| 判断（Judgment） | `反思的判断、发散和综合`（旧键 `reflect judgment, divergent, synthesizer`） | 判断力最强的模型。Cursor 上、并且 `claude-opus-5-5-xhigh` 可用时可以用这个名字 | `references/judgment-reviewer.md` |
+| 工具（Tooling） | `反思的工具视角`（旧键 `reflect tooling`） | 较快的写代码模型。Cursor 上、并且 `grok-4.7-xhigh-fast` 可用时可以用这个名字 | `references/tooling-reviewer.md` |
+| 发散（Divergent） | `反思的判断、发散和综合`（旧键 `reflect judgment, divergent, synthesizer`） | 同判断 | `references/divergent-reviewer.md` |
 
 把每个模板原样传过去，在标明的地方替换成对话记录的路径或摘要。审查者在子智能体的回复正文里返回发现。派不出三个子智能体时，在主对话里按三个视角各写一遍，并说一句没有换模型。
 
 ## 3. 综合
 
-再派一个子智能体，类型同样要能访问 MCP。模型取自 `reflect judgment, divergent, synthesizer` 那一行。没有这一行，或软件不能指定模型，就按上一节的规则。把 `references/synthesizer.md` 原样传过去，在标明的地方内联每个审查者的完整输出。它返回一份 Accepted / Rejected / Backlog 列表。
+再派一个子智能体，类型同样要能访问 MCP。模型取自「反思的判断、发散和综合」那一行，没有再读旧键 `reflect judgment, divergent, synthesizer`。没有这一行，或软件不能指定模型，就按上一节的规则。把 `references/synthesizer.md` 原样传过去，在标明的地方内联每个审查者的完整输出。它返回一份 Accepted / Rejected / Backlog 列表。
 
 ## 4. 结构化强制检查
 
@@ -76,7 +76,7 @@ Backlog 默认输出为待办草稿。只有用户已授权写入指定跟踪系
 
 ## 宿主适配
 
-判断、发散和综合读 `reflect judgment, divergent, synthesizer`，工具视角读 `reflect tooling`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Cursor 按那份 skill 文末的目录说明放置。
+判断、发散和综合读「反思的判断、发散和综合」（旧键 `reflect judgment, divergent, synthesizer`），工具视角读「反思的工具视角」（旧键 `reflect tooling`）。中文键优先。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Cursor 按那份 skill 文末的目录说明放置。
 
 Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 

@@ -57,7 +57,7 @@
 
 ## how
 
-探索用内置 `explorer`，或 `s-how-explorer`。讲解用 `s-how-explainer`，或在提示词里点名模型。复杂情况写成：Spawn one explorer subagent per angle. Each uses model \<how explorer\> with model_reasoning_effort \<档位\>. Wait for all, then spawn one explainer on model \<how explainer\>. 没有 toml、也点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
+探索用内置 `explorer`，或 `s-how-explorer`。讲解用 `s-how-explainer`，或在提示词里点名模型。复杂情况写成：Spawn one explorer subagent per angle. Each uses model \<怎么工作的探索者，或旧键 how explorer\> with model_reasoning_effort \<档位\>. Wait for all, then spawn one explainer on model \<怎么工作的讲解者，或旧键 how explainer\>. 中文键优先。没有 toml、也点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
 
 ## interrogate
 
@@ -79,7 +79,7 @@
 
 | 宿主 | 配置或工具 | 生效或限制 | 依据或说明 |
 |---|---|---|---|
-| Codex | 在 `~/.codex/AGENTS.md` 里维护 `# s model configuration` 到 `# end s model configuration` 这一段。设过 `CODEX_HOME` 就用那个目录。同目录已有 `AGENTS.override.md` 时，Codex 读的是 override 而不是 `AGENTS.md`，就改 override 里的同一段。需要单独模型的角色，再写 `~/.codex/agents/s-<角色>.toml`，见下面 Codex 一节 | 会读 `AGENTS.md` 这一段，也会读 `agents/` 里的自定义智能体。只替换标记之间的内容，只覆盖 `s-` 开头的智能体文件 | [AGENTS.md](https://developers.openai.com/codex/guides/agents-md)，[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
+| Codex | 在 `~/.codex/AGENTS.md` 里维护 `# s 模型配置` 到 `# s 模型配置结束` 这一段。旧标记 `# s model configuration` 到 `# end s model configuration` 是同一段，读取仍然有效，重写时换成中文标记和中文键。设过 `CODEX_HOME` 就用那个目录。同目录已有 `AGENTS.override.md` 时，Codex 读的是 override 而不是 `AGENTS.md`，就改 override 里的同一段。需要单独模型的角色，再写 `~/.codex/agents/s-<角色>.toml`，见下面 Codex 一节 | 会读 `AGENTS.md` 这一段，也会读 `agents/` 里的自定义智能体。只替换标记之间的内容，只覆盖 `s-` 开头的智能体文件 | [AGENTS.md](https://developers.openai.com/codex/guides/agents-md)，[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
 
 ## setup-s-models：模型配置
 
@@ -89,10 +89,10 @@
 
 角色行仍写在 `~/.codex/AGENTS.md`（或 `AGENTS.override.md`）的标记段里。需要单独模型的角色，再写自定义智能体：
 
-- 路径：`~/.codex/agents/s-<角色>.toml`。设过 `CODEX_HOME` 就用那个目录下的 `agents/`。项目里可以用 `.codex/agents/`。只覆盖 `s-` 开头的文件。`<角色>` 的拼法按角色名生成：空格和逗号替换成连字符，连续连字符合并：`how explorer` 是 `s-how-explorer.toml`，列表角色再加 `-1`、`-2`。`name` 字段等于不带扩展名的文件名。
+- 路径：`~/.codex/agents/s-<角色>.toml`。设过 `CODEX_HOME` 就用那个目录下的 `agents/`。项目里可以用 `.codex/agents/`。只覆盖 `s-` 开头的文件。`<角色>` 仍按旧英文键生成，不用中文键：空格和逗号替换成连字符，连续连字符合并：`how explorer` 是 `s-how-explorer.toml`，列表角色再加 `-1`、`-2`。配置块里的键用中文，没有中文键再读旧英文键。`name` 字段等于不带扩展名的文件名。
 - `inherit-parent` 和 `auto` 不写文件。
 - 必填 `name`、`description`、`developer_instructions`。`name` 是派出时用的名字，和文件名保持一致最省事，以 `name` 为准。
-- 同时写 `model` 和 `model_reasoning_effort`。模型名必须是这次账号里真有的。文档举例是 `gpt-6.1-sol`（重活）和 `gpt-6-luna`（快、窄），账号没有这两个名字就不要写。推理档位用第 3 步的预算目标：`unlimited` 对 `max`，`large` 对 `xhigh`，`medium` 对 `high`，`small` 对 `medium`。文档列出的档位还有 `ultra` 和 `low`。只有该模型支持这个档位才写入；不支持就写它支持的、不超过目标的最高档，并告诉用户。文档建议 GPT-6 Luna 从 `high` 起，GPT-6 Astra 从 `low` 起。
+- 同时写 `model` 和 `model_reasoning_effort`。模型名必须是这次账号里真有的。文档举例是 `gpt-6.1-sol`（重活）和 `gpt-6-luna`（快、窄），账号没有这两个名字就不要写。推理档位用 `# 预算`（旧行 `# budget`）的目标：不限对 `max`，大对 `xhigh`，中对 `high`，省对 `medium`。旧档名 `unlimited`、`large`、`medium`、`small` 相同。文档列出的档位还有 `ultra` 和 `low`。只有该模型支持这个档位才写入；不支持就写它支持的、不超过目标的最高档，并告诉用户。文档建议 GPT-6 Luna 从 `high` 起，GPT-6 Astra 从 `low` 起。
 - 只读角色把「不要改文件」写进 `developer_instructions`。文档写明：这句话不会变成单独的只读沙箱。子智能体继承父级这一轮的沙箱和审批。自定义智能体继承父级的权限、provider 和 MCP，文件里不能改这些。
 - 内置 `worker` 做实现，`explorer` 做读得多的探索，`default` 是通用兜底。同名自定义智能体会盖过内置。
 
@@ -112,7 +112,7 @@ profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/con
 
 ## why
 
-自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`，或 `s-why-investigators`。综合点名 `s-why-synthesizer`。提示词写成：Spawn one subagent per evidence source. Each uses model \<why investigators\>. Wait for all, then spawn one synthesizer on model \<why synthesizer\>. Do not edit files. 模型名用这次账号里真有的。提示词禁止改文件，不会变成单独的只读沙箱。
+自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`，或 `s-why-investigators`。综合点名 `s-why-synthesizer`。提示词写成：Spawn one subagent per evidence source. Each uses model \<为什么的调查者，或旧键 why investigators\>. Wait for all, then spawn one synthesizer on model \<为什么的综合者，或旧键 why synthesizer\>. 中文键优先。Do not edit files. 模型名用这次账号里真有的。提示词禁止改文件，不会变成单独的只读沙箱。
 
 ## show-me-your-work
 

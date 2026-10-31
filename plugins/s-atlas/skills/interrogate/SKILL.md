@@ -30,7 +30,7 @@ disable-model-invocation: true
 
 ## 第 3 步：派出审查者
 
-在一条消息里启动所有审查者。读当前软件的 s 模型配置（路径见文末）里 `interrogate reviewers` 那一行，有几个条目就派几个，标记为 Reviewer A、B 等等。没有这份配置或没有这一行，就派两个：一个用你判断力最强的模型，一个用你写代码较快的模型。软件不能给子智能体单独指定模型时，两个都省略模型，让它们跟父对话走，并说一句这次没有换模型。
+在一条消息里启动所有审查者。读当前软件的 s 模型配置（路径见文末）里「审问审查者」那一行，没有再读旧键 `interrogate reviewers`。有几个条目就派几个，标记为 Reviewer A、B 等等。没有这份配置或没有这一行，就派两个：一个用你判断力最强的模型，一个用你写代码较快的模型。软件不能给子智能体单独指定模型时，两个都省略模型，让它们跟父对话走，并说一句这次没有换模型。
 
 | 子智能体 | 没有配置、而且软件能指定模型时 |
 |----------|---------------|
@@ -81,7 +81,7 @@ disable-model-invocation: true
 
 ## 宿主适配
 
-角色行是 `interrogate reviewers`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。工具名以[宿主适配](../../HOSTS.md)中的当前平台参考为准。一条消息里把审查者都派出去。
+角色行是「审问审查者」（旧键 `interrogate reviewers`）。中文键优先。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。工具名以[宿主适配](../../HOSTS.md)中的当前平台参考为准。一条消息里把审查者都派出去。
 
 Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 

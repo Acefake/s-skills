@@ -108,7 +108,7 @@ Each live lane runs on its own machine at the PR head when the app can place it 
 
 - [ ] <Test file and the case it gains.> Run `<command>`.
 
-**Verify, live.** Complete the checks required by the recorded s-router level. Level 0 only reviews the diff; mark inapplicable checks n/a with a reason. For high-risk programs that need ten lanes, use `<swarm workers model>` at the PR head per the boot recipe; otherwise include only the applicable scenarios.
+**Verify, live.** Complete the checks required by the recorded s-router level. Level 0 only reviews the diff; mark inapplicable checks n/a with a reason. For high-risk programs that need ten lanes, use `<群体作战的工作者 model, else the old swarm workers model>` at the PR head per the boot recipe; otherwise include only the applicable scenarios.
 
 - [ ] Lane 1. Regression lane against trunk. Run <the same load-bearing scenario> at trunk and head. If trunk lacks the feature, record that and gate <the behavior the diff adds plus the end state the user waits for>. Save `<slug>.png`. Pass when <predicate>.
 - [ ] Lane 2. <Scenario.> Save `<slug>.png`. Pass when <predicate>.

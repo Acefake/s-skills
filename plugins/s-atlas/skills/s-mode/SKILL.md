@@ -151,6 +151,6 @@ color: yellow
 
 ## 宿主适配
 
-角色与模型的调度见「子智能体」和 [subagents.md](references/subagents.md)。具体派发工具、配置位置和模型参数见[宿主适配](../../HOSTS.md)。
+角色与模型的调度见「子智能体」和 [subagents.md](references/subagents.md)。配置里的角色键用中文；旧英文键仍然有效，同一行两套都在时用中文键。对照表在 [角色键对照](../setup-s-models/references/role-keys.md)。具体派发工具、配置位置和模型参数见[宿主适配](../../HOSTS.md)。
 
 找不到工具、类型或模型时，先读 [host-fallback.md](references/host-fallback.md)，再使用当前宿主实际支持的替代并说明。不能派子代理时，由主对话按顺序完成独立步骤并自行审查，说明没有独立审查，也说明这一轮是顺序完成的。

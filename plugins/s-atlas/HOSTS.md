@@ -1,6 +1,6 @@
 # 宿主适配
 
-本仓库只支持 **Codex、Claude Code、Cursor、WorkBuddy**。插件名为 `s-atlas`，仓库和市场名为 `s-skills`。版本以插件清单为准，技能以当前会话实际发现的目录为准。
+插件分发支持 **Codex、Claude Code、Cursor、WorkBuddy**。模型配置另外识别 **DeepSeek Harness**（命令 `dsh`）和 **Nous Research 的 Hermes agent**（命令 `hermes`）。插件名为 `s-atlas`，仓库和市场名为 `s-skills`。版本以插件清单为准，技能以当前会话实际发现的目录为准。DeepSeek Harness 和 Hermes 没有市场安装包，也不走本仓库的安装脚本。
 
 ## 按需读取当前宿主
 
@@ -12,8 +12,19 @@
 | Claude Code | [Claude Code 工具和配置](skills/s-router/references/claude-code-tools.md) |
 | Cursor | [Cursor 工具和配置](skills/s-router/references/cursor-tools.md) |
 | WorkBuddy | [WorkBuddy 工具和配置](skills/s-router/references/workbuddy-tools.md) |
+| DeepSeek Harness（`dsh`） | [DeepSeek Harness 工具和配置](skills/s-router/references/dsh-tools.md) |
+| Hermes agent | [Hermes 工具和配置](skills/s-router/references/hermes-tools.md) |
 
 技能正文负责任务步骤、角色职责、输入输出和验收；平台参考负责工具参数、配置位置和能力差异。已有用户配置与本次授权优先，不用示例模型覆盖用户选择。
+
+DeepSeek Harness 和 Hermes 的 17 个角色行与现有四个宿主相同。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，只替换这一段。旧标记 `# s model configuration` 到 `# end s model configuration` 是同一段，读取仍然有效；重写时换成中文标记和中文键。角色键的对照在 [角色键对照](skills/setup-s-models/references/role-keys.md)。两家的配置 YAML 都不放这段：`cordis.patch.yml` 和 `config.yaml` 里的其他条目保持原样。
+
+| 宿主 | 标记段 | 技能目录 | 列出可用模型 | 多个 profile |
+|---|---|---|---|---|
+| DeepSeek Harness | `$DSH_HOME/AGENTS.md`（未设置时是 `~/.dsh/AGENTS.md`） | `$DSH_HOME/skills/<name>/SKILL.md` | 选中 profile 的 `dsh --dump-config`，以及会话里的 `list_subagent_models` | 问用户用 `profiles/` 里的哪一个目录 |
+| Hermes | 选中 profile 的 `SOUL.md` | 该 profile 家目录下的 `skills/` | 只读 `hermes config get` 的 `model` 与 `providers`（或旧的 `custom_providers`） | `hermes profile list` 多于一个时问用户 |
+
+子代理不能按次接收模型时，17 行写 `inherit-parent`，派出时不传模型。推理档位按预算映射：不限 → `max`，大 → `xhigh`，中 → `high`，省 → `medium`。旧档名 `unlimited`、`large`、`medium`、`small` 相同。宿主没有的档位按该参考改到不超过目标的最高档。判断步骤、依据和未确认项在上面两份参考里。
 
 ## 共同行为
 
