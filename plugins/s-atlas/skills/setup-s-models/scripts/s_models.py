@@ -6,7 +6,7 @@ and how an existing block is replaced without touching the rest of the file.
 
     python s_models.py render --budget 省 --fast sonnet --strong opus
     python s_models.py check ~/.claude/rules/s-models.md
-    python s_models.py write ~/.claude/rules/s-models.md --budget 大 --fast sonnet --strong opus
+    python s_models.py write ~/.claude/rules/s-models.md --budget 大 --fast sonnet --strong opus --role-effort
     python s_models.py write ... --apply      # only this flag writes
 
 Exit codes: 0 ok, 1 check problems or refused write, 2 bad arguments.
@@ -98,6 +98,37 @@ def budget_line(budget: str, effort: str | None = None) -> str:
     if EFFORTS.index(actual) > EFFORTS.index(target):
         raise SModelsError(f'实际档位 {actual} 高于预算 {budget} 的目标 {target}，只能下调')
     return f'# 预算: {budget}（{actual}）'
+
+
+ITEM_RE = re.compile(r'^(.*?)\s*[（(]\s*([a-z]+)\s*[）)]$')
+
+
+def split_item(item: str) -> tuple[str, str | None]:
+    """'sonnet（medium）' → ('sonnet', 'medium'); no suffix → (item, None)."""
+    match = ITEM_RE.match(item.strip())
+    return (match.group(1), match.group(2)) if match else (item.strip(), None)
+
+
+def role_effort(budget: str, key: str, effort: str | None = None) -> str:
+    """Starting level of one role: the budget level, hardest tasks one step up."""
+    rule = '大' if budget == INHERIT else budget
+    base = effort or BUDGETS[rule][0]
+    if key == HARDEST and EFFORTS.index(base) < len(EFFORTS) - 1:
+        return EFFORTS[EFFORTS.index(base) + 1]
+    return base
+
+
+def add_efforts(rows: dict[str, str], budget: str, effort: str | None) -> dict[str, str]:
+    """Append （档位） to every item that does not already carry one."""
+    out = {}
+    for key, value in rows.items():
+        level = role_effort(budget, key, effort)
+        items = []
+        for item in value.split(','):
+            name, existing = split_item(item)
+            items.append(f'{name}（{existing or level}）')
+        out[key] = ', '.join(items)
+    return out
 
 
 def review_items(budget: str, fast: str, strong: str, third: str | None) -> list[str]:
@@ -239,10 +270,17 @@ def check_text(text: str, models: list[str] | None = None) -> dict:
         if value is None:
             notes.append(f'缺少角色 {key}，会用技能默认')
             continue
-        items = [item.strip() for item in value.split(',')]
-        if any(not item for item in items):
+        raw_items = [item.strip() for item in value.split(',')]
+        if any(not item for item in raw_items):
             problems.append(f'{key} 有空项')
             continue
+        split = [split_item(item) for item in raw_items]
+        items = [name for name, _ in split]
+        for name, level in split:
+            if not name:
+                problems.append(f'{key} 有只写档位没写模型的项')
+            elif level is not None and level not in EFFORTS:
+                problems.append(f'{key} 的档位 {level} 不合法：用 {"、".join(EFFORTS)}')
         if group != REVIEW and len(items) != 1:
             problems.append(f'{key} 只能写一个模型，现在是 {len(items)} 项')
         if group == REVIEW and budget in BUDGETS:
@@ -319,6 +357,8 @@ def add_render_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('--strong', help='判断类用的强模型；不给就和快模型相同')
     parser.add_argument('--third', help='不限预算时第三个系列的模型')
     parser.add_argument('--effort', help='宿主没有目标档时实际使用的档位（只能下调）')
+    parser.add_argument('--role-effort', action='store_true',
+                        help='每个角色值后加（档位）：宿主能随派发传档位时用，如 Claude Code 的 Agent effort')
     parser.add_argument('--inherit', action='store_true', help='宿主不能按次传模型：全部写 inherit-parent')
     parser.add_argument('--set', action='append', default=[], metavar='角色=值', help='覆盖某一行，可重复')
 
@@ -326,6 +366,8 @@ def add_render_arguments(parser: argparse.ArgumentParser) -> None:
 def block_from_args(args: argparse.Namespace) -> str:
     budget = normalize_budget(args.budget)
     rows = render_rows(budget, args.fast, args.strong, args.third, args.inherit, parse_sets(args.set))
+    if args.role_effort:
+        rows = add_efforts(rows, budget, args.effort)
     block = render_block(budget, rows, args.effort)
     # --set 可能把评审行改成不合预算的项数；生成的段必须先过自己的校验。
     problems = check_text(block)['problems']

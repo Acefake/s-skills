@@ -49,7 +49,7 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
 17 行由 [`scripts/s_models.py`](scripts/s_models.py) 按上面的规则生成，不要手工推导。命令用 `python`（没有就用 `python3`）。脚本路径相对本技能目录，配置文件路径按宿主参考。
 
-- 第 3 步：`python scripts/s_models.py render --budget <省|中|大|不限|inherit-parent> --fast <快模型> --strong <强模型>`，把输出原样贴给用户。有第三个系列加 `--third`；宿主不能按次传模型加 `--inherit`；宿主没有目标档加 `--effort <实际档>`（只能下调）；用户改某一行用 `--set 角色=值`，可重复。脚本拒绝不合项数的改动，把错误原文告诉用户再问。
+- 第 3 步：`python scripts/s_models.py render --budget <省|中|大|不限|inherit-parent> --fast <快模型> --strong <强模型>`，把输出原样贴给用户。Claude Code 加 `--role-effort`，让每一行带上档位，例如 `sonnet（medium）`，派发时才会传 `effort`；有第三个系列加 `--third`；宿主不能按次传模型加 `--inherit`；宿主没有目标档加 `--effort <实际档>`（只能下调）；用户改某一行用 `--set 角色=值`，可重复。脚本拒绝不合项数的改动，把错误原文告诉用户再问。
 - 第 4 步：先跑 `write <文件> 同样的参数` 预览会做什么（create、append、replace 或 unchanged），用户明确同意后加 `--apply` 再跑一次。脚本只替换标记段，保留其他内容和换行风格，首次覆盖时留 `.s-models.bak` 备份；标记段不完整时拒绝写入。
 - 写完跑 `check <文件> --models <这次确认的模型，逗号分隔>`，通过才说完成。日常只读自检也用 `check`。
 

@@ -86,6 +86,47 @@ class RenderTest(unittest.TestCase):
         self.assertIn('--fast', err)
 
 
+class RoleEffortTest(unittest.TestCase):
+    def test_every_item_carries_budget_level_hardest_one_up(self):
+        r = m.add_efforts(rows('省'), '省', None)
+        self.assertEqual(r['修 bug'], 'sonnet（medium）')
+        self.assertEqual(r['最难的任务'], 'opus（high）')
+        self.assertEqual(m.add_efforts(rows('不限'), '不限', None)['最难的任务'], 'opus（max）')
+
+    def test_each_reviewer_item_has_its_own_level(self):
+        r = m.add_efforts(rows('大'), '大', None)
+        self.assertEqual(r['审问审查者'], 'sonnet（xhigh）, opus（xhigh）')
+
+    def test_existing_level_is_kept_and_actual_effort_is_used(self):
+        r = m.add_efforts({**rows('中'), '修 bug': 'sonnet（low）'}, '中', 'medium')
+        self.assertEqual(r['修 bug'], 'sonnet（low）')
+        self.assertEqual(r['写功能和重构'], 'sonnet（medium）')
+
+    def test_inherit_rows_can_carry_level(self):
+        r = m.add_efforts(m.render_rows('中', None, None, inherit=True), '中', None)
+        self.assertEqual(r['修 bug'], 'inherit-parent（high）')
+
+    def test_cli_role_effort_block_passes_check_with_model_names(self):
+        code, out, _ = run('render', '--budget', '大', '--fast', 'sonnet', '--strong', 'opus', '--role-effort')
+        self.assertEqual(code, 0)
+        self.assertIn('最难的任务: opus（max）', out)
+        result = m.check_text(out, ['sonnet', 'opus'])
+        self.assertEqual(result['status'], 'ok', result['problems'])
+
+    def test_check_rejects_bad_level_and_unknown_model_inside_suffix(self):
+        block = m.render_block('省', rows('省')).replace('修 bug: sonnet', '修 bug: sonnet（ultra）')
+        self.assertTrue(any('ultra' in p for p in m.check_text(block)['problems']))
+        block = m.render_block('省', rows('省')).replace('修 bug: sonnet', '修 bug: gpt-x（high）')
+        self.assertTrue(any('gpt-x' in p for p in m.check_text(block, ['sonnet', 'opus'])['problems']))
+
+    def test_docs_tell_dispatchers_to_pass_effort(self):
+        tools = (ROOT / 'plugins/s-atlas/skills/s-router/references/claude-code-tools.md').read_text(encoding='utf-8')
+        self.assertIn('每次派发都要传', tools)
+        keys = (SKILL / 'references/role-keys.md').read_text(encoding='utf-8')
+        self.assertIn('模型（档位）', keys)
+        self.assertIn('--role-effort', (SKILL / 'SKILL.md').read_text(encoding='utf-8'))
+
+
 class CheckTest(unittest.TestCase):
     def test_rendered_blocks_pass_their_own_check(self):
         for budget in ('省', '中', '大', '不限', 'skip'):

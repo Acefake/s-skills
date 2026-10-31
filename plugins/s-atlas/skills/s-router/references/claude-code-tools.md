@@ -31,6 +31,7 @@
 | 向用户提问的工具 | `AskUserQuestion` |
 | 后台运行和取结果 | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 |
 | 指定模型 | `model` 写别名 `sonnet`、`opus`、`haiku`，或完整模型 ID；不写或写 `inherit` 就继承父级 |
+| 指定推理档位 | `effort` 字段（`low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的 `Agent` 定义里有才传。取角色行值括号里的档位，没有括号取 `# 预算` 括号里的，再按 `s-mode` 的子智能体规则调整。**每次派发都要传，不要依赖父会话的档位** |
 | s 模型规则（`/setup-s-models`） | `~/.claude/rules/s-models.md` |
 | 子智能体在哪里跑 | 不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里 |
 | 让主对话定时醒来 | 使用 `timed-loop`。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
@@ -79,6 +80,8 @@ Claude Code 只写角色行，不另做智能体文件。写出的标记段是 `
 ### 推理档位
 
 Claude Code 的模型名没有 `-medium` 这类档位后缀，别名只有 `sonnet`、`opus`、`haiku`，档位是另一个独立参数。`Agent` 工具有 `effort` 字段（取值 `low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的工具定义里真有这个字段才传。
+
+`/setup-s-models` 在 Claude Code 上用 `--role-effort` 生成，每个角色行都带档位，例如 `sonnet（medium）`。派发时：去掉括号得到 `model`，括号里的档位传给 `effort`。竞技场、审问等多项列表，每一项各用各的档位。
 
 预算映射：不限 → `max`，大 → `xhigh`，中 → `high`，省 → `medium`。目标档不在这次工具声明的取值里时，改到不超过目标的最高档，`# 预算` 括号里写实际档位。没有 `effort` 字段就不传，`# 预算` 仍写用户选的档名和映射后的档位，并说明这次派发不会带档位。
 
