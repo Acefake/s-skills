@@ -110,6 +110,8 @@ def content_hash(name: str) -> str:
         if not path.is_file():
             continue
         rel = path.relative_to(root).as_posix()
+        if "__pycache__" in path.parts or path.suffix == ".pyc":
+            continue
         if rel in excluded:
             continue
         files.append(path)
