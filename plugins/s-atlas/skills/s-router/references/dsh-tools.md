@@ -31,7 +31,7 @@ profile 是 `$DSH_HOME/profiles/<name>/` 里已经存在的目录。文档里的
 
 ## 标记段写在哪里
 
-写在 `$DSH_HOME/AGENTS.md`。两头都有 `# s model configuration` 和 `# end s model configuration` 时，只替换中间。两头都没有时，追加到文件末尾。只看到一头就停，留下原文。
+写在 `$DSH_HOME/AGENTS.md`。写出的两头是 `# s 模型配置` 和 `# s 模型配置结束`。这两头，或旧标记 `# s model configuration` 和 `# end s model configuration`，都在时只替换中间，并写成中文标记和中文键。两头都没有时，追加到文件末尾。只看到一头就停，留下原文。旧起始行只要以 `# s model configuration` 开头就算。
 
 不写 `$DSH_HOME/cordis.patch.yml`，也不写 `$DSH_HOME/profiles/<profile>/cordis.patch.yml`。这两份是顶层 YAML 数组，条目形如 `id`、`name`、`config`。后一层按 `id` 替换整段 `config`，注释不会被 [agent-instructions](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/context/agent-instructions/README.md) 注入对话。家目录还有一份共享的 `$DSH_HOME/cordis.patch.yml`，盖过每个 profile 自己的那一层。这些文件原样保留。
 
@@ -75,9 +75,9 @@ Web 和 Desktop 预设在 spawn 上打开选择和发现，fork 上两者都关�
 
 内置 DeepSeek 适配器的档位是 `off`、`low`、`high`、`max`。没有 `medium`，也没有 `xhigh`。见[提供者指南](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/guide/providers.md)和 [model-info.ts](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/llm/llm-deepseek/src/model-info.ts)。自定义 provider 以该模型声明的 `reasoningEfforts` 的键为准；声明为 `false` 或没有声明时，这个模型没有可选档位。
 
-预算先映射到 `unlimited` → `max`，`large` → `xhigh`，`medium` → `high`，`small` → `medium`。目标不在这次声明的档位里时，按 `off` < `low` < `medium` < `high` < `xhigh` < `max` < `ultra` 选不超过目标的最高已声明档，并说明替换。没有这样的档位时，不传 `reasoning_effort`，用模型默认。内置 DeepSeek 因此是：`unlimited` → `max`，`large` → `high`，`medium` → `high`，`small` → `low`。
+预算先映射：不限 → `max`，大 → `xhigh`，中 → `high`，省 → `medium`。旧档名 `unlimited`、`large`、`medium`、`small` 相同。目标不在这次声明的档位里时，按 `off` < `low` < `medium` < `high` < `xhigh` < `max` < `ultra` 选不超过目标的最高已声明档，并说明替换。没有这样的档位时，不传 `reasoning_effort`，用模型默认。内置 DeepSeek 因此是：不限 → `max`，大 → `high`，中 → `high`，省 → `low`。
 
-只有这次工具真有 `reasoning_effort` 字段才在派出时传递。没有这个字段时，`# budget` 仍写用户选的中文档名和映射后的档位，例如 `大（high）`。旧行 `large (xhigh)` 与 `大（xhigh）` 是同一档。并说明子代理不会收到这个参数。不把档位写进 `cordis.patch.yml`。
+只有这次工具真有 `reasoning_effort` 字段才在派出时传递。没有这个字段时，`# 预算` 仍写用户选的中文档名和映射后的档位，例如 `大（high）`。旧行 `# budget` 与 `# 预算` 是同一行；`large (xhigh)` 与 `大（xhigh）` 是同一档。重写时写成 `# 预算`。并说明子代理不会收到这个参数。不把档位写进 `cordis.patch.yml`。
 
 ## 未确认
 

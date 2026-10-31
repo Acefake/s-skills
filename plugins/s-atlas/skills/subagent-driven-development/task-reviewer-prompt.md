@@ -8,6 +8,7 @@
 Subagent (general-purpose):
   description: "Review Task N (spec + quality)"
   # Omit model for auto/inherit-parent or when the host cannot select it.
+  # Role line: Chinese key first, else the old English key in setup-s-models.
   model: [optional available model chosen from the role configuration]
   prompt: |
     You are reviewing one task's implementation: first whether it matches its

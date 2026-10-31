@@ -16,7 +16,7 @@
    7. Do it cheaper.
 
    When an earlier mantra meets the target, stop.
-3. Plan the fix from the trace. Use `architect` only for substantial unresolved choices about ownership, state, or interfaces. A fix that crosses a function boundary but follows an established design does not need architecture exploration. Delegate implementation to a subagent using your configured perf-issue model (the `perf-issue` line in the s model config from setup-s-models; if the app cannot set a sub-agent model, omit it and say so. Do not paste a Cursor model slug into another app). Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section. Review the diff. Capture a post-fix trace.
+3. Plan the fix from the trace. Use `architect` only for substantial unresolved choices about ownership, state, or interfaces. A fix that crosses a function boundary but follows an established design does not need architecture exploration. Delegate implementation to a subagent using your configured perf-issue model (the `性能问题` line, or the old `perf-issue` line, in the s model config from setup-s-models; if the app cannot set a sub-agent model, omit it and say so. Do not paste a Cursor model slug into another app). Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section. Review the diff. Capture a post-fix trace.
    Apply the **principle-sequence-verifiable-units** principle skill, verifying each attempt before trying the next.
 4. Parse and compare the artifacts (JSON to sqlite, diff). "Inconclusive" or wrong-surface is not a pass. Flag it.
 5. Cite the measurement in the PR.

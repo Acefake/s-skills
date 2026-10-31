@@ -20,7 +20,7 @@
 
 ## 标记段写在哪里
 
-写在选中 profile 的 `SOUL.md`（`$HERMES_HOME/SOUL.md`，默认 `~/.hermes/SOUL.md`，具名 profile 则是该 profile 家目录里的 `SOUL.md`）。两头都有 `# s model configuration` 和 `# end s model configuration` 时，只替换中间。两头都没有时，追加到文件末尾。只看到一头就停，留下原文，包括用户原来的身份说明。
+写在选中 profile 的 `SOUL.md`（`$HERMES_HOME/SOUL.md`，默认 `~/.hermes/SOUL.md`，具名 profile 则是该 profile 家目录里的 `SOUL.md`）。写出的两头是 `# s 模型配置` 和 `# s 模型配置结束`。这两头，或旧标记 `# s model configuration` 和 `# end s model configuration`，都在时只替换中间，并写成中文标记和中文键。两头都没有时，追加到文件末尾。只看到一头就停，留下原文，包括用户原来的身份说明。旧起始行只要以 `# s model configuration` 开头就算。
 
 不写 `config.yaml`。它是模型、provider、终端等设置的结构化文件。注释不会进入系统提示。`model`、`providers`、旧的 `custom_providers`、`delegation` 和其他键都保持原样。见[配置](https://hermes-agent.nousresearch.com/docs/user-guide/configuration)。
 
@@ -60,12 +60,12 @@
 
 | 预算 | 档位 |
 |---|---|
-| `unlimited` | `max` |
-| `large` | `xhigh` |
-| `medium` | `high` |
-| `small` | `medium` |
+| 不限（旧名 `unlimited`） | `max` |
+| 大（旧名 `large`） | `xhigh` |
+| 中（旧名 `medium`） | `high` |
+| 省（旧名 `small`） | `medium` |
 
-`# budget` 写成中文档名和映射后的档位，例如 `大（xhigh）`。旧行 `large (xhigh)` 与它相同。默认 `delegate_task` 不能按次传 `reasoning_effort`，所以派出时不传。`delegation.reasoning_effort` 会作用在之后的每一个子代理上；本技能不写这个键。用户跳过预算时，`# budget` 写 `inherit-parent`。
+`# 预算` 写成中文档名和映射后的档位，例如 `大（xhigh）`。旧行 `# budget` 与它是同一行；`large (xhigh)` 与 `大（xhigh）` 相同。默认 `delegate_task` 不能按次传 `reasoning_effort`，所以派出时不传。`delegation.reasoning_effort` 会作用在之后的每一个子代理上；本技能不写这个键。用户跳过预算时，`# 预算` 写 `inherit-parent`。
 
 ## 未确认
 

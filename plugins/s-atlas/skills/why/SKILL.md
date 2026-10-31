@@ -52,7 +52,7 @@ disable-model-invocation: true
 
 版本控制总是可以通过 git 和 `gh` 使用。对其他六类，根据 MCP 的名字、服务器说明、工具名和资源描述来分类。如果一个 MCP 可能属于不止一类，就选和它的主要证据相符的那一类。把有歧义的情况记录在覆盖地图里。
 
-每个有对应 MCP 的类别派一个调查者，全部放在一条消息里，让它们并发运行，每个调查者只负责一个工具或 MCP。不要让一个智能体负责多个 MCP。模型用 `why investigators` 那一行。没有这一行，或软件不能指定模型，就按开头的规则省略或换一个更快的写代码模型。
+每个有对应 MCP 的类别派一个调查者，全部放在一条消息里，让它们并发运行，每个调查者只负责一个工具或 MCP。不要让一个智能体负责多个 MCP。模型用「为什么的调查者」那一行，没有再读旧键 `why investigators`。没有这一行，或软件不能指定模型，就按开头的规则省略或换一个更快的写代码模型。
 
 每个调查者的提示词，是填好的 `references/investigator-prompt.md`，再加上：
 - 所选 MCP 对应类别的操作手册 `references/sources/<source>.md`，根据 `references/source-playbook.md` 里的例子改写
@@ -82,7 +82,7 @@ disable-model-invocation: true
 
 ## 第 4 步：综合
 
-派出一个综合者。模型用 `why synthesizer` 那一行。没有这一行，或软件不能指定模型，就按开头的规则省略或换一个更强的模型。它会拿到：
+派出一个综合者。模型用「为什么的综合者」那一行，没有再读旧键 `why synthesizer`。没有这一行，或软件不能指定模型，就按开头的规则省略或换一个更强的模型。它会拿到：
 1. 调查者的发现，包括所有没找到结果的情况，以及所有附了理由而跳过的类别
 2. 代码锚点
 3. 用户原来的问题
@@ -105,7 +105,7 @@ disable-model-invocation: true
 
 ## 宿主适配
 
-调查读 `why investigators`，综合读 `why synthesizer`。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。调查者要能用 MCP，提示词里仍然禁止它写文件。
+调查读「为什么的调查者」（旧键 `why investigators`），综合读「为什么的综合者」（旧键 `why synthesizer`）。中文键优先。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。调查者要能用 MCP，提示词里仍然禁止它写文件。
 
 Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 

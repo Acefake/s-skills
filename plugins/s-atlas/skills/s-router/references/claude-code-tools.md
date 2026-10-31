@@ -73,7 +73,7 @@ Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目
 
 ## setup-s-models
 
-Claude Code 只写角色行，不另做智能体文件。
+Claude Code 只写角色行，不另做智能体文件。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，角色键用中文。旧标记 `# s model configuration` 到 `# end s model configuration` 和旧英文键仍然可读；重写时换成中文。中文键优先。
 
 
 Claude Code 拉差异时，判断类用 `opus`，写代码类用 `sonnet`（或这次账号里的完整模型 ID）。派的时候不写模型或写 `inherit`，就跟父对话走。

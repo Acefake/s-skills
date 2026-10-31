@@ -28,7 +28,7 @@
 | 只读探索 | 同一个 `Task` 加 `readonly: true`（会去掉 MCP 工具） |
 | 向用户提问的工具 | `AskQuestion` |
 | 后台运行和取结果 | `run_in_background: true`；做完结果回到主对话 |
-| 指定模型 | `model` 写具体模型名。写代码和 `swarm workers` 在这些名字确实可用时用 `grok-4.7-xhigh-fast`，文字、判断和最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级。这两个名字不要拿到别的软件里用 |
+| 指定模型 | `model` 写具体模型名。写代码和「群体作战的工作者」（旧键 `swarm workers`）在这些名字确实可用时用 `grok-4.7-xhigh-fast`，文字、判断和最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级。这两个名字不要拿到别的软件里用 |
 | s 模型规则（`/setup-s-models`） | `~/.cursor/rules/s-models.mdc`，`alwaysApply: true`。frontmatter 的 description 是 `s per-role model choices (overrides skill defaults)` |
 | 子智能体在哪里跑 | `environment: "cloud"` 放到云端；从非默认的已推送分支开始用 `cloud_base_branch`。需要用户电脑上的文件、界面或登录态时用 `environment: "local"`。云端状态在 Cursor 的后台面板看 |
 | 让主对话定时醒来 | 跑 `/timed-loop`。菜单里有 `/loop` 时交给它：`/loop 1h`、`/loop until <检查>`，或不写间隔的动态模式。本技能不另做计时器 |
@@ -37,7 +37,7 @@
 
 ## architect
 
-没有 `architect runners` 时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。别名条目和被拒绝的条目，按本文件 arena 章节的系列规则处理：`claude-*` 一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 一个系列；被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`；找不到系列就用 `claude-opus-5-5-xhigh`。
+没有「架构设计参赛者」（旧键 `architect runners`）时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。别名条目和被拒绝的条目，按本文件 arena 章节的系列规则处理：`claude-*` 一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 一个系列；被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`；找不到系列就用 `claude-opus-5-5-xhigh`。
 
 参赛者是 `Task`，`run_in_background: true`，`subagent_type: generalPurpose`，`model` 为该条目。
 
@@ -45,11 +45,11 @@
 
 阶段 B：一条消息里 N 个 `Task`，`run_in_background: true`，`subagent_type: generalPurpose`（参赛者要写到自己的输出目录），`model` 为该条目。`auto` 或 `inherit-parent` 省略 `model`。
 
-没有 `arena runners` 时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。
+没有「竞技场参赛者」（旧键 `arena runners`）时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。
 
 `Task` 拒绝了某个条目，就改用它所在系列的默认，并说一句。系列按前缀：`claude-*` 是一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 是一个系列。被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`。找不到匹配的系列，就用 `claude-opus-5-5-xhigh`。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。别名条目不要拿去回退。
 
-阶段 C：参赛者都完成之后，再派一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`model` 从 `arena cross-judge pool` 里选一个，优先和父级不同系列。没有这行时，从上面两个默认里选一个不同系列的。
+阶段 C：参赛者都完成之后，再派一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`model` 从「竞技场交叉评审」（旧键 `arena cross-judge pool`）里选一个，优先和父级不同系列。中文键优先。没有这行时，从上面两个默认里选一个不同系列的。
 
 ## author-skill
 
@@ -65,7 +65,7 @@
 
 ## how
 
-每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: true`。探索者的 `model` 是 `how explorer`，没有这行时用 `grok-4.7-xhigh-fast`。讲解者的 `model` 是 `how explainer`，没有这行时用 `claude-opus-5-5-xhigh`。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。
+每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: true`。探索者的 `model` 是「怎么工作的探索者」（旧键 `how explorer`），没有这行时用 `grok-4.7-xhigh-fast`。讲解者的 `model` 是「怎么工作的讲解者」（旧键 `how explainer`），没有这行时用 `claude-opus-5-5-xhigh`。中文键优先。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。
 
 `Task` 拒绝了某个名字，就改用该角色的默认并说一句。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。`readonly: true` 会去掉 MCP。需要 MCP 时不要用这个只读参数，改成提示词里禁止写文件。
 
@@ -73,7 +73,7 @@
 
 用 `Task`。每个审查者：`subagent_type: generalPurpose`，`readonly: true`，`model` 设为那一行的对应条目。`auto` 或 `inherit-parent` 省略 `model`。
 
-没有这行配置时，Reviewer A 用 `claude-opus-5-5-xhigh`，Reviewer B 用 `grok-4.7-xhigh-fast`。这两个名字必须是这次真能传给 `Task` 的。
+没有「审问审查者」（旧键 `interrogate reviewers`）时，Reviewer A 用 `claude-opus-5-5-xhigh`，Reviewer B 用 `grok-4.7-xhigh-fast`。中文键优先。这两个名字必须是这次真能传给 `Task` 的。
 
 `Task` 拒绝了某个条目，就改用它所在系列的默认，并说一句。系列按前缀：`claude-*` 是一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 是一个系列。被拒绝的 `composer-*` 改用 Reviewer B 的默认 `grok-4.7-xhigh-fast`。找不到匹配的系列，就用 Reviewer A 的默认 `claude-opus-5-5-xhigh`。连默认也被拒绝时，从报错里的有效名字里选最接近的，优先同一系列、同一推理档位，并另开一个 PR 更新默认表。别名条目不是模型名，不要对它做回退。
 
@@ -83,10 +83,10 @@
 
 | 视角 | 角色行 | 没有这行、并且名字这次可用时的 `model` |
 |---|---|---|
-| 判断 | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` |
-| 工具 | `reflect tooling` | `grok-4.7-xhigh-fast` |
-| 发散 | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` |
-| 综合 | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` |
+| 判断 | `反思的判断、发散和综合`（旧键 `reflect judgment, divergent, synthesizer`） | `claude-opus-5-5-xhigh` |
+| 工具 | `反思的工具视角`（旧键 `reflect tooling`） | `grok-4.7-xhigh-fast` |
+| 发散 | `反思的判断、发散和综合`（旧键 `reflect judgment, divergent, synthesizer`） | `claude-opus-5-5-xhigh` |
+| 综合 | `反思的判断、发散和综合`（旧键 `reflect judgment, divergent, synthesizer`） | `claude-opus-5-5-xhigh` |
 
 `auto` 或 `inherit-parent` 省略 `model`。`Task` 拒绝了某个名字，就改用该行的默认并说一句。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
 
@@ -115,24 +115,29 @@ alwaysApply: true
 
 `grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只有这次真的能传给 `Task` 才写进文件。两个都在、预算是「大」时，角色行就是下面这份，评审列表 2 项。其他档按 setup-s-models 改列表长度和后缀，改完的名字必须仍在检测结果里。
 
+写出的键用中文。文件里已有的旧英文键按 setup-s-models 的对照表改写，模型值不动。
+
 ```
-feature, refactoring: grok-4.7-xhigh-fast
-bug-fix: grok-4.7-xhigh-fast
-perf-issue: grok-4.7-xhigh-fast
-hillclimb: grok-4.7-xhigh-fast
-judgment and prose: claude-opus-5-5-xhigh
-hardest tasks: claude-opus-5-5-xhigh
-how explorer: grok-4.7-xhigh-fast
-how explainer: claude-opus-5-5-xhigh
-why investigators: grok-4.7-xhigh-fast
-why synthesizer: claude-opus-5-5-xhigh
-reflect tooling: grok-4.7-xhigh-fast
-reflect judgment, divergent, synthesizer: claude-opus-5-5-xhigh
-arena runners: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
-arena cross-judge pool: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
-swarm workers: grok-4.7-xhigh-fast
-architect runners: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
-interrogate reviewers: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
+# s 模型配置
+# 预算: 大（xhigh）
+写功能和重构: grok-4.7-xhigh-fast
+修 bug: grok-4.7-xhigh-fast
+性能问题: grok-4.7-xhigh-fast
+爬坡优化: grok-4.7-xhigh-fast
+判断和写作: claude-opus-5-5-xhigh
+最难的任务: claude-opus-5-5-xhigh
+怎么工作的探索者: grok-4.7-xhigh-fast
+怎么工作的讲解者: claude-opus-5-5-xhigh
+为什么的调查者: grok-4.7-xhigh-fast
+为什么的综合者: claude-opus-5-5-xhigh
+反思的工具视角: grok-4.7-xhigh-fast
+反思的判断、发散和综合: claude-opus-5-5-xhigh
+竞技场参赛者: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
+竞技场交叉评审: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
+群体作战的工作者: grok-4.7-xhigh-fast
+架构设计参赛者: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
+审问审查者: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
+# s 模型配置结束
 ```
 
 检测不到这两个名字时，用检测到的写代码模型和判断模型填同一张表，并说明默认名这次不可用。写完告诉用户：新开一个对话后，这条规则才会生效。
@@ -141,7 +146,7 @@ interrogate reviewers: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
 
 ## swarm
 
-每个工作者一个 `Task`：`subagent_type: generalPurpose`，`environment: "cloud"`，`run_in_background: true`，`model` 用第 4 步选的名字。`auto` 或 `inherit-parent` 省略 `model`。没有这行配置、并且 `grok-4.7-xhigh-fast` 这次真能传给 `Task` 时，用这个名字。
+每个工作者一个 `Task`：`subagent_type: generalPurpose`，`environment: "cloud"`，`run_in_background: true`，`model` 用第 4 步选的名字，角色行是「群体作战的工作者」（旧键 `swarm workers`）。`auto` 或 `inherit-parent` 省略 `model`。没有这行、并且 `grok-4.7-xhigh-fast` 这次真能传给 `Task` 时，用这个名字。中文键优先。
 
 只有工作者需要用户电脑上的文件、界面或登录态时，才改 `environment: "local"`。必须从一个非默认的、已推送的分支开始时，传 `cloud_base_branch`。
 
@@ -159,7 +164,7 @@ interrogate reviewers: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
 
 每次都是 `Task`，`subagent_type: generalPurpose`，`readonly: false`。不要用 `readonly: true`，它会去掉 MCP，调查者和综合者的引用抽查会失效。
 
-调查者的 `model` 是 `why investigators`，没有这行时用 `grok-4.7-xhigh-fast`。综合者的 `model` 是 `why synthesizer`，没有这行时用 `claude-opus-5-5-xhigh`。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。拒绝了某个名字，就改用该角色的默认；连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
+调查者的 `model` 是「为什么的调查者」（旧键 `why investigators`），没有这行时用 `grok-4.7-xhigh-fast`。综合者的 `model` 是「为什么的综合者」（旧键 `why synthesizer`），没有这行时用 `claude-opus-5-5-xhigh`。中文键优先。这两个默认名必须是这次真能传给 `Task` 的。`auto` 或 `inherit-parent` 省略 `model`。拒绝了某个名字，就改用该角色的默认；连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
 
 ## show-me-your-work
 

@@ -10,11 +10,37 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
 # 设置 s 的模型
 
-给 17 个角色选定模型和预算，写入当前宿主会读的标记段。路径、以及标记外的内容能不能动，以[宿主适配](../../HOSTS.md)为准。起止标记仍是 `# s model configuration` 和 `# end s model configuration`。再跑一次只替换这一段。段内旧英文注释一并换掉。宿主要求 frontmatter 时，只用该宿主参考里写明的那几行。
+给 17 个角色选定模型和预算，写入当前宿主会读的标记段。路径、以及标记外的内容能不能动，以[宿主适配](../../HOSTS.md)为准。写出的起止标记是 `# s 模型配置` 和 `# s 模型配置结束`。再跑一次时，这对标记，或旧标记 `# s model configuration` 到 `# end s model configuration`，都算同一段：整段换成下面的中文块。注释、`# 预算` 和角色键用中文；已有模型值按对照表抄到中文键。同一角色两行都有时，留中文键上的值，英文键不写回去。旧起始行只要以 `# s model configuration` 开头就算。只看到一头就停，留下原文。宿主要求 frontmatter 时，只用该宿主参考里写明的那几行。Codex 的 `s-*.toml` 文件名仍按旧英文键生成，见该参考。
 
 只写这次确认可用的模型名。`inherit-parent` 和 `auto` 始终合法，派子代理时不传模型。一个都检测不到，请用户把有权限的名字贴过来。不编造，不抄别的软件的名字。这 17 行以外的旧角色不写回去。
 
 先列出这次真能传给子代理的模型。
+
+## 对照
+
+写出用左列。读取时左列优先，没有再读右列。
+
+| 中文键 | 旧英文键 |
+|---|---|
+| 写功能和重构 | feature, refactoring |
+| 修 bug | bug-fix |
+| 性能问题 | perf-issue |
+| 爬坡优化 | hillclimb |
+| 判断和写作 | judgment and prose |
+| 最难的任务 | hardest tasks |
+| 怎么工作的探索者 | how explorer |
+| 怎么工作的讲解者 | how explainer |
+| 为什么的调查者 | why investigators |
+| 为什么的综合者 | why synthesizer |
+| 反思的工具视角 | reflect tooling |
+| 反思的判断、发散和综合 | reflect judgment, divergent, synthesizer |
+| 竞技场参赛者 | arena runners |
+| 竞技场交叉评审 | arena cross-judge pool |
+| 群体作战的工作者 | swarm workers |
+| 架构设计参赛者 | architect runners |
+| 审问审查者 | interrogate reviewers |
+
+`# 预算` 与旧行 `# budget` 是同一行。`省（medium）`、`中（high）`、`大（xhigh）`、`不限（max）` 与旧行 `small (medium)`、`medium (high)`、`large (xhigh)`、`unlimited (max)` 相同。重写时预算行写成 `# 预算: 省（medium）` 这种，括号里的档位照抄；原先是英文档名就换成对应的省、中、大、不限。
 
 ## 一次一问
 
@@ -26,16 +52,16 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
    **Hermes。** 家目录是 `$HERMES_HOME`，否则 `~/.hermes`。`hermes profile list` 多于一个就问。技能在该家的 `skills/`。标记段只写该家的 `SOUL.md`，不改 `config.yaml`。默认不能按次传模型，17 行都写 `inherit-parent`，不传模型和档位。名单用 `hermes -p <name> config get`，不要加 `--raw`。见 [Hermes 参考](../s-router/references/hermes-tools.md)。
 
-2. **选预算。** 只问这一题，不问套餐或订阅。已有预算先说出来。额度有限的套餐建议选「省」，或在下一步把 17 行都改成 `inherit-parent`。默认是「大」。跳过则 `# budget` 写 `inherit-parent`，不改模型名后缀；下一步先按「大」的角色分工和 2 项评审组来填，后缀用检测结果里原有的名字。
+2. **选预算。** 只问这一题，不问套餐或订阅。已有预算先说出来。额度有限的套餐建议选「省」，或在下一步把 17 行都改成 `inherit-parent`。默认是「大」。跳过则 `# 预算` 写 `inherit-parent`，不改模型名后缀；下一步先按「大」的角色分工和 2 项评审组来填，后缀用检测结果里原有的名字。
 
    选项用下面的原文：
 
-   - 省：评审组只留 1 项，用快模型；只有 hardest tasks 用强模型，其余角色都用快模型；推理 medium
+   - 省：评审组只留 1 项，用快模型；只有最难的任务用强模型，其余角色都用快模型；推理 medium
    - 中：评审组 1 到 2 项；判断类用强模型，写代码类用快模型；推理 high
    - 大：评审组 2 项，先快模型再强模型；判断类用强模型，写代码类用快模型；推理 xhigh
    - 不限：评审组至少 2 项，有第三个系列再加 1 项；判断类用强模型，写代码类用快模型；推理 max
 
-   快模型是写代码系列，强模型是判断系列，按名字前缀分。写代码类：`feature, refactoring`、`bug-fix`、`perf-issue`、`hillclimb`、`how explorer`、`why investigators`、`reflect tooling`、`swarm workers`。判断类：`judgment and prose`、`hardest tasks`、`how explainer`、`why synthesizer`、`reflect judgment, divergent, synthesizer`。评审组这四行用同一份列表：`arena runners`、`architect runners`、`interrogate reviewers`、`arena cross-judge pool`。逗号分隔的每一项派一个子代理；`arena cross-judge pool` 从中选一项。
+   快模型是写代码系列，强模型是判断系列，按名字前缀分。写代码类：`写功能和重构`、`修 bug`、`性能问题`、`爬坡优化`、`怎么工作的探索者`、`为什么的调查者`、`反思的工具视角`、`群体作战的工作者`。判断类：`判断和写作`、`最难的任务`、`怎么工作的讲解者`、`为什么的综合者`、`反思的判断、发散和综合`。评审组这四行用同一份列表：`竞技场参赛者`、`架构设计参赛者`、`审问审查者`、`竞技场交叉评审`。逗号分隔的每一项派一个子代理；竞技场交叉评审从中选一项。
 
    Codex、Claude Code、Cursor、WorkBuddy 把推理目标写进模型名后缀：省 medium，中 high，大 xhigh，不限 max。以 `fast` 结尾时看前一段。没有刚好的后缀，就用同一系列里不超过目标的最高已检测名字。系列没有这种后缀时，不限和大用最强的，中用中间的，省用更便宜或更快的。只有一个名字就不动，并说明没有档位。DeepSeek Harness 和 Hermes 不改名字后缀；括号里写映射后的档位，宿主没有该档就按参考下调。
 
@@ -45,32 +71,32 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
 4. **确认后写入。** 展示完整标记段。用户同意才写。写完说明路径、会不会自动读到、要不要新开对话。
 
-`# budget` 写成 `省（medium）`、`中（high）`、`大（xhigh）`、`不限（max）`，宿主下调档位时括号里写实际档位，跳过则写 `inherit-parent`。旧行 `small (medium)`、`medium (high)`、`large (xhigh)`、`unlimited (max)` 与这四档相同。
+`# 预算` 写成 `省（medium）`、`中（high）`、`大（xhigh）`、`不限（max）`，宿主下调档位时括号里写实际档位，跳过则写 `inherit-parent`。
 
-arena、architect、interrogate 按列表有几项就派几个。swarm、reflect、why、how 不读这一行来决定人数。
+arena、architect、interrogate 按列表有几项就派几个。swarm、reflect、why、how 不读预算行来决定人数。这些技能认中文键，也认对照表里的旧英文键。
 
 ```
-# s model configuration
+# s 模型配置
 # 一行一个角色。删掉一行就用技能默认。
 # inherit-parent 或 auto：跟父对话的模型，派子代理时不传模型。
-# 逗号分隔的列表，每一项派一个子代理。arena cross-judge pool 从中选一项。
-# budget: 大（xhigh）
-feature, refactoring: <confirmed model or inherit-parent>
-bug-fix: <confirmed model or inherit-parent>
-perf-issue: <confirmed model or inherit-parent>
-hillclimb: <confirmed model or inherit-parent>
-judgment and prose: <confirmed model or inherit-parent>
-hardest tasks: <confirmed model or inherit-parent>
-how explorer: <confirmed model or inherit-parent>
-how explainer: <confirmed model or inherit-parent>
-why investigators: <confirmed model or inherit-parent>
-why synthesizer: <confirmed model or inherit-parent>
-reflect tooling: <confirmed model or inherit-parent>
-reflect judgment, divergent, synthesizer: <confirmed model or inherit-parent>
-arena runners: <one or more confirmed entries>
-arena cross-judge pool: <one or more confirmed entries>
-swarm workers: <confirmed model or inherit-parent>
-architect runners: <one or more confirmed entries>
-interrogate reviewers: <one or more confirmed entries>
-# end s model configuration
+# 逗号分隔的列表，每一项派一个子代理。竞技场交叉评审从中选一项。
+# 预算: 大（xhigh）
+写功能和重构: <已确认的模型或 inherit-parent>
+修 bug: <已确认的模型或 inherit-parent>
+性能问题: <已确认的模型或 inherit-parent>
+爬坡优化: <已确认的模型或 inherit-parent>
+判断和写作: <已确认的模型或 inherit-parent>
+最难的任务: <已确认的模型或 inherit-parent>
+怎么工作的探索者: <已确认的模型或 inherit-parent>
+怎么工作的讲解者: <已确认的模型或 inherit-parent>
+为什么的调查者: <已确认的模型或 inherit-parent>
+为什么的综合者: <已确认的模型或 inherit-parent>
+反思的工具视角: <已确认的模型或 inherit-parent>
+反思的判断、发散和综合: <已确认的模型或 inherit-parent>
+竞技场参赛者: <一项或多项已确认的条目>
+竞技场交叉评审: <一项或多项已确认的条目>
+群体作战的工作者: <已确认的模型或 inherit-parent>
+架构设计参赛者: <一项或多项已确认的条目>
+审问审查者: <一项或多项已确认的条目>
+# s 模型配置结束
 ```
