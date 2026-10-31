@@ -18,6 +18,15 @@ LOCK_PATH = ROOT / "plugin-versions.lock.json"
 
 PLUGIN_ORDER = ("s-atlas",)
 
+# Docs that print the current plugin version. Each regex has one group: the
+# version. bump_plugin_version.py rewrites them; check_marketplace.py compares.
+DOC_VERSION_REFS = {
+    "s-atlas": (
+        ("README.md", re.compile(r"当前版本 (\d+\.\d+\.\d+)")),
+        ("docs/architecture.md", re.compile(r"当前版本 \*\*(\d+\.\d+\.\d+)\*\*")),
+    ),
+}
+
 EXPECTED_SKILL_COUNTS = {
     "s-atlas": 79,
 }
@@ -143,6 +152,27 @@ def set_manifest_version(path: Path, version: str) -> None:
         raise ValueError(f"{path} is not a JSON object")
     data["version"] = version
     write_json(path, data)
+
+
+def doc_versions(name: str) -> list[tuple[str, str | None]]:
+    """Return (relative path, version printed in that doc or None)."""
+    found: list[tuple[str, str | None]] = []
+    for rel, pattern in DOC_VERSION_REFS.get(name, ()):
+        path = ROOT / rel
+        match = pattern.search(path.read_text(encoding="utf-8")) if path.is_file() else None
+        found.append((rel, match.group(1) if match else None))
+    return found
+
+
+def set_doc_versions(name: str, version: str) -> None:
+    for rel, pattern in DOC_VERSION_REFS.get(name, ()):
+        path = ROOT / rel
+        text = path.read_text(encoding="utf-8")
+        match = pattern.search(text)
+        if not match:
+            raise ValueError(f"{rel} has no version line matching {pattern.pattern!r}")
+        start, end = match.span(1)
+        path.write_text(text[:start] + version + text[end:], encoding="utf-8", newline="\n")
 
 
 def load_lock() -> dict:

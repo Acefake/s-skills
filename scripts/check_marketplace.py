@@ -31,6 +31,7 @@ from marketplace_lib import (
     ROOT,
     SEMVER_RE,
     content_hash,
+    doc_versions,
     frontmatter_name,
     load_lock,
     manifest_paths,
@@ -114,6 +115,11 @@ def check_versions(problems: Problems) -> None:
                 problems.add(
                     f"{path.relative_to(ROOT)} version is {found}, lock says {version}"
                 )
+        for rel, found in doc_versions(name):
+            if found is None:
+                problems.add(f"{rel}: no 当前版本 line found for {name}")
+            elif found != version:
+                problems.add(f"{rel} says version {found}, lock says {version}")
 
 
 def check_cursor_marketplace(problems: Problems) -> None:

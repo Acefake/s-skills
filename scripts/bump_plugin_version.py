@@ -3,7 +3,7 @@
 
 Plugin hosts keep the installed copy until the version string
 in plugin.json changes. Run this after editing a plugin, then commit the
-manifest and plugin-versions.lock.json updates together.
+manifest, README/docs version lines and plugin-versions.lock.json updates together.
 
     python3 scripts/bump_plugin_version.py s-atlas
     python3 scripts/bump_plugin_version.py --all
@@ -25,6 +25,7 @@ from marketplace_lib import (
     content_hash,
     load_lock,
     manifest_paths,
+    set_doc_versions,
     set_manifest_version,
     write_json,
 )
@@ -41,6 +42,7 @@ def bump_one(lock: dict, name: str) -> str:
     version = bump_patch(current)
     for path in manifest_paths(name):
         set_manifest_version(path, version)
+    set_doc_versions(name, version)
     entry["version"] = version
     entry["contentSha256"] = actual
     return f"{name}: {current} -> {version}"
