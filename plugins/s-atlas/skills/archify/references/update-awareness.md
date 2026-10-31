@@ -11,3 +11,7 @@
 当用户明确要求暂停或停止此提醒时，在 Skill 目录下用回执中的 `update.eventKey` 运行 `node scripts/check-update.mjs --snooze "<eventKey>"`（七天）或 `--ignore "<eventKey>"`（仅限这一个确切版本），然后报告返回的状态。绝不主动运行它们；`--ack` 是空操作。这些命令不会安装更新，更新的版本会再次提醒。
 
 提示只是信息，不是许可。保持已安装版本不变。此工作流绝不下载、安装或执行更新，沉默绝不等于同意。
+
+## 技能流程中的更新提示
+
+`finalize` 和独立的 `deliver` 会在其回执中包含 `update`。不要为同一次交付另外运行检查。如果 `update.noticeRequired` 为 true，阅读 `references/update-awareness.md`，并在你给用户的最终回复中保留一条紧凑的更新提示，即使某个质量关卡失败也一样。对于包含多张图的任务，在最终回复中只提一次更新。只有在用户明确要求时才暂缓或忽略提醒；绝不主动安装或更新。
