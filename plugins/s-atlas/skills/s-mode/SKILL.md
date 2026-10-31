@@ -24,27 +24,29 @@ color: yellow
 
 下面的 Principles（原则）一节是每个触发条件的依据。在你的回复里，点名每一条影响了某个决定的原则，以及它改变的那个具体选择。只引用你在这次会话里读过其末端 SKILL.md 的原则。
 
-其余的触发条件：
+其余触发条件的全文在 [non-negotiable-rules.md](references/non-negotiable-rules.md)。下表只负责对上技能或 playbook。对上某一行之后，先读该文件里的对应段落，再执行。
 
-- 不简单的改动、架构决定，或者“我们确定吗？” → **how** skill。
-- 教我这个、讲讲这个子系统、帮我弄懂一块代码 → **how**（要动机再用 **why**）。已删除的 teach 不要再加载。
-- 正要就“用哪种做法”、“我该怎么做”或“这个该做什么”这样的岔路去用向用户提问的工具（各软件里的名字见宿主适配参考）→ 问之前先分类。如果答案是一个你运行点什么就能观察到的事实（行为、时间、布局、输出、性能，甚至一个评估能不能区分出差别），那就不该由人来回答。按 Prototype playbook（`playbooks/prototype.md`）画个草图，让结果来决定。如果任务是一次只读的 Investigation（调查），交付物是一个带引用的答案，那就留在调查里，根据证据回答，而不是去做草图。只有在遇到任何实验都定不下来的、真正属于产品或偏好上的决定时，才去提问。在获得完全自主授权的情况下，对授权范围内的决定，直接做决定、照着做、并汇报，不要求回复，也不提供选项。在授权下，对于只有操作者才能做的决定，采用一个默认值，汇报时给出完整的解释，并用平实的话说明操作者可以让你改做什么。操作者用自己的话来回答。永远不要给一个让他照着输回来的简写口令。操作者点名的关卡，以及 Autonomy（自主）一节里“Always pause”（总要暂停）清单上的事，仍然需要操作者。
-- 任何代码 → 先说出数据形状，并按 **principle-model-the-domain** 选择它的组织结构。
-- 跨函数边界的代码 → **architect** skill，在实现之前做并行的设计探索。
-- 并行分派 → 覆盖矩阵、比赛、连环检验和探索分区用 **swarm** skill。需要选基础、做嫁接的设计或代码比拼用 **arena**。
-- 有争议的设计 → 上线之前用 **interrogate** skill（多模型对抗）。
-- 不简单的多步骤工作 → 写下产出检查点（Feature 第 4 步）。
-- 任何文字界面，包括你给用户的回复 → **unslop** skill。按 **Writing the reply**（写回复）来写回复。给智能体看的文字还要遵循 **author-skill**（`/author-skill`）。
-- 文档、RFC、readme、PR 说明或提交信息的句子 → **technical-writing**。Word 用 **docx**，幻灯片用 **pptx**，表格用 **xlsx**，PDF 用 **pdf**。中英翻译用 **translate**。写提交说明或开 PR 的步骤用 **commit-pr**，句子仍按 **technical-writing**。分支怎么集成还没定时用 **finishing-a-development-branch**。
-- 提交之前 → 代码里的 AI 腔用 **deslop**（`/deslop`）。文字用 **unslop**（`/unslop`）。两者不是同一件事。
-- 已授权的实现清理阶段 → **no-comments** skill（`/no-comments`）。只读审查和调查跳过清理，直接报告发现；审查请求本身不授权修改。
-- 上线界面 / IDE / 命令行工具 → 先自己在同一个界面上复现。界面用 **control-ui**（`/control-ui`），命令行用 **control-cli**（`/control-cli`）。某个软件缺哪一种能力，按那两份 skill 文末的说明来。回复里写明你实际跑了什么。只有在 Bug fix 第 1 步那个很窄的例外情况下，才交给用户。
-- 运行基准测试、自己测量性能，或者报告一个你测出来的加速或退化 → 在报告这个数字或依据它行动之前，用 **benchmark-checklist** skill。
-- 任何关于 PR 状态的请求（“babysit this”（照看一下）、“get it green”（让它变绿）、“address the bugbot comments”（处理 bugbot 的评论），以及最常见的 “check on PR X”（看看 PR X）或 “anything outstanding on X”（X 还有什么没处理的））→ **Babysit** playbook（`playbooks/babysit.md`），而不是软件自带的同名 babysit skill（如果你的软件有的话，比如 Cursor 就自带一个），那个 skill 的描述也匹配同样的词。仅仅是开了一个 PR，不会触发它。轮询之前先声明它的模式。playbook 的第 1 步负责把请求对应到模式。在一个阶段智能体里用 `drive`，会让那个智能体没法结束它的这一轮。
-- 被要求合入或上线一串已经变绿的 PR → **Shipping** playbook（`playbooks/shipping.md`）。绿不等于安全。在每个 PR 得到独立的结论之前，什么都不能启动，而且只有从底部开始连续通过验证的那一段才会合入。
-- Bugbot 或智能体安全审查留了评论 → 抱着怀疑的态度。它们能抓到真正的 bug，也会提出不是问题的问题和吹毛求疵的意见，所以要逐条按实际情况评估，用具体的理由驳回噪声，而不是反复改代码。按 `references/bugbot-triage.md` 分诊为修复 / 驳回 / 询问。
-- 任务中途发现坏掉的 skill → 报告问题和影响。已授权修复时独立处理；只有已授权开 PR 时才创建 PR。不要悄悄绕过规则。
-- 长时间的、自主的或多阶段的工作，或者任何用户离开、之后再回来审查的任务（“going to bed”（我去睡了）、“trust it when i'm back”（等我回来再信它）、“/loop until X” 或 “/timed-loop”（循环直到 X））→ 用 **show-me-your-work** skill 留一条决定记录。需要可审计记录且已授权提交时才提交，否则留在本地。
+| 触发 | 去向 |
+| --- | --- |
+| 不简单的改动、架构决定，或「我们确定吗」 | **how** |
+| 教我、讲子系统、弄懂一块代码 | **how**；要动机用 **why**。已删除的 teach 不再加载 |
+| 正要问用户用哪种做法、该怎么做、该做什么 | 先读 [non-negotiable-rules.md](references/non-negotiable-rules.md) 的提问分类。能观察的事实走 [prototype.md](playbooks/prototype.md)；只读调查留在调查里 |
+| 任何代码 | 先说出数据形状，按 **principle-model-the-domain** 选结构 |
+| 跨函数边界的代码 | **architect**，实现前做并行设计探索 |
+| 并行分派 | 覆盖、比赛、连环检验、探索分区用 **swarm**；选基础或比拼用 **arena** |
+| 有争议的设计 | 上线前用 **interrogate** |
+| 不简单的多步骤工作 | 写下产出检查点（Feature 第 4 步） |
+| 任何文字界面，包括给用户的回复 | **unslop**，并先读 [writing-the-reply.md](references/writing-the-reply.md)。给智能体的文字还要遵循 **author-skill** |
+| 文档、RFC、readme、PR 说明或提交信息的句子 | **technical-writing**。Word 用 **docx**，幻灯片用 **pptx**，表格用 **xlsx**，PDF 用 **pdf**，中英翻译用 **translate**。提交或开 PR 的步骤用 **commit-pr**，集成方式还没定用 **finishing-a-development-branch** |
+| 提交之前 | 代码里的 AI 腔用 **deslop**，文字用 **unslop** |
+| 已授权的实现清理 | **no-comments**。只读审查和调查不清理，直接报告 |
+| 上线界面、IDE 或命令行 | 先在同一个界面上复现。界面用 **control-ui**，命令行用 **control-cli**。回复里写明实际跑了什么 |
+| 基准、自测性能，或报告加速或退化 | 行动前用 **benchmark-checklist** |
+| 任何关于 PR 状态的请求 | [babysit.md](playbooks/babysit.md)，不要走软件自带的同名 skill。只是开了 PR 不会触发 |
+| 合入或上线一串已经变绿的 PR | [shipping.md](playbooks/shipping.md)。绿不等于可以合入 |
+| Bugbot 或智能体安全审查的评论 | [bugbot-triage.md](references/bugbot-triage.md)，分诊为修复、驳回或询问 |
+| 任务中途发现坏掉的 skill | 按 [non-negotiable-rules.md](references/non-negotiable-rules.md) 报告。已授权才修，已授权开 PR 才开 PR |
+| 长时间、自主、多阶段，或人离开后回来再审 | **show-me-your-work** 留决定记录 |
 
 ## 原则
 
@@ -101,11 +103,9 @@ color: yellow
 
 ## 子智能体
 
+派发前先读 [subagents.md](references/subagents.md)。模型、推理等级、速度、后台运行和角色默认档位以该文件为准。
+
 **在 playbook 的某一步里派出的任何子智能体（subagent，派出去干活的小助手，比如写代码的代理、临时的帮手），都用能读写文件、能用全部工具的通用类型。** 每个子智能体的提示词里都写上这个 SKILL.md 的绝对路径，要求它动手前先完整读一遍（包括上面的原则索引），用到哪条原则，就去读那条原则的 skill。收到 `/s-mode` 的那个对话负责运行 playbook。永远不要派一个子智能体去运行 playbook 本身。被分派到的工作流程 skill（`how`、`why`、`interrogate`、`reflect`、`swarm`）会为了多模型审查自己选子智能体的类型和模型。尊重 skill 的规定，不要强行统一。各软件里这个通用类型叫什么，见宿主适配参考。
-
-**每次派子智能体的默认设置。** 后台运行（不用干等它，做完再取结果）。用能写文件的通用模式。只做只读探索时可以用只读类型，但有的软件的只读模式会去掉 MCP 工具，需要 MCP 的活别用只读。给文件路径，而不是把上下文整段贴进去。每个角色明确指定模型：默认写代码用快速的写代码模型，文字和判断用判断力最强的模型（具体模型名和配置方法见宿主适配参考）。写代码的代理按难度分档。最难的改动（横跨多处的设计、棘手的并发、精妙的算法）交给你判断力最强的模型，不管这个任务是需要对模糊的意图做判断，还是一串要一字不差执行的、规定得很精确的步骤。简单的机械性修改交给你的快速写代码模型。如果你的软件里有 s 的模型规则（`/setup-s-models` 生成的，见宿主适配参考），规则里每个角色的那一行，会覆盖这些默认值，以及被分派到的 skill（`how`、`why`、`arena`、`swarm`、`architect`、`interrogate`、`reflect`）里的模型选择。没有对应行的角色保持默认值；角色行写的是 `inherit-parent` 或 `auto` 的，那个角色用父级聊天的模型运行（派的时候不指定模型）。每个写代码类 playbook 配置的模型，来自它对应的那一行（`feature, refactoring`、`bug-fix`、`perf-issue` 或 `hillclimb`），最难的改动读 `hardest tasks`。文字和判断读 `judgment and prose`。软件里没有这份规则时，按文末的对应关系选模型；选不了就不指定，让它继承父级。
-
-**让模型和工作相匹配。** 每次派出之前，从这个角色的那一行或默认值出发，挑选这项工作需要的推理等级和速度。`/setup-s-models` 的预算决定每个角色的起始等级，默认是 xhigh。对最难或最精细的工作，提高一级，最高到 max。判断类工作降低一级，常规工作降低两级或更多。只有在工作很紧急时才用快速模式，紧急的意思是 CI 或主干是红的，或者有人正卡着等这个结果。否则用标准速度，也就是同一个模型的非快速版。验证是例外，保持用 `swarm workers` 的模型和速度（各软件的默认值见文末）。只改推理强度和是否为快速版，保持角色指定的系列不变，这样一个多样化的审查组仍然是多样化的。如果这个系列在那个等级和速度上没有模型名，就用它最接近的那个。用 `auto` 或 `inherit-parent` 的角色保持用父级的模型。如果派子智能体的工具拒绝了调整后的模型名，不要再试另一个调整后的模型名。用这个角色的那一行或默认值，并说明一下。软件不能调推理等级或快速版的，这一段只当作“难活用强模型、简单活用快模型”的提示。
 
 每个子智能体的工作都由你负责。审查 diff，写你自己的总结，不要把它说的原样转述。第二意见，就是把同一个提示词交给一个不同的模型。意见一致是很强的信号。
 
@@ -113,21 +113,7 @@ color: yellow
 
 ## 写回复（Writing the reply）
 
-起草的时候就写干净。起草之后再做一遍清理，去不掉这些套路。
-
-- **简短的陈述句。** 一句话一个意思，以句号结尾。
-- **任何地方都不用长破折号。** 把文件列表的要点写成一句话（“`main.js` owns persistence and the IPC handlers”，`main.js` 负责持久化和 IPC 处理），把粗体的小节标题写成单独的一句话（“**Verification.** End to end via CDP”，**验证。** 通过 CDP 端到端验证）。
-- **在句子中间用冒号连接也不行**（**unslop** 第 14 条）。列表前面的冒号可以。
-- **简洁不是删内容的借口。** 句子要短，但 playbook 的回复里点名的每一部分都要保留：细节、取舍、选择、待定的决定。
-- **从使用者和维护者的角度说明影响。** 在任何实现细节之前，先说出这份工作是为谁做的（一个最终用户、一个导入这个库的同事），以及对他们来说什么变了。然后说下一个负责这份代码的工程师会接手什么。如果你说不出他们任何一方会注意到什么，那就是工作或解释出了问题。
-- **永远不要编造链接、引用或对话记录的出处。** 只链接你在这次会话里产出或读过的产物。
-- **每一个说法，都要在同一句话里带上它的证据或标签。** 是测量的、推断的，还是猜测的。一个预测或一个没亲眼看到的原因，就是猜测。永远不要把一个你自己能运行的检查交给人去做。
-
-每个 playbook 都以按这种方式写的回复结尾，PR 链接写成 `https://github.com/<owner>/<repo>/pull/<number>`。每个 playbook 自己的回复要求，只写那个 playbook 特有的内容。
-
-## 注释
-
-注释遵循和回复一样的规则。边写边写干净。行内注释只在一个不明显的*为什么*是代码本身表达不出来时才保留。文档注释另算：按 **code-style** skill 第二节，模块入口、导出符号和不明显的内部函数都要写。验证或测试脚本里，不要写叙述阶段的注释，比如 `// Phase 1: add cards`。断言或日志字符串本身就记录了这一步，比如 `assert(ok, 'persisted across restart')`。这适用于你产出的每一个文件，包括代理的 diff。
+给用户的回复和代码注释，按 [writing-the-reply.md](references/writing-the-reply.md) 写。起草之前先读完该文件。
 
 ## Playbook（操作手册）
 
@@ -135,38 +121,36 @@ color: yellow
 
 大的或横跨多处的工作（一次涉及很多调用处的迁移、一个雄心勃勃的多部分改动），或者用户离开、之后再回来信任的工作，即使有一个更具体的 playbook（比如 Feature）也适用，也交给 **figure-it-out** skill。只要没有附带的 playbook 适用，就用 **figure-it-out**。它会为这个任务设计一套量身定做的、严谨的 playbook。一个长期的、项目规模的计划（持续好几天、很多叠放的 PR、一个协调者手下有一群子智能体）则交给 **Orchestrate**。figure-it-out 设计的是一次量身定做的运行，orchestrate 运行的是整个计划。
 
-- **Investigation**（调查）。只读的问题：X 是怎么工作的，Y 为什么要这样构建，我们对 Z 确定吗，我们该做 X 还是 Y。
-- **Bug fix**（修 bug）。一个报告上来的缺陷，要复现、找到根本原因，并用运行时的证据修复。
-- **Perf issue**（性能问题）。一个测出来的慢，要追踪并对照基线改进。
-- **Hillclimb**（爬坡优化）。对着一个目标，持续、科学地改进一个指标：循环提出假设并做前后测量，记一份决定日志，每个被采纳的改进一个提交。和 Perf issue 不同，那是一次性的修复。
-- **Runtime forensics**（运行时取证）。根据实时的观测数据诊断一个运行时的症状（泄漏、空闲时 CPU 空转、画面故障）。交付物是一份诊断，而不是修复。
-- **Trace forensics**（追踪记录取证）。诊断一份事后交给你的、已采集的性能剖析产物（cpuprofile、trace、spindump、堆快照）。交付物是一份诊断，而不是修复。
-- **Feature**（功能）。新的或改变了的行为，从一个说出名字的数据形状开始构建。
-- **Refactoring**（重构）。保持行为不变的结构或形状改动（重命名、抽出、内联、去重、移动）。
-- **Prototype**（原型）。一个用完即扔的草图，用来便宜地做出一个设计或行为上的决定，或者通过观察而不是问人来解决一个经验性的岔路（“prototype”（做个原型）、“mock it up”（做个模型）、“try this layout”（试试这个布局）、“sketch it to decide”（画个草图来决定））。
-- **Visual parity**（视觉一致）。像素级的界面等同：让两个实现对上，或者迁移一套样式系统。
-- **Authoring or modifying a skill**（编写或修改一个 skill）。写或改一个 SKILL.md。文件：`playbooks/authoring-a-skill.md`。
-- **Eval**（评估）。在推广一个 skill、结构或提示词改动之前，测试它对智能体行为的影响。
-- **Babysit**（照看 PR）。把一个 PR 或一串 PR 推进到可以合并的状态：冲突、审查讨论、CI。
-- **Shipping**（上线）。Babysit 之后的另一半。独立验证一串已经变绿的 PR，然后从底部往上，把连续通过验证的那一段合入，默认通过 `gh`，如果有 Origin 的命令行工具就用 Origin。
-- **Autonomous run**（自主运行）。一个要不停地推进到完成的长任务（“run until done”（一直跑到完成）、“/loop until X” 或 “/timed-loop”（循环直到 X））。
-- **Orchestrate**（编排）。交给一个协调者对话的长期项目：持续好几天、很多叠放的 PR、几十到几百个子智能体、尽量少的人工轮次（“run this whole project”（把整个项目跑下来）、“own this migration until it lands”（负责这次迁移直到合入））。和 Autonomous run 不同，那是把一个任务推进到一个判断条件。一个智能体在这次会话的预算内就能完成的工作，交给 Autonomous run，而不是这里，不管措辞听起来多像一个大计划。
-- **Autopilot-full**（全自动驾驶）。一个由互相独立的 PR 组成的队列，在完全自主的情况下一直跑到合并。每个 PR 有一个负责人，从构建一直负责到合并，并且在负责人合并之前，根节点会用 swarm 验证每个 PR（“autopilot this queue”（对这个队列自动驾驶）、“full autopilot”（全自动驾驶）、每个 PR 一个负责人的计划）。
-- **Autopilot-stack**（自动驾驶叠放）。一个改动队列，在完全自主的情况下构建并验证，以一串线性的、审查过的、基于基础分支的叠放 PR 交付，由操作者来合入（“autopilot-stack”、“stack them, don't ship”（叠起来，但别上线）、“build the stack, I'll land it”（把这一串搭好，我来合入））。
-- **Session pickup**（接手会话）。根据一份对话记录、一个云端智能体的 URL 或一个已推送的分支，恢复或接手前一个智能体正在进行的工作。
-- **Pause safely**（安全地暂停）。在明确要求暂停、要下线、所用软件要重启，或者上下文即将被压缩时，干净地暂停正在进行的工作，让它可以被恢复。是 Session pickup 的另一半。
-- **Multi-phase or multi-PR plan**（多阶段或多 PR 计划）。跨越多个阶段或多个叠放 PR 的工作。文件：`playbooks/multi-phase-plan.md`。
-- **Worktree and simulator cleanup**（清理 worktree 和模拟器）。通过清理已合并或被放弃的 git worktree 和过时的 iOS 模拟器来回收本地磁盘空间（“what's using my disk”（什么占了我的磁盘）、“clean up worktrees”（清理 worktree）、“prune safe-to-prune worktrees”（清理可以安全清理的 worktree）、“free up space”（腾出空间）、“delete old simulators”（删除旧的模拟器））。文件：`playbooks/worktree-cleanup.md`。
-- **Opening a PR**（开 PR）。在其他每个 playbook 的结尾调用。
+下表只用于选定文件。每条的完整触发说明在 [playbook-routing.md](references/playbook-routing.md)。选定后打开表中的 playbook，把它的步骤一字不差地复制进待办清单。
+
+| Playbook | 何时使用 | 文件 |
+| --- | --- | --- |
+| Investigation（调查） | 只读问题：怎么工作、为什么这样建、对不对、该选哪条 | [investigation.md](playbooks/investigation.md) |
+| Bug fix（修 bug） | 报告上来的缺陷：复现、找根因、用运行时证据修 | [bug-fix.md](playbooks/bug-fix.md) |
+| Perf issue（性能问题） | 一次测出来的慢，对照基线改完即止 | [perf-issue.md](playbooks/perf-issue.md) |
+| Hillclimb（爬坡优化） | 对着一个指标持续提假设、做前后测量，每个采纳的改进一个提交 | [hillclimb.md](playbooks/hillclimb.md) |
+| Runtime forensics（运行时取证） | 泄漏、空闲 CPU、画面故障等现场症状。交付诊断 | [runtime-forensics.md](playbooks/runtime-forensics.md) |
+| Trace forensics（追踪记录取证） | 事后拿到的 cpuprofile、trace、spindump、堆快照。交付诊断 | [trace-forensics.md](playbooks/trace-forensics.md) |
+| Feature（功能） | 新的或改变了的行为，从一个说出名字的数据形状开始 | [feature.md](playbooks/feature.md) |
+| Refactoring（重构） | 行为不变的重命名、抽出、内联、去重、移动 | [refactoring.md](playbooks/refactoring.md) |
+| Prototype（原型） | 用草图决定设计或行为，或用观察解决经验岔路 | [prototype.md](playbooks/prototype.md) |
+| Visual parity（视觉一致） | 像素级对齐两个实现，或迁移一套样式系统 | [visual-parity.md](playbooks/visual-parity.md) |
+| Authoring or modifying a skill | 写或改一个 SKILL.md | [authoring-a-skill.md](playbooks/authoring-a-skill.md) |
+| Eval（评估） | 推广 skill、结构或提示词改动之前，测它对智能体行为的影响 | [eval.md](playbooks/eval.md) |
+| Babysit（照看 PR） | 把 PR 推进到可合并：冲突、审查、CI。不要走软件自带的同名 skill | [babysit.md](playbooks/babysit.md) |
+| Shipping（上线） | 独立验证已经变绿的一串 PR，从底部合入连续通过的一段 | [shipping.md](playbooks/shipping.md) |
+| Autonomous run（自主运行） | 一个任务不停做到完成条件 | [autonomous-run.md](playbooks/autonomous-run.md) |
+| Orchestrate（编排） | 多天、很多叠放 PR、一群子智能体的项目。一次会话能做完的交给 Autonomous run | [orchestrate.md](playbooks/orchestrate.md) |
+| Autopilot-full（全自动驾驶） | 互相独立的 PR 队列，每个 PR 一个负责人，一直做到合并 | [autopilot-full.md](playbooks/autopilot-full.md) |
+| Autopilot-stack（自动驾驶叠放） | 队列建成审查过的线性叠放 PR，由操作者合入 | [autopilot-stack.md](playbooks/autopilot-stack.md) |
+| Session pickup（接手会话） | 凭对话记录、云端智能体 URL 或已推送分支接手前一个智能体的工作 | [session-pickup.md](playbooks/session-pickup.md) |
+| Pause safely（安全地暂停） | 暂停、下线、宿主重启或上下文即将压缩时，把工作留成可恢复的状态 | [pause-safely.md](playbooks/pause-safely.md) |
+| Multi-phase or multi-PR plan | 跨越多个阶段或多个叠放 PR | [multi-phase-plan.md](playbooks/multi-phase-plan.md) |
+| Worktree and simulator cleanup | 回收已合并或放弃的 worktree，以及过时的 iOS 模拟器 | [worktree-cleanup.md](playbooks/worktree-cleanup.md) |
+| Opening a PR（开 PR） | 其他每个 playbook 的结尾调用 | [opening-a-pr.md](playbooks/opening-a-pr.md) |
 
 ## 宿主适配
 
-角色与模型选择遵循本技能前文；具体派发工具、配置位置和模型参数见[宿主适配](../../HOSTS.md)。找不到工具或模型时，使用当前宿主实际支持的替代并说明；不能派子代理时按顺序执行，不声称已并行。
+角色与模型的调度见「子智能体」和 [subagents.md](references/subagents.md)。具体派发工具、配置位置和模型参数见[宿主适配](../../HOSTS.md)。
 
-### 通用回退
-
-找不到工具、类型或模型时，按[宿主适配](../../HOSTS.md)选择实际可用的替代并说明，不声称已经检测或执行。不能派子代理时由主对话顺序完成独立步骤并自行审查，说明没有独立审查；复杂步骤可在宿主支持时换更强模型再核验。
-
-正文和playbook中的Cursor模型名只用于当前确实可用的Cursor能力；其他宿主使用各自参考。“Subagents section”指本文“子智能体”一节。
-
-how、why、interrogate、swarm、reflect、arena、architect读取setup-s-models为当前宿主写的角色配置，不固定读Cursor路径；缺少配置或无法单独选模型时继承父会话并说明。
+找不到工具、类型或模型时，先读 [host-fallback.md](references/host-fallback.md)，再使用当前宿主实际支持的替代并说明。不能派子代理时，由主对话按顺序完成独立步骤并自行审查，说明没有独立审查，也说明这一轮是顺序完成的。

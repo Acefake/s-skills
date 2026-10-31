@@ -1,0 +1,25 @@
+SKILL.md 的 Playbook 表只负责选定文件。下面是每条的完整触发说明。选定后打开表中的 playbook，按该文件的步骤执行。
+
+- **Investigation**（调查）。只读的问题：X 是怎么工作的，Y 为什么要这样构建，我们对 Z 确定吗，我们该做 X 还是 Y。
+- **Bug fix**（修 bug）。一个报告上来的缺陷，要复现、找到根本原因，并用运行时的证据修复。
+- **Perf issue**（性能问题）。一个测出来的慢，要追踪并对照基线改进。
+- **Hillclimb**（爬坡优化）。对着一个目标，持续、科学地改进一个指标：循环提出假设并做前后测量，记一份决定日志，每个被采纳的改进一个提交。和 Perf issue 不同，那是一次性的修复。
+- **Runtime forensics**（运行时取证）。根据实时的观测数据诊断一个运行时的症状（泄漏、空闲时 CPU 空转、画面故障）。交付物是一份诊断，而不是修复。
+- **Trace forensics**（追踪记录取证）。诊断一份事后交给你的、已采集的性能剖析产物（cpuprofile、trace、spindump、堆快照）。交付物是一份诊断，而不是修复。
+- **Feature**（功能）。新的或改变了的行为，从一个说出名字的数据形状开始构建。
+- **Refactoring**（重构）。保持行为不变的结构或形状改动（重命名、抽出、内联、去重、移动）。
+- **Prototype**（原型）。一个用完即扔的草图，用来便宜地做出一个设计或行为上的决定，或者通过观察而不是问人来解决一个经验性的岔路（“prototype”（做个原型）、“mock it up”（做个模型）、“try this layout”（试试这个布局）、“sketch it to decide”（画个草图来决定））。
+- **Visual parity**（视觉一致）。像素级的界面等同：让两个实现对上，或者迁移一套样式系统。
+- **Authoring or modifying a skill**（编写或修改一个 skill）。写或改一个 SKILL.md。文件：`playbooks/authoring-a-skill.md`。
+- **Eval**（评估）。在推广一个 skill、结构或提示词改动之前，测试它对智能体行为的影响。
+- **Babysit**（照看 PR）。把一个 PR 或一串 PR 推进到可以合并的状态：冲突、审查讨论、CI。
+- **Shipping**（上线）。Babysit 之后的另一半。独立验证一串已经变绿的 PR，然后从底部往上，把连续通过验证的那一段合入，默认通过 `gh`，如果有 Origin 的命令行工具就用 Origin。
+- **Autonomous run**（自主运行）。一个要不停地推进到完成的长任务（“run until done”（一直跑到完成）、“/loop until X” 或 “/timed-loop”（循环直到 X））。
+- **Orchestrate**（编排）。交给一个协调者对话的长期项目：持续好几天、很多叠放的 PR、几十到几百个子智能体、尽量少的人工轮次（“run this whole project”（把整个项目跑下来）、“own this migration until it lands”（负责这次迁移直到合入））。和 Autonomous run 不同，那是把一个任务推进到一个判断条件。一个智能体在这次会话的预算内就能完成的工作，交给 Autonomous run，而不是这里，不管措辞听起来多像一个大计划。
+- **Autopilot-full**（全自动驾驶）。一个由互相独立的 PR 组成的队列，在完全自主的情况下一直跑到合并。每个 PR 有一个负责人，从构建一直负责到合并，并且在负责人合并之前，根节点会用 swarm 验证每个 PR（“autopilot this queue”（对这个队列自动驾驶）、“full autopilot”（全自动驾驶）、每个 PR 一个负责人的计划）。
+- **Autopilot-stack**（自动驾驶叠放）。一个改动队列，在完全自主的情况下构建并验证，以一串线性的、审查过的、基于基础分支的叠放 PR 交付，由操作者来合入（“autopilot-stack”、“stack them, don't ship”（叠起来，但别上线）、“build the stack, I'll land it”（把这一串搭好，我来合入））。
+- **Session pickup**（接手会话）。根据一份对话记录、一个云端智能体的 URL 或一个已推送的分支，恢复或接手前一个智能体正在进行的工作。
+- **Pause safely**（安全地暂停）。在明确要求暂停、要下线、所用软件要重启，或者上下文即将被压缩时，干净地暂停正在进行的工作，让它可以被恢复。是 Session pickup 的另一半。
+- **Multi-phase or multi-PR plan**（多阶段或多 PR 计划）。跨越多个阶段或多个叠放 PR 的工作。文件：`playbooks/multi-phase-plan.md`。
+- **Worktree and simulator cleanup**（清理 worktree 和模拟器）。通过清理已合并或被放弃的 git worktree 和过时的 iOS 模拟器来回收本地磁盘空间（“what's using my disk”（什么占了我的磁盘）、“clean up worktrees”（清理 worktree）、“prune safe-to-prune worktrees”（清理可以安全清理的 worktree）、“free up space”（腾出空间）、“delete old simulators”（删除旧的模拟器））。文件：`playbooks/worktree-cleanup.md`。
+- **Opening a PR**（开 PR）。在其他每个 playbook 的结尾调用。

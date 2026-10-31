@@ -1,4 +1,4 @@
-# 交付契约
+# 交付契约 <a id="delivery-contract"></a>
 
 ## 定稿失败与候选稿修复 <a id="failed-finalize-and-candidate-repair"></a>
 
@@ -267,7 +267,7 @@ Preview 在回环地址上监视一个显式指定的输入，将每个稳定摘
 
 ## 交接回执 <a id="handoff-receipt"></a>
 
-对于被请求的诊断性或结构化交接，从现有回执中推导以下详情。普通的面向用户回复遵循 [Output](../SKILL.md#output)；此清单不是默认的聊天回复。
+对于被请求的诊断性或结构化交接，从现有回执中推导以下详情。普通的面向用户回复遵循 [Output](user-output.md)；此清单不是默认的聊天回复。
 
 ```text
 diagram_type: <actual diagram type>
@@ -285,3 +285,25 @@ correction_rounds: 0|1|2
 打开、预览状态、分享卡片（Share Cards）以及其他查看器导出都不是校验声明。
 
 定稿回执的发布使用上文所述的同一个与身份绑定、不覆盖的发布器和显式恢复记录。完整回执和摘要回执必须与候选稿、产物、交付元数据和浏览器回执各不相同。它们的目标必须不存在，或是单链接的常规文件；作为符号链接的回执条目和被硬链接的目标会失败即关闭。之后出现的占用者或父目录变化会停止发布，并保持不动。默认回执名与物理产物共享命名空间，并受主机文件名长度限制约束。两个回执是分别发布的，而不是崩溃原子的一对；只有完整执行并通过的命令才算成功交接。
+
+## 技能流程中的交付步骤
+
+SKILL.md「交付」只保留入口。视觉复查、序列宽度、截图、失败修复、来源证明、导出和打开按下面的全文执行。文中「上面的 finalize 命令」指 native-diagram-authoring.md 第 4 步里的那条命令。
+
+## 交付 <a id="delivery"></a>
+
+首个候选稿和每次修复之后，都使用上面的 `finalize` 命令。
+
+`finalize` 在第一个未通过的关卡处停止。它的紧凑 stdout 和 `<output-stem>.finalize-summary.json` 是普通证据。通过的运行不产生截图，并报告 `visualReview: "not-requested"`。
+
+当一个通过的 Architecture 回执报告 `visualReviewRecommendation.signals.resolvedCrossovers` 时，把候选稿另存一份副本，然后在一次编辑中应用这些提示，且只改变节点的位置和尺寸：每个节点、关系（包括其 `from` 和 `to`）、标签和来源都保持原样。用 `--out-dir <folder>/review-2` 重新运行一次完整的 `finalize`，因为之前的 HTML 已经拥有它的浏览器证据。`--out-dir` 只会重新安置新的 browser-check 回执和默认的 finalize 回执，不会重新安置 HTML 或其交付回执。成功交付会在所请求的输出路径上重写这一对文件；更早的审查证据仍绑定到其原始产物字节。见 [review evidence paths](#a-new-candidate-at-an-existing-output-path)。如果那次运行失败、报告了更多交叉，或报告了相同的交叉但 `signals.routesOverSuggestedBends` 更多，则恢复副本，并用 `--out-dir <folder>/review-3` 对其定稿。不要开始第二轮布局调整。仅关于多余弯折的提示是可选的。
+
+当 `layoutReviewRecommendation.action` 为 `inspect-sequence-width` 时，在交出新编写的 Sequence 之前遵循 [Sequence width review](#sequence-width-review)。
+
+对于普通生成（包括新定位的 Architecture），感知审查是可选的。当用户要求视觉审查、在开发审计期间，或存在具体的路由/浏览器问题时，使用 [Optional capture evidence](#optional-capture-evidence)，并配合 `--out-dir <folder>/visual-check`。`visualReviewRecommendation` 只是建议。在声称视觉质量之前先检查截图；在没有进行感知审查时，任何检查方面的声明都要限定为自动化检查。
+
+对于失败的关卡、独立命令、来源证明/恢复、重复交付、导出或打开，阅读 [Delivery contract](#delivery-contract)。原生图的恢复遵循 `deliver` → 严格来源证明 `check` → `browser-check`；截图需要严格的来源证明。讲解页的交付按其编写指南所述使用 validate、deliver 和 check。
+
+对于 workflow 视口溢出，在下一次布局编辑之前阅读 [Workflow viewport repair](authoring-contract.md#workflow-viewport-repair)。
+
+报告验证细节时，区分产物检查、浏览器证据、截图和实际的感知审查。对于明确要求的即时预览或活跃的桌面循环，见 [Optional opening](#optional-opening)。
