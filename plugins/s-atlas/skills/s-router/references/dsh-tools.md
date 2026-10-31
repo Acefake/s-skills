@@ -77,7 +77,7 @@ Web 和 Desktop 预设在 spawn 上打开选择和发现，fork 上两者都关�
 
 预算先映射到 `unlimited` → `max`，`large` → `xhigh`，`medium` → `high`，`small` → `medium`。目标不在这次声明的档位里时，按 `off` < `low` < `medium` < `high` < `xhigh` < `max` < `ultra` 选不超过目标的最高已声明档，并说明替换。没有这样的档位时，不传 `reasoning_effort`，用模型默认。内置 DeepSeek 因此是：`unlimited` → `max`，`large` → `high`，`medium` → `high`，`small` → `low`。
 
-只有这次工具真有 `reasoning_effort` 字段才在派出时传递。没有这个字段时，`# budget` 仍写用户选的标签和映射后的档位，例如 `large (high)`，并说明子代理不会收到这个参数。不把档位写进 `cordis.patch.yml`。
+只有这次工具真有 `reasoning_effort` 字段才在派出时传递。没有这个字段时，`# budget` 仍写用户选的中文档名和映射后的档位，例如 `大（high）`。旧行 `large (xhigh)` 与 `大（xhigh）` 是同一档。并说明子代理不会收到这个参数。不把档位写进 `cordis.patch.yml`。
 
 ## 未确认
 

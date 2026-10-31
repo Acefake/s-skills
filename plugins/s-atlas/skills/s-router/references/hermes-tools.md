@@ -65,7 +65,7 @@
 | `medium` | `high` |
 | `small` | `medium` |
 
-`# budget` 写成用户选的标签和这个档位，例如 `large (xhigh)`。默认 `delegate_task` 不能按次传 `reasoning_effort`，所以派出时不传。`delegation.reasoning_effort` 会作用在之后的每一个子代理上；本技能不写这个键。用户跳过预算时，`# budget` 写 `inherit-parent`。
+`# budget` 写成中文档名和映射后的档位，例如 `大（xhigh）`。旧行 `large (xhigh)` 与它相同。默认 `delegate_task` 不能按次传 `reasoning_effort`，所以派出时不传。`delegation.reasoning_effort` 会作用在之后的每一个子代理上；本技能不写这个键。用户跳过预算时，`# budget` 写 `inherit-parent`。
 
 ## 未确认
 

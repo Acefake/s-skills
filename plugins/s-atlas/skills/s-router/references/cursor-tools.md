@@ -98,13 +98,13 @@
 
 | 宿主 | 配置或工具 | 生效或限制 | 依据或说明 |
 |---|---|---|---|
-| Cursor | `~/.cursor/rules/s-models.mdc`。frontmatter 写 `description: s per-role model choices (overrides skill defaults)` 和 `alwaysApply: true`，下面接第 5 步的正文 | 会。新对话生效 | Cursor 的用户规则目录 |
+| Cursor | `~/.cursor/rules/s-models.mdc`。frontmatter 写 `description: s per-role model choices (overrides skill defaults)` 和 `alwaysApply: true`，下面接 setup-s-models 的标记段正文 | 会。新对话生效 | Cursor 的用户规则目录 |
 
 ## setup-s-models
 
 这次对话在 Cursor 里时，按下面做。模型名通过 `Task` 的 `model` 参数传给子智能体。`inherit-parent` 和 `auto` 省略 `model`。
 
-预算和确认用 `AskQuestion`，四个标签一字不改。检测不到模型时，请用户把有权限的名字贴过来。
+预算和确认用 `AskQuestion`。四个选项用 setup-s-models 的中文标签：省、中、大、不限，并带上该技能里的额度提示。检测不到模型时，请用户把有权限的名字贴过来。
 
 写入 `~/.cursor/rules/s-models.mdc`，覆盖整个文件。frontmatter 用这两行：
 
@@ -113,7 +113,7 @@ description: s per-role model choices (overrides skill defaults)
 alwaysApply: true
 ```
 
-`grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只有这次真的能传给 `Task` 才写进文件。两个都在、预算是 `large` 时，角色行就是下面这份。预算不是 `large` 时，仍用这两个系列，只按第 3 步改后缀，改完的名字必须仍在检测结果里。
+`grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只有这次真的能传给 `Task` 才写进文件。两个都在、预算是「大」时，角色行就是下面这份，评审列表 2 项。其他档按 setup-s-models 改列表长度和后缀，改完的名字必须仍在检测结果里。
 
 ```
 feature, refactoring: grok-4.7-xhigh-fast
