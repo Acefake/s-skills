@@ -119,6 +119,11 @@ class RoleEffortTest(unittest.TestCase):
         block = m.render_block('省', rows('省')).replace('修 bug: sonnet', '修 bug: gpt-x（high）')
         self.assertTrue(any('gpt-x' in p for p in m.check_text(block, ['sonnet', 'opus'])['problems']))
 
+    def test_every_consumer_skill_points_to_the_value_format(self):
+        for name in ('arena', 'architect', 'interrogate', 'swarm', 'why', 'how', 'reflect'):
+            text = (ROOT / f'plugins/s-atlas/skills/{name}/SKILL.md').read_text(encoding='utf-8')
+            self.assertIn('../setup-s-models/references/role-keys.md', text, name)
+
     def test_docs_tell_dispatchers_to_pass_effort(self):
         tools = (ROOT / 'plugins/s-atlas/skills/s-router/references/claude-code-tools.md').read_text(encoding='utf-8')
         self.assertIn('每次派发都要传', tools)
