@@ -11,3 +11,5 @@ node_modules/
 .codebuddy/LICENSE*
 .codebuddy/NOTICE*
 .codebuddy/.s-atlas-common-files.json
+
+.venv/

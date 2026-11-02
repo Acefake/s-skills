@@ -17,7 +17,13 @@ import re
 import sys
 from pathlib import Path
 
-from jsonschema import Draft7Validator, Draft202012Validator, FormatChecker
+if sys.version_info < (3, 10):
+    sys.exit("Python 3.10+ required, found " + sys.version.split()[0])
+
+try:
+    from jsonschema import Draft7Validator, Draft202012Validator, FormatChecker
+except ModuleNotFoundError:
+    sys.exit("jsonschema missing, run: python -m pip install -r requirements-dev.txt")
 
 from marketplace_lib import (
     AGENT_NAME_RE,

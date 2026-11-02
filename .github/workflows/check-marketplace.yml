@@ -13,8 +13,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install JSON Schema checker
-        run: pip install "jsonschema>=4.20"
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
       - name: Check marketplace manifests and versions
         run: python3 scripts/check_marketplace.py
       - name: Test skill resource validation
