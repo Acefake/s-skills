@@ -54,5 +54,17 @@
   {"prompt": "给购物车结算补测试，内部重构时测试别老挂", "expect": ["test-strategy", "tdd", "principle-test-behavior-not-implementation"]},
   {"prompt": "做个拖拽排序，没有现成方案，先比较几种做法", "expect": ["brainstorming", "principle-exhaust-the-design-space"]},
   {"prompt": "这次迁移拆成小步，每一步都能验证", "expect": ["writing-plans", "principle-sequence-verifiable-units"]},
-  {"prompt": "改完了，跑一遍证明真的好了再告诉我", "expect": ["principle-prove-it-works", "requesting-code-review"]}
+  {"prompt": "改完了，跑一遍证明真的好了再告诉我", "expect": ["principle-prove-it-works", "requesting-code-review"]},
+  {"prompt": "接口参数校验到处都是，统一放到入口那一层，内部别再层层防御", "expect": ["principle-boundary-discipline", "code-style"]},
+  {"prompt": "导出功能先做简单版还是全做？别为了好写牺牲用户体验", "expect": ["principle-experience-first", "brainstorming"]},
+  {"prompt": "写逻辑之前，先把订单和支付的核心数据结构定下来", "expect": ["principle-foundational-thinking", "brainstorming"]},
+  {"prompt": "日志太长了别全贴进来，交给子代理读完只给我摘要", "expect": ["principle-guard-the-context-window"]},
+  {"prompt": "新的配置接口写好了，把老调用方都迁过去，然后删掉旧接口别留兼容层", "expect": ["principle-migrate-callers-then-delete-legacy-apis"]},
+  {"prompt": "用户状态的判断在五个文件里各写了一遍，收成一个结构", "expect": ["principle-model-the-domain"]},
+  {"prompt": "这些都能撤销，你先做出来我再看，别每步都问我", "expect": ["principle-never-block-on-the-human"]},
+  {"prompt": "这次重写直接改到目标架构，别搞过渡期的兼容代码", "expect": ["principle-outcome-oriented-execution", "principle-migrate-callers-then-delete-legacy-apis"]},
+  {"prompt": "新需求别硬塞进旧的结构里，按第一性原理把这层重新设计", "expect": ["principle-redesign-from-first-principles", "brainstorming"]},
+  {"prompt": "两个子代理会同时写同一个配置文件，先想办法别让它们共享", "expect": ["principle-separate-before-serializing-shared-state"]},
+  {"prompt": "加新功能之前，先把这块的死代码和多余校验清掉", "expect": ["principle-subtract-before-you-add"]},
+  {"prompt": "这个类型设计让非法状态根本写不出来", "expect": ["principle-type-system-discipline"]}
 ]

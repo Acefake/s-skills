@@ -20,12 +20,9 @@ class TriggerCasesTest(unittest.TestCase):
         prompts = [case["prompt"] for case in self.cases]
         self.assertEqual(len(prompts), len(set(prompts)))
 
-    def test_every_non_principle_skill_has_a_case(self):
+    def test_every_auto_skill_has_a_case(self):
         covered = {name for case in self.cases for name in case["expect"]}
-        missing = sorted(
-            name for name in self.candidates
-            if not name.startswith("principle-") and name not in covered
-        )
+        missing = sorted(name for name in self.candidates if name not in covered)
         self.assertEqual(missing, [], "add a trigger case for each new auto-invocable skill")
 
     def test_router_is_not_a_candidate(self):
