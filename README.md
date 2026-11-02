@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.37，共 **80** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.39，共 **79** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor、WorkBuddy会按你说的话自动挑对应的技能。
 
@@ -67,14 +67,6 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 重新配置默认保留已有角色模型，单行修改使用 `--set`，明确重新分配才使用 `--replace-roles`。不能独立选模的宿主使用继承模式。配置和文件检查通过后，仍需在新会话核验实际角色与派发参数。详见[模型配置技能](plugins/s-atlas/skills/setup-s-models/SKILL.md)和[公共派发规则](plugins/s-atlas/skills/s-mode/references/subagents.md)。
 
-## 经验学习
-
-`learn` 在用户纠正、重复错误或已验证的重要结论出现时，先检查已有规则和经验，每个任务最多提出一条学习建议。普通成功、一次性要求和重复经验不记录。你确认具体内容与范围后才保存；未确认的候选不写文件。
-
-经验保存在本机 `~/.s-atlas/lessons`，全局与项目分开，四个支持的宿主可共用；实际项目任务按意图回读最多三条，其他项目的记录不会混入。重复保存不新增，修订须确认并引用被替代记录，旧文件保留为历史。经验不能覆盖当前指示和实际代码，不代表模型训练或后台自动学习。`reflect` 仍负责点名后的深度复盘与技能修改。
-
-例如：`记住这次在当前项目保存后必须回读验证的经验`，或 `先查本项目以前关于 Vue 保存的经验`。安装新版后，全局提示词的新增规则仍通过显式调用 `setup-s-instructions` 同步，安装和普通技能调用不会自动改全局规则。
-
 ## 架构与技能路由
 
 [![s-atlas 技能全景：任务路由与 79 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
@@ -85,8 +77,7 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 - **任务主线：** 当前宿主读取全局约定与技能描述。已有明确匹配就直接加载，拿不准才用 `s-router`；按任务进入直接处理、方案与计划、调试或只读交付。
 - **交付边界：** 验证强度按档位，代码改动先自审，第2档以上再做只读独立评审。已有验证结果可复用，Git 操作只按已有授权执行。
-- **经验支线：** `learn` 按需回读全局与当前项目经验；遇到纠正、重复错误或已验证的重要结论时，最多提出一条建议，逐条确认后才写入。
-- **两个显式入口：** `setup-s-instructions` 负责初始化与同步全局规则；`reflect` 负责深度复盘和技能修改。日常自检和学习建议不会自动替代这两个入口。
+- **两个显式入口：** `setup-s-instructions` 负责初始化与同步全局规则；`reflect` 负责深度复盘和技能修改。日常自检不会自动替代这两个入口。
 
 小改动跳过方案和计划；子代理实现仍需授权，不能把代码独立评审授权扩展成并行开发授权。需要隔离时使用 `using-git-worktrees`，优先复用适合的现有工作区并保留已有修改。
 
@@ -125,14 +116,13 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 支持插件命令的宿主也可以使用 `/s-atlas:技能名`，例如 `/s-atlas:s-mode`。Codex 可在技能选择器中选择相应技能。
 
-原则、`learn`、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`patent-disclosure`、`patent-application`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及开发流程技能（`brainstorming` 到 `finishing-a-development-branch`）可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
+原则、`setup-s-models`、`impeccable`、`technical-writing`、`docx`、`pptx`、`xlsx`、`pdf`、`patent-disclosure`、`patent-application`、`commit-pr`、`translate`、`s-proposal`、`s-review`，以及开发流程技能（`brainstorming` 到 `finishing-a-development-branch`）可以按描述自动选用。`s-review` 审 PR、分支或本地改动，默认只出报告。`frontend-design` 只在点名时使用，日常做界面走 `impeccable`。工作模式和并行审查等复杂流程需要点名。自动选用不表示每轮都会执行；能不能做到还取决于宿主提供的工具。
 
 ## 我想做什么
 
 | 我想做什么 | 用哪个 skill |
 |---|---|
 | 修 bug、报错、结果不对 | `systematic-debugging` |
-| 回读经验、记住纠正或重复错误的教训 | `learn`，保存前逐条确认 |
 | 有便宜的测试点，先写失败测试再修 | `tdd` |
 | 做新功能、改行为 | `brainstorming`，然后 `writing-plans` |
 | 按写好的计划做 | `executing-plans` 或 `subagent-driven-development` |
@@ -173,11 +163,10 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 「自动」是模型按描述选用；「手点」是 frontmatter 里有 `disable-model-invocation: true`，由用户点名或已授权工作流明确派发。
 
-### 自动选用（58 个）
+### 自动选用（57 个）
 
 | 技能 | 用途 |
 |---|---|
-| `learn` | 按需回读已确认经验；自动提出建议，逐条确认后保存 |
 | `s-router` | 日常先查该用哪个技能 |
 | `brainstorming` | 做功能前先把方案磨清 |
 | `writing-plans` | 把活写成可执行计划 |

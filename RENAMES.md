@@ -16,6 +16,8 @@
 
 1.6.0 把插件名从 `s` 改为 `s-atlas`，目录从 `plugins/s/` 改为 `plugins/s-atlas/`。技能名仍用原来的 `s-` 前缀，例如 `s-review`、`s-proposal`。市场名仍是 `s-skills`，仓库名不变。安装命令是 `/plugin install s-atlas@s-skills`。当前插件版本 1.6.0，活跃技能 72 个。
 
+1.7.38 删除 `learn`（经验学习）及其脚本和测试，名字留在 `RETIRED_SKILLS`。全局规则不再包含经验建议一节；`reflect` 保留。恢复方法见下面的“回滚”，从 1.7.37 的提交取回 `plugins/s-atlas/skills/learn/`。
+
 ## 回滚
 
 要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s-atlas/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。

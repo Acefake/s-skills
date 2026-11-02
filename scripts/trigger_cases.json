@@ -41,8 +41,6 @@
   {"prompt": "把这段说明翻译成英文，代码块保持原样", "expect": ["translate"]},
   {"prompt": "帮我从这个项目里挖一下专利点，写技术交底书", "expect": ["patent-disclosure"]},
   {"prompt": "起草权利要求书和说明书，按国知局格式出 Word", "expect": ["patent-application"]},
-  {"prompt": "记住这次教训：保存后必须回读验证", "expect": ["learn"]},
-  {"prompt": "先查一下本项目以前关于 Vue 保存的经验", "expect": ["learn"]},
   {"prompt": "配置一下 s 各个角色用哪个模型和推理预算", "expect": ["setup-s-models"]},
   {"prompt": "这个基准测试说快了 3 倍，这数字靠谱吗？", "expect": ["principle-explain-the-number"]},
   {"prompt": "同一个前提下修了两次还是不对", "expect": ["principle-attack-the-premise", "systematic-debugging"]},

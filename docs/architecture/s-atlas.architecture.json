@@ -2,7 +2,7 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "s-atlas：按需执行，确认后沉淀",
+    "title": "s-atlas：按需选择，分档验证",
     "locale": "zh-CN",
     "output": "docs/architecture/s-atlas.html",
     "quality_profile": "showcase",
@@ -204,105 +204,6 @@
           "end_line": 43
         }
       ]
-    },
-    {
-      "id": "learn",
-      "type": "backend",
-      "label": "learn：回读与建议",
-      "sublabel": "每个任务最多一条候选",
-      "pos": [
-        320,
-        430
-      ],
-      "size": [
-        190,
-        72
-      ],
-      "sources": [
-        {
-          "path": "plugins/s-atlas/skills/learn/SKILL.md",
-          "line": 12,
-          "end_line": 34
-        },
-        {
-          "path": "plugins/s-atlas/skills/learn/SKILL.md",
-          "line": 50,
-          "end_line": 56
-        }
-      ]
-    },
-    {
-      "id": "approval",
-      "type": "security",
-      "label": "用户逐条确认",
-      "sublabel": "未确认的候选不写文件",
-      "pos": [
-        600,
-        430
-      ],
-      "size": [
-        190,
-        72
-      ],
-      "sources": [
-        {
-          "path": "plugins/s-atlas/skills/learn/SKILL.md",
-          "line": 30,
-          "end_line": 46
-        }
-      ]
-    },
-    {
-      "id": "io",
-      "type": "backend",
-      "label": "lessons.py",
-      "sublabel": "查询；去重；保留替换历史",
-      "pos": [
-        880,
-        430
-      ],
-      "size": [
-        190,
-        72
-      ],
-      "sources": [
-        {
-          "path": "plugins/s-atlas/skills/learn/scripts/lessons.py",
-          "line": 91,
-          "end_line": 138
-        },
-        {
-          "path": "plugins/s-atlas/skills/learn/scripts/lessons.py",
-          "line": 141,
-          "end_line": 169
-        }
-      ]
-    },
-    {
-      "id": "store",
-      "type": "database",
-      "label": "本机经验目录",
-      "sublabel": "global / projects/<hash>",
-      "pos": [
-        880,
-        640
-      ],
-      "size": [
-        190,
-        72
-      ],
-      "sources": [
-        {
-          "path": "plugins/s-atlas/skills/learn/scripts/lessons.py",
-          "line": 49,
-          "end_line": 54
-        },
-        {
-          "path": "plugins/s-atlas/skills/learn/scripts/lessons.py",
-          "line": 141,
-          "end_line": 158
-        }
-      ]
     }
   ],
   "connections": [
@@ -345,47 +246,6 @@
       "to": "delivery",
       "label": "适用验证",
       "variant": "emphasis"
-    },
-    {
-      "id": "learn-context",
-      "from": "router",
-      "to": "learn",
-      "label": "回读或纠正"
-    },
-    {
-      "id": "recall-context",
-      "from": "learn",
-      "to": "router",
-      "label": "相关经验≤3",
-      "fromSide": "left",
-      "toSide": "left"
-    },
-    {
-      "id": "propose-lesson",
-      "from": "learn",
-      "to": "approval",
-      "label": "一条建议"
-    },
-    {
-      "id": "approved-write",
-      "from": "approval",
-      "to": "io",
-      "label": "确认后写入",
-      "variant": "security"
-    },
-    {
-      "id": "readonly-search",
-      "from": "learn",
-      "to": "io",
-      "label": "只读查询",
-      "fromSide": "bottom",
-      "toSide": "bottom"
-    },
-    {
-      "id": "scoped-records",
-      "from": "io",
-      "to": "store",
-      "label": "分范围读写"
     }
   ],
   "cards": [
@@ -394,22 +254,22 @@
       "title": "技能按需加载",
       "items": [
         "已有明确匹配就直接加载；s-router 只在不明确时兜底。",
-        "58 个自动选用技能；21 个显式技能仍需点名或工作流授权。"
+        "57 个自动选用技能；22 个显式技能仍需点名或工作流授权。"
       ]
     },
     {
       "dot": "emerald",
-      "title": "经验有确认边界",
+      "title": "配置入口各管一件事",
       "items": [
-        "查询只读全局与当前项目；其他项目不混入。",
-        "--confirmed 是调用方的确认声明，不独立验证聊天授权。"
+        "setup-s-instructions 同步全局规则，setup-s-models 配置模型。",
+        "s-init 按顺序串起两者，每次写入前都要用户明确确认。"
       ]
     },
     {
       "dot": "amber",
-      "title": "不是后台自动训练",
+      "title": "不是常驻服务",
       "items": [
-        "learn 只保存经确认的经验；reflect 仍是显式深度复盘。",
+        "s-atlas 是技能与本地工具，不是独立运行的 Agent 服务。",
         "文案和只读任务不跑测试；Git 操作仍遵循已有授权。"
       ]
     }
