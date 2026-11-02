@@ -1,7 +1,6 @@
 ---
 name: impeccable
 description: "「做页面」「改界面」「设计一下」「卡顿」「掉帧」「滚动慢」。也用于打磨、加动画、审查样式、落地页、设置页、空状态、无障碍和 INP。纯后端不用。Use when designing, redesigning, reviewing, polishing, or speeding up a page, component, or interface, including slow interactions, jank, and dropped frames."
-version: 4.6.0
 license: Apache 2.0
 ---
 

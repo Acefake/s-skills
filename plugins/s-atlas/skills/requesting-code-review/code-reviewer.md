@@ -61,6 +61,7 @@ Subagent (available read-only reviewer role):
     - Proper error handling?
     - Type safety where applicable?
     - DRY without premature abstraction?
+    - Wrappers or layers that only pass calls through, with no responsibility of their own? Prefer the smallest change that solves the problem (skills/principle-laziness-protocol, skills/principle-minimize-reader-load).
     - Edge cases handled?
 
     **Architecture:**
