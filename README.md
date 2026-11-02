@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.35，共 **79** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.36，共 **79** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor、WorkBuddy会按你说的话自动挑对应的技能。
 
@@ -300,7 +300,7 @@ python scripts/eval_triggers.py --model haiku --jobs 6 --repeat 3
 python scripts/eval_triggers.py --filter impeccable
 ```
 
-新增可自动选用的技能（`principle-*` 除外）时，单元测试会要求先在用例文件里补一条触发用例。评测只验证描述的区分度；实际宿主同时加载多个技能、模型是否按配置委派，仍需通过真实会话验证。
+新增可自动选用的技能（包括原则）时，单元测试会要求先在用例文件里补一条触发用例。评测只验证描述的区分度；实际宿主同时加载多个技能、模型是否按配置委派，仍需通过真实会话验证。
 
 ## 许可证
 

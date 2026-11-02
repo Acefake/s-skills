@@ -17,7 +17,7 @@ Understand current performance and identify problems:
    - How bad is it? (Perceivable? Annoying? Blocking?)
    - Who's affected? (All users? Mobile only? Slow connections?)
 
-Measure before and after. Optimizing without a measurement spends effort on things that do not matter.
+Measure before and after. Optimizing without a measurement spends effort on things that do not matter. Before reporting a speedup, name what limits it, per [principle-explain-the-number](../../principle-explain-the-number/SKILL.md).
 
 ## Optimization Strategy
 
