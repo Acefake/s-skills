@@ -76,7 +76,7 @@ Expected: PASS
 
 - [ ] **Step 6: Independent review before delivery**
 
-所有代码修改自审后派只读 subagent，小任务缩小范围，高风险改动扩大必要的调用链审查，使用 requesting-code-review 模板。评审读取实际代码和已有验证证据，不修改、不跑测试；实现者修复发现后复审。简单小代码改动也需轻量独立评审；无法委派时报告缺口，已有相同最终代码的有效评审可复用。
+按档位需要时，自审后派只读 subagent，范围按风险定，高风险改动扩大必要的调用链审查，使用 requesting-code-review 模板。评审读取实际代码和已有验证证据，不修改、不跑测试；实现者修复发现后复审。是否需要按 code-style「交付前独立评审」的档位判断，第0、1档的任务写明“不需要”及档位；该派而无法委派时报告缺口，已有相同最终代码的有效评审可复用。
 
 - [ ] **Step 7: Commit only when authorized**
 
