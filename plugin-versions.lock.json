@@ -3,8 +3,8 @@
   "note": "contentSha256 covers every file in the plugin except the registered manifest JSON files. Bump version when it changes.",
   "plugins": {
     "s-atlas": {
-      "version": "1.7.41",
-      "contentSha256": "99fd2ff10d0717daa856de3f9bcfac1bc7e7f07190ef1ef59325235e7524a82a"
+      "version": "1.7.42",
+      "contentSha256": "74c2a6e27181f1d4ef300230be81383de58babbe36d6466476d8b630fc0ae208"
     }
   }
 }
