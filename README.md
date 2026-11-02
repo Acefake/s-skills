@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.32，共 **79** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.34，共 **79** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor、WorkBuddy会按你说的话自动挑对应的技能。
 
@@ -58,6 +58,14 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 日常使用技能时，每个主会话只读检查一次；缺失、过期或无法确认时提醒，继续原任务。安装与普通技能调用不会自动改写全局配置。全局规则通常在新会话生效。
 
 初始化提示词的当前正文见 [`AGENTS.md`](plugins/s-atlas/AGENTS.md)；[`AGENTS-snippet.md`](plugins/s-atlas/AGENTS-snippet.md) 仅作手动引导及旧配置识别。
+
+## 三档模型配置
+
+`setup-s-models` 按当前宿主实际可用于子代理的模型推荐轻量、常规、复杂三档，不固定型号，允许共用模型。轻量档处理范围明确、结果易核对的检索和机械任务；常规档处理日常实现与探索；复杂档处理困难实现和综合判断。能用搜索或脚本直接完成的任务不额外派代理。
+
+新增 `--light` 和“检索和简单任务”角色。`--fast` 仍表示常规模型，`--strong` 表示复杂模型；`--third` 仍仅用于不限预算的额外评审。新配置包含 18 个角色行，旧 17 行配置继续有效，缺少轻量行就沿用原工作流角色。三档不增加评审人数，也不授权委派或切换主会话模型。
+
+重新配置默认保留已有角色模型，单行修改使用 `--set`，明确重新分配才使用 `--replace-roles`。不能独立选模的宿主使用继承模式。配置和文件检查通过后，仍需在新会话核验实际角色与派发参数。详见[模型配置技能](plugins/s-atlas/skills/setup-s-models/SKILL.md)和[公共派发规则](plugins/s-atlas/skills/s-mode/references/subagents.md)。
 
 ## 经验学习
 

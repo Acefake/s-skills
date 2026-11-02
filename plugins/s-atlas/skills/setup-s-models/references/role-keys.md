@@ -2,6 +2,7 @@ setup-s-models 写出配置时用左列。各技能读取时左列优先，没�
 
 | 中文键 | 旧英文键 |
 |---|---|
+| 检索和简单任务 | lookup and simple tasks |
 | 写功能和重构 | feature, refactoring |
 | 修 bug | bug-fix |
 | 性能问题 | perf-issue |
@@ -21,6 +22,8 @@ setup-s-models 写出配置时用左列。各技能读取时左列优先，没�
 | 审问审查者 | interrogate reviewers |
 
 ## 行值格式
+
+“检索和简单任务”是可选的轻量角色。旧 17 行配置缺少它时继续使用原工作流角色，不猜测模型、不自动补写。新生成配置共 18 行，轻量模型省略时使用常规模型。派发分类及用户显式模型优先级见[公共派发规则](../../s-mode/references/subagents.md)。轻量角色没有显式档位时，预算档位最多取 `medium`，其他角色维持原规则。
 
 每一项可以是 `模型`，也可以是 `模型（档位）`，例如 `sonnet（medium）`、`opus（high）`、`inherit-parent（high）`。档位只能是 `low`、`medium`、`high`、`xhigh`、`max`。逗号分隔的列表里，每一项各带各的档位。
 

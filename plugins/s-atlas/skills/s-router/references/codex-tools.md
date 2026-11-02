@@ -83,6 +83,10 @@
 
 ## setup-s-models：模型配置
 
+三档推荐与配置生成遵循 [setup-s-models](../../setup-s-models/SKILL.md)，派发遵循[公共派发规则](../../s-mode/references/subagents.md)。新增轻量角色“检索和简单任务”，英文键 `lookup and simple tasks`，需要单独模型时使用 `s-lookup-and-simple-tasks.toml`，其 `name` 为 `s-lookup-and-simple-tasks`。按当前会话实际支持的模型及推理档位配置，轻量角色无显式档位时最多取 `medium`。角色文件中的模型与档位必须和已确认的配置行一致；固定角色不能改模时选择匹配的已发现角色，不冒充已换模。旧配置缺少轻量行就使用原工作流角色。现有角色文件只在用户同意修改相应角色后同步，配置成功和新会话发现分别验收。
+
+三档分类选中的角色优先于本文件 how、why、swarm 章节里的默认角色。轻量模型固定在文件中时，使用已发现的 `s-lookup-and-simple-tasks`；不能指定目标模型时报告未分流，不让固定的 `s-how-explorer` 等角色冒充轻量角色。
+
 这里说的是本地 Codex（CLI、IDE、桌面应用）。ChatGPT Work 是另一套托管环境，不要把它的界面套过来。
 
 官方文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)、[AGENTS.md](https://developers.openai.com/codex/guides/agents-md)。当前版本默认能派子智能体。没有 Cursor 那种带 `model` 参数的 `Task` 工具。

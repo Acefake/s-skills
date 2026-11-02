@@ -1,5 +1,6 @@
 """setup-s-models 的规则脚本：生成、校验、写入都要结果固定。"""
 import importlib.util
+import json
 import re
 import tempfile
 import unittest
@@ -248,6 +249,131 @@ class WriteTest(unittest.TestCase):
         with self.assertRaises(m.SModelsError):
             m.write_file(self.path, self.block(), apply=True)
         self.assertEqual(self.path.read_text(encoding='utf-8'), '# s 模型配置\n修 bug: sonnet\n')
+
+
+class ThreeTierTest(unittest.TestCase):
+    def test_light_only_changes_new_role_and_keeps_reviewers(self):
+        for budget in ('省', '中', '大', '不限'):
+            original = rows(budget)
+            actual = rows(budget, light='small')
+            self.assertEqual(actual['检索和简单任务'], 'small')
+            self.assertEqual({k: v for k, v in actual.items() if k != '检索和简单任务'},
+                             {k: v for k, v in original.items() if k != '检索和简单任务'})
+        self.assertEqual(rows('不限', light='small', third='extra')['审问审查者'], 'sonnet, opus, extra')
+
+    def test_default_inherit_and_override(self):
+        self.assertEqual(rows('中')['检索和简单任务'], 'sonnet')
+        self.assertEqual(m.render_rows('中', None, None, inherit=True)['检索和简单任务'], 'inherit-parent')
+        self.assertEqual(rows('中', light='small', overrides={'lookup and simple tasks': 'auto'})['检索和简单任务'], 'auto')
+
+    def test_light_effort_is_capped_but_explicit_level_is_kept(self):
+        r = m.add_efforts(rows('大', light='small'), '大', None)
+        self.assertEqual(r['检索和简单任务'], 'small（medium）')
+        self.assertEqual(r['写功能和重构'], 'sonnet（xhigh）')
+        self.assertEqual(m.add_efforts(rows('大'), '大', 'low')['检索和简单任务'], 'sonnet（low）')
+        r = rows('大', overrides={'检索和简单任务': 'small（high）'})
+        self.assertEqual(m.add_efforts(r, '大', None)['检索和简单任务'], 'small（high）')
+
+    def test_resolve_plain_light_caps_budget_and_accepts_english_key(self):
+        block = m.render_block('大', rows('大', light='small'))
+        expected = [{'model': 'small', 'effort': 'medium'}]
+        self.assertEqual(m.resolve_role(block, 'lookup and simple tasks')['items'], expected)
+        block = block.replace('检索和简单任务: small', '检索和简单任务: small（high）')
+        self.assertEqual(m.resolve_role(block, '检索和简单任务')['items'][0]['effort'], 'high')
+
+    def test_old_config_keeps_original_roles_without_light_error(self):
+        current = m.render_block('大', rows('大'))
+        old = '\n'.join(line for line in current.splitlines() if not line.startswith('检索和简单任务:'))
+        result = m.check_text(old, ['sonnet', 'opus'])
+        self.assertEqual(result['status'], 'ok', result['problems'])
+        self.assertNotIn('检索和简单任务', result['rows'])
+        self.assertEqual(m.resolve_role(old, '修 bug')['items'][0]['model'], 'sonnet')
+        with self.assertRaises(m.SModelsError):
+            m.resolve_role(old, '检索和简单任务')
+
+    def test_cli_light_validation_and_render(self):
+        code, out, _ = run('render', '--budget', '中', '--fast', 'normal', '--strong', 'complex', '--light', 'small', '--role-effort')
+        self.assertEqual(code, 0)
+        self.assertIn('检索和简单任务: small（medium）', out)
+        self.assertEqual(m.check_text(out, ['normal', 'complex', 'small'])['status'], 'ok')
+        self.assertEqual(m.check_text(out, ['normal', 'complex'])['status'], 'problems')
+        code, _, _ = run('render', '--budget', '中', '--fast', 'normal', '--light', 'small', '--set', '检索和简单任务=small（ultra）')
+        self.assertEqual(code, 1)
+        code, _, err = run('render', '--budget', '大', '--fast', 'normal', '--role-effort', '--effort', 'ultra')
+        self.assertEqual(code, 1)
+        self.assertIn('未知推理档位', err)
+        code, _, err = run('render', '--budget', '省', '--fast', 'normal', '--role-effort', '--effort', 'high')
+        self.assertEqual(code, 1)
+        self.assertIn('只能下调', err)
+
+    def test_write_preserves_existing_roles_and_set_wins(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'rules.md'
+            old = m.render_block('中', rows('中', overrides={'修 bug': 'chosen（low）'}))
+            old = '\n'.join(line for line in old.splitlines() if not line.startswith('检索和简单任务:'))
+            source = '用户前文\n' + old + '\n用户后文\n'
+            path.write_text(source, encoding='utf-8')
+            args = ('write', str(path), '--budget', '中', '--fast', 'normal', '--strong', 'complex', '--light', 'small', '--json')
+            code, out, _ = run(*args)
+            self.assertEqual(code, 0)
+            preview = json.loads(out)
+            self.assertFalse(preview['applied'])
+            self.assertIn('修 bug: chosen（low）', preview['block'])
+            self.assertIn('检索和简单任务: small', preview['block'])
+            self.assertEqual(path.read_text(encoding='utf-8'), source)
+            code, out, _ = run(*args, '--set', '修 bug=override', '--apply')
+            self.assertEqual(code, 0)
+            self.assertIn('修 bug: override', path.read_text(encoding='utf-8'))
+            self.assertTrue(path.read_text(encoding='utf-8').startswith('用户前文\n'))
+            self.assertTrue(path.read_text(encoding='utf-8').endswith('用户后文\n'))
+            self.assertEqual(run(*args, '--set', '修 bug=override', '--apply')[0], 0)
+            self.assertEqual(run(*args, '--replace-roles', '--apply')[0], 0)
+            self.assertIn('修 bug: normal', path.read_text(encoding='utf-8'))
+
+    def test_existing_light_choice_is_preserved_and_can_be_changed_explicitly(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'rules.md'
+            path.write_text(m.render_block('中', rows('中', light='chosen')), encoding='utf-8')
+            args = ('write', str(path), '--budget', '中', '--fast', 'normal', '--light', 'new', '--json')
+            code, out, _ = run(*args)
+            self.assertEqual(code, 0)
+            self.assertIn('检索和简单任务: chosen', json.loads(out)['block'])
+            code, out, _ = run(*args, '--set', 'lookup and simple tasks=new')
+            self.assertEqual(code, 0)
+            self.assertIn('检索和简单任务: new', json.loads(out)['block'])
+
+    def test_budget_change_does_not_silently_rewrite_preserved_reviewers(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'rules.md'
+            original = m.render_block('大', rows('大'))
+            path.write_text(original, encoding='utf-8')
+            args = ('write', str(path), '--budget', '省', '--fast', 'normal', '--strong', 'complex', '--apply')
+            code, _, err = run(*args)
+            self.assertEqual(code, 1)
+            self.assertIn('恰好 1', err)
+            self.assertEqual(path.read_text(encoding='utf-8'), original)
+            self.assertEqual(run(*args, '--replace-roles')[0], 0)
+
+    def test_explicit_inherit_replaces_existing_models(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'rules.md'
+            path.write_text(m.render_block('中', rows('中', light='chosen')), encoding='utf-8')
+            code, out, _ = run('write', str(path), '--budget', '中', '--inherit', '--json')
+            self.assertEqual(code, 0)
+            result = m.check_text(json.loads(out)['block'])
+            self.assertEqual(set(result['rows'].values()), {'inherit-parent'})
+
+    def test_confirmed_model_list_rejects_unknown_before_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'rules.md'
+            args = ('write', str(path), '--budget', '中', '--fast', 'normal', '--strong', 'complex', '--light', 'unknown', '--models', 'normal,complex', '--apply')
+            code, _, err = run(*args)
+            self.assertEqual(code, 1)
+            self.assertIn('未确认的模型', err)
+            self.assertFalse(path.exists())
+            code, _, _ = run(*args, '--set', '检索和简单任务=normal')
+            self.assertEqual(code, 0)
+            self.assertTrue(path.exists())
 
 
 class ContractTest(unittest.TestCase):

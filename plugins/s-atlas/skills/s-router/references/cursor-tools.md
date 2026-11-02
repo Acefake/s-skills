@@ -102,18 +102,20 @@
 
 ## setup-s-models
 
+按 [setup-s-models](../../setup-s-models/SKILL.md)推荐轻量、常规、复杂三档，按[公共派发规则](../../s-mode/references/subagents.md)派发。新增“检索和简单任务”，只选择当前 `Task` 真正支持的模型名，无显式档位时起始目标最多为 `medium`。没有第三个合适型号可共用常规模型，不能独立选模时继承。旧配置缺少轻量行就沿用原角色。重新配置默认保留已有角色，明确重新分配才加 `--replace-roles`。how、why、swarm 的三档派发若被拒绝，报告错误并交回主线程，不按其他章节的系列回退说明替换型号。
+
 这次对话在 Cursor 里时，按下面做。模型名通过 `Task` 的 `model` 参数传给子智能体。`inherit-parent` 和 `auto` 省略 `model`。
 
 预算和确认用 `AskQuestion`。四个选项用 setup-s-models 里那四行原文，标签和说明都放进卡片。额度有限的提示放在这道题里。检测不到模型时，请用户把有权限的名字贴过来。
 
-写入 `~/.cursor/rules/s-models.mdc`，覆盖整个文件。frontmatter 用这两行：
+写入 `~/.cursor/rules/s-models.mdc`，只替换模型配置标记段并保留其他内容。仅在首次创建时添加下面两行 frontmatter；已有 frontmatter 保留，不能覆盖用户其他字段：
 
 ```
 description: s per-role model choices (overrides skill defaults)
 alwaysApply: true
 ```
 
-`grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只有这次真的能传给 `Task` 才写进文件。两个都在、预算是「大」时，角色行就是下面这份，评审列表 2 项。其他档按 setup-s-models 改列表长度和后缀，改完的名字必须仍在检测结果里。
+下面只是原有双模型角色配置的示例，不是当前账号的可用性声明。新配置使用脚本生成 18 行，包括“检索和简单任务”；它的模型由当前宿主实际名单选择，省略轻量选择时共用常规模型。旧示例中的型号只有这次确实可派发时才可选用，不能据此覆盖已有配置。
 
 写出的键用中文。文件里已有的旧英文键按 [角色键对照](../../setup-s-models/references/role-keys.md) 改写，模型值不动。
 

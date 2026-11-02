@@ -1,7 +1,7 @@
 """Render, check and write the s model block deterministically.
 
 The skill asks the questions; this script owns the rules: which role gets the
-fast or strong model, how many reviewers each budget sends, the budget line,
+light, regular or complex model, how many reviewers each budget sends, the budget line,
 and how an existing block is replaced without touching the rest of the file.
 
     python s_models.py render --budget 省 --fast sonnet --strong opus
@@ -27,12 +27,14 @@ OLD_END = '# end s model configuration'
 INHERIT = 'inherit-parent'
 FREE_VALUES = (INHERIT, 'auto')
 
+LIGHT = 'light'
 FAST = 'fast'
 STRONG = 'strong'
 REVIEW = 'review'
 
 # (中文键, 旧英文键, 分组)。顺序就是写出顺序，和 SKILL.md 的模板一致。
 ROLES = (
+    ('检索和简单任务', 'lookup and simple tasks', LIGHT),
     ('写功能和重构', 'feature, refactoring', FAST),
     ('修 bug', 'bug-fix', FAST),
     ('性能问题', 'perf-issue', FAST),
@@ -54,6 +56,7 @@ ROLES = (
 ROLE_KEYS = tuple(key for key, _, _ in ROLES)
 OLD_TO_NEW = {old: new for new, old, _ in ROLES}
 HARDEST = '最难的任务'
+LIGHT_ROLE = '检索和简单任务'
 
 # 预算：中文名 → (目标推理档位, 评审项数下限, 上限)。上限 None 表示不封顶。
 BUDGETS = {
@@ -114,6 +117,8 @@ def role_effort(budget: str, key: str, effort: str | None = None) -> str:
     """Starting level of one role: the budget level, hardest tasks one step up."""
     rule = '大' if budget == INHERIT else budget
     base = effort or BUDGETS[rule][0]
+    if key == LIGHT_ROLE:
+        return EFFORTS[min(EFFORTS.index(base), EFFORTS.index('medium'))]
     if key == HARDEST and EFFORTS.index(base) < len(EFFORTS) - 1:
         return EFFORTS[EFFORTS.index(base) + 1]
     return base
@@ -148,7 +153,8 @@ def review_items(budget: str, fast: str, strong: str, third: str | None) -> list
 
 def render_rows(budget: str, fast: str | None, strong: str | None,
                 third: str | None = None, inherit: bool = False,
-                overrides: dict[str, str] | None = None) -> dict[str, str]:
+                overrides: dict[str, str] | None = None,
+                light: str | None = None) -> dict[str, str]:
     """Role → value. `inherit` means the host cannot pick a model per dispatch."""
     rule = '大' if budget == INHERIT else budget
     if inherit:
@@ -161,7 +167,9 @@ def render_rows(budget: str, fast: str | None, strong: str | None,
         strong = strong or fast
         rows = {}
         for key, _, group in ROLES:
-            if group == REVIEW:
+            if group == LIGHT:
+                rows[key] = light or fast
+            elif group == REVIEW:
                 rows[key] = ', '.join(review_items(budget, fast, strong, third))
             elif group == STRONG and (rule != '省' or key == HARDEST):
                 rows[key] = strong
@@ -227,7 +235,7 @@ def parse_block(lines: list[str]) -> tuple[str | None, dict[str, str], list[str]
             english[OLD_TO_NEW[key]] = value
             notes.append(f'旧英文键 {key!r}，重写时会换成 {OLD_TO_NEW[key]}')
         else:
-            notes.append(f'不在 17 个角色里的键 {key!r}，重写时不会写回')
+            notes.append(f'不在 {len(ROLES)} 个角色里的键 {key!r}，重写时不会写回')
     for key, value in english.items():
         rows.setdefault(key, value)
     return budget, rows, notes
@@ -269,7 +277,8 @@ def check_text(text: str, models: list[str] | None = None) -> dict:
     for key, _, group in ROLES:
         value = rows.get(key)
         if value is None:
-            notes.append(f'缺少角色 {key}，会用技能默认')
+            if group != LIGHT:
+                notes.append(f'缺少角色 {key}，会用技能默认')
             continue
         raw_items = [item.strip() for item in value.split(',')]
         if any(not item for item in raw_items):
@@ -317,6 +326,8 @@ def resolve_role(text: str, role: str) -> dict:
     budget, _ = parse_budget_text(raw_budget)
     _, budget_effort = parse_budget_text(raw_budget)
     default = budget_effort or ('xhigh' if budget in (None, INHERIT) else BUDGETS[budget][0])
+    if key == LIGHT_ROLE and default in EFFORTS:
+        default = EFFORTS[min(EFFORTS.index(default), EFFORTS.index('medium'))]
     items = []
     for part in rows[key].split(','):
         name, level = split_item(part)
@@ -384,9 +395,11 @@ def parse_sets(values: list[str]) -> dict[str, str]:
 
 def add_render_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('--budget', required=True, help='省、中、大、不限，或 inherit-parent（跳过）')
-    parser.add_argument('--fast', help='写代码类用的快模型')
-    parser.add_argument('--strong', help='判断类用的强模型；不给就和快模型相同')
+    parser.add_argument('--light', help='检索和简单任务的轻量模型；不给就使用常规模型')
+    parser.add_argument('--fast', help='日常实现与探索的常规模型')
+    parser.add_argument('--strong', help='困难实现与综合判断的复杂模型；不给就和常规模型相同')
     parser.add_argument('--third', help='不限预算时第三个系列的模型')
+    parser.add_argument('--models', help='本次确认可用的模型，逗号分隔；提供时在预览和写入前校验')
     parser.add_argument('--effort', help='宿主没有目标档时实际使用的档位（只能下调）')
     parser.add_argument('--role-effort', action='store_true',
                         help='每个角色值后加（档位）：宿主能随派发传档位时用，如 Claude Code 的 Agent effort')
@@ -396,12 +409,24 @@ def add_render_arguments(parser: argparse.ArgumentParser) -> None:
 
 def block_from_args(args: argparse.Namespace) -> str:
     budget = normalize_budget(args.budget)
-    rows = render_rows(budget, args.fast, args.strong, args.third, args.inherit, parse_sets(args.set))
+    if args.effort is not None and args.effort not in EFFORTS:
+        raise SModelsError(f'未知推理档位 {args.effort!r}：用 {"、".join(EFFORTS)}')
+    budget_line(budget, args.effort)
+    overrides = {}
+    if args.command == 'write' and not args.replace_roles and not args.inherit:
+        existing, _ = read_file(Path(args.file).expanduser())
+        lines = existing.splitlines()
+        span = find_block(lines)
+        if span is not None:
+            _, overrides, _ = parse_block(lines[span[0] + 1:span[1]])
+    overrides.update({OLD_TO_NEW.get(key, key): value for key, value in parse_sets(args.set).items()})
+    rows = render_rows(budget, args.fast, args.strong, args.third, args.inherit, overrides, args.light)
     if args.role_effort:
         rows = add_efforts(rows, budget, args.effort)
     block = render_block(budget, rows, args.effort)
     # --set 可能把评审行改成不合预算的项数；生成的段必须先过自己的校验。
-    problems = check_text(block)['problems']
+    models = [name.strip() for name in args.models.split(',')] if args.models is not None else None
+    problems = check_text(block, models)['problems']
     if problems:
         raise SModelsError('生成的配置不合规则：' + '；'.join(problems))
     return block
@@ -421,6 +446,7 @@ def main(argv: list[str] | None = None) -> int:
     write = sub.add_parser('write', help='替换或追加标记段，默认只预览')
     write.add_argument('file')
     add_render_arguments(write)
+    write.add_argument('--replace-roles', action='store_true', help='明确用本次推荐重新生成已有角色；默认保留原有选择')
     write.add_argument('--apply', action='store_true', help='真正写入；不加只报告会做什么')
     for item in (render, check, write, resolve):
         item.add_argument('--json', action='store_true', help='输出 JSON')

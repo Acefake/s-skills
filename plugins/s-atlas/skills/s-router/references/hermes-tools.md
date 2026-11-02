@@ -1,5 +1,7 @@
 # Hermes 宿主参考
 
+三档配置沿用 [setup-s-models](../../setup-s-models/SKILL.md)，新增“检索和简单任务”。按[公共派发规则](../../s-mode/references/subagents.md)区分任务，不假设有按次选模能力。当前工具未确认支持独立选模时，18 行均使用 `inherit-parent`，明确没有模型分流。旧配置缺少轻量行则沿用原角色；普通配置更新保留已有角色，明确重新分配才使用 `--replace-roles`。不改共用的委派默认模型来冒充按角色选模。
+
 仅在当前会话是 Nous Research 的 Hermes agent（命令 `hermes`）时阅读。这里只记录模型配置、技能目录和子代理模型能力。不改 Codex、Claude Code、Cursor、WorkBuddy 的写法。本文件不提供安装脚本，也不把 `s-atlas` 注册进 Hermes 的技能市场。真实客户端未在本仓库运行，文件校验通过不等于会话发现或派发已经验收。
 
 家目录是 `$HERMES_HOME`。没设置时是 `~/.hermes`。下文用这家目录表示当前选中的 profile，不写死某台机器的路径。
@@ -40,17 +42,17 @@
 
 不要加 `--raw`。凭证字段会打出来。交互式 `hermes model` 和会话里的 `/model` 列出的是策展目录，不是端点的原始 `/models` 全量。本步骤不启动交互向导。见[配置模型](https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models)。
 
-未确认有非交互命令可以打印策展目录或端点 `/models` 的全量结果。`discover_models` 为真时，选择器会向端点查询；配置里的 `models` 仍是可以直接读到的名单。上面的命令给不出名字时，请用户把有权限的名字贴过来。这些名字用来向用户说明当前默认和已配置名单。默认的 `delegate_task` 不能按次接收它们，所以不写进 17 行。
+未确认有非交互命令可以打印策展目录或端点 `/models` 的全量结果。`discover_models` 为真时，选择器会向端点查询；配置里的 `models` 仍是可以直接读到的名单。上面的命令给不出名字时，请用户把有权限的名字贴过来。这些名字用来向用户说明当前默认和已配置名单。默认的 `delegate_task` 不能按次接收它们，所以不写进 18 行。
 
 ## 子代理能不能按次指定模型
 
-不能按角色各传一个模型。17 行都写 `inherit-parent`。派出时不传模型。
+不能按角色各传一个模型。18 行都写 `inherit-parent`。派出时不传模型。
 
 [委派说明](https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation)写明：默认策略下 `delegate_task` 没有按任务的模型参数。设置了 `delegation.model` 时，同一批子代理都用这一个模型；省略则用父级模型。`delegation.provider` 同样是全体共用。本技能不写入、不清除这两个键。
 
-可选插件 advanced-delegation 可以用 `model_map` 或 `profile_routes`，让模型在每次任务里选一个已经写好的路线名。模型只看见路线名和说明，看不见 provider 和模型字段。见[插件页](https://hermes-agent.nousresearch.com/docs/plugins/advanced-delegation)。这次工具参数里没有确认到可按角色传入的模型名之前，不把路线名写进 17 行，也不改 `delegation.backend`。看板的按任务模型是另一条功能，不是 `delegate_task` 的参数，本技能不使用它。
+可选插件 advanced-delegation 可以用 `model_map` 或 `profile_routes`，让模型在每次任务里选一个已经写好的路线名。模型只看见路线名和说明，看不见 provider 和模型字段。见[插件页](https://hermes-agent.nousresearch.com/docs/plugins/advanced-delegation)。这次工具参数里没有确认到可按角色传入的模型名之前，不把路线名写进 18 行，也不改 `delegation.backend`。看板的按任务模型是另一条功能，不是 `delegate_task` 的参数，本技能不使用它。
 
-不把 17 个角色收成 `delegation.model` 这一个键。[PR 76480](https://github.com/NousResearch/hermes-agent/pull/76480) 曾描述 `hermes subagent model` 也写这个共用键；该 PR 已关闭且未合并，当前 CLI 参考里未确认有这条命令。不要运行它。
+不把 18 个角色收成 `delegation.model` 这一个键。[PR 76480](https://github.com/NousResearch/hermes-agent/pull/76480) 曾描述 `hermes subagent model` 也写这个共用键；该 PR 已关闭且未合并，当前 CLI 参考里未确认有这条命令。不要运行它。
 
 ## 推理档位
 
