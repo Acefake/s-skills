@@ -22,7 +22,19 @@ Word 的功能你已经会用。这个技能补上代码里看不到的部分：
 uv run <skill>/ooxml/scripts/unpack.py contract.docx unpacked
 ```
 
-自己写的 Python 要声明依赖，用 `uv run --with defusedxml script.py`，或写 PEP 723 头。Node 脚本用 `NODE_PATH=<skill>/node_modules node build.js`。`<skill>/node_modules` 不存在时，在 `<skill>` 里执行一次 `npm install`。渲染页面需要 LibreOffice（`soffice`）和 poppler（`pdftoppm`）。阅读需要 pandoc。
+自己写的 Python 要声明依赖，用 `uv run --with defusedxml script.py`，或写 PEP 723 头。Node 脚本在 Bash 中用 `NODE_PATH="<skill>/node_modules" node build.js`；PowerShell 使用下面的写法，运行后恢复原环境变量。`<skill>/node_modules` 不存在时，在 `<skill>` 里执行一次 `npm install`。渲染页面需要 LibreOffice（`soffice`）和 poppler（`pdftoppm`）。阅读需要 pandoc。
+
+```powershell
+$previousNodePath = $env:NODE_PATH
+try {
+    $env:NODE_PATH = '<skill>/node_modules'
+    node ./build.js
+} finally {
+    $env:NODE_PATH = $previousNodePath
+}
+```
+
+将 `<skill>` 替换为当前技能的绝对路径，`build.js` 替换为实际脚本路径；命令仍在用户工作目录运行。
 
 ## 选哪条流程
 
