@@ -51,7 +51,7 @@ WorkBuddy 本机项目安装使用同一脚本加 `-HostName workbuddy`，链接
 
 ## 全局技能提示词
 
-显式调用 [setup-s-instructions](skills/setup-s-instructions/SKILL.md) 初始化当前宿主的全局指令，保留其他配置并幂等更新。普通技能只按[日常自检](skills/setup-s-instructions/references/daily-check.md)提醒，每会话一次，不自动写入。Cursor 使用真正的全局 User Rules；项目 Always 规则不能替代全局配置。
+显式调用 [setup-s-instructions](skills/setup-s-instructions/SKILL.md) 初始化当前宿主的全局指令，保留其他配置并幂等更新。普通技能只按[日常自检](skills/setup-s-instructions/references/daily-check.md)提醒，每会话一次，不自动写入。Cursor 使用真正的全局 User Rules；项目 Always 规则不能替代全局配置。想一次完成全局指令和模型配置，显式调用 [s-init](skills/s-init/SKILL.md)，它只做顺序编排。
 
 ## 经确认的经验
 

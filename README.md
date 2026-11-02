@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.36，共 **79** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.37，共 **80** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor、WorkBuddy会按你说的话自动挑对应的技能。
 
@@ -51,7 +51,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 
 ### 让技能自动生效
 
-安装后显式调用 `setup-s-instructions`，初始化当前宿主的全局技能提示词。Codex 在技能选择器中选择它；支持插件命令的宿主可用 `/s-atlas:setup-s-instructions`。
+安装后显式调用 `setup-s-instructions`，初始化当前宿主的全局技能提示词。Codex 在技能选择器中选择它；支持插件命令的宿主可用 `/s-atlas:setup-s-instructions`。想一次配好提示词和模型，显式调用 `s-init`（`/s-atlas:s-init`），它会按顺序走 `setup-s-instructions` 和 `setup-s-models`。
 
 Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`，默认 `~/.claude/CLAUDE.md`。WorkBuddy 使用用户级兼容文件 `~/.codebuddy/CODEBUDDY.md`，脚本参数为 `--host workbuddy`，默认只读检查，明确初始化时加 `--apply`。初始化从当前插件的 `AGENTS.md` 和 `plugin.json` 生成带版本的完整规则。已知旧规则原位迁移，保留用户其他内容和首份备份，重复执行不会重复添加。版本或正文变化时只读检查报告过期，显式初始化或更新后同步。Cursor 使用全局 User Rules；没有可用的设置编辑工具时，技能给出完整提示词供粘贴，并标记尚未配置。
 
@@ -242,11 +242,12 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 | `principle-never-block-on-the-human` | 可撤销的事先做再给人看 |
 | `principle-encode-lessons-in-structure` | 第二次出现的教训写成检查 |
 
-### 手点（21 个）
+### 手点（22 个）
 
 | 技能 | 用途 |
 |---|---|
 | `setup-s-instructions` | 显式初始化、检查或修复当前宿主的全局技能提示词 |
+| `s-init` | 显式一键初始化：先同步全局技能提示词，再配置模型，每步写入前确认 |
 | `frontend-design` | 点名时给一份有主见的视觉方向，不带检查脚本 |
 | `s-mode` | 点名才走的加强工作流 |
 | `s-agent` | `s-mode` 派出去写代码的子智能体 |
