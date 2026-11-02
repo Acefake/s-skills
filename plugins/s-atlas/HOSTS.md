@@ -17,6 +17,21 @@
 
 技能正文负责任务步骤、角色职责、输入输出和验收；平台参考负责工具参数、配置位置和能力差异。已有用户配置与本次授权优先，不用示例模型覆盖用户选择。
 
+## 向用户提问的工具
+
+技能里说“用宿主的提问工具”，指下表的工具。名字以当前会话的工具定义为准，定义里没有就不调用。
+
+| 宿主 | 提问工具 | 备注 | 出处 |
+|---|---|---|---|
+| Claude Code | `AskUserQuestion` | | [claude-code-tools.md](skills/s-router/references/claude-code-tools.md) |
+| Codex | `request_user_input` | 只有主对话能用，子智能体不能问 | [codex-tools.md](skills/s-router/references/codex-tools.md) |
+| Cursor | `AskQuestion` | | [cursor-tools.md](skills/s-router/references/cursor-tools.md) |
+| WorkBuddy | 未确认固定名字 | 用宿主实际提供的提问工具 | [workbuddy-tools.md](skills/s-router/references/workbuddy-tools.md) |
+| DeepSeek Harness（`dsh`） | 未确认 | 参考文件没有记录 | [dsh-tools.md](skills/s-router/references/dsh-tools.md) |
+| Hermes agent | 未确认 | 参考文件没有记录 | [hermes-tools.md](skills/s-router/references/hermes-tools.md) |
+
+没有提问工具时，在对话里列编号选项并等回复。沉默、“随便”不当作批准。
+
 DeepSeek Harness 和 Hermes 的 18 个角色行与现有四个宿主相同。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，只替换这一段。旧标记 `# s model configuration` 到 `# end s model configuration` 是同一段，读取仍然有效；重写时换成中文标记和中文键。角色键的对照在 [角色键对照](skills/setup-s-models/references/role-keys.md)。两家的配置 YAML 都不放这段：`cordis.patch.yml` 和 `config.yaml` 里的其他条目保持原样。
 
 | 宿主 | 标记段 | 技能目录 | 列出可用模型 | 多个 profile |
