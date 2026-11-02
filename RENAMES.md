@@ -18,6 +18,8 @@
 
 1.7.38 删除 `learn`（经验学习）及其脚本和测试，名字留在 `RETIRED_SKILLS`。全局规则不再包含经验建议一节；`reflect` 保留。恢复方法见下面的“回滚”，从 1.7.37 的提交取回 `plugins/s-atlas/skills/learn/`。
 
+1.7.41 恢复 `automate-me`：从 1.3.0 之前的提交取回后按当前规范改写，去掉对已不存在的 `poteto-mode` 的引用和 Cursor 专用模型名，挖掘对话记录前先取得用户同意。
+
 ## 回滚
 
 要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s-atlas/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。

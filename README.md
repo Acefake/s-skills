@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.40，共 **79** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.7.41，共 **80** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor、WorkBuddy会按你说的话自动挑对应的技能。
 
@@ -69,11 +69,11 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 ## 架构与技能路由
 
-[![s-atlas 技能全景：任务路由与 79 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
+[![s-atlas 技能全景：任务路由与 80 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
 
 [全景卡片图源（HTML）](docs/architecture/s-atlas-panorama.html) · [完整说明](docs/architecture.md) · [组件关系补充图](docs/architecture/s-atlas.html)
 
-主图沿用白底全景卡片风格：上半部分展示从任务到技能的路由，下半部分按入口与配置、工作模式、开发主流程、专项技能和原则分栏，完整列出 79 个技能的触发例子与职责。浅色实底表示可自动选用，白底虚线表示需点名或已有授权派发。点击图片可放大，HTML 卡片链接到对应技能源码。
+主图沿用白底全景卡片风格：上半部分展示从任务到技能的路由，下半部分按入口与配置、工作模式、开发主流程、专项技能和原则分栏，完整列出 80 个技能的触发例子与职责。浅色实底表示可自动选用，白底虚线表示需点名或已有授权派发。点击图片可放大，HTML 卡片链接到对应技能源码。
 
 - **任务主线：** 当前宿主读取全局约定与技能描述。已有明确匹配就直接加载，拿不准才用 `s-router`；按任务进入直接处理、方案与计划、调试或只读交付。
 - **交付边界：** 验证强度按档位，代码改动先自审，第2档以上再做只读独立评审。已有验证结果可复用，Git 操作只按已有授权执行。
@@ -231,12 +231,13 @@ Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录�
 | `principle-never-block-on-the-human` | 可撤销的事先做再给人看 |
 | `principle-encode-lessons-in-structure` | 第二次出现的教训写成检查 |
 
-### 手点（22 个）
+### 手点（23 个）
 
 | 技能 | 用途 |
 |---|---|
 | `setup-s-instructions` | 显式初始化、检查或修复当前宿主的全局技能提示词 |
 | `s-init` | 显式一键初始化：先同步全局技能提示词，再配置模型，每步写入前确认 |
+| `automate-me` | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |
 | `frontend-design` | 点名时给一份有主见的视觉方向，不带检查脚本 |
 | `s-mode` | 点名才走的加强工作流 |
 | `s-agent` | `s-mode` 派出去写代码的子智能体 |

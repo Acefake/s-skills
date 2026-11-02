@@ -28,7 +28,7 @@ DOC_VERSION_REFS = {
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "s-atlas": 79,
+    "s-atlas": 80,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.
@@ -38,7 +38,6 @@ RETIRED_SKILLS = frozenset({
     "animation-performance",
     "apple-design",
     "ask-sonner",
-    "automate-me",
     "blast-radius",
     "break-ui",
     "correct",
