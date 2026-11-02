@@ -20,6 +20,8 @@
 
 1.7.41 恢复 `automate-me`：从 1.3.0 之前的提交取回后按当前规范改写，把对 `poteto-mode` 的引用改成现在的 `s-mode`，去掉 Cursor 专用模型名和已不支持的 OpenCode 示例，挖掘对话记录前先取得用户同意。
 
+1.8.0 汇总 1.7.37 到 1.7.43：新增 `s-init`（一键初始化），恢复 `automate-me`，删除 `learn`，`HOSTS.md` 集中列出各宿主的提问工具。技能总数 80，其中自动选用 57、显式调用 23。
+
 ## 回滚
 
 要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s-atlas/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
