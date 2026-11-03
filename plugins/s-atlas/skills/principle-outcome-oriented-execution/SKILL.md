@@ -1,6 +1,6 @@
 ---
 name: principle-outcome-oriented-execution
-description: "「直接改到目标结构」「别搞过渡兼容」。有阶段边界的重写和迁移，直接走向目标架构。Use when a planned rewrite or migration should move directly to the target structure."
+description: "「直接改到目标结构」「直接改到目标架构」「别搞过渡兼容」。目标已定的重写和迁移，直接走向目标架构，不留过渡期代码。Use when a planned rewrite or migration should move directly to the target structure."
 disable-model-invocation: false
 ---
 

@@ -22,6 +22,8 @@
 
 1.8.0 汇总 1.7.37 到 1.7.43：新增 `s-init`（一键初始化），恢复 `automate-me`，删除 `learn`，`HOSTS.md` 集中列出各宿主的提问工具。技能总数 80，其中自动选用 57、显式调用 23。
 
+1.8.1 不改技能名，只修复：setup-s-models 首次写入 CRLF 文件不再破坏原有行尾，保留 BOM，原子写入；s-router 描述改为拿不准或没有全局规则时才用；独立评审和 subagent-driven-development 按 s 模型配置的角色行选模型；找回 `claude plugin eval` 评测套件；触发用例加入反例。
+
 ## 回滚
 
 要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s-atlas/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。

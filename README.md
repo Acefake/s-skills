@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.8.0，共 **80** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.8.1，共 **80** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor、WorkBuddy会按你说的话自动挑对应的技能。
 
@@ -77,7 +77,7 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 - **任务主线：** 当前宿主读取全局约定与技能描述。已有明确匹配就直接加载，拿不准才用 `s-router`；按任务进入直接处理、方案与计划、调试或只读交付。
 - **交付边界：** 验证强度按档位，代码改动先自审，第2档以上再做只读独立评审。已有验证结果可复用，Git 操作只按已有授权执行。
-- **两个显式入口：** `setup-s-instructions` 负责初始化与同步全局规则；`reflect` 负责深度复盘和技能修改。日常自检不会自动替代这两个入口。
+- **显式写入入口：** `setup-s-instructions` 同步全局规则，`setup-s-models` 写模型配置，`s-init` 按顺序串起两者；`reflect` 把复盘落到技能修改，`automate-me` 起草个人 `-mode` 技能。日常自检只读，不替代这些入口。
 
 小改动跳过方案和计划；子代理实现仍需授权，不能把代码独立评审授权扩展成并行开发授权。需要隔离时使用 `using-git-worktrees`，优先复用适合的现有工作区并保留已有修改。
 
@@ -291,7 +291,9 @@ python scripts/eval_triggers.py --model haiku --jobs 6 --repeat 3
 python scripts/eval_triggers.py --filter impeccable
 ```
 
-新增可自动选用的技能（包括原则）时，单元测试会要求先在用例文件里补一条触发用例。评测只验证描述的区分度；实际宿主同时加载多个技能、模型是否按配置委派，仍需通过真实会话验证。
+新增可自动选用的技能（包括原则）时，单元测试会要求先在用例文件里补一条触发用例。`expect` 写 `["none"]` 的是反例，检查无关请求不会误触发技能。评测只验证描述的区分度。
+
+宿主里的真实行为用 [plugins/s-atlas/evals](plugins/s-atlas/evals/README.md) 的 `claude plugin eval` 用例检查：配置模型时首轮只提问、无关请求不误触发 setup-s-models、角色行带档位时 interrogate 派出的模型和 `effort` 正确。它同样会产生实际调用，不在 CI 里跑。
 
 ## 许可证
 

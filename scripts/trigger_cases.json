@@ -64,5 +64,8 @@
   {"prompt": "新需求别硬塞进旧的结构里，按第一性原理把这层重新设计", "expect": ["principle-redesign-from-first-principles", "brainstorming"]},
   {"prompt": "两个子代理会同时写同一个配置文件，先想办法别让它们共享", "expect": ["principle-separate-before-serializing-shared-state"]},
   {"prompt": "加新功能之前，先把这块的死代码和多余校验清掉", "expect": ["principle-subtract-before-you-add"]},
-  {"prompt": "这个类型设计让非法状态根本写不出来", "expect": ["principle-type-system-discipline"]}
+  {"prompt": "这个类型设计让非法状态根本写不出来", "expect": ["principle-type-system-discipline"]},
+  {"prompt": "今天周几？", "expect": ["none"]},
+  {"prompt": "Python 里 list 和 tuple 有什么区别，简单说一下", "expect": ["none"]},
+  {"prompt": "帮我想三个周末出去玩的地方", "expect": ["none"]}
 ]

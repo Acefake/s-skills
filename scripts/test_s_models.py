@@ -1,6 +1,8 @@
 """setup-s-models 的规则脚本：生成、校验、写入都要结果固定。"""
 import importlib.util
 import json
+import os
+import stat
 import re
 import tempfile
 import unittest
@@ -241,7 +243,38 @@ class WriteTest(unittest.TestCase):
         data = self.path.read_bytes().decode('utf-8')
         self.assertNotIn('s model configuration', data)
         self.assertNotIn('\n', data.replace('\r\n', ''))
+        self.assertNotIn('\r\r', data)
         self.assertTrue(data.startswith('用户\r\n# s 模型配置\r\n'))
+
+    def test_append_to_crlf_file_keeps_user_lines_and_bom(self):
+        self.path.parent.mkdir(parents=True)
+        original = b'\xef\xbb\xbf# my rules\r\nkeep me\r\n'
+        self.path.write_bytes(original)
+        result = m.write_file(self.path, self.block(), apply=True)
+        self.assertEqual(result['action'], 'append')
+        data = self.path.read_bytes()
+        self.assertTrue(data.startswith(b'\xef\xbb\xbf# my rules\r\nkeep me\r\n\r\n# s '))
+        self.assertNotIn(b'\r\r', data)
+        self.assertNotIn(b'\n', data.replace(b'\r\n', b''))
+        self.assertEqual(Path(result['backup']).read_bytes(), original)
+        self.assertEqual(m.write_file(self.path, self.block(), apply=True)['action'], 'unchanged')
+
+    def test_replace_keeps_form_feed_and_trailing_blank_lines(self):
+        self.path.parent.mkdir(parents=True)
+        self.path.write_bytes(('a\fb\n\n' + self.block('省') + '\n\nend\n\n').encode('utf-8'))
+        m.write_file(self.path, self.block('大'), apply=True)
+        data = self.path.read_bytes().decode('utf-8')
+        self.assertTrue(data.startswith('a\fb\n\n# s 模型配置'))
+        self.assertTrue(data.endswith('# s 模型配置结束\n\nend\n\n'))
+
+    def test_read_only_file_is_refused_without_leftovers(self):
+        self.path.parent.mkdir(parents=True)
+        self.path.write_text('用户\n', encoding='utf-8')
+        os.chmod(self.path, stat.S_IREAD)
+        self.addCleanup(os.chmod, self.path, stat.S_IREAD | stat.S_IWRITE)
+        with self.assertRaises(m.SModelsError):
+            m.write_file(self.path, self.block(), apply=True)
+        self.assertEqual(sorted(p.name for p in self.path.parent.iterdir()), ['s-models.md'])
 
     def test_half_block_refuses_to_write(self):
         self.path.parent.mkdir(parents=True)

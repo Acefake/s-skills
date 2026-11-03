@@ -23,7 +23,9 @@ def main():
             metadata = re.sub(r'^policy:[ \t]*$', 'policy:\n' + setting, metadata, count=1, flags=re.M)
         else:
             metadata = metadata.rstrip() + '\npolicy:\n' + setting + '\n'
-        policy.write_text(metadata.lstrip('\n'), encoding='utf-8')
+        metadata = metadata.lstrip('\n')
+        if not policy.exists() or policy.read_bytes().decode('utf-8') != metadata:
+            policy.write_text(metadata, encoding='utf-8', newline='\n')
     print(f'Automatic skills: {automatic}')
 
 

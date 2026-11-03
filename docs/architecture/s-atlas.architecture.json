@@ -8,7 +8,7 @@
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/Acefake/s-skills.git",
-      "revision": "dab5ad11e14a8b8154b704d0006fc8d9171bd021"
+      "revision": "cfd0823ff5483f272bcd41f9bae7e3a377655220"
     },
     "legend": {
       "entries": {
@@ -44,8 +44,8 @@
       "sources": [
         {
           "path": "plugins/s-atlas/skills/setup-s-instructions/scripts/global_instructions.py",
-          "line": 132,
-          "end_line": 148
+          "line": 134,
+          "end_line": 150
         }
       ]
     },
@@ -65,8 +65,8 @@
       "sources": [
         {
           "path": "plugins/s-atlas/skills/setup-s-instructions/scripts/global_instructions.py",
-          "line": 32,
-          "end_line": 46
+          "line": 23,
+          "end_line": 35
         },
         {
           "path": "plugins/s-atlas/AGENTS.md",
@@ -96,8 +96,8 @@
         },
         {
           "path": "plugins/s-atlas/skills/s-router/SKILL.md",
-          "line": 69,
-          "end_line": 73
+          "line": 63,
+          "end_line": 68
         }
       ]
     },
@@ -105,7 +105,7 @@
       "id": "session",
       "type": "frontend",
       "label": "当前代理会话",
-      "sublabel": "Codex · Claude Code · Cursor",
+      "sublabel": "Codex · Claude Code · Cursor · WorkBuddy",
       "pos": [
         40,
         230
@@ -118,12 +118,12 @@
         {
           "path": "plugins/s-atlas/HOSTS.md",
           "line": 3,
-          "end_line": 15
+          "end_line": 16
         },
         {
           "path": "plugins/s-atlas/HOSTS.md",
-          "line": 19,
-          "end_line": 26
+          "line": 44,
+          "end_line": 55
         }
       ]
     },
@@ -148,8 +148,8 @@
         },
         {
           "path": "plugins/s-atlas/AGENTS.md",
-          "line": 47,
-          "end_line": 49
+          "line": 9,
+          "end_line": 12
         }
       ]
     },
@@ -170,12 +170,12 @@
         {
           "path": "plugins/s-atlas/skills/s-router/SKILL.md",
           "line": 47,
-          "end_line": 60
+          "end_line": 61
         },
         {
           "path": "plugins/s-atlas/skills/s-router/SKILL.md",
-          "line": 69,
-          "end_line": 73
+          "line": 63,
+          "end_line": 68
         }
       ]
     },
@@ -183,7 +183,7 @@
       "id": "delivery",
       "type": "security",
       "label": "验证与交付",
-      "sublabel": "分档验证；代码双重评审",
+      "sublabel": "分档验证；按风险独立评审",
       "pos": [
         880,
         230
@@ -201,7 +201,7 @@
         {
           "path": "plugins/s-atlas/AGENTS.md",
           "line": 41,
-          "end_line": 43
+          "end_line": 46
         }
       ]
     }

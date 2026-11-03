@@ -2,7 +2,7 @@
 
 s-atlas 是一套由代理读取的技能与本地工具，不是独立运行的 Agent 服务。Codex、Claude Code、Cursor、WorkBuddy 提供会话和执行能力；本仓库提供技能描述、任务流程、宿主适配和确定性的配置工具。
 
-当前版本 **1.8.0**，共 **80** 个技能：**57** 个可按描述自动选用，**23** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
+当前版本 **1.8.1**，共 **80** 个技能：**57** 个可按描述自动选用，**23** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
 
 ![s-atlas 全景卡片图：任务路由与 80 个技能](s-skills-route.png)
 
@@ -18,9 +18,9 @@ s-atlas 是一套由代理读取的技能与本地工具，不是独立运行的
 | 专项技能 | 29 | 理解架构、界面操作、专项审查、Office、专利和表达 |
 | 做事原则 | 24 | 按具体问题选用的 `principle-*` |
 
-浅色实底为自动技能，白底虚线为显式技能。卡片内容依据 [1f9f9e4](https://github.com/Acefake/s-skills/commit/1f9f9e4170676133c23d11fd43aa6d1b40cd6678) 中的技能描述、正文和调用政策整理，每个技能恰好出现一次，卡片标题链接到对应源码。HTML 是 4500 像素宽的独立可编辑图源，可缩小或横向浏览；PNG 预览可直接放大查看。
+浅色实底为自动技能，白底虚线为显式技能。卡片内容按 1.8.0 的技能描述、正文和调用政策整理（含 s-init、automate-me，已去掉 learn），每个技能恰好出现一次，卡片标题链接到对应源码。HTML 是 4500 像素宽的独立可编辑图源，可缩小或横向浏览；PNG 预览可直接放大查看。
 
-组件关系图作为补充保留，表示逻辑职责，不表示分别部署的服务。其 [JSON 图源](architecture/s-atlas.architecture.json) 的节点证据固定在 [dab5ad1](https://github.com/Acefake/s-skills/commit/dab5ad11e14a8b8154b704d0006fc8d9171bd021)，可追溯到具体文件和行号。
+组件关系图作为补充保留，表示逻辑职责，不表示分别部署的服务。其 [JSON 图源](architecture/s-atlas.architecture.json) 的节点证据固定在 [cfd0823](https://github.com/Acefake/s-skills/commit/cfd0823ff5483f272bcd41f9bae7e3a377655220)，可追溯到具体文件和行号。
 
 ## 一、宿主、指令和技能各管一层
 
@@ -31,7 +31,7 @@ s-atlas 是一套由代理读取的技能与本地工具，不是独立运行的
 | 技能发现与路由 | 优先直接匹配；不明确时才由 s-router 判断；不覆盖显式调用政策 | [s-router](../plugins/s-atlas/skills/s-router/SKILL.md) 与各技能 frontmatter |
 | 执行流程与能力 | 按任务使用方案、计划、调试、文档、界面、测试等技能 | [skills/](../plugins/s-atlas/skills/) |
 | 宿主适配 | 把通用动作映射到当前宿主已有工具，不编造能力 | [HOSTS.md](../plugins/s-atlas/HOSTS.md) |
-| 本地持久化 | 幂等同步受管全局规则 | [setup-s-instructions](../plugins/s-atlas/skills/setup-s-instructions/SKILL.md) |
+| 本地持久化 | 幂等同步受管全局规则和模型配置，写入前确认 | [setup-s-instructions](../plugins/s-atlas/skills/setup-s-instructions/SKILL.md)、[setup-s-models](../plugins/s-atlas/skills/setup-s-models/SKILL.md)、[s-init](../plugins/s-atlas/skills/s-init/SKILL.md) |
 
 三个市场入口共用 `plugins/s-atlas` 中的技能源文件，通过各自插件清单分发。它们不共享一个后台进程，也不自动共享其他机器上的配置。
 
@@ -70,6 +70,8 @@ flowchart TD
 |---|---|---|
 | 安装或更新插件 | 宿主发现对应版本的技能 | 不自动改全局提示词，不保证当前会话立即重载 |
 | 显式执行 `setup-s-instructions` | 将当前版本完整规则同步到受管标记块，保留其他内容 | 不清空用户配置 |
+| 显式执行 `setup-s-models` | 一步一问选预算和 18 行角色模型，确认后写入模型标记段 | 不切换主会话模型，只影响技能派出的子代理 |
+| 显式执行 `s-init` | 按顺序做上面两步，每步写入前确认，最后汇总 | 不替用户预选预算或模型 |
 | 日常全局自检 | 每个主会话只读检查一次，缺失或过期时提醒 | 不自动初始化，不阻塞任务 |
 
 Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`。WorkBuddy 使用兼容文件 `~/.codebuddy/CODEBUDDY.md`，项目技能安装到 `.codebuddy/skills/`；本机与云端分开。Cursor 使用全局 User Rules，有真实设置编辑能力时才自动操作；否则提供待粘贴内容并标明尚未配置，项目 Always 规则不能冒充全局规则。

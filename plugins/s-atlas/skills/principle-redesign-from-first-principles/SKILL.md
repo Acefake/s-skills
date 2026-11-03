@@ -1,6 +1,6 @@
 ---
 name: principle-redesign-from-first-principles
-description: "「新需求按第一性原理重做」「别补在旧形状上」。把新需求整合进已有设计时，重做这一层。Use when a new requirement should be redesigned from first principles instead of patched onto the old shape."
+description: "「新需求按第一性原理重做」「别补在旧形状上」。来了新需求、要整合进已有设计时，重做这一层。目标已定的重写或迁移用 principle-outcome-oriented-execution。Use when a new requirement should be redesigned from first principles instead of patched onto the old shape."
 disable-model-invocation: false
 ---
 

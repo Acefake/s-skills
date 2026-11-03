@@ -16,14 +16,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import shutil
+import stat
 import sys
+import tempfile
 from pathlib import Path
 
 START = '# s 模型配置'
 END = '# s 模型配置结束'
 OLD_START = '# s model configuration'
 OLD_END = '# end s model configuration'
+BOM = b'\xef\xbb\xbf'
 INHERIT = 'inherit-parent'
 FREE_VALUES = (INHERIT, 'auto')
 
@@ -341,42 +346,77 @@ def resolve_role(text: str, role: str) -> dict:
 
 # ---------- writing ----------
 
-def read_file(path: Path) -> tuple[str, str]:
+def read_file(path: Path) -> tuple[str, str, bool]:
+    """Return (text with LF line ends, original newline, had BOM).
+
+    A file with any CRLF is written back as CRLF throughout.
+    """
     if not path.exists():
-        return '', '\n'
-    data = path.read_bytes().decode('utf-8-sig')
-    return data, '\r\n' if '\r\n' in data else '\n'
+        return '', '\n', False
+    raw = path.read_bytes()
+    data = raw.decode('utf-8-sig')
+    newline = '\r\n' if '\r\n' in data else '\n'
+    return data.replace('\r\n', '\n'), newline, raw.startswith(BOM)
 
 
 def merged_text(existing: str, block: str) -> tuple[str, str]:
     """Return (new text, action) where action is create / append / replace / unchanged."""
-    lines = existing.splitlines()
+    # Split on \n only: splitlines() would also break on \f, \x85 or a lone \r in user text.
+    lines = existing.split('\n')
+    if lines[-1] == '':
+        lines.pop()
     span = find_block(lines)
     if span is None:
         if not existing.strip():
             return block + '\n', 'create'
-        return existing.rstrip('\r\n') + '\n\n' + block + '\n', 'append'
+        return existing.rstrip('\n') + '\n\n' + block + '\n', 'append'
     start, end = span
     new_lines = lines[:start] + block.split('\n') + lines[end + 1:]
     text = '\n'.join(new_lines) + '\n'
-    if text.replace('\r\n', '\n') == existing.replace('\r\n', '\n'):
+    if text == existing:
         return text, 'unchanged'
     return text, 'replace'
 
 
 def write_file(path: Path, block: str, apply: bool) -> dict:
-    existing, newline = read_file(path)
+    if path.is_symlink():
+        path = path.resolve()  # replace the target, not the link
+    existing, newline, bom = read_file(path)
     text, action = merged_text(existing, block)
     result = {'path': str(path), 'action': action, 'applied': False, 'backup': None}
     if not apply or action == 'unchanged':
         return result
     path.parent.mkdir(parents=True, exist_ok=True)
+    original = path.read_bytes() if path.exists() else None
+    if original is not None and not os.access(path, os.W_OK):
+        raise SModelsError(f'{path} 是只读文件，去掉只读属性后再运行')
     if existing:
         backup = path.with_name(path.name + '.s-models.bak')
         if not backup.exists():
-            backup.write_bytes(path.read_bytes())
+            shutil.copy2(path, backup)
             result['backup'] = str(backup)
-    path.write_bytes(text.replace('\n', newline).encode('utf-8'))
+    data = (BOM if bom else b'') + text.replace('\n', newline).encode('utf-8')
+    if original is not None:
+        mode = stat.S_IMODE(path.stat().st_mode)
+    else:
+        umask = os.umask(0)
+        os.umask(umask)
+        mode = 0o666 & ~umask
+    fd, temporary = tempfile.mkstemp(prefix=path.name + '.', dir=path.parent)
+    try:
+        with os.fdopen(fd, 'wb') as stream:
+            stream.write(data)
+        os.chmod(temporary, mode)
+        if (path.read_bytes() if path.exists() else None) != original:
+            raise SModelsError('配置文件在写入期间被改动，请重新运行')
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            try:
+                os.chmod(temporary, stat.S_IWRITE | stat.S_IREAD)
+                os.unlink(temporary)
+            except OSError:
+                pass
     result['applied'] = True
     return result
 
@@ -414,7 +454,7 @@ def block_from_args(args: argparse.Namespace) -> str:
     budget_line(budget, args.effort)
     overrides = {}
     if args.command == 'write' and not args.replace_roles and not args.inherit:
-        existing, _ = read_file(Path(args.file).expanduser())
+        existing, _, _ = read_file(Path(args.file).expanduser())
         lines = existing.splitlines()
         span = find_block(lines)
         if span is not None:
@@ -459,7 +499,7 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({'block': block}, ensure_ascii=False) if args.json else block)
             return 0
         if args.command == 'check':
-            text, _ = read_file(Path(args.file).expanduser())
+            text, _, _ = read_file(Path(args.file).expanduser())
             models = [m.strip() for m in args.models.split(',')] if args.models else None
             result = check_text(text, models)
             if args.json:
@@ -472,7 +512,7 @@ def main(argv: list[str] | None = None) -> int:
                     print(f'提示: {line}')
             return 0 if result['status'] == 'ok' else 1
         if args.command == 'resolve':
-            text, _ = read_file(Path(args.file).expanduser())
+            text, _, _ = read_file(Path(args.file).expanduser())
             result = resolve_role(text, args.role)
             if args.json:
                 print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -495,6 +535,9 @@ def main(argv: list[str] | None = None) -> int:
             print(block)
         return 0
     except SModelsError as exc:
+        print(f'错误: {exc}', file=sys.stderr)
+        return 1
+    except OSError as exc:
         print(f'错误: {exc}', file=sys.stderr)
         return 1
 

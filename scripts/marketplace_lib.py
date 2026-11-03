@@ -10,6 +10,8 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -102,7 +104,25 @@ def write_json(path: Path, data: object) -> None:
     path.write_text(
         json.dumps(data, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
+
+
+def plugin_files(root: Path) -> list[Path]:
+    """Files git would commit under root: tracked plus untracked, minus ignored.
+
+    Ignored local files such as node_modules must not change the hash. Outside a
+    git checkout every file counts.
+    """
+    try:
+        listed = subprocess.run(
+            ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "."],
+            cwd=root, capture_output=True, check=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError) as error:
+        print(f"warning: git ls-files failed ({error}); hashing every file under {root}", file=sys.stderr)
+        return list(root.rglob("*"))
+    return [root / item.decode("utf-8") for item in set(listed.split(b"\0")) if item]
 
 
 def content_hash(name: str) -> str:
@@ -115,13 +135,13 @@ def content_hash(name: str) -> str:
     root = plugin_dir(name)
     excluded = set(MANIFEST_REL_PATHS)
     files: list[Path] = []
-    for path in root.rglob("*"):
+    for path in plugin_files(root):
         if not path.is_file():
             continue
         rel = path.relative_to(root).as_posix()
         if "__pycache__" in path.parts or path.suffix == ".pyc":
             continue
-        if rel in excluded:
+        if rel in excluded or rel.startswith("evals/results/"):
             continue
         files.append(path)
     digest = hashlib.sha256()

@@ -14,7 +14,14 @@ class TriggerCasesTest(unittest.TestCase):
             self.assertTrue(case["prompt"].strip())
             self.assertTrue(case["expect"], case["prompt"])
             for name in case["expect"]:
+                if name == eval_triggers.NONE:
+                    self.assertEqual(case["expect"], [name], f"{case['prompt']} mixes none with skills")
+                    continue
                 self.assertIn(name, self.candidates, f"{case['prompt']} expects {name}")
+
+    def test_has_negative_cases(self):
+        negatives = [case for case in self.cases if case["expect"] == [eval_triggers.NONE]]
+        self.assertGreaterEqual(len(negatives), 3, "keep cases that should not trigger any skill")
 
     def test_prompts_are_unique(self):
         prompts = [case["prompt"] for case in self.cases]

@@ -1,6 +1,6 @@
 ---
 name: s-router
-description: "「开始任何对话」「先查技能」「该用哪个」「拿不准」。在作答、提问、探索代码库或读文件之前，先查找并调用相关技能。Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions."
+description: "「先查技能」「该用哪个」「拿不准」。没有加载全局技能规则，或拿不准该用哪个技能、任务跨模块时，在作答、提问或读文件之前先用它查找并调用相关技能。Use when no global skill rules are loaded, or when it is unclear which skill fits or the task spans modules, before answering or exploring."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
@@ -57,7 +57,7 @@ description: "「开始任何对话」「先查技能」「该用哪个」「拿
 | 专利申请、权利要求、说明书、附图 | patent-application |
 | 提交说明、提交、PR | commit-pr；集成方式未定用finishing-a-development-branch |
 | 审PR、分支、本地改动 | s-review，只读报告，含位置与P0/P1/P2 |
-| 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | archify；架构重构评审用refactor-architecture |
+| 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | archify；架构重构评审建议用户点名refactor-architecture（显式技能） |
 | 教我、解释代码怎么工作 | 点名how时加载；未点名时直接讲解，不自动加载显式技能 |
 
 ## 共用执行规则

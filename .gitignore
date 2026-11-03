@@ -13,3 +13,6 @@ node_modules/
 .codebuddy/.s-atlas-common-files.json
 
 .venv/
+
+# claude plugin eval 的运行结果
+plugins/*/evals/results/
