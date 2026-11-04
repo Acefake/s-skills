@@ -35,22 +35,6 @@
 | 写 SKILL.md | 跑 `/author-skill`。菜单里有内置 `/create-skill` 时用它起草 |
 
 
-## architect
-
-没有「架构设计参赛者」（旧键 `architect runners`）时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。别名条目和被拒绝的条目，按本文件 arena 章节的系列规则处理：`claude-*` 一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 一个系列；被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`；找不到系列就用 `claude-opus-5-5-xhigh`。
-
-参赛者是 `Task`，`run_in_background: true`，`subagent_type: generalPurpose`，`model` 为该条目。
-
-## arena
-
-阶段 B：一条消息里 N 个 `Task`，`run_in_background: true`，`subagent_type: generalPurpose`（参赛者要写到自己的输出目录），`model` 为该条目。`auto` 或 `inherit-parent` 省略 `model`。
-
-没有「竞技场参赛者」（旧键 `arena runners`）时，一个 `claude-opus-5-5-xhigh`，一个 `grok-4.7-xhigh-fast`，而且这两个名字这次必须真能传给 `Task`。
-
-`Task` 拒绝了某个条目，就改用它所在系列的默认，并说一句。系列按前缀：`claude-*` 是一个系列；`grok-*`、`cursor-grok-*`、`composer-*` 是一个系列。被拒绝的 `composer-*` 改用 `grok-4.7-xhigh-fast`。找不到匹配的系列，就用 `claude-opus-5-5-xhigh`。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。别名条目不要拿去回退。
-
-阶段 C：参赛者都完成之后，再派一个 `Task`，`subagent_type: generalPurpose`，`readonly: true`，`model` 从「竞技场交叉评审」（旧键 `arena cross-judge pool`）里选一个，优先和父级不同系列。中文键优先。没有这行时，从上面两个默认里选一个不同系列的。
-
 ## author-skill
 
 斜杠菜单里如果有内置的 `/create-skill`，用它起草、测试、迭代。它认得 Cursor 自己的目录和校验。没有这条内置命令时，按上面的步骤写。
@@ -115,7 +99,7 @@ description: s per-role model choices (overrides skill defaults)
 alwaysApply: true
 ```
 
-下面只是原有双模型角色配置的示例，不是当前账号的可用性声明。新配置使用脚本生成 18 行，包括“检索和简单任务”；它的模型由当前宿主实际名单选择，省略轻量选择时共用常规模型。旧示例中的型号只有这次确实可派发时才可选用，不能据此覆盖已有配置。
+下面只是原有双模型角色配置的示例，不是当前账号的可用性声明。新配置使用脚本生成 15 行，包括“检索和简单任务”；它的模型由当前宿主实际名单选择，省略轻量选择时共用常规模型。旧示例中的型号只有这次确实可派发时才可选用，不能据此覆盖已有配置。
 
 写出的键用中文。文件里已有的旧英文键按 [角色键对照](../../setup-s-models/references/role-keys.md) 改写，模型值不动。
 
@@ -134,10 +118,7 @@ alwaysApply: true
 为什么的综合者: claude-opus-5-5-xhigh
 反思的工具视角: grok-4.7-xhigh-fast
 反思的判断、发散和综合: claude-opus-5-5-xhigh
-竞技场参赛者: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
-竞技场交叉评审: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
 群体作战的工作者: grok-4.7-xhigh-fast
-架构设计参赛者: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
 审问审查者: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
 # s 模型配置结束
 ```

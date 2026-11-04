@@ -30,7 +30,7 @@ DOC_VERSION_REFS = {
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "s-atlas": 80,
+    "s-atlas": 79,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.
@@ -39,6 +39,7 @@ RETIRED_SKILLS = frozenset({
     "animation-glossary",
     "animation-performance",
     "apple-design",
+    "arena",
     "ask-sonner",
     "blast-radius",
     "break-ui",
@@ -101,11 +102,8 @@ def read_json(path: Path) -> object:
 
 def write_json(path: Path, data: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
+    with path.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
 
 
 def plugin_files(root: Path) -> list[Path]:
@@ -192,7 +190,8 @@ def set_doc_versions(name: str, version: str) -> None:
         if not match:
             raise ValueError(f"{rel} has no version line matching {pattern.pattern!r}")
         start, end = match.span(1)
-        path.write_text(text[:start] + version + text[end:], encoding="utf-8", newline="\n")
+        with path.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text[:start] + version + text[end:])
 
 
 def load_lock() -> dict:

@@ -35,18 +35,6 @@
 | 写 SKILL.md | 跑 `/author-skill`。目录按本文件对应技能的章节 |
 
 
-## architect
-
-提示词里点名 `s-architect-runners-1` 和 `s-architect-runners-2`，或点名两个这次账号里真有的模型，写明等齐再汇总。
-
-## arena
-
-阶段 B 的提示词：Spawn one subagent per runner. Runner 1 is `s-arena-runners-1`. Runner 2 is `s-arena-runners-2`. Wait for all of them, then stop. 没有 toml 时，改成点名两个这次账号里真有的模型，并写上 `model_reasoning_effort`。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。
-
-阶段 C：等齐之后再派一个。Spawn one subagent, `s-arena-cross-judge-pool-<n>`（或点名池里选中的模型）. It only scores. Do not edit files. Wait for it. 提示词禁止改文件，不会变成单独的只读沙箱。
-
-`default_subagent_model` 拉不开多个参赛者。profile 不是每个参赛者一个。未核实：给单个子智能体选 profile。
-
 ## author-skill
 
 按上面的步骤写。文档化的项目位置包括 `.agents/skills/<技能名>/SKILL.md`。个人目录没有在这次核对的 Codex 文档里写成唯一路径时，先放仓库里的 `skills/<技能名>/SKILL.md`，并告诉用户。

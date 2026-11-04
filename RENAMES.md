@@ -40,7 +40,7 @@
 | 代码为什么这样 | why | 活跃 |
 | 先画架构草图 | architect | 活跃 |
 | 并行群体作战 | swarm | 活跃 |
-| 多方案竞技场 | arena | 活跃 |
+| 多方案竞技场 | arena | 已移除 |
 | 多模型对抗审查 | interrogate | 活跃 |
 | 清理AI腔 | unslop | 活跃 |
 | 清理代码腔 | deslop | 活跃 |

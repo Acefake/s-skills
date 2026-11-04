@@ -33,7 +33,7 @@ color: yellow
 | 正要问用户用哪种做法、该怎么做、该做什么 | 先读 [non-negotiable-rules.md](references/non-negotiable-rules.md) 的提问分类。能观察的事实走 [prototype.md](playbooks/prototype.md)；只读调查留在调查里 |
 | 任何代码 | 先说出数据形状，按 **principle-model-the-domain** 选结构 |
 | 跨函数边界的代码 | **architect**，实现前做并行设计探索 |
-| 并行分派 | 覆盖、比赛、连环检验、探索分区用 **swarm**；选基础或比拼用 **arena** |
+| 并行分派 | 覆盖、比赛、连环检验、探索分区用 **swarm** |
 | 有争议的设计 | 上线前用 **interrogate** |
 | 不简单的多步骤工作 | 写下产出检查点（Feature 第 4 步） |
 | 任何文字界面，包括给用户的回复 | **unslop**，并先读 [writing-the-reply.md](references/writing-the-reply.md)。给智能体的文字还要遵循 **author-skill** |

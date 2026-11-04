@@ -34,8 +34,7 @@ class RenderTest(unittest.TestCase):
     def test_small_uses_strong_only_for_hardest_and_one_reviewer(self):
         r = rows('省')
         self.assertEqual([k for k, v in r.items() if v == 'opus'], ['最难的任务'])
-        for key in ('竞技场参赛者', '竞技场交叉评审', '架构设计参赛者', '审问审查者'):
-            self.assertEqual(r[key], 'sonnet')
+        self.assertEqual(r['审问审查者'], 'sonnet')
 
     def test_medium_gives_judgment_to_strong_and_one_or_two_reviewers(self):
         r = rows('中')
@@ -45,12 +44,12 @@ class RenderTest(unittest.TestCase):
         self.assertEqual(rows('中', strong='sonnet')['审问审查者'], 'sonnet')
 
     def test_large_is_exactly_fast_then_strong(self):
-        self.assertEqual(rows('大')['竞技场参赛者'], 'sonnet, opus')
-        self.assertEqual(rows('large')['竞技场参赛者'], 'sonnet, opus')
+        self.assertEqual(rows('大')['审问审查者'], 'sonnet, opus')
+        self.assertEqual(rows('large')['审问审查者'], 'sonnet, opus')
 
     def test_unlimited_adds_third_family_without_duplicates(self):
-        self.assertEqual(rows('不限', third='haiku')['架构设计参赛者'], 'sonnet, opus, haiku')
-        self.assertEqual(rows('不限', third='opus')['架构设计参赛者'], 'sonnet, opus')
+        self.assertEqual(rows('不限', third='haiku')['审问审查者'], 'sonnet, opus, haiku')
+        self.assertEqual(rows('不限', third='opus')['审问审查者'], 'sonnet, opus')
 
     def test_single_model_still_meets_reviewer_count(self):
         r = rows('大', strong=None)
@@ -66,7 +65,7 @@ class RenderTest(unittest.TestCase):
     def test_skip_writes_inherit_budget_and_large_layout(self):
         block = m.render_block(m.INHERIT, rows('skip'))
         self.assertIn('# 预算: inherit-parent', block)
-        self.assertIn('竞技场参赛者: sonnet, opus', block)
+        self.assertIn('审问审查者: sonnet, opus', block)
 
     def test_effort_may_only_go_down(self):
         self.assertEqual(m.budget_line('大', 'high'), '# 预算: 大（high）')
@@ -123,7 +122,7 @@ class RoleEffortTest(unittest.TestCase):
         self.assertTrue(any('gpt-x' in p for p in m.check_text(block, ['sonnet', 'opus'])['problems']))
 
     def test_every_consumer_skill_points_to_the_value_format(self):
-        for name in ('arena', 'architect', 'interrogate', 'swarm', 'why', 'how', 'reflect'):
+        for name in ('interrogate', 'swarm', 'why', 'how', 'reflect'):
             text = (ROOT / f'plugins/s-atlas/skills/{name}/SKILL.md').read_text(encoding='utf-8')
             self.assertIn('../setup-s-models/references/role-keys.md', text, name)
 
@@ -196,7 +195,7 @@ class CheckTest(unittest.TestCase):
         self.assertTrue(any('gpt-x' in p for p in problems))
 
     def test_old_english_block_is_read_with_notes(self):
-        old = '# s model configuration\n# budget: small (medium)\nbug-fix: opus\narena runners: sonnet\n# end s model configuration\n'
+        old = '# s model configuration\n# budget: small (medium)\nbug-fix: opus\ninterrogate reviewers: sonnet\n# end s model configuration\n'
         result = m.check_text(old)
         self.assertEqual(result['budget'], '省')
         self.assertEqual(result['rows']['修 bug'], 'opus')

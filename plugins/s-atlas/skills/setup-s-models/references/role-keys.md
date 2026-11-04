@@ -15,15 +15,12 @@ setup-s-models 写出配置时用左列。各技能读取时左列优先，没�
 | 为什么的综合者 | why synthesizer |
 | 反思的工具视角 | reflect tooling |
 | 反思的判断、发散和综合 | reflect judgment, divergent, synthesizer |
-| 竞技场参赛者 | arena runners |
-| 竞技场交叉评审 | arena cross-judge pool |
 | 群体作战的工作者 | swarm workers |
-| 架构设计参赛者 | architect runners |
 | 审问审查者 | interrogate reviewers |
 
 ## 行值格式
 
-“检索和简单任务”是可选的轻量角色。旧 17 行配置缺少它时继续使用原工作流角色，不猜测模型、不自动补写。新生成配置共 18 行，轻量模型省略时使用常规模型。派发分类及用户显式模型优先级见[公共派发规则](../../s-mode/references/subagents.md)。轻量角色没有显式档位时，预算档位最多取 `medium`，其他角色维持原规则。
+“检索和简单任务”是可选的轻量角色。旧 17 行配置缺少它时继续使用原工作流角色，不猜测模型、不自动补写。新生成配置共 15 行，轻量模型省略时使用常规模型。派发分类及用户显式模型优先级见[公共派发规则](../../s-mode/references/subagents.md)。轻量角色没有显式档位时，预算档位最多取 `medium`，其他角色维持原规则。
 
 每一项可以是 `模型`，也可以是 `模型（档位）`，例如 `sonnet（medium）`、`opus（high）`、`inherit-parent（high）`。档位只能是 `low`、`medium`、`high`、`xhigh`、`max`。逗号分隔的列表里，每一项各带各的档位。
 

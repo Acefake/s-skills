@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 # 架构设计
 
-用 `not implemented` 的函数体和伪代码，勾勒出类型、函数签名、类的形状和模块边界。综合多个模型的视角，然后照着选定的草图把代码填进去。
+用 `not implemented` 的函数体和伪代码，勾勒出类型、函数签名、类的形状和模块边界。然后照着选定的草图把代码填进去。
 
 ## 开始
 
@@ -32,31 +32,29 @@ disable-model-invocation: true
 
 ## 阶段 B：画草图
 
-先判断职责归属、状态模型或接口是否存在实质未决选择。已有模式明确、只是机械移动或局部提取时，记录沿用的约定和最小草图即可，不运行 arena。存在实质选择时，用设计草图任务和阶段 A 的摸底产物运行 **arena**，把 `references/runner-prompt.md` 作为每个参赛者的提示词传进去。
-
-参赛者从当前软件的 s 模型配置里「架构设计参赛者」那一行取，没有再读旧键 `architect runners`。这一行代替竞技场的「竞技场参赛者」（旧键 `arena runners`）。路径见文末。没有这一行，就按 **arena** 的默认：一个更强的模型，一个较快的写代码模型。软件不能指定模型就省略。别名条目和被拒绝的条目，按 **arena** 阶段 A 的参赛者规则处理。Cursor 的 `claude-opus-5-5-xhigh` 和 `grok-4.7-xhigh-fast` 只在 Cursor 上、并且这次确实可用时才用。行值带括号时（如 `sonnet（medium）`），按[行值格式](../setup-s-models/references/role-keys.md)拆开：括号前是模型，括号里的档位当起始推理等级传给宿主，不要把括号连模型名一起传。
+先判断职责归属、状态模型或接口是否存在实质未决选择。已有模式明确、只是机械移动或局部提取时，记录沿用的约定和最小草图即可。存在实质选择时，用设计草图任务和阶段 A 的摸底产物，自己写出草图。
 
 存在多个可行设计时，比较至少两个有实际取舍的候选，按 **principle-exhaust-the-design-space** 探索。约束已确定唯一合理形状时，记录依据并沿用，不为了凑候选制造额外层级或抽象。
 
-在综合之前，用 [`references/design-red-flags.md`](references/design-red-flags.md) 筛查每一个候选。假设下一个贡献者是一个智能体：它只看到自己打开的文件，照抄离它最近的例子，走能编译通过的最短路径。优先选那种“一个从单个文件看起来正确的改动，对整个仓库也是正确的”的设计。
+在定稿之前，用 [`references/design-red-flags.md`](references/design-red-flags.md) 筛查每一个候选。假设下一个贡献者是一个智能体：它只看到自己打开的文件，照抄离它最近的例子，走能编译通过的最短路径。优先选那种“一个从单个文件看起来正确的改动，对整个仓库也是正确的”的设计。
 
 按接口深度比较可行的候选。优先选那个在更小、更简单的公开接口后面藏住更多复杂度的设计。一个功能丰富的接口，可以通过把能力集中起来、而不是把它分散到各层，来让调用链保持很短。
 
-运行 Arena 时，用它返回的设计包填写设计理由里的“Synthesis decision”（综合决定）。沿用已有设计时，在同一节说明依据，不虚构候选或综合过程。
+比较过多个候选时，在设计理由的“Synthesis decision”（综合决定）里记录所选候选和取舍。沿用已有设计时，在同一节说明依据，不虚构候选。
 
 ## 阶段 C：达成一致（可选）
 
-默认：带着综合好的设计直接进入实现。没有人工检查点。
+默认：带着定稿的设计直接进入实现。没有人工检查点。
 
-当调用者明确要求时，才加一个检查点：“/architect with checkpoint”（带检查点）、“stop and show me before implementing”（实现之前先停下来给我看），或者类似的话。那时就把综合好的设计展示出来，暂停等待批准。
+当调用者明确要求时，才加一个检查点：“/architect with checkpoint”（带检查点）、“stop and show me before implementing”（实现之前先停下来给我看），或者类似的话。那时就把定稿的设计展示出来，暂停等待批准。
 
-不管哪种情况，综合结果都可以作为单独的一个提交，这就是 **principle-foundational-thinking** 原则 skill 里“先搭脚手架”的方式。按照 **principle-outcome-oriented-execution** 原则 skill，在填充过程中出现计划好的、范围明确的破坏是可以的。如果想在实现之前对设计施加对抗性的压力，就对综合好的草图运行 **interrogate** skill。
+不管哪种情况，草图都可以作为单独的一个提交，这就是 **principle-foundational-thinking** 原则 skill 里“先搭脚手架”的方式。按照 **principle-outcome-oriented-execution** 原则 skill，在填充过程中出现计划好的、范围明确的破坏是可以的。如果想在实现之前对设计施加对抗性的压力，就对定稿的草图运行 **interrogate** skill。
 
 如果人对形状提出异议（在检查点上或者事后），就把它当作阶段 A 的证据。在写更多代码之前，重新摸底，重跑阶段 B。
 
 ## 阶段 D：照着草图实现
 
-把 `not implemented` 的函数体换成代码，把伪代码换成逻辑。综合好的草图就是约定。偏离它的地方是要指出来的信号，而不是要默默吸收的摩擦。如果一个函数需要一个草图没预料到的参数，就问一问：是草图错了，是漏了需求，还是实现越界了。
+把 `not implemented` 的函数体换成代码，把伪代码换成逻辑。定稿的草图就是约定。偏离它的地方是要指出来的信号，而不是要默默吸收的摩擦。如果一个函数需要一个草图没预料到的参数，就问一问：是草图错了，是漏了需求，还是实现越界了。
 
 ## 阶段 E：架构错了就推倒重来
 
@@ -78,7 +76,7 @@ disable-model-invocation: true
 1. 对已经建好的部分重新运行 **how** skill。
 2. 按照 **principle-redesign-from-first-principles**，重新设计，就好像这些新约束从第一天起就是假设一样。
 3. 按照 **principle-subtract-before-you-add** 原则 skill，先做减法再做加法。新的草图在变大之前，应该比旧的更小。
-4. 回到阶段 B，重新运行 arena。
+4. 回到阶段 B，重新画草图。
 
 ## 产出
 
@@ -86,10 +84,4 @@ disable-model-invocation: true
 
 ## 宿主适配
 
-这个 skill 把 [arena](../arena/SKILL.md) 的派法拿来画草图。角色行换成「架构设计参赛者」（旧键 `architect runners`），代替「竞技场参赛者」（旧键 `arena runners`）。中文键优先。拒绝规则、后台、只读评审，按[宿主适配](../../HOSTS.md)中当前平台参考的 arena 章节执行。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。
-
-Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
-
-### 派不出子智能体
-
-仍按阶段 B 判断是否需要探索。确有多个可行设计时，在主对话里写候选草图并比较；已有明确形状时直接沿用。
+这个 skill 不派子智能体。工具和配置见[宿主适配](../../HOSTS.md)。

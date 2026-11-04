@@ -32,18 +32,18 @@
 
 没有提问工具时，在对话里列编号选项并等回复。沉默、“随便”不当作批准。
 
-DeepSeek Harness 和 Hermes 的 18 个角色行与现有四个宿主相同。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，只替换这一段。旧标记 `# s model configuration` 到 `# end s model configuration` 是同一段，读取仍然有效；重写时换成中文标记和中文键。角色键的对照在 [角色键对照](skills/setup-s-models/references/role-keys.md)。两家的配置 YAML 都不放这段：`cordis.patch.yml` 和 `config.yaml` 里的其他条目保持原样。
+DeepSeek Harness 和 Hermes 的 15 个角色行与现有四个宿主相同。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，只替换这一段。旧标记 `# s model configuration` 到 `# end s model configuration` 是同一段，读取仍然有效；重写时换成中文标记和中文键。角色键的对照在 [角色键对照](skills/setup-s-models/references/role-keys.md)。两家的配置 YAML 都不放这段：`cordis.patch.yml` 和 `config.yaml` 里的其他条目保持原样。
 
 | 宿主 | 标记段 | 技能目录 | 列出可用模型 | 多个 profile |
 |---|---|---|---|---|
 | DeepSeek Harness | `$DSH_HOME/AGENTS.md`（未设置时是 `~/.dsh/AGENTS.md`） | `$DSH_HOME/skills/<name>/SKILL.md` | 选中 profile 的 `dsh --dump-config`，以及会话里的 `list_subagent_models` | 问用户用 `profiles/` 里的哪一个目录 |
 | Hermes | 选中 profile 的 `SOUL.md` | 该 profile 家目录下的 `skills/` | 只读 `hermes config get` 的 `model` 与 `providers`（或旧的 `custom_providers`） | `hermes profile list` 多于一个时问用户 |
 
-子代理不能按次接收模型时，18 行写 `inherit-parent`，派出时不传模型。推理档位按预算映射：不限 → `max`，大 → `xhigh`，中 → `high`，省 → `medium`。旧档名 `unlimited`、`large`、`medium`、`small` 相同。宿主没有的档位按该参考改到不超过目标的最高档。判断步骤、依据和未确认项在上面两份参考里。
+子代理不能按次接收模型时，15 行写 `inherit-parent`，派出时不传模型。推理档位按预算映射：不限 → `max`，大 → `xhigh`，中 → `high`，省 → `medium`。旧档名 `unlimited`、`large`、`medium`、`small` 相同。宿主没有的档位按该参考改到不超过目标的最高档。判断步骤、依据和未确认项在上面两份参考里。
 
 ## 共同行为
 
-三档模型按[公共派发规则](skills/s-mode/references/subagents.md)选择，当前宿主确认可派发的模型才可写入配置。新增“检索和简单任务”角色，英文键 `lookup and simple tasks`；旧 17 行配置无需迁移，缺少轻量行时沿用原角色。新配置共 18 行，允许三档共用模型。不能按次选模时全部使用继承模式，不声称已分流。重新配置默认保留已有角色选择，用户明确选择重新分配才加 `--replace-roles`，修改单行用 `--set`。模型或参数被拒绝时报告错误并交回主线程，不自动换型号。
+三档模型按[公共派发规则](skills/s-mode/references/subagents.md)选择，当前宿主确认可派发的模型才可写入配置。新增“检索和简单任务”角色，英文键 `lookup and simple tasks`；旧 17 行配置无需迁移，缺少轻量行时沿用原角色。新配置共 15 行，允许三档共用模型。不能按次选模时全部使用继承模式，不声称已分流。重新配置默认保留已有角色选择，用户明确选择重新分配才加 `--replace-roles`，修改单行用 `--set`。模型或参数被拒绝时报告错误并交回主线程，不自动换型号。
 
 - 不编造当前会话没有的工具、参数、模型或代理类型。使用实际可用的等价能力，并说明替代方式。
 - 模型配置只修改用户选定作用域内属于本技能的标记段或角色文件，保留其他内容。具体路径和模型字段按平台参考，不在各技能重复定义。

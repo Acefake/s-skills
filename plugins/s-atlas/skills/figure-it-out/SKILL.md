@@ -33,7 +33,7 @@ disable-model-invocation: true
 拆成不可再分、可以各自独立合入的单元。最不确定、风险最高的先做。脚手架和验证在功能之前（见 **principle-foundational-thinking** 原则 skill）。
 
 - 在做工作之前先搭好验证工具，并从改动之前的状态采集基线，让检查结果读起来就是“旧值 vs 新值”。
-- 对于单向门式的设计决定，运行 **architect** skill（它会运行 **arena**）。对于形状已经很具体的机械性工作，跳过它。对一个已经定下来的设计再开一次竞技场，就是过度设计（见 **principle-laziness-protocol** 原则 skill）。
+- 对于单向门式的设计决定，运行 **architect** skill。对于形状已经很具体的机械性工作，跳过它。对一个已经定下来的设计再做一轮方案比较，就是过度设计（见 **principle-laziness-protocol** 原则 skill）。
 - 决定哪些要分派出去。只在接缝处并行，并给每个工作者它自己的 worktree 或分支（见 **principle-separate-before-serializing-shared-state** 原则 skill）。不要分派过度。按 **s-mode** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
 - 把设计好的阶段列表写下来。人要审查的就是这份列表。
 

@@ -52,10 +52,7 @@ ROLES = (
     ('为什么的综合者', 'why synthesizer', STRONG),
     ('反思的工具视角', 'reflect tooling', FAST),
     ('反思的判断、发散和综合', 'reflect judgment, divergent, synthesizer', STRONG),
-    ('竞技场参赛者', 'arena runners', REVIEW),
-    ('竞技场交叉评审', 'arena cross-judge pool', REVIEW),
     ('群体作战的工作者', 'swarm workers', FAST),
-    ('架构设计参赛者', 'architect runners', REVIEW),
     ('审问审查者', 'interrogate reviewers', REVIEW),
 )
 ROLE_KEYS = tuple(key for key, _, _ in ROLES)
@@ -80,7 +77,7 @@ HEADER = (
     START,
     '# 一行一个角色。删掉一行就用技能默认。',
     '# inherit-parent 或 auto：跟父对话的模型，派子代理时不传模型。',
-    '# 逗号分隔的列表，每一项派一个子代理。竞技场交叉评审从中选一项。',
+    '# 逗号分隔的列表，每一项派一个子代理。',
 )
 
 

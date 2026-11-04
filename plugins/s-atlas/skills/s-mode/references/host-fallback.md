@@ -10,4 +10,4 @@
 
 正文和playbook中的Cursor模型名只用于当前确实可用的Cursor能力；其他宿主使用各自参考。“Subagents section”指本文“子智能体”一节。
 
-how、why、interrogate、swarm、reflect、arena、architect读取setup-s-models为当前宿主写的角色配置，不固定读Cursor路径；缺少配置或无法单独选模型时继承父会话并说明。
+how、why、interrogate、swarm、reflect、architect读取setup-s-models为当前宿主写的角色配置，不固定读Cursor路径；缺少配置或无法单独选模型时继承父会话并说明。

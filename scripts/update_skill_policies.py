@@ -25,7 +25,8 @@ def main():
             metadata = metadata.rstrip() + '\npolicy:\n' + setting + '\n'
         metadata = metadata.lstrip('\n')
         if not policy.exists() or policy.read_bytes().decode('utf-8') != metadata:
-            policy.write_text(metadata, encoding='utf-8', newline='\n')
+            with policy.open('w', encoding='utf-8', newline='\n') as handle:
+                handle.write(metadata)
     print(f'Automatic skills: {automatic}')
 
 

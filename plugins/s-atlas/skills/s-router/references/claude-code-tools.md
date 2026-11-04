@@ -38,10 +38,6 @@
 | 写 SKILL.md | 跑 `/author-skill`。个人 skill 可以放在 `~/.claude/skills/<名字>/SKILL.md` |
 
 
-## arena
-
-参赛者用 `Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `opus` 和 `sonnet`（完整 ID 仅当 `Agent` 定义允许）。交叉评审用 `Explore`。不写模型或写 `inherit` 就跟父级。
-
 ## author-skill
 
 Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目级放 `.claude/skills/`。使用对应技能正文定义的 frontmatter。
@@ -83,7 +79,7 @@ Claude Code 只写角色行，不另做智能体文件。写出的标记段是 `
 
 Claude Code 的模型名没有 `-medium` 这类档位后缀，别名只有 `sonnet`、`opus`、`haiku`，档位是另一个独立参数。`Agent` 工具有 `effort` 字段（取值 `low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的工具定义里真有这个字段才传。
 
-`/setup-s-models` 在 Claude Code 上用 `--role-effort` 生成，每个角色行都带档位，例如 `sonnet（medium）`。派发时：去掉括号得到 `model`，括号里的档位传给 `effort`。竞技场、审问等多项列表，每一项各用各的档位。
+`/setup-s-models` 在 Claude Code 上用 `--role-effort` 生成，每个角色行都带档位，例如 `sonnet（medium）`。派发时：去掉括号得到 `model`，括号里的档位传给 `effort`。审问等多项列表，每一项各用各的档位。
 
 预算映射：不限 → `max`，大 → `xhigh`，中 → `high`，省 → `medium`。目标档不在这次工具声明的取值里时，改到不超过目标的最高档，`# 预算` 括号里写实际档位。没有 `effort` 字段就不传，`# 预算` 仍写用户选的档名和映射后的档位，并说明这次派发不会带档位。
 
