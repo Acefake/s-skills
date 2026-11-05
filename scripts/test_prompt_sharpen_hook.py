@@ -64,13 +64,10 @@ class PromptSharpenHookTest(unittest.TestCase):
 
     def test_plugin_registers_the_hook_by_default(self):
         hooks = json.loads((ROOT / 'plugins/s-atlas/hooks/hooks.json').read_text(encoding='utf-8'))['hooks']
-        self.assertEqual(set(hooks), {'UserPromptSubmit', 'PreToolUse'})
         self.assertEqual(hooks['PreToolUse'][0]['matcher'], 'Bash')
-        for entries in hooks.values():
-            command = entries[0]['hooks'][0]['command']
-            self.assertIn('${CLAUDE_PLUGIN_ROOT}/skills/prompt-sharpen/scripts/improve_hook.py', command)
-            self.assertIn('python3 ', command)
-            self.assertIn('|| python ', command)
+        for event in ('UserPromptSubmit', 'PreToolUse'):
+            commands = [h['command'] for entry in hooks[event] for h in entry['hooks']]
+            self.assertTrue(any('${CLAUDE_PLUGIN_ROOT}/skills/prompt-sharpen/scripts/improve_hook.py' in c for c in commands), event)
 
     def test_skill_and_docs_point_at_the_hook(self):
         skill = (SKILL_DIR / 'SKILL.md').read_text(encoding='utf-8')

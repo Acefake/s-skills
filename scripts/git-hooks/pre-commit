@@ -1,0 +1,39 @@
+#!/bin/sh
+# 提交前检查插件版本和内容哈希是否同步，和 CI 的 check_marketplace 同一个检查。
+# 启用：git config core.hooksPath scripts/git-hooks
+# 内容变了就先运行 python scripts/bump_plugin_version.py s-atlas，再提交。
+# PRE_COMMIT_PYTHON 可指定解释器；否则依次找 .venv、python3、python，都要求 3.10+ 且装了 jsonschema。
+# 检查的是工作区，不是暂存区：只暂存部分改动时，结果可能和实际提交的内容不一致。
+
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+cd "$root" || exit 0
+
+usable() {
+  "$1" -c 'import sys, jsonschema; sys.exit(0 if sys.version_info >= (3, 10) else 1)' >/dev/null 2>&1
+}
+
+py=""
+if [ -n "$PRE_COMMIT_PYTHON" ]; then
+  usable "$PRE_COMMIT_PYTHON" && py="$PRE_COMMIT_PYTHON"
+else
+  for candidate in .venv/Scripts/python.exe .venv/bin/python python3 python; do
+    case "$candidate" in
+      .venv/*) [ -x "$candidate" ] || continue ;;
+      *) command -v "$candidate" >/dev/null 2>&1 || continue ;;
+    esac
+    if usable "$candidate"; then
+      py="$candidate"
+      break
+    fi
+  done
+fi
+
+if [ -z "$py" ]; then
+  echo "pre-commit: 找不到可用的 Python 3.10+（需装 jsonschema），跳过版本检查（CI 仍会检查）。" >&2
+  exit 0
+fi
+
+if ! "$py" -B scripts/check_marketplace.py; then
+  echo "pre-commit: 插件内容或版本未同步。内容变了就运行 python scripts/bump_plugin_version.py s-atlas 再提交。" >&2
+  exit 1
+fi
