@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="plugins/s-atlas/icon.png" width="128" alt="s-atlas" />
+  <img src="plugins/s-atlas/icon.svg" width="128" alt="s-atlas" />
 </p>
 
 <h1 align="center">s-atlas</h1>
