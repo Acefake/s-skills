@@ -2,13 +2,13 @@
   <img src="plugins/s-atlas/icon.png" width="128" alt="s-atlas" />
 </p>
 
-<h1 align="center">s-atlas 中文技能</h1>
+<h1 align="center">s-atlas</h1>
 
 <p align="center"><strong>把日常写代码的方式，写成技能。</strong></p>
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.0，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
+<p align="center">当前版本 1.0.1，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -251,16 +251,4 @@ git config core.hooksPath scripts/git-hooks   # 提交前自动检查版本和�
 
 ## 许可证
 
-s-atlas 按 [LICENSE](plugins/s-atlas/LICENSE) 发布。个别技能附带的组件许可证：
-
-- [`brainstorming`、`writing-plans` 等开发流程技能](plugins/s-atlas/LICENSE-dev-workflow)
-- [`frontend-design`](plugins/s-atlas/LICENSE-frontend-design)
-- [`refactor-architecture`](plugins/s-atlas/LICENSE-refactor-architecture)
-- [`prompt-sharpen`](plugins/s-atlas/LICENSE-prompt-improver)：改编自 [claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver)，MIT，Copyright (c) 2025 severity1
-- [`project-memory`](plugins/s-atlas/LICENSE-update-memory)：改编自 [update-memory](https://github.com/ondatra-ai/awesome-claude-mcp)，MIT，Copyright (c) 2025 Philosophical Ondatra
-- [`deslop`、`control-cli`、`control-ui`](plugins/s-atlas/LICENSE-deslop-control)
-- [`docx`、`pptx`、`xlsx`、`pdf`](plugins/s-atlas/LICENSE-document-skills)
-- [`impeccable`：许可证](plugins/s-atlas/LICENSE-impeccable) · [声明](plugins/s-atlas/NOTICE-impeccable.md)
-- [`archify`：许可证与声明](plugins/s-atlas/skills/archify/)
-- [`patent-disclosure`](plugins/s-atlas/skills/patent-disclosure/LICENSE)：改编自 [cn-patent](https://github.com/Zaoqu-Liu/cn-patent)，MIT，Copyright (c) 2026 Zaoqu Liu
-- [`patent-application`](plugins/s-atlas/skills/patent-application/LICENSE)：改编自 [cnipa-patent-writer](https://github.com/fnjialun/cnipa-patent-writer)，MIT，Copyright (c) 2026 fnjialun
+s-atlas 按 [LICENSE](plugins/s-atlas/LICENSE) 发布；第三方组件见[许可证与声明](docs/third-party-licenses.md)。
