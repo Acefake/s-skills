@@ -1,0 +1,28 @@
+{
+  "description": "prompt-sharpen: nudge the model to load the skill on vague prompts, and run long-lived Bash commands in the background",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/prompt-sharpen/scripts/improve_hook.py\" || python \"${CLAUDE_PLUGIN_ROOT}/skills/prompt-sharpen/scripts/improve_hook.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/skills/prompt-sharpen/scripts/improve_hook.py\" || python \"${CLAUDE_PLUGIN_ROOT}/skills/prompt-sharpen/scripts/improve_hook.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

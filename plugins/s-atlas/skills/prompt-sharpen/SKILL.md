@@ -12,7 +12,7 @@ description: "「优化提示词」「这句话说清楚再做」「需求太模
 
 把含糊的需求变成能直接执行的请求：先研究项目，再问只有用户能答的问题，最后带着研究结果和答案去做。
 
-本技能的流程和问题写法改写自 [severity1/claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver)（MIT，见 [LICENSE-prompt-improver](../../LICENSE-prompt-improver)）。由你点名，或模型判断需求确实含糊时加载。原项目靠钩子对每条提示词做判断；本库不装钩子。
+本技能的流程和问题写法改写自 [severity1/claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver)（MIT，见 [LICENSE-prompt-improver](../../LICENSE-prompt-improver)）。由你点名，或模型判断需求确实含糊时加载。原项目靠钩子对每条提示词做判断；本库随插件带一个同源的钩子：Claude Code 默认开启，Codex 需手动配置，细节和跳过方法见[钩子](references/hook.md)；其他宿主靠点名或描述触发。
 
 ## 什么时候用
 
@@ -101,3 +101,4 @@ description: "「优化提示词」「这句话说清楚再做」「需求太模
 - [研究方法](references/research-strategies.md)
 - [提问写法](references/question-patterns.md)
 - [示例](references/examples.md)
+- [钩子（Claude Code 默认开启，Codex 手动配置）](references/hook.md)
