@@ -1,10 +1,24 @@
-# s-atlas 中文技能
+<p align="center">
+  <img src="plugins/s-atlas/icon.png" width="128" alt="s-atlas" />
+</p>
 
-![s-atlas](plugins/s-atlas/icon.png)
+<h1 align="center">s-atlas 中文技能</h1>
 
-把日常写代码的方式写成技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。支持 Codex、Claude Code、Cursor、WorkBuddy。
+<p align="center"><strong>把日常写代码的方式，写成技能。</strong></p>
 
-当前版本 1.0.0，共 **82** 个技能：59 个按描述自动选用，23 个需点名调用。
+<p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、WorkBuddy。</p>
+
+<p align="center">当前版本 1.0.0，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
+
+<p align="center">
+  <a href="#安装">安装</a> ·
+  <a href="#使用">使用</a> ·
+  <a href="#技能一览">技能一览</a> ·
+  <a href="docs/architecture.md">架构说明</a> ·
+  <a href="https://github.com/Acefake/s-skills/releases/latest">发行版</a>
+</p>
+
+---
 
 ## 安装
 
