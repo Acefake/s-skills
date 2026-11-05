@@ -28,7 +28,7 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
 ## 一次一问
 
-用宿主的提问工具，一次一步。没有就给编号，等回复。每步都能跳过，但第 3、4 步必须各自单独问一次：不能因为前面选了预算、跳过了某步，或用户说「随便」，就把展示和确认合并或略过。
+按[初始化时的交互提问](../setup-s-instructions/references/interactive-confirmation.md)选择工具，一次一步；有 `request_user_input_async` 时优先使用，发出后等待用户回复。没有当前模式可用的工具或调用明确失败，才给编号、说明原因并等回复。每步都能跳过，但第 3、4 步必须各自单独问一次：不能因为前面选了预算、跳过了某步，或用户说「随便」，就把展示和确认合并或略过。
 
 1. **确认宿主。** 说出检测到的软件。选项是它，加上 Codex、Claude Code、Cursor、WorkBuddy、DeepSeek Harness（`dsh`）、Hermes agent（`hermes`）。两个都像，或和前四个冲突，就停在这里问。跳过时：检测明确就用它，否则不写文件。Codex、Claude Code、Cursor、WorkBuddy 的路径和派法不变，见各自参考。
 

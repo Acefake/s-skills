@@ -14,6 +14,8 @@ disable-model-invocation: true
 
 ## 1. 识别宿主
 
+所有提问先按[初始化时的交互提问](../setup-s-instructions/references/interactive-confirmation.md)选择当前模式可用的工具；异步提问后必须等用户回复才能继续。
+
 按 [setup-s-instructions](../setup-s-instructions/SKILL.md) 第 1 节识别 Codex、Claude Code、Cursor 或 WorkBuddy；无法确定才询问。只处理当前宿主。DeepSeek Harness（`dsh`）和 Hermes 没有全局提示词脚本：告诉用户第 2、3 步不适用，记为“提示词不适用”，直接进入第 4 步。
 
 ## 2. 检查全局提示词

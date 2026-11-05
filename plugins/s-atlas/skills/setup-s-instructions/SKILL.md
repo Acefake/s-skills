@@ -9,6 +9,8 @@ disable-model-invocation: true
 
 ## 1. 确认当前宿主并检查
 
+需要询问宿主或确认写入时，按[初始化时的交互提问](references/interactive-confirmation.md)选择当前模式可用的工具。异步提问后等用户明确回复，不把工具返回当作确认。
+
 根据当前会话工具和已加载配置识别 Codex、Claude Code、Cursor 或 WorkBuddy；无法确定才询问。只处理当前宿主，不顺便配置其他软件。
 
 用可用的 Python 3 运行本技能目录下的脚本，先不传 `--apply`：
