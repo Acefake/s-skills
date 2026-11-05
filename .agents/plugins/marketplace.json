@@ -1,7 +1,7 @@
 {
   "name": "s-skills",
   "interface": {
-    "displayName": "S 的中文技能"
+    "displayName": "s-skills"
   },
   "plugins": [
     {
