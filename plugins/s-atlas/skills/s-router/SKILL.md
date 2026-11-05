@@ -59,6 +59,8 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 | 审PR、分支、本地改动 | s-review，只读报告，含位置与P0/P1/P2 |
 | 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | archify；架构重构评审建议用户点名refactor-architecture（显式技能） |
 | 教我、解释代码怎么工作 | 点名how时加载；未点名时直接讲解，不自动加载显式技能 |
+| 需求含糊、缺目标或验收标准且读代码定不下来、优化提示词 | prompt-sharpen；需求已清楚就不用，bug 走 systematic-debugging，新功能走 brainstorming |
+| 建项目档案、同步项目记录、更新架构或规范文档 | project-memory |
 
 ## 共用执行规则
 

@@ -2,7 +2,7 @@
 
 ![s-atlas](plugins/s-atlas/icon.png)
 
-Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.8.2，共 **80** 个技能。
+Acefake 的中文 AI 编程技能库，插件名 `s-atlas`，当前版本 1.8.3，共 **81** 个技能。
 
 它把我日常写代码的方式写成了技能：先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证；界面要干净克制，代码按模块放、写文档注释。装上之后，Codex、Claude Code、Cursor、WorkBuddy会按你说的话自动挑对应的技能。
 
@@ -163,7 +163,7 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 「自动」是模型按描述选用；「手点」是 frontmatter 里有 `disable-model-invocation: true`，由用户点名或已授权工作流明确派发。
 
-### 自动选用（57 个）
+### 自动选用（59 个）
 
 | 技能 | 用途 |
 |---|---|
@@ -199,6 +199,8 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 | `s-review` | 中文代码审查：审 PR、分支或本地改动，带出处和严重程度，给合并结论 |
 | `control-ui` | 在真浏览器里操作界面取证 |
 | `control-cli` | 在本地操作命令行或 TUI |
+| `prompt-sharpen` | 需求含糊时先读项目、再问清缺口，改写成能直接执行的提示词。改编自 [claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver)（MIT） |
+| `project-memory` | 在项目里建立并维护架构、规范、决策记录，改动后按 diff 只更新受影响的部分。改编自 [update-memory](https://github.com/ondatra-ai/awesome-claude-mcp)（MIT） |
 
 Python 用 3.12，推荐 `uv`。docx 和 pptx 还要 Node.js（在技能目录里 `npm install` 一次）。看页面需要 LibreOffice 和 poppler。docx 阅读需要 pandoc。中文渲染检查要安装 Noto CJK（Debian/Ubuntu：`fonts-noto-cjk`）。PDF 的扫描件 OCR 另要 Tesseract。
 
@@ -301,6 +303,8 @@ s-atlas 按 [LICENSE](plugins/s-atlas/LICENSE) 发布。个别技能附带的组
 - [`brainstorming`、`writing-plans` 等开发流程技能：许可证](plugins/s-atlas/LICENSE-dev-workflow)
 - [`frontend-design`：许可证](plugins/s-atlas/LICENSE-frontend-design)
 - [`refactor-architecture`：许可证](plugins/s-atlas/LICENSE-refactor-architecture)
+- [`prompt-sharpen`：许可证](plugins/s-atlas/LICENSE-prompt-improver)（改编自 [claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver)，MIT，Copyright (c) 2025 severity1）
+- [`project-memory`：许可证](plugins/s-atlas/LICENSE-update-memory)（改编自 [update-memory](https://github.com/ondatra-ai/awesome-claude-mcp)，MIT，Copyright (c) 2025 Philosophical Ondatra）
 - [`deslop`、`control-cli`、`control-ui`：许可证](plugins/s-atlas/LICENSE-deslop-control)
 - [`docx`、`pptx`、`xlsx`、`pdf`：许可证](plugins/s-atlas/LICENSE-document-skills)
 - [`impeccable`：许可证](plugins/s-atlas/LICENSE-impeccable)
