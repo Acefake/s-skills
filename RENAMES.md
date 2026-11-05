@@ -1,5 +1,7 @@
 # 技能改名
 
+版本号从 1.0.0 重新开始计。下文的 1.x 版本号是重置前的旧编号，对应 git 历史里的提交，不是 Release。
+
 1.2.0 把技能目录和 `name` 改成英文小写 kebab-case，文件夹名等于 `name`。
 技能在 `plugins/s-atlas/skills/`，随插件分发。1.3.0 删掉了原来放在 `archive/s/` 的 39 个归档技能，名字留在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`。
 
