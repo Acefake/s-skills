@@ -165,7 +165,7 @@ class ConfigureTest(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.rules = self.root / 'AGENTS.md'
         self.rules.write_bytes(b'keep me\r\n')
 
