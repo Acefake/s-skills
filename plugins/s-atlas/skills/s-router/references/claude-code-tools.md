@@ -70,7 +70,9 @@ Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目
 
 ## setup-s-models
 
-三档模型按 [setup-s-models](../../setup-s-models/SKILL.md)推荐，按[公共派发规则](../../s-mode/references/subagents.md)选角色。新增“检索和简单任务”，只使用当前 `Agent` 定义真正接受的模型别名，轻量角色无显式档位时最多取 `medium`。旧配置缺少轻量行就沿用原角色；不能指定模型时继承，不虚构第三个型号。重新配置默认保留已有行，只有明确重新分配才使用 `--replace-roles`。模型和档位被拒绝时报告错误，不自动换型。
+只有原生 Claude 模型时，使用[Claude Code 原生三档](../../setup-s-models/references/native-budget-profiles.md#claude-code-原生)，不写 Sol、Astra 或 DP4.1 目标。明确角色档位优先于通用预算映射。备用模型与 effort 必须分别被当前 Agent 定义支持；没有 effort 字段时不能宣称已指定推理档位。用户级策略可放在上表确认的规则文件中，项目级按当前实际读取的 CLAUDE.md 建立入口。
+
+三档模型按 [setup-s-models](../../setup-s-models/SKILL.md)推荐，按[公共派发规则](../../s-mode/references/subagents.md)选角色。新增“检索与探索”，只使用当前 `Agent` 定义真正接受的模型别名，轻量角色无显式档位时最多取 `medium`。旧配置缺少轻量行就沿用原角色；不能指定模型时继承，不虚构第三个型号。重新配置默认保留已有行，只有明确重新分配才使用 `--replace-roles`。模型和档位被拒绝时报告错误，不自动换型。
 
 Claude Code 只写角色行，不另做智能体文件。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，角色键用中文。旧标记 `# s model configuration` 到 `# end s model configuration` 和旧英文键仍然可读；重写时换成中文。中文键优先。
 

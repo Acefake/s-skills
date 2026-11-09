@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.4，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
+<p align="center">当前版本 1.0.5，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -69,6 +69,8 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 ```
 
 支持插件命令的宿主用 `/s-atlas:技能名`，Codex 在技能选择器里选。自动选用按描述匹配，不保证每轮触发；点名的技能不会自己运行。
+
+在 T3 Code 中可使用底层宿主已发现的技能，并按 [T3 编排参考](plugins/s-atlas/skills/s-router/references/t3-code-tools.md) 配置六个跨提供商角色：检索与探索、方案设计、开发实现、专项攻坚、验证测试、独立评审。支持项目模型目标校验、派发参数解析和双文件配置预览/恢复；旧十五角色保持读取兼容，普通宿主与 T3 统一六角色。不新增市场安装包，持续编排台账与 PR 等待尚未接入。
 
 | 我想做什么 | 用 |
 |---|---|

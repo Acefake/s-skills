@@ -6,6 +6,8 @@ description: "「在这个会话里派子智能体做」「按计划逐个任务
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
+T3 Code 中先读 [T3 编排参考](../s-router/references/t3-code-tools.md)，按角色解析与路由派发。独立检出由 T3 创建绑定；任务说明带齐上下文，不假定父历史或未提交文件可见。等待遵循返回的 `next`。
+
 涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # 子代理驱动开发

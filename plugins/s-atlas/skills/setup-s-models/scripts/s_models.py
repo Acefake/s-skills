@@ -38,7 +38,7 @@ STRONG = 'strong'
 REVIEW = 'review'
 
 # (中文键, 旧英文键, 分组)。顺序就是写出顺序，和 SKILL.md 的模板一致。
-ROLES = (
+LEGACY_ROLES = (
     ('检索和简单任务', 'lookup and simple tasks', LIGHT),
     ('写功能和重构', 'feature, refactoring', FAST),
     ('修 bug', 'bug-fix', FAST),
@@ -55,10 +55,29 @@ ROLES = (
     ('群体作战的工作者', 'swarm workers', FAST),
     ('审问审查者', 'interrogate reviewers', REVIEW),
 )
+ROLE_GROUPS = {
+    '检索与探索': ('检索和简单任务', '怎么工作的探索者', '为什么的调查者'),
+    '方案设计': ('判断和写作', '怎么工作的讲解者', '为什么的综合者', '反思的判断、发散和综合'),
+    '开发实现': ('写功能和重构', '修 bug'),
+    '专项攻坚': ('性能问题', '爬坡优化', '最难的任务'),
+    '验证测试': ('群体作战的工作者',),
+    '独立评审': ('审问审查者', '反思的工具视角'),
+}
+ROLES = (
+    ('检索与探索', 'lookup and exploration', LIGHT),
+    ('方案设计', 'design', STRONG),
+    ('开发实现', 'implementation', FAST),
+    ('专项攻坚', 'specialist', STRONG),
+    ('验证测试', 'verification', FAST),
+    ('独立评审', 'review', REVIEW),
+)
 ROLE_KEYS = tuple(key for key, _, _ in ROLES)
-OLD_TO_NEW = {old: new for new, old, _ in ROLES}
-HARDEST = '最难的任务'
-LIGHT_ROLE = '检索和简单任务'
+LEGACY_ROLE = {old: new for new, group in ROLE_GROUPS.items() for old in group}
+LEGACY_ENGLISH = {english: chinese for chinese, english, _ in LEGACY_ROLES}
+OLD_TO_NEW = {**LEGACY_ROLE, **{english: LEGACY_ROLE[chinese] for english, chinese in LEGACY_ENGLISH.items()},
+              **{english: chinese for chinese, english, _ in ROLES}}
+HARDEST = '专项攻坚'
+LIGHT_ROLE = '检索与探索'
 
 # 预算：中文名 → (目标推理档位, 评审项数下限, 上限)。上限 None 表示不封顶。
 BUDGETS = {
@@ -210,10 +229,10 @@ def find_block(lines: list[str]) -> tuple[int, int] | None:
     return starts[0], ends[0]
 
 
-def parse_block(lines: list[str]) -> tuple[str | None, dict[str, str], list[str]]:
+def parse_block(lines: list[str], overrides: dict[str, str] | None = None) -> tuple[str | None, dict[str, str], list[str]]:
     """Return (raw budget text, Chinese-keyed rows, notes about the source)."""
     budget, rows, notes = None, {}, []
-    english: dict[str, str] = {}
+    aliases = {}
     for line in lines:
         text = line.strip()
         match = re.match(r'#\s*(预算|budget)\s*[:：]\s*(.+)$', text)
@@ -225,21 +244,28 @@ def parse_block(lines: list[str]) -> tuple[str | None, dict[str, str], list[str]
         if not text or text.startswith('#'):
             continue
         key, sep, value = text.partition(':')
-        if not sep:
-            notes.append(f'无法识别的行：{text}')
-            continue
         key, value = key.strip(), value.strip()
         if key in ROLE_KEYS:
             if key in rows:
-                notes.append(f'角色 {key} 出现了不止一次，以最后一次为准')
+                raise SModelsError(f'角色 {key} 重复，请保留一行')
             rows[key] = value
-        elif key in OLD_TO_NEW:
-            english[OLD_TO_NEW[key]] = value
-            notes.append(f'旧英文键 {key!r}，重写时会换成 {OLD_TO_NEW[key]}')
+        elif sep and key in OLD_TO_NEW:
+            source = LEGACY_ENGLISH.get(key, key)
+            priority = 1 if key in LEGACY_ENGLISH else 2
+            if source not in aliases or priority >= aliases[source][2]:
+                aliases[source] = (OLD_TO_NEW[key], value, priority)
+            notes.append(f'旧英文或旧角色键 {key!r}，新键为 {OLD_TO_NEW[key]}')
         else:
-            notes.append(f'不在 {len(ROLES)} 个角色里的键 {key!r}，重写时不会写回')
-    for key, value in english.items():
-        rows.setdefault(key, value)
+            notes.append(f'无法识别或不在六角色里的行：{text}')
+    rows.update(overrides or {})
+    for target in ROLE_KEYS:
+        if target in rows:
+            continue
+        values = {value for key, value, _ in aliases.values() if key == target}
+        if len(values) > 1:
+            raise SModelsError(f'{target} 对应旧角色模型冲突；明确选择新角色值或确认重新分配，不能自动合并')
+        if values:
+            rows[target] = values.pop()
     return budget, rows, notes
 
 
@@ -322,7 +348,20 @@ def resolve_role(text: str, role: str) -> dict:
     span = find_block(lines)
     if span is None:
         raise SModelsError('没有 s 模型配置段')
-    raw_budget, rows, _ = parse_block(lines[span[0] + 1:span[1]])
+    body = lines[span[0] + 1:span[1]]
+    legacy_name = LEGACY_ENGLISH.get(role, role)
+    exact = {}
+    if legacy_name in LEGACY_ROLE and not any(line.partition(':')[0].strip() == key for line in body):
+        for line in body:
+            name, sep, value = line.strip().partition(':')
+            if sep and name.strip() in (legacy_name, *[e for e, c in LEGACY_ENGLISH.items() if c == legacy_name]):
+                if name.strip() == legacy_name or key not in exact:
+                    exact[key] = value.strip()
+    if exact:
+        raw_budget, _, _ = parse_block([line for line in body if line.lstrip().startswith('#')])
+        rows = exact
+    else:
+        raw_budget, rows, _ = parse_block(body)
     if key not in rows:
         raise SModelsError(f'配置里没有角色 {key}，用技能默认')
     budget, _ = parse_budget_text(raw_budget)
@@ -335,6 +374,8 @@ def resolve_role(text: str, role: str) -> dict:
         name, level = split_item(part)
         if not name:
             raise SModelsError(f'{key} 有空项')
+        if name.startswith('t3:'):
+            raise SModelsError('T3 目标请用 t3_targets.py resolve，不能把别名当作模型名派发')
         if level is not None and level not in EFFORTS:
             raise SModelsError(f'{key} 的档位 {level} 不合法')
         items.append({'model': None if name in FREE_VALUES else name, 'effort': level or default})
@@ -455,7 +496,8 @@ def block_from_args(args: argparse.Namespace) -> str:
         lines = existing.splitlines()
         span = find_block(lines)
         if span is not None:
-            _, overrides, _ = parse_block(lines[span[0] + 1:span[1]])
+            selected = {OLD_TO_NEW.get(key, key): value for key, value in parse_sets(args.set).items()}
+            _, overrides, _ = parse_block(lines[span[0] + 1:span[1]], selected)
     overrides.update({OLD_TO_NEW.get(key, key): value for key, value in parse_sets(args.set).items()})
     rows = render_rows(budget, args.fast, args.strong, args.third, args.inherit, overrides, args.light)
     if args.role_effort:

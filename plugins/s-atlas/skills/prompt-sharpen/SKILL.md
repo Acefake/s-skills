@@ -1,6 +1,6 @@
 ---
 name: prompt-sharpen
-description: "「优化提示词」「这句话说清楚再做」「需求太模糊」「/prompt-sharpen」。需求缺目标、范围或验收标准，且读代码也定不下来时，先读项目、再问清缺口、改写成能直接执行的提示词。需求已清楚就不用。Use when a request is too vague to act on and the missing target, scope, or acceptance criteria cannot be found by reading the project."
+description: "「优化提示词」「这句话说清楚再做」「需求太模糊」「/prompt-sharpen」。目标、范围、约束或验收有影响结果的关键缺口，且对话无法补足时加载；先研究项目，能确定的自行补齐，必要时才提问并改写请求。Use when explicitly asked to improve a prompt, or when unresolved interpretations or missing requirements materially change the outcome; research before deciding whether to ask."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
@@ -16,13 +16,16 @@ description: "「优化提示词」「这句话说清楚再做」「需求太模
 
 ## 什么时候用
 
-- 用户点名，或需求缺目标、范围、验收标准，读代码也定不下来。
-- 需求已经清楚（有明确的文件、动作和结果）：不用本技能，直接做。
+- 用户点名时加载；未点名时，目标、作用对象、范围、约束或验收有会明显影响结果的缺口，且对话无法补足时加载。
+- 存在多个合理解释且会改变实现方向、修改范围或验收结果时，先加载再研究项目；不把“读代码也定不下来”作为加载前提。
+- 需求已有足够信息时直接做。没有文件名、提示词短不等于含糊；有动作、有文件名或是讨论也不保证没有关键缺口。
 - 以 `*` 开头、斜杠命令、`#` 开头的记忆指令：不介入。
 - bug、报错、测试失败：走 [systematic-debugging](../systematic-debugging/SKILL.md)，先查根因，读代码能定位的不提问。
 - 新功能或要改行为：设计问题交给 [brainstorming](../brainstorming/SKILL.md)，不在这里设计。
 
 用不用本技能的判断，先看对话里已有的信息：最近的报错、提到的文件、刚做的决定、用户正在看的文件。这些足够时，就等于需求已清楚。
+
+加载不等于必须提问。研究能确定的自行补齐；常规实现选择按项目惯例处理，合理假设简述即可。普通事实问答、明确的只读诊断、有上下文的“改吧”“测试一下”不因信息不完整强行介入。只问无法从证据确认、又确实影响结果且必须用户决定的问题。bug 与新功能分别由对应流程主导，已在那里确认的信息直接复用，不重复问。
 
 ## 流程
 
@@ -39,7 +42,7 @@ description: "「优化提示词」「这句话说清楚再做」「需求太模
 规则：
 
 - 问题必须来自研究，不能来自猜测或常识。
-- 简单缺口自己读。要读很多文件、跨多个目录时，按[公共派发规则](../s-mode/references/subagents.md)派只读检索子智能体，角色读 s 模型配置里的「检索和简单任务」。
+- 简单缺口自己读。要读很多文件、跨多个目录时，按[公共派发规则](../s-mode/references/subagents.md)派只读检索子智能体，角色读 s 模型配置里的「检索与探索」。
 - 派子智能体时，把对话里已有的文件路径、报错、已做的决定写进它的提示词；它看不到前面的对话。
 - 派不出子智能体时，主对话里自己读，并说一句没有换模型。
 

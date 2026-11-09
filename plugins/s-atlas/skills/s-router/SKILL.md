@@ -59,7 +59,7 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 | 审PR、分支、本地改动 | s-review，只读报告，含位置与P0/P1/P2 |
 | 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | archify；架构重构评审建议用户点名refactor-architecture（显式技能） |
 | 教我、解释代码怎么工作 | 点名how时加载；未点名时直接讲解，不自动加载显式技能 |
-| 需求含糊、缺目标或验收标准且读代码定不下来、优化提示词 | prompt-sharpen；需求已清楚就不用，bug 走 systematic-debugging，新功能走 brainstorming |
+| 优化提示词，或对话无法补足且会影响结果的需求关键缺口 | prompt-sharpen，加载后先研究，必要时才提问；不以已读代码为加载前提。bug 由 systematic-debugging、新功能设计由 brainstorming 主导，不重复澄清 |
 | 建项目档案、同步项目记录、更新架构或规范文档 | project-memory |
 
 ## 共用执行规则
@@ -73,6 +73,8 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 - 主任务可在当前或接续会话用[executing-plans](../executing-plans/SKILL.md)执行。用户要求或已授权工作流明确采用子代理时，才用[subagent-driven-development](../subagent-driven-development/SKILL.md)，不因工具可用而自动切换。
 
 ## 平台参考与用户指示
+
+在 T3 Code 编排环境中，涉及模型、委派或工作区时加读 [T3 Code 编排参考](references/t3-code-tools.md)，再读取底层宿主参考。显式 T3 目标失败不自动降级。
 
 派子代理、建工作树或收尾分支时，只读当前平台参考：[Codex](references/codex-tools.md)、[Claude Code](references/claude-code-tools.md)、[Cursor](references/cursor-tools.md)、[WorkBuddy](references/workbuddy-tools.md)、[DeepSeek Harness](references/dsh-tools.md)、[Hermes](references/hermes-tools.md)。
 

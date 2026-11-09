@@ -45,19 +45,19 @@
 
 ## how
 
-探索用内置 `explorer`，或 `s-how-explorer`。讲解用 `s-how-explainer`，或在提示词里点名模型。复杂情况写成：Spawn one explorer subagent per angle. Each uses model \<怎么工作的探索者，或旧键 how explorer\> with model_reasoning_effort \<档位\>. Wait for all, then spawn one explainer on model \<怎么工作的讲解者，或旧键 how explainer\>. 中文键优先。没有 toml、也点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
+探索用内置 `explorer`，或 `s-lookup-and-exploration`。讲解用 `s-design`，或在提示词里点名模型。复杂情况写成：Spawn one explorer subagent per angle. Each uses model \<检索与探索，或旧键 how explorer\> with model_reasoning_effort \<档位\>. Wait for all, then spawn one explainer on model \<方案设计，或旧键 how explainer\>. 中文键优先。没有 toml、也点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
 
 ## interrogate
 
 用话派，不要找 `Task` 的 `model` 参数。提示词写成：Spawn one subagent per reviewer. Reviewer A is `<name-a>`（或 “uses model \<A\> with model_reasoning_effort \<档位\>”）. Reviewer B is `<name-b>`. Wait for both. Do not edit files. Return each reviewer's findings.
 
-`<name-a>` 是 `~/.codex/agents/s-interrogate-reviewers-1.toml` 的 `name`。文件里的 `model` 和 `model_reasoning_effort` 优先于口头点名。没有这些文件时，在提示词里点名两个这次账号里真有的模型。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。`[agents].default_subagent_model` 是全体一个默认，拉不开两个审查者。profile 是整次进程的覆盖，不是每个审查者一个。未核实：给单个子智能体选 profile。
+`<name-a>` 是 `~/.codex/agents/s-review-1.toml` 的 `name`。文件里的 `model` 和 `model_reasoning_effort` 优先于口头点名。没有这些文件时，在提示词里点名两个这次账号里真有的模型。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。`[agents].default_subagent_model` 是全体一个默认，拉不开两个审查者。profile 是整次进程的覆盖，不是每个审查者一个。未核实：给单个子智能体选 profile。
 
 提示词里的「不要改文件」不会变成单独的只读沙箱。
 
 ## reflect
 
-提示词写成：Spawn three subagents. Judgment and divergent use `s-reflect-judgment-divergent-synthesizer`（或 model \<判断模型\>). Tooling uses `s-reflect-tooling`（或 model \<写代码模型\>). Wait for all three. Then spawn one synthesizer on the judgment model. 自定义智能体继承父级 MCP。提示词可以要求审查者不要改 skill 文件；这不会变成单独的只读沙箱。模型名用这次账号里真有的。
+提示词写成：Spawn three subagents. Judgment and divergent use `s-design`（或 model \<判断模型\>). Tooling uses `s-review`（或 model \<写代码模型\>). Wait for all three. Then spawn one synthesizer on the judgment model. 自定义智能体继承父级 MCP。提示词可以要求审查者不要改 skill 文件；这不会变成单独的只读沙箱。模型名用这次账号里真有的。
 
 ## s-agent
 
@@ -71,9 +71,11 @@
 
 ## setup-s-models：模型配置
 
-三档推荐与配置生成遵循 [setup-s-models](../../setup-s-models/SKILL.md)，派发遵循[公共派发规则](../../s-mode/references/subagents.md)。新增轻量角色“检索和简单任务”，英文键 `lookup and simple tasks`，需要单独模型时使用 `s-lookup-and-simple-tasks.toml`，其 `name` 为 `s-lookup-and-simple-tasks`。按当前会话实际支持的模型及推理档位配置，轻量角色无显式档位时最多取 `medium`。角色文件中的模型与档位必须和已确认的配置行一致；固定角色不能改模时选择匹配的已发现角色，不冒充已换模。旧配置缺少轻量行就使用原工作流角色。现有角色文件只在用户同意修改相应角色后同步，配置成功和新会话发现分别验收。
+只有原生 Codex 模型时，使用[Codex 原生三档](../../setup-s-models/references/native-budget-profiles.md#codex-原生)，不写 Claude 或 DP4.1 目标。明确角色档位优先于本参考的通用预算映射，不因预算较高就覆盖为 xhigh/max；备用须选择本会话实际发现的匹配角色，不临时改写同名 TOML。用户选择备用方案后仍须完整预览并最终确认写入。
 
-三档分类选中的角色优先于本文件 how、why、swarm 章节里的默认角色。轻量模型固定在文件中时，使用已发现的 `s-lookup-and-simple-tasks`；不能指定目标模型时报告未分流，不让固定的 `s-how-explorer` 等角色冒充轻量角色。
+三档推荐与配置生成遵循 [setup-s-models](../../setup-s-models/SKILL.md)，派发遵循[公共派发规则](../../s-mode/references/subagents.md)。新增轻量角色“检索与探索”，英文键 `lookup and exploration`，需要单独模型时使用 `s-lookup-and-exploration.toml`，其 `name` 为 `s-lookup-and-exploration`。按当前会话实际支持的模型及推理档位配置，轻量角色无显式档位时最多取 `medium`。角色文件中的模型与档位必须和已确认的配置行一致；固定角色不能改模时选择匹配的已发现角色，不冒充已换模。旧配置缺少轻量行就使用原工作流角色。现有角色文件只在用户同意修改相应角色后同步，配置成功和新会话发现分别验收。
+
+三档分类选中的角色优先于本文件 how、why、swarm 章节里的默认角色。轻量模型固定在文件中时，使用已发现的 `s-lookup-and-exploration`；不能指定目标模型时报告未分流，不让固定的 `s-lookup-and-exploration` 等角色冒充轻量角色。
 
 这里说的是本地 Codex（CLI、IDE、桌面应用）。ChatGPT Work 是另一套托管环境，不要把它的界面套过来。
 
@@ -81,7 +83,7 @@
 
 角色行仍写在 `~/.codex/AGENTS.md`（或 `AGENTS.override.md`）的标记段里。需要单独模型的角色，再写自定义智能体：
 
-- 路径：`~/.codex/agents/s-<角色>.toml`。设过 `CODEX_HOME` 就用那个目录下的 `agents/`。项目里可以用 `.codex/agents/`。只覆盖 `s-` 开头的文件。`<角色>` 仍按旧英文键生成，不用中文键：空格和逗号替换成连字符，连续连字符合并：`how explorer` 是 `s-how-explorer.toml`，列表角色再加 `-1`、`-2`。配置块里的键用中文，没有中文键再读旧英文键。`name` 字段等于不带扩展名的文件名。
+- 路径：`~/.codex/agents/s-<角色>.toml`。设过 `CODEX_HOME` 就用那个目录下的 `agents/`。项目里可以用 `.codex/agents/`。只覆盖 `s-` 开头的文件。`<角色>` 按六角色英文键生成，不用中文键：空格和逗号替换成连字符，连续连字符合并：`lookup and exploration` 是 `s-lookup-and-exploration.toml`，列表角色再加 `-1`、`-2`。配置块里的键用中文，没有中文键再读旧英文键。`name` 字段等于不带扩展名的文件名。
 - `inherit-parent` 和 `auto` 不写文件。
 - 必填 `name`、`description`、`developer_instructions`。`name` 是派出时用的名字，和文件名保持一致最省事，以 `name` 为准。
 - 同时写 `model` 和 `model_reasoning_effort`。模型名必须是这次账号里真有的。文档举例是 `gpt-6.1-sol`（重活）和 `gpt-6-luna`（快、窄），账号没有这两个名字就不要写。推理档位用 `# 预算`（旧行 `# budget`）的目标：不限对 `max`，大对 `xhigh`，中对 `high`，省对 `medium`。旧档名 `unlimited`、`large`、`medium`、`small` 相同。文档列出的档位还有 `ultra` 和 `low`。只有该模型支持这个档位才写入；不支持就写它支持的、不超过目标的最高档，并告诉用户。文档建议 GPT-6 Luna 从 `high` 起，GPT-6 Astra 从 `low` 起。
@@ -94,7 +96,7 @@ profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/con
 
 ## swarm
 
-提示词写成：Spawn N subagents in parallel. Each is `s-swarm-workers`（或 “each uses model \<模型\> with model_reasoning_effort \<档位\>”）. Wait for all of them, then summarize. 文件在 `~/.codex/agents/s-swarm-workers.toml`。没有文件时点名这次账号里真有的较快模型。文档举例 `gpt-6-luna` 只在账号有它时才用。
+提示词写成：Spawn N subagents in parallel. Each uses the configured role for its assigned responsibility（或 “each uses model \<模型\> with model_reasoning_effort \<档位\>”）. Wait for all of them, then summarize. 开发工作者选择已发现的 `s-implementation`，验证工作者选择已发现的 `s-verification`，其他职责选择对应六角色；配置位于 `~/.codex/agents/`。没有文件时点名这次账号里真有的较快模型。文档举例 `gpt-6-luna` 只在账号有它时才用。
 
 没有 `cloud_base_branch`。SHA 写在提示词里。未核实：有没有把子智能体放到另一台机器的参数。子智能体文档只写了跟父级同一套沙箱。并发很多时，看 `[agents].max_concurrent_threads_per_session`，不写则由 Codex 自己选默认。
 
@@ -104,7 +106,7 @@ profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/con
 
 ## why
 
-自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`，或 `s-why-investigators`。综合点名 `s-why-synthesizer`。提示词写成：Spawn one subagent per evidence source. Each uses model \<为什么的调查者，或旧键 why investigators\>. Wait for all, then spawn one synthesizer on model \<为什么的综合者，或旧键 why synthesizer\>. 中文键优先。Do not edit files. 模型名用这次账号里真有的。提示词禁止改文件，不会变成单独的只读沙箱。
+自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`，或 `s-lookup-and-exploration`。综合点名 `s-design`。提示词写成：Spawn one subagent per evidence source. Each uses model \<检索与探索，或旧键 why investigators\>. Wait for all, then spawn one synthesizer on model \<方案设计，或旧键 why synthesizer\>. 中文键优先。Do not edit files. 模型名用这次账号里真有的。提示词禁止改文件，不会变成单独的只读沙箱。
 
 ## show-me-your-work
 

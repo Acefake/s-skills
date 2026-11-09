@@ -36,7 +36,7 @@ class HostSupportTest(unittest.TestCase):
     def test_adding_workbuddy_does_not_enable_other_retired_products(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for name in ('T3 Code', 'OpenCode', 'CodeBuddy', 'Antigravity', 'Pi'):
+            for name in ('OpenCode', 'CodeBuddy', 'Antigravity', 'Pi'):
                 (root/'README.md').write_text('Supported: '+name, encoding='utf-8')
                 with self.subTest(name=name), patch.object(check_marketplace, 'ROOT', root):
                     problems = check_marketplace.Problems()
@@ -133,7 +133,7 @@ class HostSupportTest(unittest.TestCase):
                 check_marketplace.check_supported_hosts(problems)
                 self.assertFalse(problems.ok())
 
-    def test_host_validation_rejects_unsupported_active_instructions(self):
+    def test_host_validation_allows_t3_orchestration_instructions(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             skill = root / 'plugins/s-atlas/skills/example'
@@ -142,7 +142,7 @@ class HostSupportTest(unittest.TestCase):
             with patch.object(check_marketplace, 'ROOT', root):
                 problems = check_marketplace.Problems()
                 check_marketplace.check_supported_hosts(problems)
-                self.assertFalse(problems.ok())
+                self.assertTrue(problems.ok(), problems.items)
 
     def test_policy_update_does_not_rewrite_skill_instructions(self):
         with tempfile.TemporaryDirectory() as directory:

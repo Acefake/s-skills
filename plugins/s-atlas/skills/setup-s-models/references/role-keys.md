@@ -1,27 +1,30 @@
-setup-s-models 写出配置时用左列。各技能读取时左列优先，没有再读右列。
+# 六角色与旧键兼容
 
-| 中文键 | 旧英文键 |
+所有宿主新生成配置使用下表中文键，英文键用于宿主角色文件命名与兼容读取。
+
+| 中文键 | 英文键 |
 |---|---|
-| 检索和简单任务 | lookup and simple tasks |
-| 写功能和重构 | feature, refactoring |
-| 修 bug | bug-fix |
-| 性能问题 | perf-issue |
-| 爬坡优化 | hillclimb |
-| 判断和写作 | judgment and prose |
-| 最难的任务 | hardest tasks |
-| 怎么工作的探索者 | how explorer |
-| 怎么工作的讲解者 | how explainer |
-| 为什么的调查者 | why investigators |
-| 为什么的综合者 | why synthesizer |
-| 反思的工具视角 | reflect tooling |
-| 反思的判断、发散和综合 | reflect judgment, divergent, synthesizer |
-| 群体作战的工作者 | swarm workers |
-| 审问审查者 | interrogate reviewers |
+| 检索与探索 | lookup and exploration |
+| 方案设计 | design |
+| 开发实现 | implementation |
+| 专项攻坚 | specialist |
+| 验证测试 | verification |
+| 独立评审 | review |
+
+## 旧配置读取
+
+旧中文与旧英文键继续读取，映射由 scripts/s_models.py 的 LEGACY_ROLES 与 ROLE_GROUPS 维护。检索和简单任务、how explorer、why investigators 对应检索与探索；judgment and prose、how explainer、why synthesizer、reflect judgment, divergent, synthesizer 对应方案设计；feature, refactoring 和 bug-fix 对应开发实现；perf-issue、hillclimb、hardest tasks 对应专项攻坚；swarm workers 对应验证测试；interrogate reviewers 与 reflect tooling 对应独立评审。
+
+旧角色的精确请求仍读取原行；合并旧行时不同模型或档位必须报冲突。明确的新中文行优先，不自动丢弃其他旧选择。读取旧键不代表再生成十五行。Codex 新角色文件分别为 s-lookup-and-exploration、s-design、s-implementation、s-specialist、s-verification、s-review（评审列表按宿主规则加序号）；不自动删除用户的旧角色文件。
 
 ## 行值格式
 
-“检索和简单任务”是可选的轻量角色。旧 17 行配置缺少它时继续使用原工作流角色，不猜测模型、不自动补写。新生成配置共 15 行，轻量模型省略时使用常规模型。派发分类及用户显式模型优先级见[公共派发规则](../../s-mode/references/subagents.md)。轻量角色没有显式档位时，预算档位最多取 `medium`，其他角色维持原规则。
+首选/次选不使用逗号行值表示。逗号各项是独立派发名额；顺序备用与项目策略的持久化见[混合三档与顺序备用](mixed-budget-profiles.md)。现有解析器不自动故障转移。
 
-每一项可以是 `模型`，也可以是 `模型（档位）`，例如 `sonnet（medium）`、`opus（high）`、`inherit-parent（high）`。档位只能是 `low`、`medium`、`high`、`xhigh`、`max`。逗号分隔的列表里，每一项各带各的档位。
+只有本厂商工具的宿主选[原生三档](native-budget-profiles.md)。当前宿主能力先于候选型号，显式角色档位先于通用预算；不存在可用次选时报告，不伪造跨厂商回退。
 
-读取时先去掉括号里的档位，剩下的当模型名用，括号里的档位当这个角色的起始推理等级。带括号的整串传给宿主会被直接拒绝（Claude Code 的 `Agent` 对 `model` 做取值校验，会报 `InputValidationError`）。拿不准时运行 `python scripts/s_models.py resolve <配置文件> <角色>`（路径相对 `setup-s-models` 技能目录），它输出每一项的模型和档位，模型为空表示不传。宿主能随派发传推理档位时（Claude Code 的 `Agent` 工具有 `effort`）必须传；不能传就只用模型名，不要把括号原样当模型名交给宿主。没有括号时，起始等级取 `# 预算` 括号里的档位。
+每项可写 模型 或 模型（档位），例如 sonnet（medium）、inherit-parent（high）。逗号分隔的评审项各带各的档位。档位为 low、medium、high、xhigh、max；宿主按自己的参数与合法值映射，不能把括号原样传给 model。
+
+普通模式执行 python scripts/s_models.py resolve <规则文件> <角色> --json；T3 别名执行 scripts/t3_targets.py resolve，参考 [T3 编排参考](../../s-router/references/t3-code-tools.md)。检索与探索未指定档位时最多 medium；专项攻坚生成时比预算起始高一级，最高 max。显式档位优先。
+
+角色名与人数分开：只有独立评审的列表长度受预算约束，其他角色不会因为定义存在就自动运行。派发仍需要任务授权。

@@ -6,7 +6,7 @@
 
 ## 技能目录
 
-模型配置使用 [setup-s-models](../../setup-s-models/SKILL.md) 的三档推荐，新增“检索和简单任务”角色。派发按[公共派发规则](../../s-mode/references/subagents.md)，旧配置缺少轻量行时沿用原角色；新配置 15 行，不能按次选模时也包括轻量行的继承值。轻量角色无显式档位时最多取 `medium`，只传当前工具真正支持的参数。重新配置默认保留已有行，用户明确重新分配才使用 `--replace-roles`。模型或参数拒绝时报告错误并交回主线程，不另选型号。
+模型配置使用 [setup-s-models](../../setup-s-models/SKILL.md) 的三档推荐，新增“检索与探索”角色。派发按[公共派发规则](../../s-mode/references/subagents.md)，旧配置缺少轻量行时沿用原角色；新配置 6 行，不能按次选模时也包括轻量行的继承值。轻量角色无显式档位时最多取 `medium`，只传当前工具真正支持的参数。重新配置默认保留已有行，用户明确重新分配才使用 `--replace-roles`。模型或参数拒绝时报告错误并交回主线程，不另选型号。
 
 本地发现顺序以[技能子系统](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/skills.md)为准：
 
@@ -61,13 +61,13 @@ profile 是 `$DSH_HOME/profiles/<name>/` 里已经存在的目录。文档里的
 同时满足下面四条，才把确认过的 `<provider>/<model>` 写进角色行：
 
 1. 用来派出的那一个工具（出厂的 spawn；出厂的 fork 关掉选择）`modelSelection` 为 `true`，或旧字段 `modelSelectionSettings` 为 `true`。
-2. `--dump-config-schema` 声明了这个字段。schema 没有、dump 却有，写未确认，15 行用 `inherit-parent`。
+2. `--dump-config-schema` 声明了这个字段。schema 没有、dump 却有，写未确认，6 行用 `inherit-parent`。
 3. 工具的委派后端支持 `agentOptions`。文档写明进程内 spawn、fork 和 DSH SDK 支持；ACP、Codex、Claude Code 后端会在挂载时失败。dump 里的后端对不上这两组时，写未确认，用 `inherit-parent`。
-4. 有一条已经启用、且 `allowedModels` 非空的子代理模型选择设置。没有记录到的会话策略时，显式的 provider 和 model 只允许父代理当前路线。那不能按角色换模型，15 行写 `inherit-parent`。文档允许只提交 `reasoning_effort`：`provider` 和 `model` 必须成对出现，也可以只提交档位，由父级或配置补上路线。
+4. 有一条已经启用、且 `allowedModels` 非空的子代理模型选择设置。没有记录到的会话策略时，显式的 provider 和 model 只允许父代理当前路线。那不能按角色换模型，6 行写 `inherit-parent`。文档允许只提交 `reasoning_effort`：`provider` 和 `model` 必须成对出现，也可以只提交档位，由父级或配置补上路线。
 
 Web 和 Desktop 预设在 spawn 上打开选择和发现，fork 上两者都关。headless、SDK、ACP 的出厂配置不带发现工具。用户的 patch 可以改这些默认值，所以仍以 dump 为准。
 
-第 4 条不满足、前三条满足时：15 行写 `inherit-parent`，派出时不传 `provider` 和 `model`，只传映射后的 `reasoning_effort`。前三条有任一条不满足，或 schema 对不上：15 行写 `inherit-parent`，这三个字段都不传，并说明这次子代理的模型和档位都跟父级走。`agent-default-model` 的 `reasoningEffort` 只描述父级默认，不改那一行。
+第 4 条不满足、前三条满足时：6 行写 `inherit-parent`，派出时不传 `provider` 和 `model`，只传映射后的 `reasoning_effort`。前三条有任一条不满足，或 schema 对不上：6 行写 `inherit-parent`，这三个字段都不传，并说明这次子代理的模型和档位都跟父级走。`agent-default-model` 的 `reasoningEffort` 只描述父级默认，不改那一行。
 
 允许路线在顶层会话创建时采样一次，之后改设置不影响这个会话。写完标记段后新开对话。
 
