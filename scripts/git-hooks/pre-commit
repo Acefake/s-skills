@@ -1,7 +1,7 @@
 #!/bin/sh
 # 提交前检查插件版本和内容哈希是否同步，和 CI 的 check_marketplace 同一个检查。
 # 启用：git config core.hooksPath scripts/git-hooks
-# 内容变了就先运行 python scripts/bump_plugin_version.py s-atlas，再提交。
+# 内容变了就先运行 python scripts/bump_plugin_version.py s-wukong，再提交。
 # PRE_COMMIT_PYTHON 可指定解释器；否则依次找 .venv、python3、python，都要求 3.10+ 且装了 jsonschema。
 # 检查的是工作区，不是暂存区：只暂存部分改动时，结果可能和实际提交的内容不一致。
 
@@ -34,6 +34,6 @@ if [ -z "$py" ]; then
 fi
 
 if ! "$py" -B scripts/check_marketplace.py; then
-  echo "pre-commit: 插件内容或版本未同步。内容变了就运行 python scripts/bump_plugin_version.py s-atlas 再提交。" >&2
+  echo "pre-commit: 插件内容或版本未同步。内容变了就运行 python scripts/bump_plugin_version.py s-wukong 再提交。" >&2
   exit 1
 fi

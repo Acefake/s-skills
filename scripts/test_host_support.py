@@ -49,7 +49,7 @@ class HostSupportTest(unittest.TestCase):
             root = Path(directory)
             (root/'scripts').mkdir()
             shutil.copyfile(marketplace_lib.ROOT/'scripts/install_local_skills.ps1', root/'scripts/install_local_skills.ps1')
-            plugin = root/'plugins/s-atlas'
+            plugin = root/'plugins/s-wukong'
             for name in ('one', 'two'):
                 skill = plugin/'skills'/name
                 skill.mkdir(parents=True)
@@ -81,7 +81,7 @@ class HostSupportTest(unittest.TestCase):
             root = Path(directory)
             (root/'scripts').mkdir()
             shutil.copyfile(marketplace_lib.ROOT/'scripts/install_local_skills.ps1', root/'scripts/install_local_skills.ps1')
-            plugin = root/'plugins/s-atlas'
+            plugin = root/'plugins/s-wukong'
             (plugin/'skills/one').mkdir(parents=True)
             (plugin/'skills/one/SKILL.md').write_text('# one', encoding='utf-8')
             (plugin/'HOSTS.md').write_text('# new host', encoding='utf-8')
@@ -97,7 +97,7 @@ class HostSupportTest(unittest.TestCase):
     def test_hermes_agent_name_is_allowed(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            plugin = root / 'plugins/s-atlas'
+            plugin = root / 'plugins/s-wukong'
             skill = plugin / 'skills/setup-s-models'
             skill.mkdir(parents=True)
             (root / 'README.md').write_text('模型配置识别 Hermes agent。\n', encoding='utf-8')
@@ -136,7 +136,7 @@ class HostSupportTest(unittest.TestCase):
     def test_host_validation_allows_t3_orchestration_instructions(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            skill = root / 'plugins/s-atlas/skills/example'
+            skill = root / 'plugins/s-wukong/skills/example'
             skill.mkdir(parents=True)
             (skill / 'SKILL.md').write_text('Use T3 Code delegate_task before proceeding.\n', encoding='utf-8')
             with patch.object(check_marketplace, 'ROOT', root):
@@ -147,7 +147,7 @@ class HostSupportTest(unittest.TestCase):
     def test_policy_update_does_not_rewrite_skill_instructions(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            skill = root / 'plugins/s-atlas/skills/example'
+            skill = root / 'plugins/s-wukong/skills/example'
             (skill / 'agents').mkdir(parents=True)
             instructions = '---\nname: example\ndescription: example\n---\nUse the browser and preserve the model configuration.\n'
             (skill / 'SKILL.md').write_text(instructions, encoding='utf-8')
@@ -161,7 +161,7 @@ class HostSupportTest(unittest.TestCase):
     def test_host_validation_detects_missing_platform_guide(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            plugin = root / 'plugins/s-atlas'
+            plugin = root / 'plugins/s-wukong'
             plugin.mkdir(parents=True)
             (plugin / 'HOSTS.md').write_text('[Codex](skills/s-router/references/codex-tools.md)', encoding='utf-8')
             with patch.object(check_marketplace, 'ROOT', root):
@@ -176,7 +176,7 @@ class HostSupportTest(unittest.TestCase):
                 self.assertTrue(problems.ok(), problems.items)
 
     def test_host_guides_resolve_in_project_link_layout(self):
-        source = marketplace_lib.ROOT / 'plugins/s-atlas'
+        source = marketplace_lib.ROOT / 'plugins/s-wukong'
         with tempfile.TemporaryDirectory() as directory:
             installed = Path(directory) / '.agents'
             installed.mkdir()

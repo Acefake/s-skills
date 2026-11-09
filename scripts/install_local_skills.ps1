@@ -5,21 +5,26 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path $PSScriptRoot -Parent
-$sourceRoot = Join-Path $repoRoot 'plugins/s-atlas/skills'
+$sourceRoot = Join-Path $repoRoot 'plugins/s-wukong/skills'
 $adapterDirectory = if ($HostName -eq 'workbuddy') { '.codebuddy' } else { '.agents' }
 $adapterRoot = Join-Path $repoRoot $adapterDirectory
 $destinationRoot = Join-Path $adapterRoot 'skills'
-$commonFiles = @((Get-Item -LiteralPath (Join-Path $repoRoot 'plugins/s-atlas/HOSTS.md')))
-$commonFiles += @(Get-ChildItem -LiteralPath (Join-Path $repoRoot 'plugins/s-atlas') -File | Where-Object {
+$commonFiles = @((Get-Item -LiteralPath (Join-Path $repoRoot 'plugins/s-wukong/HOSTS.md')))
+$commonFiles += @(Get-ChildItem -LiteralPath (Join-Path $repoRoot 'plugins/s-wukong') -File | Where-Object {
     $_.Name -like 'LICENSE*' -or $_.Name -like 'NOTICE*'
 })
 if ($HostName -eq 'workbuddy') {
-    $ownershipPath = Join-Path $adapterRoot '.s-atlas-common-files.json'
+    $ownershipPath = Join-Path $adapterRoot '.s-wukong-common-files.json'
+    $legacyOwnershipPath = Join-Path $adapterRoot '.s-atlas-common-files.json'
     $ownership = $null
-    if (Test-Path -LiteralPath $ownershipPath) {
-        $ownership = Get-Content -LiteralPath $ownershipPath -Raw | ConvertFrom-Json
+    $recordPath = $ownershipPath
+    if (-not (Test-Path -LiteralPath $ownershipPath) -and (Test-Path -LiteralPath $legacyOwnershipPath)) {
+        $recordPath = $legacyOwnershipPath
+    }
+    if (Test-Path -LiteralPath $recordPath) {
+        $ownership = Get-Content -LiteralPath $recordPath -Raw | ConvertFrom-Json
         if ($ownership.schema -ne 1 -or -not $ownership.files) {
-            throw "Invalid installation record: $ownershipPath"
+            throw "Invalid installation record: $recordPath"
         }
     }
     foreach ($sourceFile in $commonFiles) {

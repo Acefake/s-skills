@@ -5,7 +5,7 @@ Plugin hosts keep the installed copy until the version string
 in plugin.json changes. Run this after editing a plugin, then commit the
 manifest, README/docs version lines and plugin-versions.lock.json updates together.
 
-    python3 scripts/bump_plugin_version.py s-atlas
+    python3 scripts/bump_plugin_version.py s-wukong
     python3 scripts/bump_plugin_version.py --all
 
 The script adds 1 to the last number: 1.0.0 becomes 1.0.1. To publish
@@ -50,7 +50,7 @@ def bump_one(lock: dict, name: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Bump plugin versions after content changes")
-    parser.add_argument("plugin", nargs="?", help="plugin id, for example s-atlas")
+    parser.add_argument("plugin", nargs="?", help="plugin id, for example s-wukong")
     parser.add_argument("--all", action="store_true", help="bump every plugin whose files changed")
     args = parser.parse_args()
     if args.all == bool(args.plugin):

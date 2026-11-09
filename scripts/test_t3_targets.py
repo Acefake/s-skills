@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-SCRIPTS = Path(__file__).resolve().parents[1] / 'plugins/s-atlas/skills/setup-s-models/scripts'
+SCRIPTS = Path(__file__).resolve().parents[1] / 'plugins/s-wukong/skills/setup-s-models/scripts'
 sys.path.insert(0, str(SCRIPTS))
 import s_models as models
 import t3_targets as t3
@@ -193,11 +193,21 @@ class ConfigureTest(unittest.TestCase):
     def test_preview_then_apply_is_idempotent_and_preserves_other_text(self):
         preview = self.configure()
         self.assertIn('keep me', preview['rules'])
-        self.assertFalse((self.root / 's-atlas.t3.json').exists())
+        self.assertFalse((self.root / 's-wukong.t3.json').exists())
         self.assertEqual(self.rules.read_bytes(), b'keep me\r\n')
         self.configure(True)
         self.assertTrue(self.rules.read_bytes().startswith(b'keep me\r\n'))
         self.assertEqual(self.configure(True)['changed'], False)
+
+    def test_legacy_target_name_is_read_and_not_overwritten(self):
+        legacy = self.root / 's-atlas.t3.json'
+        legacy.write_text(json.dumps(config()), encoding='utf-8')
+        self.assertEqual(t3.existing_or_current(self.root, t3.TARGET_FILE, t3.LEGACY_TARGET_FILE), legacy)
+        with self.assertRaises(t3.ConfigError) as caught:
+            self.configure()
+        self.assertIn('s-atlas.t3.json', str(caught.exception))
+        self.assertFalse((self.root / 's-wukong.t3.json').exists())
+        self.assertTrue(legacy.is_file())
 
     def test_second_replace_failure_rolls_back(self):
         original = t3.atomic_write
@@ -209,7 +219,7 @@ class ConfigureTest(unittest.TestCase):
             with self.assertRaises(OSError):
                 self.configure(True)
         self.assertEqual(self.rules.read_bytes(), b'keep me\r\n')
-        self.assertFalse((self.root / 's-atlas.t3.json').exists())
+        self.assertFalse((self.root / 's-wukong.t3.json').exists())
 
     def test_backup_dangling_symlink_does_not_write_outside_project(self):
         outside = self.root / 'outside'

@@ -1,9 +1,9 @@
 # 技能改名
 
-版本号从 1.0.0 重新开始计。下文的 1.x 版本号是重置前的旧编号，对应 git 历史里的提交，不是 Release。
+版本号从 1.0.0 重新开始计。下文的 1.x 版本号是重置前的旧编号，对应 git 历史里的提交，不是 Release。1.0.10 起插件名是 `s-wukong`，目录是 `plugins/s-wukong/`；下面各条仍按当时的名字记录。
 
 1.2.0 把技能目录和 `name` 改成英文小写 kebab-case，文件夹名等于 `name`。
-技能在 `plugins/s-atlas/skills/`，随插件分发。1.3.0 删掉了原来放在 `archive/s/` 的 39 个归档技能，名字留在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`。
+技能在 `plugins/s-wukong/skills/`，随插件分发。1.3.0 删掉了原来放在 `archive/s/` 的 39 个归档技能，名字留在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`。
 
 活跃 61：原来的 50 个（含 frontend-design）加上 11 个开发流程技能。
 归档 38：原来的 35 个，加上 3 个和现有技能重叠、因此不进 `skills/` 的开发流程技能。
@@ -30,7 +30,7 @@
 
 ## 回滚
 
-要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s-atlas/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
+要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s-wukong/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
 整次改名可以回退 1.2.0 的提交。旧中文名不再作为目录或 `name` 使用。
 
 ## 旧名到新名

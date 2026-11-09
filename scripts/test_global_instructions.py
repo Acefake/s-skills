@@ -10,11 +10,11 @@ from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / 'plugins/s-atlas/skills/setup-s-instructions/scripts/global_instructions.py'
+SCRIPT = ROOT / 'plugins/s-wukong/skills/setup-s-instructions/scripts/global_instructions.py'
 
 
 def full_rules(legacy=False):
-    text = (ROOT / 'plugins/s-atlas/AGENTS.md').read_text(encoding='utf-8')
+    text = (ROOT / 'plugins/s-wukong/AGENTS.md').read_text(encoding='utf-8')
     text = text[text.index('收到任务后，在读文件、跑命令、提问或作答之前：'):]
     if legacy:
         # Reproduce the existing user configuration: plain names, no patent rows.
@@ -61,7 +61,26 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.module.sync_global('codex', home=self.home, apply=True)
         result = path.read_text(encoding='utf-8')
         self.assertEqual(result, '用户前缀\n' + self.module.managed_block() + '\n用户后缀\n')
-        self.assertEqual(path.with_name(path.name + '.s-atlas.bak').read_bytes(), original)
+        self.assertEqual(path.with_name(path.name + '.s-wukong.bak').read_bytes(), original)
+
+    def test_previous_plugin_markers_are_replaced(self):
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        old = '<!-- s-atlas:instructions:start -->\n## s-atlas 全局技能规则\n\nold rules\n<!-- s-atlas:instructions:end -->'
+        path.write_text('前缀\n' + old + '\n后缀\n', encoding='utf-8')
+        self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated')
+        self.module.sync_global('codex', home=self.home, apply=True)
+        text = path.read_text(encoding='utf-8')
+        self.assertEqual(text, '前缀\n' + self.module.managed_block() + '\n后缀\n')
+        self.assertNotIn('s-atlas:instructions', text)
+
+    def test_pre_rename_unmarked_rules_migrate(self):
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        old = (SCRIPT.parent.parent / 'references/full-instructions-v7.txt').read_text(encoding='utf-8').strip()
+        path.write_text('前缀\n' + old + '\n后缀\n', encoding='utf-8')
+        self.module.sync_global('codex', home=self.home, apply=True)
+        self.assertEqual(path.read_text(encoding='utf-8'), '前缀\n' + self.module.managed_block() + '\n后缀\n')
 
     def test_rule_change_with_same_version_is_detected(self):
         self.module.sync_global('claude-code', home=self.home, apply=True)
@@ -71,7 +90,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             self.assertEqual(self.module.sync_global('claude-code', home=self.home)['status'], 'configured')
 
     def test_legacy_short_rules_migrate_without_duplicate(self):
-        source = (ROOT / 'plugins/s-atlas/AGENTS-snippet.md').read_text(encoding='utf-8')
+        source = (ROOT / 'plugins/s-wukong/AGENTS-snippet.md').read_text(encoding='utf-8')
         short = source.split('```text\n', 1)[1].split('\n```', 1)[0]
         path = self.home / '.codex/AGENTS.md'
         path.parent.mkdir()
@@ -120,7 +139,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             code, result = self.run_cli('workbuddy', apply=True)
             self.assertEqual((code, result['status'], result['changed']), (0, 'configured', expected))
             self.assertTrue(path.read_bytes().startswith(original))
-        self.assertEqual(path.with_name(path.name+'.s-atlas.bak').read_bytes(), original)
+        self.assertEqual(path.with_name(path.name+'.s-wukong.bak').read_bytes(), original)
         self.assertFalse((self.home/'.workbuddy').exists())
 
     def test_create_global_codex_and_repeat_without_changes(self):
@@ -128,7 +147,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         path = self.home / '.codex/AGENTS.md'
         self.assertTrue(result['changed'])
         first = path.read_bytes()
-        self.assertIn('s-atlas 全局技能规则', first.decode('utf-8'))
+        self.assertIn('s-wukong 全局技能规则', first.decode('utf-8'))
         result = self.module.sync_global('codex', home=self.home, apply=True)
         self.assertFalse(result['changed'])
         self.assertEqual(first, path.read_bytes())
@@ -140,7 +159,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         path.write_bytes(original)
         self.module.sync_global('claude-code', home=self.home, apply=True)
         self.assertTrue(path.read_bytes().startswith(original))
-        self.assertEqual(path.with_name(path.name + '.s-atlas.bak').read_bytes(), original)
+        self.assertEqual(path.with_name(path.name + '.s-wukong.bak').read_bytes(), original)
         first = path.read_bytes()
         self.module.sync_global('claude-code', home=self.home, apply=True)
         self.assertEqual(path.read_bytes(), first)
@@ -170,7 +189,7 @@ class GlobalInstructionsTest(unittest.TestCase):
                     expected = ('\ufeff用户偏好\r\n\r\n' + self.module.managed_block().replace('\n', '\r\n') + '\r\n其他配置\r\n').encode('utf-8')
                     self.assertEqual(path.read_bytes(), expected)
                     self.assertFalse(self.module.sync_global(host, home=self.home, apply=True)['changed'])
-                    self.assertTrue(path.with_name(path.name + '.s-atlas.bak').exists())
+                    self.assertTrue(path.with_name(path.name + '.s-wukong.bak').exists())
 
     def test_cli_migrates_existing_legacy_full_rules_for_both_hosts(self):
         for host, relative in (('codex', '.codex/AGENTS.md'), ('claude-code', '.claude/CLAUDE.md')):
@@ -185,7 +204,7 @@ class GlobalInstructionsTest(unittest.TestCase):
                 for changed in (True, False):
                     code, result = self.run_cli(host, apply=True)
                     self.assertEqual((code, result['status'], result['changed']), (0, 'configured', changed))
-                self.assertEqual(path.with_name(path.name + '.s-atlas.bak').read_bytes(), original)
+                self.assertEqual(path.with_name(path.name + '.s-wukong.bak').read_bytes(), original)
 
     def test_previous_how_route_is_replaced_with_current_policy(self):
         current = '| 教我、这块代码怎么工作 | 点名 how 时加载；未点名时直接讲解，保持显式调用政策 |'
@@ -301,7 +320,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             with self.assertRaises(self.module.ConfigurationError):
                 self.module.sync_global('claude-code', home=self.home, apply=True)
             self.assertEqual(path.read_bytes(), original.encode('utf-8'))
-        self.assertFalse(path.with_name(path.name + '.s-atlas.bak').exists())
+        self.assertFalse(path.with_name(path.name + '.s-wukong.bak').exists())
 
     def test_cli_reports_missing_apply_configured_and_cursor_without_writing_globals(self):
         environment = dict(os.environ)
@@ -337,7 +356,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.assertEqual(list(self.home.iterdir()), [])
 
     def test_daily_links_resolve_and_new_skill_is_explicit(self):
-        skills = ROOT / 'plugins/s-atlas/skills'
+        skills = ROOT / 'plugins/s-wukong/skills'
         guide = skills / 'setup-s-instructions/references/daily-check.md'
         self.assertTrue(guide.is_file())
         for path in skills.glob('*/SKILL.md'):
@@ -412,7 +431,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.assertTrue(updated.startswith(b'prefix\r\n'))
         self.assertTrue(updated.endswith(b'\r\nsuffix\r\n'))
         self.assertNotIn(b'\n', updated.replace(b'\r\n', b''))
-        self.assertEqual(path.with_name(path.name + '.s-atlas.bak').read_bytes(), original)
+        self.assertEqual(path.with_name(path.name + '.s-wukong.bak').read_bytes(), original)
         self.assertFalse(self.module.sync_global('claude-code', home=self.home, apply=True)['changed'])
 
     def test_unreadable_encoding_is_reported_without_modification(self):
@@ -434,7 +453,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             with self.assertRaises(PermissionError):
                 self.module.sync_global('codex', home=self.home, apply=True)
         self.assertEqual(path.read_bytes(), original)
-        backup = path.with_name(path.name + '.s-atlas.bak')
+        backup = path.with_name(path.name + '.s-wukong.bak')
         self.assertEqual(backup.read_bytes(), original)
         self.assertEqual(set(path.parent.iterdir()), {path, backup})
 

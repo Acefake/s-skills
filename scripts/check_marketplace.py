@@ -321,13 +321,13 @@ def check_description(label: str, text: str, problems: Problems) -> None:
 
 
 def check_agent_descriptions(problems: Problems) -> None:
-    root = ROOT / "plugins" / "s-atlas" / "agents"
+    root = ROOT / "plugins" / "s-wukong" / "agents"
     found = sorted(path for path in root.glob("*.md")) if root.is_dir() else []
     if len(found) != 2:
-        problems.add(f"plugins/s-atlas/agents: found {len(found)} agents, expected 2")
+        problems.add(f"plugins/s-wukong/agents: found {len(found)} agents, expected 2")
     for path in found:
         text = path.read_text(encoding="utf-8")
-        check_description(f"plugins/s-atlas/agents/{path.name}", text, problems)
+        check_description(f"plugins/s-wukong/agents/{path.name}", text, problems)
 
 
 def check_skills(problems: Problems) -> None:
@@ -392,11 +392,11 @@ def check_local_links(directory: Path, text: str, problems: Problems, label: str
             problems.add(f"{label}: broken local link {target}")
 
 
-# A skill is named in backticks, in bold, or as a /s-atlas: command.
+# A skill is named in backticks, in bold, or as a /s-wukong: command.
 SKILL_NAME_RES = (
     re.compile(r"`([a-z0-9]+(?:-[a-z0-9]+)+)`"),
     re.compile(r"\*\*([a-z0-9]+(?:-[a-z0-9]+)+)\*\*"),
-    re.compile(r"/s-atlas:([a-z0-9]+(?:-[a-z0-9]+)+)"),
+    re.compile(r"/s-wukong:([a-z0-9]+(?:-[a-z0-9]+)+)"),
 )
 
 
@@ -414,7 +414,7 @@ def skill_reference_problems(text: str, active: set[str], archived: set[str]) ->
 
 
 def check_skill_references(problems: Problems) -> None:
-    skills_root = ROOT / "plugins" / "s-atlas" / "skills"
+    skills_root = ROOT / "plugins" / "s-wukong" / "skills"
     active = {path.name for path in skills_root.iterdir() if path.is_dir()}
     archived = set(RETIRED_SKILLS)
     for path in sorted(skills_root.rglob("*.md")):
@@ -427,10 +427,10 @@ def check_supported_hosts(problems: Problems) -> None:
     """Reject retired adapters in maintained entry points and platform guides."""
     # Nous Research 的 Hermes agent 是支持的宿主。退役名录不再包含 Hermes。
     retired = re.compile(r"\b(?:OpenCode|Antigravity|Pi)\b|(?<![./\\])\bCodeBuddy\b(?![./\\])", re.I)
-    for relative in (".codebuddy-plugin/marketplace.json", "plugins/s-atlas/.codebuddy-plugin/plugin.json"):
+    for relative in (".codebuddy-plugin/marketplace.json", "plugins/s-wukong/.codebuddy-plugin/plugin.json"):
         if (ROOT / relative).exists():
             problems.add(f"unsupported host adapter: {relative}")
-    plugin = ROOT / "plugins/s-atlas"
+    plugin = ROOT / "plugins/s-wukong"
     paths = [ROOT / "README.md", plugin / "HOSTS.md", plugin / "AGENTS.md", plugin / "AGENTS-snippet.md"]
     paths.extend((plugin / "skills").glob("*/SKILL.md"))
     paths.extend((plugin / "skills/s-router/references").glob("*.md"))

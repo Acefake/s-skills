@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL_DIR = ROOT / 'plugins/s-atlas/skills/prompt-sharpen'
+SKILL_DIR = ROOT / 'plugins/s-wukong/skills/prompt-sharpen'
 HOOK = SKILL_DIR / 'scripts/improve_hook.py'
 
 
@@ -35,7 +35,7 @@ class PromptSharpenHookTest(unittest.TestCase):
         out = run_hook(prompt_event('把登录弄好一点'))
         self.assertEqual(out['hookEventName'], 'UserPromptSubmit')
         self.assertIn('把登录弄好一点', out['additionalContext'])
-        self.assertIn('s-atlas:prompt-sharpen', out['additionalContext'])
+        self.assertIn('s-wukong:prompt-sharpen', out['additionalContext'])
 
     def test_quotes_and_backslashes_are_escaped_in_the_quoted_prompt(self):
         out = run_hook(prompt_event('改 "a\\b"'))
@@ -63,7 +63,7 @@ class PromptSharpenHookTest(unittest.TestCase):
         self.assertIsNone(run_hook({'hook_event_name': 'Stop'}))
 
     def test_plugin_registers_the_hook_by_default(self):
-        hooks = json.loads((ROOT / 'plugins/s-atlas/hooks/hooks.json').read_text(encoding='utf-8'))['hooks']
+        hooks = json.loads((ROOT / 'plugins/s-wukong/hooks/hooks.json').read_text(encoding='utf-8'))['hooks']
         self.assertEqual(hooks['PreToolUse'][0]['matcher'], 'Bash')
         for event in ('UserPromptSubmit', 'PreToolUse'):
             commands = [h['command'] for entry in hooks[event] for h in entry['hooks']]
@@ -79,7 +79,7 @@ class PromptSharpenHookTest(unittest.TestCase):
         self.assertIn('~/.codex/hooks.json', doc)
         self.assertIn('commandWindows', doc)
         self.assertIn('../../../LICENSE-prompt-improver', doc)
-        self.assertTrue((ROOT / 'plugins/s-atlas/LICENSE-prompt-improver').is_file())
+        self.assertTrue((ROOT / 'plugins/s-wukong/LICENSE-prompt-improver').is_file())
 
 
 if __name__ == '__main__':

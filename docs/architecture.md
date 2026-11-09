@@ -1,12 +1,12 @@
-# s-atlas 技能全景：路由、职责与调用边界
+# s-wukong 技能全景：路由、职责与调用边界
 
-s-atlas 是一套由代理读取的技能与本地工具，不是独立运行的 Agent 服务。Codex、Claude Code、Cursor、WorkBuddy 提供会话和执行能力；本仓库提供技能描述、任务流程、宿主适配和确定性的配置工具。
+s-wukong 是一套由代理读取的技能与本地工具，不是独立运行的 Agent 服务。Codex、Claude Code、Cursor、WorkBuddy 提供会话和执行能力；本仓库提供技能描述、任务流程、宿主适配和确定性的配置工具。
 
-当前版本 **1.0.6**，共 **82** 个技能：**59** 个可按描述自动选用，**23** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
+当前版本 **1.0.10**，共 **82** 个技能：**59** 个可按描述自动选用，**23** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
 
-![s-atlas 全景卡片图：任务路由与 82 个技能](s-skills-route.png)
+![s-wukong 全景卡片图：任务路由与 82 个技能](s-skills-route.png)
 
-[全景卡片图源（HTML）](architecture/s-atlas-panorama.html) · [组件关系补充图](architecture/s-atlas.html) · [安装与使用](../README.md)
+[全景卡片图源（HTML）](architecture/s-wukong-panorama.html) · [组件关系补充图](architecture/s-wukong.html) · [安装与使用](../README.md)
 
 主图采用白底大画布：上半部分展示点名技能、小改动、普通开发及复杂任务的调用路线，下半部分以五个分栏展示全部技能。每张卡写出“何时”和“作用”；原则卡省略共同的 `principle-` 前缀，实际目录名不变。路线是按需选用的示意，不代表每轮必须执行全部流程。
 
@@ -20,20 +20,20 @@ s-atlas 是一套由代理读取的技能与本地工具，不是独立运行的
 
 主图和上表已覆盖 82 张卡片，包含 `prompt-sharpen`、`project-memory` 和显式调用的 `release`。浅色实底为自动技能，白底虚线为显式技能。卡片链接指向提交 356bf14 的源码快照（`release` 卡片指向 `main`），每个技能恰好出现一次，卡片标题链接到对应源码。HTML 是 4500 像素宽的独立可编辑图源，可缩小或横向浏览；PNG 预览可直接放大查看。
 
-组件关系图作为补充保留，表示逻辑职责，不表示分别部署的服务。其 [JSON 图源](architecture/s-atlas.architecture.json) 的节点证据固定在 [cfd0823](https://github.com/Acefake/s-skills/commit/cfd0823ff5483f272bcd41f9bae7e3a377655220)，可追溯到具体文件和行号。
+组件关系图作为补充保留，表示逻辑职责，不表示分别部署的服务。其 [JSON 图源](architecture/s-wukong.architecture.json) 的节点证据固定在 [cfd0823](https://github.com/Acefake/s-skills/commit/cfd0823ff5483f272bcd41f9bae7e3a377655220)，可追溯到具体文件和行号。
 
 ## 一、宿主、指令和技能各管一层
 
 | 层次 | 负责什么 | 主要位置 |
 |---|---|---|
 | 宿主会话 | 提供模型、文件、终端、浏览器和代理能力；能力是否可用以当前会话为准 | Codex、Claude Code、Cursor、WorkBuddy |
-| 全局规则 | 指定如何匹配技能、何时验证、如何评审 | [AGENTS.md](../plugins/s-atlas/AGENTS.md) |
-| 技能发现与路由 | 优先直接匹配；不明确时才由 s-router 判断；不覆盖显式调用政策 | [s-router](../plugins/s-atlas/skills/s-router/SKILL.md) 与各技能 frontmatter |
-| 执行流程与能力 | 按任务使用方案、计划、调试、文档、界面、测试等技能 | [skills/](../plugins/s-atlas/skills/) |
-| 宿主适配 | 把通用动作映射到当前宿主已有工具，不编造能力 | [HOSTS.md](../plugins/s-atlas/HOSTS.md) |
-| 本地持久化 | 幂等同步受管全局规则和模型配置，写入前确认 | [setup-s-instructions](../plugins/s-atlas/skills/setup-s-instructions/SKILL.md)、[setup-s-models](../plugins/s-atlas/skills/setup-s-models/SKILL.md)、[s-init](../plugins/s-atlas/skills/s-init/SKILL.md) |
+| 全局规则 | 指定如何匹配技能、何时验证、如何评审 | [AGENTS.md](../plugins/s-wukong/AGENTS.md) |
+| 技能发现与路由 | 优先直接匹配；不明确时才由 s-router 判断；不覆盖显式调用政策 | [s-router](../plugins/s-wukong/skills/s-router/SKILL.md) 与各技能 frontmatter |
+| 执行流程与能力 | 按任务使用方案、计划、调试、文档、界面、测试等技能 | [skills/](../plugins/s-wukong/skills/) |
+| 宿主适配 | 把通用动作映射到当前宿主已有工具，不编造能力 | [HOSTS.md](../plugins/s-wukong/HOSTS.md) |
+| 本地持久化 | 幂等同步受管全局规则和模型配置，写入前确认 | [setup-s-instructions](../plugins/s-wukong/skills/setup-s-instructions/SKILL.md)、[setup-s-models](../plugins/s-wukong/skills/setup-s-models/SKILL.md)、[s-init](../plugins/s-wukong/skills/s-init/SKILL.md) |
 
-三个市场入口共用 `plugins/s-atlas` 中的技能源文件，通过各自插件清单分发。它们不共享一个后台进程，也不自动共享其他机器上的配置。
+三个市场入口共用 `plugins/s-wukong` 中的技能源文件，通过各自插件清单分发。它们不共享一个后台进程，也不自动共享其他机器上的配置。
 
 ## 二、任务主线先匹配，再按风险展开
 
@@ -78,7 +78,7 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 ## 四、源码证据和维护方式
 
-主图维护 [全景 HTML](architecture/s-atlas-panorama.html)：保留上方路由、下方五栏和卡片的“何时／作用”，同步技能总数、分区数量与自动／显式政策。更新后核对每个技能恰好出现一次、卡片文字无溢出，再以浏览器截图更新 PNG。当前预览为 4500×4450，不裁掉卡片或页脚。不要用组件关系图替代全景卡片主图。
+主图维护 [全景 HTML](architecture/s-wukong-panorama.html)：保留上方路由、下方五栏和卡片的“何时／作用”，同步技能总数、分区数量与自动／显式政策。更新后核对每个技能恰好出现一次、卡片文字无溢出，再以浏览器截图更新 PNG。当前预览为 4500×4450，不裁掉卡片或页脚。不要用组件关系图替代全景卡片主图。
 
-组件关系补充图单独维护 [JSON 图源](architecture/s-atlas.architecture.json)，使用 `archify finalize architecture` 生成其 HTML，并保留仓库证据校验、严格产物检查和浏览器检查。它与主图是两种视角，不共用 PNG 预览。
+组件关系补充图单独维护 [JSON 图源](architecture/s-wukong.architecture.json)，使用 `archify finalize architecture` 生成其 HTML，并保留仓库证据校验、严格产物检查和浏览器检查。它与主图是两种视角，不共用 PNG 预览。
 
