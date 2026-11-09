@@ -63,7 +63,7 @@
 | 预算 | 档位 |
 |---|---|
 | 不限（旧名 `unlimited`） | `max` |
-| 大（旧名 `large`） | `xhigh` |
+| 高（工具名“大”，旧名 `large`） | `xhigh` |
 | 中（旧名 `medium`） | `high` |
 | 省（旧名 `small`） | `medium` |
 

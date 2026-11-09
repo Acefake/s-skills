@@ -87,6 +87,7 @@ BUDGETS = {
     '不限': ('max', 2, None),
 }
 BUDGET_ALIASES = {
+    '高': '大',
     'small': '省', 'medium': '中', 'large': '大', 'unlimited': '不限',
     'skip': INHERIT, INHERIT: INHERIT,
 }
@@ -110,7 +111,7 @@ def normalize_budget(name: str) -> str:
         return value
     if value.lower() in BUDGET_ALIASES:
         return BUDGET_ALIASES[value.lower()]
-    raise SModelsError(f'未知预算 {name!r}：用 省、中、大、不限 或 inherit-parent')
+    raise SModelsError(f'未知预算 {name!r}：用 省、中、高 或 inherit-parent；兼容旧 大/不限')
 
 
 def budget_line(budget: str, effort: str | None = None) -> str:
@@ -472,7 +473,7 @@ def parse_sets(values: list[str]) -> dict[str, str]:
 
 
 def add_render_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('--budget', required=True, help='省、中、大、不限，或 inherit-parent（跳过）')
+    parser.add_argument('--budget', required=True, help='省、中、高；兼容旧 大/不限，或 inherit-parent（跳过）')
     parser.add_argument('--light', help='检索和简单任务的轻量模型；不给就使用常规模型')
     parser.add_argument('--fast', help='日常实现与探索的常规模型')
     parser.add_argument('--strong', help='困难实现与综合判断的复杂模型；不给就和常规模型相同')

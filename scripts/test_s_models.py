@@ -31,6 +31,21 @@ def run(*argv):
 
 
 class RenderTest(unittest.TestCase):
+    def test_high_cli_renders_compatible_large_budget(self):
+        code, out, err = run('render', '--budget', '高', '--fast', 'sonnet', '--strong', 'opus')
+        self.assertEqual(code, 0, err)
+        self.assertIn('# 预算: 大（xhigh）', out)
+        self.assertEqual(m.check_text(out)['status'], 'ok')
+        self.assertEqual(m.check_text(out)['rows']['独立评审'], 'sonnet, opus')
+
+    def test_high_header_resolves_like_legacy_large(self):
+        block = m.render_block('大', rows('大')).replace('大（xhigh）', '高（xhigh）')
+        checked = m.check_text(block)
+        self.assertEqual(checked['status'], 'ok', checked['problems'])
+        self.assertEqual(checked['budget'], '大')
+        self.assertEqual(m.resolve_role(block, '独立评审')['items'],
+                         [{'model': 'sonnet', 'effort': 'xhigh'}, {'model': 'opus', 'effort': 'xhigh'}])
+
     def test_small_uses_strong_only_for_hardest_and_one_reviewer(self):
         r = rows('省')
         self.assertEqual([k for k, v in r.items() if v == 'opus'], ['专项攻坚'])

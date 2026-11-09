@@ -1,6 +1,6 @@
 # Claude Code 与 Codex：三档预设和顺序备用
 
-用户选择混合预设或要求模型有首选、次选时读取本文件。先发现当前宿主的真实能力；不能把表中候选可用、推理参数受支持或两模型能力等价当成事实。这里只提供配置与派发约定，不实现底层服务自动故障转移。
+当前宿主支持跨提供商编排时，配置预算默认使用本文件的省、中、高三档。先发现当前宿主的真实能力；不能把表中候选可用、推理参数受支持或两模型能力等价当成事实。这里只提供配置与派发约定，不实现底层服务自动故障转移。
 
 仅原生 Codex 或 Claude Code 工具时，不套用跨厂商表，改用[原生三档](native-budget-profiles.md)。备用操作原则通用；下面 AGENTS.md、s-atlas.t3.json 双文件持久化只属于 T3。其他宿主使用其真正读取的规则文件。并发调查遵从[并发只读检索](../../s-mode/references/subagents.md#并发只读检索)，顺序备用不增加代理数量。
 
@@ -13,13 +13,13 @@
 | 检索与探索 | Haiku medium → Luna max | Luna max → Haiku high | Luna max → Haiku high |
 | 方案设计 | Sonnet medium → Sol medium | Opus medium → Sol high | Opus medium → Astra medium |
 | 开发实现 | Sonnet medium → Sol medium | Sonnet high → Sol high | Opus medium → Sol high |
-| 专项攻坚 | Opus medium → Astra medium | Opus high → Astra medium | 名额 1：Opus high → Sol high；名额 2：Astra medium → Sol high |
+| 专项攻坚 | Opus medium → Astra medium | Opus high → Astra medium | Opus high → Astra medium |
 | 验证测试 | Sol medium → Sonnet medium | Sol medium → Sonnet medium | Sol high → Sonnet high |
 | 独立评审 | DP4.1 Flash enabled → Sol medium，1 个 | DP4.1 Flash enabled → Sol medium，1 个 | 名额 1：DP4.1 Flash enabled → Sonnet medium；名额 2：Sol medium → Sonnet medium，共 2 个 |
 
 Luna max 保留本预设来源用户的显式偏好，不是官方默认；向其他用户推荐时标明这一点，允许改为客户端建议的 high。预设是工程选择，没有项目评测证明其最优或备用与首选等价。复杂代码评审不默认使用 Haiku 或 Terra；Haiku 用于明确的检索、提取和整理，Terra 可单独用于视觉验收。
 
-高档双攻坚仅在任务需要且已授权多代理时使用。独立评审名额遵从预算和任务授权，不能因为表中有次选就增加名额。可只用一个评审时，不自动启动另一个。Sol、Sonnet 评审默认 medium，DP 默认显式 enabled；高风险项明确说明原因后再考虑提供商支持的较高档位；不按预算机械升到 xhigh/max。
+专项攻坚角色行只有一个名额，高档也按首选 → 次选配置。任务确需并发攻坚且已获授权时，由主代理另外明确分工，不把额外代理写成该行的逗号列表。独立评审名额遵从预算和任务授权，不能因为表中有次选就增加名额。可只用一个评审时，不自动启动另一个。Sol、Sonnet 评审默认 medium，DP 默认显式 enabled；高风险项明确说明原因后再考虑提供商支持的较高档位；不按预算机械升到 xhigh/max。
 
 用户已选定 CodeBuddy DeepSeek-V4.1-Flash 作为首选评审，具体规则见[DeepSeek 评审](glm-review-trial.md)。省、中档一名评审，Sol 为次选；高档由 DeepSeek 与 Sol 各占一个独立名额。DP 使用 thought_level: enabled，不套用 medium 参数。此次已做一轮修复复核，不宣称全面评测通过。
 
@@ -52,6 +52,8 @@ Luna max 保留本预设来源用户的显式偏好，不是官方默认；向�
 ## 持久化与解析边界
 
 现有 `s_models.py` 与 `t3_targets.py` 的逗号列表是派发列表，不能用来序列化备用。当前 T3 schemaVersion 1 没有顺序备用字段，不能添加未经支持的 `fallback`、箭头模型名或把备用伪装为第二个评审。
+
+高档独立评审用两个完整别名表达：角色行写 `独立评审: t3:review, t3:review2`，`targets.review` 保存 CodeBuddy DP 的完整首选，`targets.review2` 保存 Codex Sol 的完整首选；对应次选分别记录在备用策略中。第二名额也必须通过别名明确 provider/model/options，不能直接追加裸模型名来假定其提供商。
 
 配置方案展示并经最终写入确认后，用现有脚本写入每个名额的首选。若要让顺序备用在新会话中生效，同时预览并确认一份项目文件 `docs/project/s-model-fallbacks.md`，保存已选预算、各名额完整首选/次选目标、推理参数与切换条件；在项目 AGENTS.md 模型段外添加指向该文件的说明，要求派发前读取。该文件由主代理维护，不声称双文件 configure 已写入它；回读检查所有文件并如实报告部分失败。不同项目不猜测或读取其他项目的策略。
 

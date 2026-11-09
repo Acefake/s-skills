@@ -90,7 +90,7 @@
 
 这次对话在 Cursor 里时，按下面做。模型名通过 `Task` 的 `model` 参数传给子智能体。`inherit-parent` 和 `auto` 省略 `model`。
 
-预算和确认用 `AskQuestion`。四个选项用 setup-s-models 里那四行原文，标签和说明都放进卡片。额度有限的提示放在这道题里。检测不到模型时，请用户把有权限的名字贴过来。
+预算和确认用 `AskQuestion`。预算只展示 setup-s-models 的省、中、高三个选项，标签和说明都放进卡片；高写入时映射为工具预算“大”，不展示历史“不限”档。额度有限的提示放在这道题里。检测不到模型时，请用户把有权限的名字贴过来。
 
 写入 `~/.cursor/rules/s-models.mdc`，只替换模型配置标记段并保留其他内容。仅在首次创建时添加下面两行 frontmatter；已有 frontmatter 保留，不能覆盖用户其他字段：
 

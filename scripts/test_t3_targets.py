@@ -152,6 +152,24 @@ class ResolveTest(unittest.TestCase):
         text = t3.render_block('大', rows)
         self.assertEqual(t3.role_config(text)['rows']['独立评审'], 'sol, sol')
 
+    def test_high_two_provider_review_aliases_configure_and_resolve(self):
+        rows = {role: 't3:review' for role in t3.SIX_ROLES}
+        rows['独立评审'] = 't3:review, t3:review2'
+        targets = config()
+        targets['targets']['review2'] = {'providerInstanceId': 'codex', 'model': 'sol',
+                                         'options': {'reasoningEffort': 'medium'}}
+        text = t3.render_block('高', rows)
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory).resolve()
+            rules = project / 'AGENTS.md'
+            t3.configure(rules, project, text, targets, catalog(), apply=True)
+            result = t3.resolve(rules.read_text(encoding='utf-8'), '独立评审',
+                                t3.load_json(project / t3.TARGET_FILE), catalog())
+        self.assertEqual([item['target']['providerInstanceId'] for item in result['items']],
+                         ['claude', 'codex'])
+        self.assertEqual([item['target']['options'] for item in result['items']],
+                         [{'effort': 'medium'}, {'reasoningEffort': 'medium'}])
+
     def test_mixed_duplicate_missing_and_malformed_six_roles_rejected(self):
         for text in (block().replace('开发实现:', '修 bug:'),
                      block().replace('开发实现:', '方案设计:'),

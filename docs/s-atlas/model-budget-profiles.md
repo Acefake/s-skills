@@ -2,7 +2,7 @@
 
 记录日期：2026-11-09。适用项目：`C:\Users\admin\s-skills`。
 
-本文是 Claude Code 与 Codex 混合使用的三档候选方案。只更新文档，尚未应用到 `AGENTS.md` 或 `s-atlas.t3.json`。不再安排 Cursor，移除不限档；高档在现有配置工具中对应“大”。
+本文记录 Claude Code 与 Codex 混合使用的三档方案；实际应用状态以当前项目的 `AGENTS.md`、`s-atlas.t3.json` 和备用策略为准，安装插件不会自动覆盖它们。不再安排 Cursor，移除不限档选项；高档在现有配置工具中对应“大”。
 
 模型分工结合官方的通用推理建议和用户偏好确定，不是经过项目对照测试的能力排名。预算主要影响模型选择和评审人数，不把所有模型统一升为 high、xhigh 或 max，也不保证两家额度消耗相等。
 
@@ -17,7 +17,7 @@
 | 检索与探索 | Haiku 5.5 · medium | Luna · max | Luna · max |
 | 方案设计 | Sonnet 5.5 · medium | Opus 5.5 · medium | Opus 5.5 · medium |
 | 开发实现 | Sonnet 5.5 · medium | Sonnet 5.5 · high | Opus 5.5 · medium |
-| 专项攻坚 | Opus 5.5 · medium | Opus 5.5 · high | Opus 5.5 · high ＋ Astra · medium |
+| 专项攻坚 | Opus 5.5 · medium | Opus 5.5 · high | Opus 5.5 · high |
 | 验证测试 | Sol · medium | Sol · medium | Sol · high |
 | 独立评审 | DP4.1 Flash · enabled，1 个 | DP4.1 Flash · enabled，1 个 | DP4.1 Flash · enabled ＋ Sol · medium，2 个 |
 
@@ -31,7 +31,7 @@ Luna 的 max 保留用户此前的显式选择，不是官方默认或推荐起�
 
 首选明确不可用时才使用次选；任务已部分执行或状态不明时先核对和停止旧任务，避免重复写入。每个名额最多尝试两个候选。高档两名评审各有备用，不把备用计为额外评审者。
 
-这是技能级的编排约定，不是现有 JSON 解析器的自动故障转移。实际项目配置与跨会话备用策略尚未写入；应用时按技能预览完整配置和策略文件，再确认写入。
+这是技能级的编排约定，不是现有 JSON 解析器的自动故障转移。实际项目配置与跨会话备用策略由各项目独立保存；应用时按技能预览完整配置和策略文件，再确认写入。
 
 ## 1. 省
 
@@ -47,7 +47,7 @@ Luna 负责主调查。条件明确的提取、日志归类和材料整理可明
 
 ## 3. 高
 
-Opus 负责设计和实现，Sol 负责验证。难题由 Opus 和 Astra 分别调查，再由主代理整合结论；两者不同时修改同一批文件。
+Opus 负责设计和实现，Sol 负责验证。专项攻坚首选 Opus high，明确不可用时使用次选 Astra medium，仍为一个名额。任务确需并发攻坚且已获授权时，再由主代理另行拆分互不冲突的范围，不自动双派。
 
 独立评审由 DP4.1 Flash enabled 与 Sol medium 各占一个名额，分别检查需求与行为遗漏、调用链与失败路径。两者次选均为 Sonnet medium。独立会话评审，不启动第三个名额。
 
