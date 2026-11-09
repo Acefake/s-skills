@@ -2,9 +2,9 @@
   "schema": 1,
   "note": "contentSha256 covers every file in the plugin except the registered manifest JSON files. Bump version when it changes.",
   "plugins": {
-    "s-atlas": {
-      "version": "1.0.6",
-      "contentSha256": "6f619c51a0cf4d158f7287d82422aae68e8a1016125215e7ac048aeebc32b10d"
+    "s-wukong": {
+      "version": "1.0.10",
+      "contentSha256": "3144dd2ff2367cfea4f643051ae34b2145590540fb395582559b749df6a5e26e"
     }
   }
 }

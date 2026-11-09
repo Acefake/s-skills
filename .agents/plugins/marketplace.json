@@ -5,11 +5,11 @@
   },
   "plugins": [
     {
-      "name": "s-atlas",
-      "description": "s-atlas 的 82 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及计划、调试、代码审查等开发流程。",
+      "name": "s-wukong",
+      "description": "s-wukong 的 82 个中文技能：做事原则、工作流程、界面设计、测试、代码规范、Office 与 PDF，以及计划、调试、代码审查等开发流程。",
       "source": {
         "source": "local",
-        "path": "./plugins/s-atlas"
+        "path": "./plugins/s-wukong"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -18,5 +18,5 @@
       "category": "Productivity"
     }
   ],
-  "icon": "plugins/s-atlas/icon.png"
+  "icon": "plugins/s-wukong/icon.png"
 }

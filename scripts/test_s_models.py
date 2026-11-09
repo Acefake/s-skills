@@ -11,7 +11,7 @@ from io import StringIO
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / 'plugins/s-atlas/skills/setup-s-models'
+SKILL = ROOT / 'plugins/s-wukong/skills/setup-s-models'
 SCRIPT = SKILL / 'scripts/s_models.py'
 
 spec = importlib.util.spec_from_file_location('s_models', SCRIPT)
@@ -138,11 +138,11 @@ class RoleEffortTest(unittest.TestCase):
 
     def test_every_consumer_skill_points_to_the_value_format(self):
         for name in ('interrogate', 'swarm', 'why', 'how', 'reflect'):
-            text = (ROOT / f'plugins/s-atlas/skills/{name}/SKILL.md').read_text(encoding='utf-8')
+            text = (ROOT / f'plugins/s-wukong/skills/{name}/SKILL.md').read_text(encoding='utf-8')
             self.assertIn('../setup-s-models/references/role-keys.md', text, name)
 
     def test_docs_tell_dispatchers_to_pass_effort(self):
-        tools = (ROOT / 'plugins/s-atlas/skills/s-router/references/claude-code-tools.md').read_text(encoding='utf-8')
+        tools = (ROOT / 'plugins/s-wukong/skills/s-router/references/claude-code-tools.md').read_text(encoding='utf-8')
         self.assertIn('每次派发都要传', tools)
         keys = (SKILL / 'references/role-keys.md').read_text(encoding='utf-8')
         self.assertIn('模型（档位）', keys)
@@ -184,7 +184,7 @@ class ResolveTest(unittest.TestCase):
         self.assertEqual((code, out.strip()), (0, 'opus\tmax'))
 
     def test_claude_code_doc_does_not_promise_unverified_full_ids(self):
-        tools = (ROOT / 'plugins/s-atlas/skills/s-router/references/claude-code-tools.md').read_text(encoding='utf-8')
+        tools = (ROOT / 'plugins/s-wukong/skills/s-router/references/claude-code-tools.md').read_text(encoding='utf-8')
         self.assertNotIn('，或完整 ID。', tools)
         self.assertIn('InputValidationError', tools)
 

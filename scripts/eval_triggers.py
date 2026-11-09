@@ -28,7 +28,7 @@ EXCLUDED = frozenset({"s-router"})
 NONE = "none"
 
 
-def load_candidates(plugin: str = "s-atlas") -> dict[str, str]:
+def load_candidates(plugin: str = "s-wukong") -> dict[str, str]:
     """
     读取宿主会自动选用的技能
     @param plugin 插件名
