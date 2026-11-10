@@ -426,10 +426,11 @@ def check_skill_references(problems: Problems) -> None:
 def check_supported_hosts(problems: Problems) -> None:
     """Reject retired adapters in maintained entry points and platform guides."""
     # Nous Research 的 Hermes agent 是支持的宿主。退役名录不再包含 Hermes。
-    retired = re.compile(r"\b(?:OpenCode|Antigravity|Pi)\b|(?<![./\\])\bCodeBuddy\b(?![./\\])", re.I)
+    retired = re.compile(r"\b(?:OpenCode|Antigravity|Pi)\b", re.I)
+    # CodeBuddy 与 WorkBuddy 同源，会读取 .claude-plugin 下的清单；再放一份只会多出要同步版本的文件。
     for relative in (".codebuddy-plugin/marketplace.json", "plugins/wukong/.codebuddy-plugin/plugin.json"):
         if (ROOT / relative).exists():
-            problems.add(f"unsupported host adapter: {relative}")
+            problems.add(f"duplicate manifest, CodeBuddy reads .claude-plugin: {relative}")
     plugin = ROOT / "plugins/wukong"
     paths = [ROOT / "README.md", plugin / "HOSTS.md", plugin / "AGENTS.md", plugin / "AGENTS-snippet.md"]
     paths.extend((plugin / "skills").glob("*/SKILL.md"))

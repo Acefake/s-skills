@@ -6,9 +6,9 @@
 
 <p align="center"><strong>把日常写代码的方式，写成技能。</strong></p>
 
-<p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、WorkBuddy。</p>
+<p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.12，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
+<p align="center">当前版本 1.0.13，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -39,7 +39,14 @@ codex plugin marketplace add Acefake/s-skills
 
 **Cursor**：从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `wukong`。
 
-**Codex 本项目、WorkBuddy**：克隆仓库后在 Windows PowerShell 运行。
+**CodeBuddy（CLI 与 IDE）**：和 Claude Code 用同一套命令。CodeBuddy 会读取仓库里 `.claude-plugin` 下的清单，所以不需要另外一份。
+
+```text
+/plugin marketplace add Acefake/s-skills
+/plugin install wukong@s-skills
+```
+
+**Codex 本项目、WorkBuddy 客户端**：克隆仓库后在 Windows PowerShell 运行。
 
 ```powershell
 git clone https://github.com/Acefake/s-skills.git
@@ -48,7 +55,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1                    
 powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy # WorkBuddy，只支持 Windows 本机项目
 ```
 
-脚本把技能链接到 `.agents/skills/`（Codex）或 `.codebuddy/skills/`（WorkBuddy），重复执行不覆盖已有文件。WorkBuddy 没有上架市场，也不同步云端个人技能库。各宿主的入口以实际界面为准，安装或更新后开新会话。宿主差异见 [宿主适配](plugins/wukong/HOSTS.md)。
+脚本把技能链接到 `.agents/skills/`（Codex）或 `.codebuddy/skills/`（WorkBuddy），重复执行不覆盖已有文件。WorkBuddy 客户端没有上架市场，也不同步云端个人技能库。CodeBuddy 和 WorkBuddy 共用 `~/.codebuddy`，全局规则和模型配置在两边是同一份，宿主 id 都用 `workbuddy`。各宿主的入口以实际界面为准，安装或更新后开新会话。宿主差异见 [宿主适配](plugins/wukong/HOSTS.md)。
 
 ### 从 s-atlas 或 s-wukong 升级
 
@@ -61,7 +68,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 /plugin install wukong@s-skills
 ```
 
-没装过的那一行跳过即可。Codex、Cursor 在插件管理入口卸载 `s-atlas` 或 `s-wukong` 后装 `wukong`；本地安装的 Codex、WorkBuddy 删掉 `.agents/skills/` 或 `.codebuddy/skills/` 里的 `s-agent`、`s-init`、`s-mode`、`s-proposal`、`s-review`、`s-router` 后重跑安装脚本。
+没装过的那一行跳过即可。CodeBuddy 的命令同上（`/plugin uninstall s-atlas@s-skills`，再 `/plugin install wukong@s-skills`）。Codex、Cursor 在插件管理入口卸载 `s-atlas` 或 `s-wukong` 后装 `wukong`；本地安装的 Codex、WorkBuddy 删掉 `.agents/skills/` 或 `.codebuddy/skills/` 里的 `s-agent`、`s-init`、`s-mode`、`s-proposal`、`s-review`、`s-router` 后重跑安装脚本。
 
 装好后开新会话，点名一次 `wukong-init`：它会把全局规则里的旧标记块原位换成 `wukong` 标记块，旧技能名一并更新。标记块外你自己写的提到 `s-atlas` 的句子不会被改，需要手动换成 `wukong`。项目里的 `s-atlas.t3.json`、`s-wukong.t3.json` 仍可读取，下次写入时改名为 `wukong.t3.json`。
 
@@ -69,7 +76,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 
 装好后点名一次 `wukong-init`（`/wukong:wukong-init`）：它按顺序同步全局技能规则和模型配置，每步写入前都会问你。也可以单独用 `setup-s-instructions`、`setup-s-models`。
 
-- 全局规则写入：Codex 的 `AGENTS.md`，Claude Code 的 `~/.claude/CLAUDE.md`，WorkBuddy 的 `~/.codebuddy/CODEBUDDY.md`；Cursor 用全局 User Rules。规则正文见 [AGENTS.md](plugins/wukong/AGENTS.md)。
+- 全局规则写入：Codex 的 `AGENTS.md`，Claude Code 的 `~/.claude/CLAUDE.md`，CodeBuddy 和 WorkBuddy 的 `~/.codebuddy/CODEBUDDY.md`；Cursor 用全局 User Rules。规则正文见 [AGENTS.md](plugins/wukong/AGENTS.md)。
 - 只在你点名时写入。平时每个会话只读检查一次，过期会提醒。新会话才生效。
 - 模型配置按当前宿主实际可用的模型，推荐轻量、常规、复杂三档，不固定型号。
 

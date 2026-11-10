@@ -1,6 +1,6 @@
 # 宿主适配
 
-插件分发支持 **Codex、Claude Code、Cursor、WorkBuddy**。模型配置另外识别 **DeepSeek Harness**（命令 `dsh`）和 **Nous Research 的 Hermes agent**（命令 `hermes`）。插件名为 `wukong`，仓库和市场名为 `s-skills`。版本以插件清单为准，技能以当前会话实际发现的目录为准。DeepSeek Harness 和 Hermes 没有市场安装包，也不走本仓库的安装脚本。
+插件分发支持 **Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy**。CodeBuddy 和 WorkBuddy 同源，共用 `~/.codebuddy`，配置里统一写 `workbuddy`。模型配置另外识别 **DeepSeek Harness**（命令 `dsh`）和 **Nous Research 的 Hermes agent**（命令 `hermes`）。插件名为 `wukong`，仓库和市场名为 `s-skills`。版本以插件清单为准，技能以当前会话实际发现的目录为准。DeepSeek Harness 和 Hermes 没有市场安装包，也不走本仓库的安装脚本。
 
 ## 按需读取当前宿主
 
@@ -23,7 +23,7 @@ T3 模型支持按底层宿主保存的用户级全局默认与项目级覆盖�
 | Codex | [Codex 工具和配置](skills/wukong-router/references/codex-tools.md) |
 | Claude Code | [Claude Code 工具和配置](skills/wukong-router/references/claude-code-tools.md) |
 | Cursor | [Cursor 工具和配置](skills/wukong-router/references/cursor-tools.md) |
-| WorkBuddy | [WorkBuddy 工具和配置](skills/wukong-router/references/workbuddy-tools.md) |
+| CodeBuddy、WorkBuddy | [CodeBuddy 与 WorkBuddy 工具和配置](skills/wukong-router/references/workbuddy-tools.md) |
 | DeepSeek Harness（`dsh`） | [DeepSeek Harness 工具和配置](skills/wukong-router/references/dsh-tools.md) |
 | Hermes agent | [Hermes 工具和配置](skills/wukong-router/references/hermes-tools.md) |
 
@@ -70,7 +70,7 @@ DeepSeek Harness 和 Hermes 的 6 个角色行与现有四个宿主相同。写�
 
 Codex 本项目开发可在仓库根运行 `powershell -NoProfile -File scripts/install_local_skills.ps1`。脚本将技能链接到项目 `.agents/skills/`，并将本文件复制到 `.agents/HOSTS.md`。平台参考位于技能内，随目录链接一起提供，无需额外复制平台资料。重新打开会话确认实际发现路径。
 
-WorkBuddy 本机项目安装使用同一脚本加 `-HostName workbuddy`，链接到 `.codebuddy/skills/`。共享说明采用哈希记录管理；可以更新未被用户修改的受管副本，已有其他内容则停止并保留。它不是市场插件安装，也不配置云端技能库。
+WorkBuddy 本机项目安装使用同一脚本加 `-HostName workbuddy`，链接到 `.codebuddy/skills/`。共享说明采用哈希记录管理；可以更新未被用户修改的受管副本，已有其他内容则停止并保留。它不是市场插件安装，也不配置云端技能库。CodeBuddy 的 CLI 与 IDE 走插件市场：`/plugin marketplace add Acefake/s-skills`、`/plugin install wukong@s-skills`。
 
 分发入口以仓库 README 为准。运行 `python scripts/check_marketplace.py` 核对清单、版本锁、调用政策、公共引用和支持范围；运行 `python -m unittest discover -s scripts -p "test_*.py"` 检查发布与适配逻辑。
 
