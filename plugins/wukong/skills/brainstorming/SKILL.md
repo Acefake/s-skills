@@ -1,0 +1,53 @@
+---
+name: brainstorming
+description: "「做个新功能」「加个接口」「改一下行为」「先把方案想清楚」。动手实现前先摸清意图、需求和设计。Use when doing any creative work before implementation - creating features, building components, adding functionality, or modifying behavior - and you need to explore user intent, requirements and design before implementation."
+---
+
+本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+## 运行环境适配
+
+涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+
+# 把想法变成设计
+
+把目标、需求和取舍整理成可实现的设计。先理解项目和用户意图，再讨论方案；一次问一个问题，能用选择题时优先用选择题。
+
+<HARD-GATE>
+设计呈现并获用户批准前，不调用实现技能、不写代码或搭项目。唯一例外是[wukong-router](../wukong-router/SKILL.md)定义的小改动；它直接走快路。任务简单不等于没有设计，拿不准是否符合快路时按需要设计处理。
+</HARD-GATE>
+
+## 执行清单
+
+为以下步骤建立任务，按顺序完成：
+
+1. **探索上下文。** 阅读当前结构、文档、近期提交和已有模式。
+2. **判断范围。** 需求跨多个独立子系统、难以放进一份规格时，拆成独立子项目，先完成第一个的规格、计划与实现循环。
+3. **澄清目标与约束。** 围绕目的、限制和成功标准提问；每条消息只问一个问题。
+4. **比较方案。** 提出 2–3 种做法，先说推荐项并解释取舍。没有先例的交互或架构决定，先做两三个便宜原型再选，见 [principle-exhaust-the-design-space](../principle-exhaust-the-design-space/SKILL.md)。
+5. **呈现设计。** 按复杂度分节，简单部分几句话，复杂部分最多约 200–300 词。覆盖架构、组件、数据流、错误处理和测试，先定核心类型和数据结构再谈逻辑（[principle-foundational-thinking](../principle-foundational-thinking/SKILL.md)），每节取得用户确认；发现不一致就回到澄清。
+6. **写规格。** 将确认的设计保存到 `docs/wukong/specs/YYYY-MM-DD-<topic>-design.md`，用户指定路径优先。只有用户已授权提交时，才按[commit-pr](../commit-pr/SKILL.md)提交规格。有 `elements-of-style:writing-clearly-and-concisely` 时使用它。
+7. **就地自检。** 按下节检查并修正，不另派一轮审查。
+8. **用户审阅。** 给出已写好的规格路径，请用户审阅；有修改就修订并重新自检，获批后才继续。
+9. **交接计划。** 调用[writing-plans](../writing-plans/SKILL.md)，不直接转入 frontend-design、mcp-builder 或其他实现技能。
+
+## 设计要求
+
+- 遵循已有代码模式，聚焦当前目标。只将确实影响本次工作的结构问题纳入设计，不捆绑无关重构。
+- 按清楚的职责、接口和边界拆单元。每个单元说明做什么、怎样使用、依赖什么，并能独立理解和测试。
+- 文件和边界应让后续实现一次能看清相关内容；避免职责缠绕，但不为拆分而拆分。
+- 保持最小必要范围，不为猜测中的未来需要添加功能。范围取舍选让人用着顺的，少做但做好，不为好写而将就（[principle-experience-first](../principle-experience-first/SKILL.md)）。
+
+## 规格自检与审阅
+
+1. 补齐 TBD、TODO、未完成章节和含糊需求。
+2. 检查各章节、架构与功能描述是否一致。
+3. 确认能形成一份可执行计划；否则先拆范围。
+4. 消除会导致不同实现的歧义。
+
+修正后说明规格保存路径；已获授权并执行提交时另报提交信息。请用户审阅，等待其回应。只有规格获批才调用 writing-plans。
+
+## 视觉伴侣
+
+只有具体问题用图比用文字更清楚时才提议，不因任务涉及界面就自动启用。第一次需要时单独询问，用户同意后才打开；拒绝后继续文字讨论，不再重复提议。
+
+邀请方式、逐题选择和启动前的阅读要求见[视觉伴侣使用边界](references/visual-companion.md)。接受伴侣不表示后续每个问题都走浏览器。

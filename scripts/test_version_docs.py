@@ -11,7 +11,7 @@ import check_marketplace
 import marketplace_lib
 
 REPO = Path(__file__).resolve().parents[1]
-SETUP_MODELS = REPO / 'plugins/s-wukong/skills/setup-s-models/SKILL.md'
+SETUP_MODELS = REPO / 'plugins/wukong/skills/setup-s-models/SKILL.md'
 
 
 class DocVersionTest(unittest.TestCase):
@@ -25,8 +25,8 @@ class DocVersionTest(unittest.TestCase):
         return root
 
     def test_repo_docs_match_lock(self):
-        lock = marketplace_lib.load_lock()['plugins']['s-wukong']['version']
-        for rel, found in marketplace_lib.doc_versions('s-wukong'):
+        lock = marketplace_lib.load_lock()['plugins']['wukong']['version']
+        for rel, found in marketplace_lib.doc_versions('wukong'):
             self.assertEqual(found, lock, rel)
 
     def test_stale_doc_version_is_reported(self):
@@ -41,8 +41,8 @@ class DocVersionTest(unittest.TestCase):
     def test_set_doc_versions_rewrites_every_doc(self):
         root = self.make_repo()
         with patch.object(marketplace_lib, 'ROOT', root):
-            marketplace_lib.set_doc_versions('s-wukong', '9.9.9')
-            self.assertEqual({v for _, v in marketplace_lib.doc_versions('s-wukong')}, {'9.9.9'})
+            marketplace_lib.set_doc_versions('wukong', '9.9.9')
+            self.assertEqual({v for _, v in marketplace_lib.doc_versions('wukong')}, {'9.9.9'})
 
     def test_bump_script_imports_doc_updater(self):
         self.assertIs(bump_plugin_version.set_doc_versions, marketplace_lib.set_doc_versions)

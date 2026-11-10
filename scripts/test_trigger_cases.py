@@ -33,7 +33,7 @@ class TriggerCasesTest(unittest.TestCase):
         self.assertEqual(missing, [], "add a trigger case for each new auto-invocable skill")
 
     def test_router_is_not_a_candidate(self):
-        self.assertNotIn("s-router", self.candidates)
+        self.assertNotIn("wukong-router", self.candidates)
 
     def test_parse_choice_reads_bare_and_wrapped_answers(self):
         names = {"tdd", "systematic-debugging"}

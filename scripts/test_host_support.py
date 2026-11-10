@@ -49,7 +49,7 @@ class HostSupportTest(unittest.TestCase):
             root = Path(directory)
             (root/'scripts').mkdir()
             shutil.copyfile(marketplace_lib.ROOT/'scripts/install_local_skills.ps1', root/'scripts/install_local_skills.ps1')
-            plugin = root/'plugins/s-wukong'
+            plugin = root/'plugins/wukong'
             for name in ('one', 'two'):
                 skill = plugin/'skills'/name
                 skill.mkdir(parents=True)
@@ -81,7 +81,7 @@ class HostSupportTest(unittest.TestCase):
             root = Path(directory)
             (root/'scripts').mkdir()
             shutil.copyfile(marketplace_lib.ROOT/'scripts/install_local_skills.ps1', root/'scripts/install_local_skills.ps1')
-            plugin = root/'plugins/s-wukong'
+            plugin = root/'plugins/wukong'
             (plugin/'skills/one').mkdir(parents=True)
             (plugin/'skills/one/SKILL.md').write_text('# one', encoding='utf-8')
             (plugin/'HOSTS.md').write_text('# new host', encoding='utf-8')
@@ -97,15 +97,15 @@ class HostSupportTest(unittest.TestCase):
     def test_hermes_agent_name_is_allowed(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            plugin = root / 'plugins/s-wukong'
+            plugin = root / 'plugins/wukong'
             skill = plugin / 'skills/setup-s-models'
             skill.mkdir(parents=True)
             (root / 'README.md').write_text('模型配置识别 Hermes agent。\n', encoding='utf-8')
             (plugin / 'HOSTS.md').write_text(
-                '[Hermes](skills/s-router/references/hermes-tools.md)\n',
+                '[Hermes](skills/wukong-router/references/hermes-tools.md)\n',
                 encoding='utf-8',
             )
-            guide = plugin / 'skills/s-router/references/hermes-tools.md'
+            guide = plugin / 'skills/wukong-router/references/hermes-tools.md'
             guide.parent.mkdir(parents=True)
             guide.write_text('# Hermes agent\n', encoding='utf-8')
             (skill / 'SKILL.md').write_text('确认宿主时包含 Hermes agent。\n', encoding='utf-8')
@@ -136,7 +136,7 @@ class HostSupportTest(unittest.TestCase):
     def test_host_validation_allows_t3_orchestration_instructions(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            skill = root / 'plugins/s-wukong/skills/example'
+            skill = root / 'plugins/wukong/skills/example'
             skill.mkdir(parents=True)
             (skill / 'SKILL.md').write_text('Use T3 Code delegate_task before proceeding.\n', encoding='utf-8')
             with patch.object(check_marketplace, 'ROOT', root):
@@ -147,7 +147,7 @@ class HostSupportTest(unittest.TestCase):
     def test_policy_update_does_not_rewrite_skill_instructions(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            skill = root / 'plugins/s-wukong/skills/example'
+            skill = root / 'plugins/wukong/skills/example'
             (skill / 'agents').mkdir(parents=True)
             instructions = '---\nname: example\ndescription: example\n---\nUse the browser and preserve the model configuration.\n'
             (skill / 'SKILL.md').write_text(instructions, encoding='utf-8')
@@ -161,14 +161,14 @@ class HostSupportTest(unittest.TestCase):
     def test_host_validation_detects_missing_platform_guide(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            plugin = root / 'plugins/s-wukong'
+            plugin = root / 'plugins/wukong'
             plugin.mkdir(parents=True)
-            (plugin / 'HOSTS.md').write_text('[Codex](skills/s-router/references/codex-tools.md)', encoding='utf-8')
+            (plugin / 'HOSTS.md').write_text('[Codex](skills/wukong-router/references/codex-tools.md)', encoding='utf-8')
             with patch.object(check_marketplace, 'ROOT', root):
                 problems = check_marketplace.Problems()
                 check_marketplace.check_supported_hosts(problems)
                 self.assertFalse(problems.ok())
-                guide = plugin / 'skills/s-router/references/codex-tools.md'
+                guide = plugin / 'skills/wukong-router/references/codex-tools.md'
                 guide.parent.mkdir(parents=True)
                 guide.write_text('# Codex\n', encoding='utf-8')
                 problems = check_marketplace.Problems()
@@ -176,22 +176,22 @@ class HostSupportTest(unittest.TestCase):
                 self.assertTrue(problems.ok(), problems.items)
 
     def test_host_guides_resolve_in_project_link_layout(self):
-        source = marketplace_lib.ROOT / 'plugins/s-wukong'
+        source = marketplace_lib.ROOT / 'plugins/wukong'
         with tempfile.TemporaryDirectory() as directory:
             installed = Path(directory) / '.agents'
             installed.mkdir()
             (installed / 'HOSTS.md').write_bytes((source / 'HOSTS.md').read_bytes())
             for filename in ('codex-tools.md', 'claude-code-tools.md', 'cursor-tools.md', 'workbuddy-tools.md', 'dsh-tools.md', 'hermes-tools.md'):
-                original = source / 'skills/s-router/references' / filename
+                original = source / 'skills/wukong-router/references' / filename
                 self.assertTrue(original.is_file(), str(original))
-                destination = installed / 'skills/s-router/references' / filename
+                destination = installed / 'skills/wukong-router/references' / filename
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_bytes(original.read_bytes())
                 self.assertTrue(destination.is_file())
             # Project installation places HOSTS beside skills/, as plugin packaging does.
             text = (installed / 'HOSTS.md').read_text(encoding='utf-8')
             for filename in ('codex-tools.md', 'claude-code-tools.md', 'cursor-tools.md', 'workbuddy-tools.md', 'dsh-tools.md', 'hermes-tools.md'):
-                relative = 'skills/s-router/references/' + filename
+                relative = 'skills/wukong-router/references/' + filename
                 self.assertIn('(' + relative + ')', text)
                 self.assertTrue((installed / relative).is_file())
 

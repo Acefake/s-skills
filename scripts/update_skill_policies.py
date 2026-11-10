@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     automatic = 0
-    for path in (ROOT / 'plugins/s-wukong/skills').glob('*/SKILL.md'):
+    for path in (ROOT / 'plugins/wukong/skills').glob('*/SKILL.md'):
         text = path.read_text(encoding='utf-8')
         end = text.index('\n---', 3)
         implicit = not bool(re.search(r'^disable-model-invocation:\s*true\s*$', text[3:end], re.M))

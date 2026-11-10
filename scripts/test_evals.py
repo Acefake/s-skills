@@ -1,4 +1,4 @@
-"""plugins/s-wukong/evals 的用例结构要能被 claude plugin eval 读到。"""
+"""plugins/wukong/evals 的用例结构要能被 claude plugin eval 读到。"""
 import re
 import tempfile
 import unittest
@@ -8,7 +8,7 @@ from unittest.mock import patch
 import marketplace_lib
 
 ROOT = Path(__file__).resolve().parents[1]
-EVALS = ROOT / 'plugins/s-wukong/evals'
+EVALS = ROOT / 'plugins/wukong/evals'
 GRADER_TYPES = {'llm', 'regex', 'tool_used', 'tool_order', 'file_exists', 'baseline'}
 
 

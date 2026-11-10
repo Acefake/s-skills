@@ -1,5 +1,8 @@
 # 技能改名
 
+当前插件名为 `wukong`，目录为 `plugins/wukong/`，市场和仓库仍为 `s-skills`。
+六个原有 `s-` 技能改为 `wukong-agent`、`wukong-init`、`wukong-mode`、`wukong-proposal`、`wukong-review`、`wukong-router`，其余技能名不变。同名 agent 同步改为 `wukong-agent`。以下版本记录保留历史名称。
+
 版本号从 1.0.0 重新开始计。下文的 1.x 版本号是重置前的旧编号，对应 git 历史里的提交，不是 Release。1.0.10 起插件名是 `s-wukong`，目录是 `plugins/s-wukong/`；下面各条仍按当时的名字记录。
 
 1.2.0 把技能目录和 `name` 改成英文小写 kebab-case，文件夹名等于 `name`。
@@ -30,14 +33,14 @@
 
 ## 回滚
 
-要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/s-wukong/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
+要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/wukong/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
 整次改名可以回退 1.2.0 的提交。旧中文名不再作为目录或 `name` 使用。
 
 ## 旧名到新名
 
 | 旧名 | 新名 | 状态 |
 |---|---|---|
-| s助手 | s-agent | 活跃 |
+| s助手 | wukong-agent | 活跃 |
 | 专挑注释 | comment-sicko | 活跃 |
 | 设置s模型 | setup-s-models | 活跃 |
 | 代码怎么工作 | how | 活跃 |
@@ -121,7 +124,7 @@
 | 说人话重讲 | plain-language | 已删 |
 | 自我改进 | self-improvement | 已删 |
 | s使用帮助 | s-help | 已删 |
-| （无旧中文名） | s-router | 活跃 |
+| （无旧中文名） | wukong-router | 活跃 |
 | （无旧中文名） | brainstorming | 活跃 |
 | （无旧中文名） | writing-plans | 活跃 |
 | （无旧中文名） | executing-plans | 活跃 |
@@ -146,11 +149,11 @@
 | design-system | 和 impeccable 的令牌、设计系统重叠 |
 | ui-ux-pro-max | 查表用，和 impeccable 抢同一句「做个页面」 |
 | web-design-guidelines | 检查清单，impeccable 已覆盖审查 |
-| apple-design | 单一风格，s-mode 不读 |
+| apple-design | 单一风格，wukong-mode 不读 |
 | shadcn | 只有项目用 shadcn 才需要 |
 | pick-frontend-lib | 偶尔选型 |
 | break-ui | 偶发 |
-| prototype | s-mode 读的是原则 principle-exhaust-the-design-space，不读这份 |
+| prototype | wukong-mode 读的是原则 principle-exhaust-the-design-space，不读这份 |
 | native-mobile-feel | 只做手机网页手感时才用 |
 | make-bot-ui | 只做 webhook 机器人界面 |
 | animate | 动画整批删掉；要恢复时先从 git 历史拿这一份 |
@@ -162,20 +165,20 @@
 | expo-animate | 只做 Expo |
 | emil-design | 和动画审查重复 |
 | ask-sonner | 只服务一个 toast 库 |
-| sharpen | s-mode 不读；日常用 brainstorming |
-| correct | s-mode 不读 |
-| blast-radius | s-mode 不读 |
-| recall | s-mode 不读 |
-| in-your-own-words | s-mode 不读 |
-| automate-me | s-mode 不读 |
-| create-verification-skill | s-mode 不读 |
-| maintain-verification-skill | s-mode 不读 |
-| typescript-best-practices | s-mode 不读；写 TS 多时优先从 git 历史拿回 |
-| teach | s-mode 不读；how 和 why 已覆盖 |
+| sharpen | wukong-mode 不读；日常用 brainstorming |
+| correct | wukong-mode 不读 |
+| blast-radius | wukong-mode 不读 |
+| recall | wukong-mode 不读 |
+| in-your-own-words | wukong-mode 不读 |
+| automate-me | wukong-mode 不读 |
+| create-verification-skill | wukong-mode 不读 |
+| maintain-verification-skill | wukong-mode 不读 |
+| typescript-best-practices | wukong-mode 不读；写 TS 多时优先从 git 历史拿回 |
+| teach | wukong-mode 不读；how 和 why 已覆盖 |
 | plain-language | 普通对话可以代替 |
-| self-improvement | 和 reflect 重叠，s-mode 只读 reflect |
-| s-help | s-mode 不读；目录改由 README 表格承担 |
-| test-driven-development | 与 s-mode 点名的 tdd 重叠，只留 tdd |
-| dispatching-parallel-agents | 与 s-mode 点名的 swarm 重叠，只留 swarm |
-| writing-skills | 与 s-mode 点名的 author-skill 重叠，只留 author-skill |
-| verification-before-completion | 与 s-mode 点名的 principle-prove-it-works 重叠，只留 principle-prove-it-works |
+| self-improvement | 和 reflect 重叠，wukong-mode 只读 reflect |
+| s-help | wukong-mode 不读；目录改由 README 表格承担 |
+| test-driven-development | 与 wukong-mode 点名的 tdd 重叠，只留 tdd |
+| dispatching-parallel-agents | 与 wukong-mode 点名的 swarm 重叠，只留 swarm |
+| writing-skills | 与 wukong-mode 点名的 author-skill 重叠，只留 author-skill |
+| verification-before-completion | 与 wukong-mode 点名的 principle-prove-it-works 重叠，只留 principle-prove-it-works |
