@@ -10,11 +10,11 @@ from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / 'plugins/s-wukong/skills/setup-s-instructions/scripts/global_instructions.py'
+SCRIPT = ROOT / 'plugins/wukong/skills/setup-s-instructions/scripts/global_instructions.py'
 
 
 def full_rules(legacy=False):
-    text = (ROOT / 'plugins/s-wukong/AGENTS.md').read_text(encoding='utf-8')
+    text = (ROOT / 'plugins/wukong/AGENTS.md').read_text(encoding='utf-8')
     text = text[text.index('收到任务后，在读文件、跑命令、提问或作答之前：'):]
     if legacy:
         # Reproduce the existing user configuration: plain names, no patent rows.
@@ -24,6 +24,33 @@ def full_rules(legacy=False):
 
 
 class GlobalInstructionsTest(unittest.TestCase):
+    def test_real_pre_rename_unmarked_rules_migrate_without_duplication(self):
+        old = (ROOT / 'scripts/fixtures/global-instructions-before-wukong.txt').read_text(encoding='utf-8').strip()
+        self.assertIn('s-router', old)
+        self.assertIn('s-review', old)
+        short = '收到任务后，在读文件、跑命令、提问或作答之前，先看当前可用的技能，用对得上的那一个。拿不准该用哪个，先用 s-router。只改文案、注释、样式数值或配置值时直接改，不跑测试；其他改动测试跑多少按 s-router 的「验证分档」，跑过的不重跑。'
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        for template in (old, short):
+            with self.subTest(template=template[:40]):
+                original = 'before\n' + template + '\nafter\n'
+                path.write_text(original, encoding='utf-8')
+                self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated')
+                self.assertEqual(path.read_text(encoding='utf-8'), original)
+                self.module.sync_global('codex', home=self.home, apply=True)
+                self.assertEqual(path.read_text(encoding='utf-8'), 'before\n' + self.module.managed_block() + '\nafter\n')
+                self.assertFalse(self.module.sync_global('codex', home=self.home, apply=True)['changed'])
+
+    def test_previous_plugin_block_is_migrated_in_place(self):
+        original = 'prefix\n<!-- s-wukong:instructions:start -->\nold\n<!-- s-wukong:instructions:end -->\nsuffix\n'
+        merged = self.module.merge_instructions(original)
+        self.assertTrue(merged.startswith('prefix\n' + self.module.START))
+        self.assertTrue(merged.endswith(self.module.END + '\nsuffix\n'))
+        self.assertNotIn('s-wukong:instructions:', merged)
+        self.assertEqual(self.module.merge_instructions(merged), merged)
+        with self.assertRaises(self.module.ConfigurationError):
+            self.module.merge_instructions(original + self.module.managed_block())
+
     @classmethod
     def setUpClass(cls):
         spec = importlib.util.spec_from_file_location('global_instructions', SCRIPT)
@@ -61,7 +88,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.module.sync_global('codex', home=self.home, apply=True)
         result = path.read_text(encoding='utf-8')
         self.assertEqual(result, '用户前缀\n' + self.module.managed_block() + '\n用户后缀\n')
-        self.assertEqual(path.with_name(path.name + '.s-wukong.bak').read_bytes(), original)
+        self.assertEqual(path.with_name(path.name + '.wukong.bak').read_bytes(), original)
 
     def test_previous_plugin_markers_are_replaced(self):
         path = self.home / '.codex/AGENTS.md'
@@ -90,7 +117,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             self.assertEqual(self.module.sync_global('claude-code', home=self.home)['status'], 'configured')
 
     def test_legacy_short_rules_migrate_without_duplicate(self):
-        source = (ROOT / 'plugins/s-wukong/AGENTS-snippet.md').read_text(encoding='utf-8')
+        source = (ROOT / 'plugins/wukong/AGENTS-snippet.md').read_text(encoding='utf-8')
         short = source.split('```text\n', 1)[1].split('\n```', 1)[0]
         path = self.home / '.codex/AGENTS.md'
         path.parent.mkdir()
@@ -139,7 +166,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             code, result = self.run_cli('workbuddy', apply=True)
             self.assertEqual((code, result['status'], result['changed']), (0, 'configured', expected))
             self.assertTrue(path.read_bytes().startswith(original))
-        self.assertEqual(path.with_name(path.name+'.s-wukong.bak').read_bytes(), original)
+        self.assertEqual(path.with_name(path.name+'.wukong.bak').read_bytes(), original)
         self.assertFalse((self.home/'.workbuddy').exists())
 
     def test_create_global_codex_and_repeat_without_changes(self):
@@ -147,7 +174,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         path = self.home / '.codex/AGENTS.md'
         self.assertTrue(result['changed'])
         first = path.read_bytes()
-        self.assertIn('s-wukong 全局技能规则', first.decode('utf-8'))
+        self.assertIn('wukong 全局技能规则', first.decode('utf-8'))
         result = self.module.sync_global('codex', home=self.home, apply=True)
         self.assertFalse(result['changed'])
         self.assertEqual(first, path.read_bytes())
@@ -159,7 +186,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         path.write_bytes(original)
         self.module.sync_global('claude-code', home=self.home, apply=True)
         self.assertTrue(path.read_bytes().startswith(original))
-        self.assertEqual(path.with_name(path.name + '.s-wukong.bak').read_bytes(), original)
+        self.assertEqual(path.with_name(path.name + '.wukong.bak').read_bytes(), original)
         first = path.read_bytes()
         self.module.sync_global('claude-code', home=self.home, apply=True)
         self.assertEqual(path.read_bytes(), first)
@@ -189,7 +216,7 @@ class GlobalInstructionsTest(unittest.TestCase):
                     expected = ('\ufeff用户偏好\r\n\r\n' + self.module.managed_block().replace('\n', '\r\n') + '\r\n其他配置\r\n').encode('utf-8')
                     self.assertEqual(path.read_bytes(), expected)
                     self.assertFalse(self.module.sync_global(host, home=self.home, apply=True)['changed'])
-                    self.assertTrue(path.with_name(path.name + '.s-wukong.bak').exists())
+                    self.assertTrue(path.with_name(path.name + '.wukong.bak').exists())
 
     def test_cli_migrates_existing_legacy_full_rules_for_both_hosts(self):
         for host, relative in (('codex', '.codex/AGENTS.md'), ('claude-code', '.claude/CLAUDE.md')):
@@ -204,7 +231,7 @@ class GlobalInstructionsTest(unittest.TestCase):
                 for changed in (True, False):
                     code, result = self.run_cli(host, apply=True)
                     self.assertEqual((code, result['status'], result['changed']), (0, 'configured', changed))
-                self.assertEqual(path.with_name(path.name + '.s-wukong.bak').read_bytes(), original)
+                self.assertEqual(path.with_name(path.name + '.wukong.bak').read_bytes(), original)
 
     def test_previous_how_route_is_replaced_with_current_policy(self):
         current = '| 教我、这块代码怎么工作 | 点名 how 时加载；未点名时直接讲解，保持显式调用政策 |'
@@ -227,7 +254,7 @@ class GlobalInstructionsTest(unittest.TestCase):
     def test_incomplete_or_changed_full_rules_are_not_treated_as_configured(self):
         complete = full_rules(legacy=True)
         incomplete = [
-            '先用 s-router，按需加载技能，测试按验证分档。',
+            '先用 wukong-router，按需加载技能，测试按验证分档。',
             complete.replace('2. 对照可用技能列表，加载对口的技能：任务落在它描述写的场景里。只是沾边的不加载。', ''),
             complete.replace('| 中英翻译 | translate |', '| 中英翻译 | pptx |'),
             complete[:complete.index('小改动（意图明确')],
@@ -320,7 +347,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             with self.assertRaises(self.module.ConfigurationError):
                 self.module.sync_global('claude-code', home=self.home, apply=True)
             self.assertEqual(path.read_bytes(), original.encode('utf-8'))
-        self.assertFalse(path.with_name(path.name + '.s-wukong.bak').exists())
+        self.assertFalse(path.with_name(path.name + '.wukong.bak').exists())
 
     def test_cli_reports_missing_apply_configured_and_cursor_without_writing_globals(self):
         environment = dict(os.environ)
@@ -356,7 +383,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.assertEqual(list(self.home.iterdir()), [])
 
     def test_daily_links_resolve_and_new_skill_is_explicit(self):
-        skills = ROOT / 'plugins/s-wukong/skills'
+        skills = ROOT / 'plugins/wukong/skills'
         guide = skills / 'setup-s-instructions/references/daily-check.md'
         self.assertTrue(guide.is_file())
         for path in skills.glob('*/SKILL.md'):
@@ -431,7 +458,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.assertTrue(updated.startswith(b'prefix\r\n'))
         self.assertTrue(updated.endswith(b'\r\nsuffix\r\n'))
         self.assertNotIn(b'\n', updated.replace(b'\r\n', b''))
-        self.assertEqual(path.with_name(path.name + '.s-wukong.bak').read_bytes(), original)
+        self.assertEqual(path.with_name(path.name + '.wukong.bak').read_bytes(), original)
         self.assertFalse(self.module.sync_global('claude-code', home=self.home, apply=True)['changed'])
 
     def test_unreadable_encoding_is_reported_without_modification(self):
@@ -453,7 +480,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             with self.assertRaises(PermissionError):
                 self.module.sync_global('codex', home=self.home, apply=True)
         self.assertEqual(path.read_bytes(), original)
-        backup = path.with_name(path.name + '.s-wukong.bak')
+        backup = path.with_name(path.name + '.wukong.bak')
         self.assertEqual(backup.read_bytes(), original)
         self.assertEqual(set(path.parent.iterdir()), {path, backup})
 

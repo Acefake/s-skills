@@ -5,20 +5,23 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path $PSScriptRoot -Parent
-$sourceRoot = Join-Path $repoRoot 'plugins/s-wukong/skills'
+$sourceRoot = Join-Path $repoRoot 'plugins/wukong/skills'
 $adapterDirectory = if ($HostName -eq 'workbuddy') { '.codebuddy' } else { '.agents' }
 $adapterRoot = Join-Path $repoRoot $adapterDirectory
 $destinationRoot = Join-Path $adapterRoot 'skills'
-$commonFiles = @((Get-Item -LiteralPath (Join-Path $repoRoot 'plugins/s-wukong/HOSTS.md')))
-$commonFiles += @(Get-ChildItem -LiteralPath (Join-Path $repoRoot 'plugins/s-wukong') -File | Where-Object {
+$commonFiles = @((Get-Item -LiteralPath (Join-Path $repoRoot 'plugins/wukong/HOSTS.md')))
+$commonFiles += @(Get-ChildItem -LiteralPath (Join-Path $repoRoot 'plugins/wukong') -File | Where-Object {
     $_.Name -like 'LICENSE*' -or $_.Name -like 'NOTICE*'
 })
 if ($HostName -eq 'workbuddy') {
-    $ownershipPath = Join-Path $adapterRoot '.s-wukong-common-files.json'
+    $ownershipPath = Join-Path $adapterRoot '.wukong-common-files.json'
     $legacyOwnershipPath = Join-Path $adapterRoot '.s-atlas-common-files.json'
+    $previousOwnershipPath = Join-Path $adapterRoot '.s-wukong-common-files.json'
     $ownership = $null
     $recordPath = $ownershipPath
-    if (-not (Test-Path -LiteralPath $ownershipPath) -and (Test-Path -LiteralPath $legacyOwnershipPath)) {
+    if (-not (Test-Path -LiteralPath $ownershipPath) -and (Test-Path -LiteralPath $previousOwnershipPath)) {
+        $recordPath = $previousOwnershipPath
+    } elseif (-not (Test-Path -LiteralPath $ownershipPath) -and (Test-Path -LiteralPath $legacyOwnershipPath)) {
         $recordPath = $legacyOwnershipPath
     }
     if (Test-Path -LiteralPath $recordPath) {

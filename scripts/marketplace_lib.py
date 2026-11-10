@@ -18,19 +18,19 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGINS_DIR = ROOT / "plugins"
 LOCK_PATH = ROOT / "plugin-versions.lock.json"
 
-PLUGIN_ORDER = ("s-wukong",)
+PLUGIN_ORDER = ("wukong",)
 
 # Docs that print the current plugin version. Each regex has one group: the
 # version. bump_plugin_version.py rewrites them; check_marketplace.py compares.
 DOC_VERSION_REFS = {
-    "s-wukong": (
+    "wukong": (
         ("README.md", re.compile(r"当前版本 (\d+\.\d+\.\d+)")),
         ("docs/architecture.md", re.compile(r"当前版本 \*\*(\d+\.\d+\.\d+)\*\*")),
     ),
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "s-wukong": 82,
+    "wukong": 82,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.

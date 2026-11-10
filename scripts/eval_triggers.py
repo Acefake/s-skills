@@ -24,11 +24,11 @@ from check_marketplace import frontmatter_block, frontmatter_description
 from marketplace_lib import skill_dirs
 
 CASES_PATH = Path(__file__).resolve().parent / "trigger_cases.json"
-EXCLUDED = frozenset({"s-router"})
+EXCLUDED = frozenset({"wukong-router"})
 NONE = "none"
 
 
-def load_candidates(plugin: str = "s-wukong") -> dict[str, str]:
+def load_candidates(plugin: str = "wukong") -> dict[str, str]:
     """
     读取宿主会自动选用的技能
     @param plugin 插件名

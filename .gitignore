@@ -10,6 +10,7 @@ node_modules/
 .codebuddy/HOSTS.md
 .codebuddy/LICENSE*
 .codebuddy/NOTICE*
+.codebuddy/.wukong-common-files.json
 .codebuddy/.s-wukong-common-files.json
 .codebuddy/.s-atlas-common-files.json
 
@@ -17,3 +18,7 @@ node_modules/
 
 # claude plugin eval 的运行结果
 plugins/*/evals/results/
+
+# 本地发布产物和宿主缓存，不入库
+artifacts/
+.plugins-cache.json
