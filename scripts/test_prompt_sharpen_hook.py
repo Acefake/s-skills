@@ -41,6 +41,22 @@ class PromptSharpenHookTest(unittest.TestCase):
         out = run_hook(prompt_event('改 "a\\b"'))
         self.assertIn('"改 \\"a\\\\b\\""', out['additionalContext'])
 
+    def test_long_prompt_is_quoted_only_in_part(self):
+        prompt = '甲' * 199 + '乙' + '丙' * 3000
+        context = run_hook(prompt_event(prompt))['additionalContext']
+        self.assertIn('甲' * 199 + '乙…（原话过长已截断，以原消息为准）"', context)
+        self.assertNotIn('丙', context)
+
+    def test_prompt_at_limit_is_quoted_whole(self):
+        context = run_hook(prompt_event('甲' * 200))['additionalContext']
+        self.assertIn('"' + '甲' * 200 + '"', context)
+        self.assertNotIn('已截断', context)
+        self.assertIn('已截断', run_hook(prompt_event('甲' * 201))['additionalContext'])
+
+    def test_truncation_happens_before_escaping(self):
+        context = run_hook(prompt_event('甲' * 198 + '\\"' + '丙' * 10))['additionalContext']
+        self.assertIn('甲' * 198 + '\\\\\\"…', context)
+
     def test_bypass_prefixes_and_machine_events_stay_silent(self):
         for prompt in ('*直接做', '#记住这个', '/deslop', '', '   ',
                        '<task-notification>done</task-notification>',

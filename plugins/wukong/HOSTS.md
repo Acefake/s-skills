@@ -6,11 +6,11 @@
 
 ### T3 Code 编排环境
 
-在 T3 Code 中运行时，底层仍按 Codex、Claude Code 等宿主读取技能；涉及模型设置、子代理或工作区时，同时读取 [T3 Code 编排参考](skills/wukong-router/references/t3-code-tools.md)。这是工具适配，不新增市场安装包。T3 的能力目录不等于底层原生子代理的模型目录。
+在 T3 Code 中运行时，底层仍按 Codex、Claude Code 等宿主读取技能；涉及模型设置、子代理或工作区时，同时读取 [T3 Code 编排参考](skills/wukong-router/references/t3-code-tools.md)；配置模型目标或宿主路径时读取 [T3 模型目标配置](skills/setup-s-models/references/t3-config.md)。这是工具适配，不新增市场安装包。T3 的能力目录不等于底层原生子代理的模型目录。
 
 T3 显式目标不可用时报告错误，不执行下文通用替代规则。用户明确授权了首选/次选时，按[顺序备用](skills/setup-s-models/references/mixed-budget-profiles.md)对账失败状态后，仅切换到已确认次选。跨提供商、额外设置、独立检出或用户点名委派时使用 T3；其他任务按参考选择原生执行。`t3:` 角色引用通过 `t3_targets.py` 解析，不能直接作为模型名。
 
-T3 模型支持按底层宿主保存的用户级全局默认与项目级覆盖。全局用 `--host` 明确宿主，按 [T3 编排参考的路径表](skills/wukong-router/references/t3-code-tools.md) 遵从环境变量、规则文件名和格式；不使用统一全局目录。项目无模型段才继承所选宿主全局默认，有完整段则整段覆盖。规则与目标始终属于同一作用域；目标 JSON 不是宿主原生模型设置。更换机器仍须核对 provider 实例、模型及参数。
+T3 模型支持按底层宿主保存的用户级全局默认与项目级覆盖。全局用 `--host` 明确宿主，按 [T3 模型目标配置的路径表](skills/setup-s-models/references/t3-config.md) 遵从环境变量、规则文件名和格式；不使用统一全局目录。项目无模型段才继承所选宿主全局默认，有完整段则整段覆盖。规则与目标始终属于同一作用域；目标 JSON 不是宿主原生模型设置。更换机器仍须核对 provider 实例、模型及参数。
 
 模型预设按能力选：[T3 混合三档](skills/setup-s-models/references/mixed-budget-profiles.md)、[Codex 与 Claude Code 原生三档](skills/setup-s-models/references/native-budget-profiles.md)。预设不授予跨厂商能力，不替代能力检测或最终配置确认。
 

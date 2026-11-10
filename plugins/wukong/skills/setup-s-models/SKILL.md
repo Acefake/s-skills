@@ -17,7 +17,7 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
 按实际派发工具选择预设：T3 支持相应跨提供商目标时使用混合三档；仅本厂商原生工具时读取[原生三档](references/native-budget-profiles.md)，不得把 DP、Claude 或 Codex 的异厂商模型直接填进去。只有继承能力时说明未分流。现有模型配置优先，不因安装预设自动覆盖。
 
-先发现当前宿主能派发的模型和参数，再推荐，不能沿用父模型就声称已检测全部。T3 中读取全部连接 Agent 的可运行/禁用状态并补查候选目录，使用 [T3 编排参考](../wukong-router/references/t3-code-tools.md)；不能先要求用户在预设两家组合中选。普通宿主按自身工具定义核实可派发模型，不假定能跨提供商。
+先发现当前宿主能派发的模型和参数，再推荐，不能沿用父模型就声称已检测全部。T3 中读取全部连接 Agent 的可运行/禁用状态并补查候选目录，使用 [T3 编排参考](../wukong-router/references/t3-code-tools.md) 和 [T3 模型目标配置](references/t3-config.md)；不能先要求用户在预设两家组合中选。普通宿主按自身工具定义核实可派发模型，不假定能跨提供商。
 
 Codex 固定角色文件要与已确认的新角色、模型及档位一致，文件名按下表英文键转为连字符；不自动删除用户旧 TOML。Claude Code 的模型以当前 Agent 工具接受的值为准，每次派发都要传可用的 effort。DSH 读取所选 profile 的可派发模型与 reasoning_effort，标记段只写 $DSH_HOME/AGENTS.md（未设置时 ~/.dsh/AGENTS.md），不放 profile 子目录；Hermes 读取所选 profile 的模型，不能按次选模则六行均写 inherit-parent，写 SOUL.md，不改 YAML。多个 profile 时先确认一个。
 
@@ -25,7 +25,7 @@ Codex 固定角色文件要与已确认的新角色、模型及档位一致，�
 
 按[交互提问](../setup-s-instructions/references/interactive-confirmation.md)选择当前模式可用工具，一次一步。有 request_user_input_async 时优先使用，返回只表示已展示，等待实际回答。没有可用工具才编号提问并说明原因。
 
-1. **确认环境与作用域。** 检测到的环境优先列出，同时允许选择 Codex、Claude Code、Cursor、WorkBuddy、DSH、Hermes。T3 提供“用户级全局默认”和“当前项目”两个作用域，用户已明确指定时沿用；用户级必须识别底层宿主，传 `--host` 并按 [T3 编排参考](../wukong-router/references/t3-code-tools.md) 的宿主路径表写入，不使用统一的全局模型目录。普通宿主同样确认实际读取路径。T3 目标 JSON 供编排器读取，不冒充宿主原生模型配置。
+1. **确认环境与作用域。** 检测到的环境优先列出，同时允许选择 Codex、Claude Code、Cursor、WorkBuddy、DSH、Hermes。T3 提供“用户级全局默认”和“当前项目”两个作用域，用户已明确指定时沿用；用户级必须识别底层宿主，传 `--host` 并按 [T3 模型目标配置](references/t3-config.md) 的宿主路径表写入，不使用统一的全局模型目录。普通宿主同样确认实际读取路径。T3 目标 JSON 供编排器读取，不冒充宿主原生模型配置。
    Hermes 多 profile 时先确认一个。具名 profile 的家目录须在所有 configure/check/resolve/recover 命令中显式传 `--global-dir <已确认的 profile home>`，例如 `~/.hermes/profiles/<name>`；只有确认进程 `HERMES_HOME` 已指向该 profile home 时才可省略，不能仅选择名称却写入默认家目录。
 2. **选择预算。** 说明已有预算，再只展示以下三个选项。高映射为工具预算“大”，思考按适用宿主的三档预设逐行配置，不把全局档位机械套给每个角色。旧配置为“不限”时说明它是历史档位，未确认新档位前不迁移。
    - 省：1 名评审；常规任务优先节省额度，专项攻坚保留强模型
