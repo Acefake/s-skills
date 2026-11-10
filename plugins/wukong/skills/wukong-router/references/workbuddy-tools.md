@@ -1,9 +1,10 @@
-# WorkBuddy 宿主参考
+# CodeBuddy 与 WorkBuddy 宿主参考
 
-仅在 WorkBuddy 需要安装、配置、执行工具或子代理时阅读。这里采用官方明确说明的项目与用户级兼容目录，不把其他宿主的工具参数当作 WorkBuddy 能力，也不声称已经上架 WorkBuddy 插件市场。
+CodeBuddy（CLI 与 IDE）和 WorkBuddy 同源，用户级目录都是 `~/.codebuddy`，宿主 id 统一写 `workbuddy`。仅在 CodeBuddy 或 WorkBuddy 需要安装、配置、执行工具或子代理时阅读。这里采用官方明确说明的项目与用户级兼容目录，不把其他宿主的工具参数当作 WorkBuddy 能力，也不声称已经上架 WorkBuddy 插件市场。
 
 ## 安装与作用域
 
+- CodeBuddy CLI 与 IDE 可以直接走插件市场：`/plugin marketplace add Acefake/s-skills`，再 `/plugin install wukong@s-skills`；升级时先 `/plugin uninstall` 旧的 `s-atlas@s-skills` 或 `s-wukong@s-skills`。它读取 `.codebuddy-plugin` 和 `.claude-plugin` 两处清单，所以本仓库只维护 `.claude-plugin`，不再放第二份。`hooks/hooks.json` 按默认路径加载，命令里的 `${CLAUDE_PLUGIN_ROOT}` 和 `${CODEBUDDY_PLUGIN_ROOT}` 都会被替换，钩子经 Windows 的 `cmd` 执行，`python3 … || python …` 可用。技能的 `disable-model-invocation` 会被解析。以上依据是 CodeBuddy CN 1.106.1 的插件加载代码和同一台机器上已装的 `s-atlas@s-skills`；GitHub 来源的 `marketplace add` 没有逐步实测。
 - 推荐本仓库 Windows 项目安装：`powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy`，链接到项目 `.codebuddy/skills/<技能名>/`，共享说明放 `.codebuddy/HOSTS.md`。保留完整源码目录，不能移动或删除链接目标。
 - 每个技能保留原始 frontmatter、正文和资源。脚本不修改用户全局规则；受管共享说明只有哈希仍匹配安装记录时才更新；遇到已有不同目标或未受管的不同内容时停止，先核对归属，不覆盖用户文件。
 - 相对链接涉及插件根目录资料时，先解析技能链接的真实目标，使用完整插件的物理根路径。Python 工具会通过脚本真实路径定位自身资源。不要把项目 `.codebuddy/` 当成插件根目录去猜 `plugin.json` 的位置。

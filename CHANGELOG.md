@@ -1,5 +1,12 @@
 # 变更记录
 
+## 1.0.13
+
+### 改动
+
+- 适配 CodeBuddy（CLI 与 IDE）：它会读取 `.claude-plugin` 清单，所以不新增清单，直接用 `/plugin marketplace add Acefake/s-skills` 和 `/plugin install wukong@s-skills`。README、宿主适配和 WorkBuddy 参考同步说明，CodeBuddy 与 WorkBuddy 共用 `~/.codebuddy`，宿主 id 仍是 `workbuddy`。
+- 市场校验不再把 CodeBuddy 当作退役宿主；仍拒绝重复的 `.codebuddy-plugin` 清单。
+
 ## 1.0.12
 
 ### 改动
