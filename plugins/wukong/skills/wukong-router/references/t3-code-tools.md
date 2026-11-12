@@ -28,7 +28,7 @@ python <scripts>/t3_targets.py check --host <底层宿主> --project <项目根>
 python <scripts>/t3_targets.py resolve --host <底层宿主> --project <项目根> --capabilities <能力快照> --role "修 bug"
 ```
 
-`resolve` 输出 `schemaVersion`、角色、隔离方式及每项的 `executor` 与 `target`。`--native-model` 可重复，只填当前原生工具实际接受的模型。需要隔离加 `--worktree`，用户点名 T3 或额外设置加 `--delegate`。未列出原生支持时保守输出 T3 路由；不能用 T3 目录推断原生工具支持。
+`resolve` 输出 `schemaVersion`、角色、隔离方式及每项的 `executor`、`target` 与 `fallback`（该名额的顺序次选，结构同前两项；没有次选时为 `null`，何时改用见 setup-s-models 的混合三档与顺序备用）。`--native-model` 可重复，只填当前原生工具实际接受的模型。需要隔离加 `--worktree`，用户点名 T3 或额外设置加 `--delegate`。未列出原生支持时保守输出 T3 路由；不能用 T3 目录推断原生工具支持。
 
 同提供商同模型无覆盖时可继承参数；切换目标时按新模型构造合法 `target.options`，空对象清除父参数。不得将 Codex 的 `reasoningEffort` 原样带给仅支持 `effort` 的模型。脚本输出的 target 用于委派；原生执行应按原生工具定义传参，不能直接照搬 target。
 

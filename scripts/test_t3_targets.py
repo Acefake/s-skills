@@ -110,7 +110,7 @@ class ResolveTest(unittest.TestCase):
         for mutate in (
             lambda c: c['targets']['review'].update(model='unknown'),
             lambda c: c['targets']['review'].update(options={'reasoningEffort': 'medium'}),
-            lambda c: c.update(schemaVersion=2),
+            lambda c: c.update(schemaVersion=3),
             lambda c: c['targets']['review'].update(options={'effort': 1}),
             lambda c: c['targets']['review'].update(runtimeMode='full-access'),
         ):
@@ -509,6 +509,56 @@ class ScopedConfigTest(unittest.TestCase):
         except OSError as exc:
             self.skipTest(str(exc))
         self.assertIn('符号链接', self.cli('check', '--project', str(self.project), ok=False)['error'])
+
+
+def with_fallback(fallback=None, version=2):
+    targets = config()
+    targets['schemaVersion'] = version
+    targets['targets']['review']['fallback'] = fallback or {
+        'providerInstanceId': 'codex', 'model': 'sol', 'options': {'reasoningEffort': 'high'}}
+    return targets
+
+
+class FallbackTest(unittest.TestCase):
+    def test_v2_fallback_is_checked_and_resolved(self):
+        self.assertEqual(t3.check(block(), with_fallback(), catalog())['status'], 'ok')
+        item = t3.resolve(block(), '开发实现', with_fallback(), catalog())['items'][0]
+        self.assertEqual(item['target']['model'], 'sonnet')
+        self.assertEqual(item['fallback'], {'executor': 'delegate_task', 'target': {
+            'providerInstanceId': 'codex', 'model': 'sol', 'options': {'reasoningEffort': 'high'}}})
+
+    def test_role_level_applies_to_primary_only(self):
+        targets = with_fallback()
+        del targets['targets']['review']['options']
+        item = t3.resolve(block('t3:review（high）'), '开发实现', targets, catalog())['items'][0]
+        self.assertEqual(item['target']['options'], {'effort': 'high'})
+        self.assertEqual(item['fallback']['target']['options'], {'reasoningEffort': 'high'})
+
+    def test_missing_fallback_resolves_to_none(self):
+        self.assertIsNone(t3.resolve(block(), '开发实现', config(), catalog())['items'][0]['fallback'])
+        self.assertIsNone(t3.resolve(block('sol'), '开发实现', config(), catalog())['items'][0]['fallback'])
+
+    def test_invalid_fallbacks_are_rejected(self):
+        primary = {'providerInstanceId': 'claude', 'model': 'sonnet', 'options': {'effort': 'medium'}}
+        nested = {'providerInstanceId': 'codex', 'model': 'sol', 'fallback': primary}
+        cases = {'missing model': with_fallback({'providerInstanceId': 'codex', 'model': 'nope'}),
+                 'bad option': with_fallback({'providerInstanceId': 'codex', 'model': 'sol',
+                                              'options': {'reasoningEffort': 'ultra'}}),
+                 'same as primary': with_fallback(primary),
+                 'nested': with_fallback(nested),
+                 'v1 with fallback': with_fallback(version=1)}
+        for name, targets in cases.items():
+            with self.subTest(name), self.assertRaises(t3.ConfigError):
+                t3.check(block(), targets, catalog())
+
+    def test_configure_writes_schema_version_2_and_keeps_fallback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory).resolve()
+            t3.configure(project / 'AGENTS.md', project, block(), config(), catalog(), apply=True)
+            self.assertEqual(t3.load_json(project / t3.TARGET_FILE)['schemaVersion'], 2)
+            t3.configure(project / 'AGENTS.md', project, block(), with_fallback(), catalog(), apply=True)
+            saved = t3.load_json(project / t3.TARGET_FILE)
+        self.assertEqual(saved['targets']['review']['fallback']['model'], 'sol')
 
 
 class ConfigureTest(unittest.TestCase):

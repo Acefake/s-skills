@@ -60,24 +60,45 @@ def unique_keys(pairs: list) -> dict:
 
 
 def validate_targets(config: dict) -> dict:
-    """严格校验目标结构，拒绝权限字段和非字符串/布尔参数。"""
-    if set(config) != {'schemaVersion', 'targets'} or type(config['schemaVersion']) is not int or config['schemaVersion'] != 1:
-        raise ConfigError('目标配置必须是 schemaVersion: 1 和 targets')
+    """严格校验目标结构，拒绝权限字段和非字符串/布尔参数；只有 schemaVersion 2 允许 fallback。"""
+    version = config.get('schemaVersion')
+    if set(config) != {'schemaVersion', 'targets'} or type(version) is not int or version not in (1, 2):
+        raise ConfigError('目标配置必须是 schemaVersion 1 或 2 和 targets')
     targets = config['targets']
     if not isinstance(targets, dict):
         raise ConfigError('targets 必须是对象')
     for alias, target in targets.items():
-        if not ALIAS.fullmatch(alias) or not isinstance(target, dict):
-            raise ConfigError(f'非法目标别名或内容: {alias}')
-        if set(target) - {'providerInstanceId', 'model', 'options'}:
-            raise ConfigError(f'{alias} 包含未知字段')
-        for key in ('providerInstanceId', 'model'):
-            if not isinstance(target.get(key), str) or not target[key].strip():
-                raise ConfigError(f'{alias}.{key} 必须是非空字符串')
-        options = target.get('options', {})
-        if not isinstance(options, dict) or any(not key or type(value) not in (str, bool) for key, value in options.items()):
-            raise ConfigError(f'{alias}.options 仅接受字符串键及字符串/布尔值')
+        if not ALIAS.fullmatch(alias):
+            raise ConfigError(f'非法目标别名: {alias}')
+        validate_target(alias, target, version == 2)
     return targets
+
+
+def validate_target(name: str, target: dict, allow_fallback: bool) -> None:
+    """校验单个目标；次选字段与首选相同，不能再嵌套，也不能与首选完全一致。"""
+    if not isinstance(target, dict):
+        raise ConfigError(f'非法目标内容: {name}')
+    if 'fallback' in target and not allow_fallback:
+        raise ConfigError(f'{name} 是次选，不能再嵌套 fallback' if name.endswith('.fallback')
+                          else f'{name} 的 fallback 需要 schemaVersion 2')
+    if set(target) - {'providerInstanceId', 'model', 'options', 'fallback'}:
+        raise ConfigError(f'{name} 包含未知字段')
+    for key in ('providerInstanceId', 'model'):
+        if not isinstance(target.get(key), str) or not target[key].strip():
+            raise ConfigError(f'{name}.{key} 必须是非空字符串')
+    options = target.get('options', {})
+    if not isinstance(options, dict) or any(not key or type(value) not in (str, bool) for key, value in options.items()):
+        raise ConfigError(f'{name}.options 仅接受字符串键及字符串/布尔值')
+    if 'fallback' in target:
+        fallback = target['fallback']
+        validate_target(f'{name}.fallback', fallback, False)
+        if same_target(target, fallback):
+            raise ConfigError(f'{name}.fallback 与首选完全相同，次选没有意义')
+
+
+def same_target(first: dict, second: dict) -> bool:
+    return all(first.get(key) == second.get(key) for key in ('providerInstanceId', 'model')) and \
+        first.get('options', {}) == second.get('options', {})
 
 
 def capability_catalog(data: dict) -> dict:
@@ -234,22 +255,31 @@ def resolve_item(name: str, level: str | None, default: str, targets: dict,
             validate_options(model, options)
         target = {'options': options} if options is not None else {}
         native = model_id in native_models and level is None
-    else:
-        alias = name[3:] if name.startswith('t3:') else None
-        if alias is not None and alias not in targets:
-            raise ConfigError(f'目标别名不存在: {name}')
-        source = targets[alias] if alias is not None else {
-            'providerInstanceId': caps.get('inheritedProviderInstanceId'), 'model': name}
-        provider_id, model_id = source['providerInstanceId'], source['model']
-        model = model_capability(caps, provider_id, model_id)
-        options = effective_options(source, model, level, default)
-        if ('options' not in source and provider_id == caps.get('inheritedProviderInstanceId')
-                and model_id == caps.get('inheritedModel')):
-            options = {**parent_options(caps), **options}
-            validate_options(model, options)
-        target = {'providerInstanceId': provider_id, 'model': model_id, 'options': options}
-        native = (provider_id == caps.get('inheritedProviderInstanceId') and model_id in native_models
-                  and 'options' not in source and all(parent_options(caps).get(k) == v for k, v in options.items()))
+        return {'executor': 'native' if native and not force else 'delegate_task', 'target': target, 'fallback': None}
+    alias = name[3:] if name.startswith('t3:') else None
+    if alias is not None and alias not in targets:
+        raise ConfigError(f'目标别名不存在: {name}')
+    source = targets[alias] if alias is not None else {
+        'providerInstanceId': caps.get('inheritedProviderInstanceId'), 'model': name}
+    fallback = source.get('fallback')
+    # 次选常在另一家提供商，角色行的显式档位只属于首选；次选用自己保存的参数。
+    return {**resolve_source(source, level, default, caps, native_models, force),
+            'fallback': resolve_source(fallback, None, default, caps, native_models, force) if fallback else None}
+
+
+def resolve_source(source: dict, level: str | None, default: str, caps: dict,
+                   native_models: list, force: bool) -> dict:
+    """把一个已保存或裸模型目标解析为派发参数；首选与次选共用同一套规则。"""
+    provider_id, model_id = source['providerInstanceId'], source['model']
+    model = model_capability(caps, provider_id, model_id)
+    options = effective_options(source, model, level, default)
+    if ('options' not in source and provider_id == caps.get('inheritedProviderInstanceId')
+            and model_id == caps.get('inheritedModel')):
+        options = {**parent_options(caps), **options}
+        validate_options(model, options)
+    target = {'providerInstanceId': provider_id, 'model': model_id, 'options': options}
+    native = (provider_id == caps.get('inheritedProviderInstanceId') and model_id in native_models
+              and 'options' not in source and all(parent_options(caps).get(k) == v for k, v in options.items()))
     return {'executor': 'native' if native and not force else 'delegate_task', 'target': target}
 
 
@@ -282,8 +312,9 @@ def check(text: str, config: dict, capabilities: dict) -> dict:
     targets = validate_targets(config)
     caps = capability_catalog(capabilities)
     for target in targets.values():
-        model = model_capability(caps, target['providerInstanceId'], target['model'])
-        validate_options(model, target.get('options', {}))
+        for item in filter(None, (target, target.get('fallback'))):
+            model = model_capability(caps, item['providerInstanceId'], item['model'])
+            validate_options(model, item.get('options', {}))
     checked = complete_role_config(text)
     for role in checked['rows']:
         resolve(text, role, config, caps)
@@ -451,6 +482,7 @@ def configure(rules: Path, project: Path, block: str, config: dict, capabilities
         existing = '---\ndescription: s per-role model choices (overrides skill defaults)\nalwaysApply: true\n---\n' + existing
     merged, _ = s_models.merged_text(existing, block.strip())
     check(merged, config, capabilities)
+    config = {**config, 'schemaVersion': 2}
     rules_data = (s_models.BOM if bom else b'') + merged.replace('\n', newline).encode('utf-8')
     target_data = (json.dumps(config, ensure_ascii=False, indent=2) + '\n').encode('utf-8')
     changes = [(p, originals[p], data) for p, data in ((target_path, target_data), (rules, rules_data))]
