@@ -32,7 +32,7 @@ Codex 固定角色文件要与已确认的新角色、模型及档位一致，�
    - 中：1 名评审；增强方案设计与开发实现
    - 高：2 名独立评审；复杂任务使用更强模型
 3. **选定并展示完整六行。** T3 按下面的弹窗流程从本机目录选首选和次选；非 T3 宿主没有跨提供商目录，按适用宿主的参考文件推荐。
-   - 先保存一份不带 search 的 `orchestrator_capabilities` 结果，再按[模型白名单](references/model-allowlist.json)里的模型 ID 逐个 search 并保存，运行 `python scripts/t3_catalog.py catalog --capabilities <基础快照> --capabilities <search 快照>...`。每个角色按白名单偏好顺序取本机可用的前 4 个作推荐，缺哪家就往后补；白名单在本机零匹配时退回本机完整目录，首项为 inherit-parent（该角色行直接写 `inherit-parent`，不生成目标、不过 `pick`，也没有次选）。推荐不足 4 个时只放这几个，「其他」可填编号表里的其他白名单模型；用户明确要看白名单外的本机模型时，`catalog` 与 `pick` 都加 `--all`，两者保持一致，否则编号对不上。`providerOnly` 限定的提供商（Cursor 只有 Grok 4.7、Composer 2.5）在任何场景都不露出其他模型。`missing` 里标为可能截断的，按其 `search` 补搜后重跑。
+   - 先保存一份不带 search 的 `orchestrator_capabilities` 结果，直接运行 `python scripts/t3_catalog.py catalog --capabilities <基础快照>`，推荐只来自[模型白名单](references/model-allowlist.json)。只对 `missing` 中标为 `maybeTruncated` 的模型按其 `search` 补搜，把结果追加为后续 `--capabilities` 重跑；没有这类条目就不搜，每次 search 都会返回全部提供商，逐个搜索会浪费大量上下文。每个角色按白名单偏好顺序取本机可用的前 4 个作推荐，缺哪家就往后补；白名单在本机零匹配时退回本机完整目录，首项为 inherit-parent（该角色行直接写 `inherit-parent`，不生成目标、不过 `pick`，也没有次选）。推荐不足 4 个时只放这几个，「其他」可填编号表里的其他白名单模型；用户明确要看白名单外的本机模型时，`catalog` 与 `pick` 都加 `--all`，两者保持一致，否则编号对不上。`providerOnly` 限定的提供商（Cursor 只有 Grok 4.7、Composer 2.5）在任何场景都不露出其他模型。
    - 先问总开关：全部用推荐 / 逐个角色选 / 只改某几个角色。全部用推荐时，每个角色取推荐第 1 个作首选，推荐里第一个不同提供商的作次选（没有就取第 2 个，只有 1 个就不设次选），档位按所选预算预设。
    - 逐个选时先在对话里贴出 `entries` 编号表，再每个角色提问一次、四题：首选模型、首选档位、次选模型、次选档位。模型题的选项是该角色的推荐，当前值标「（当前）」；次选题去掉首选并补「不设次选」；档位题列该模型的推荐档、默认档、高一档、低一档，模型没有档位参数时省略。「其他」填编号或模型 ID。高档独立评审的第 2 个名额再问一次。
    - 每个选择都用 `python scripts/t3_catalog.py pick --capabilities <同上> --choice <编号或模型ID> --option <key=value>` 转成目标，报错时只重问这一题。次选不能与首选完全相同；同一提供商时提醒额度耗尽会一起失效。首选写成目标字段，次选写进该目标的 `fallback`。
