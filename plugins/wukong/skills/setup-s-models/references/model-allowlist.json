@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "models": {
+    "haiku": {"model": "claude-haiku-5-5", "label": "Haiku 5.5", "providers": ["claudeAgent"]},
+    "sonnet": {"model": "claude-sonnet-5-5", "label": "Sonnet 5.5", "providers": ["claudeAgent"]},
+    "opus": {"model": "claude-opus-5-5", "label": "Opus 5.5", "providers": ["claudeAgent"]},
+    "fable": {"model": "claude-fable-5-2", "label": "Fable 5.2", "providers": ["claudeAgent"]},
+    "luna": {"model": "gpt-6-luna", "label": "Luna 6", "providers": ["codex"]},
+    "sol": {"model": "gpt-6.1-sol", "label": "Sol 6.1", "providers": ["codex"]},
+    "astra": {"model": "gpt-6-astra", "label": "Astra 6", "providers": ["codex"]},
+    "terra": {"model": "gpt-6.1-terra", "label": "Terra 6.1", "providers": ["codex"]},
+    "grok": {"model": "grok-4.7", "label": "Grok 4.7", "providers": ["cursor"]},
+    "composer": {"model": "composer-2.5", "label": "Composer 2.5", "providers": ["cursor"]},
+    "dsflash": {"model": "deepseek-v4.1-flash", "label": "DeepSeek V4.1 Flash", "providers": ["codebuddy"]},
+    "glm": {"model": "glm-5.3", "label": "GLM-5.3", "providers": ["codebuddy"]},
+    "glmflash": {"model": "glm-5.3-flash", "label": "GLM-5.3 Flash", "providers": ["codebuddy"]},
+    "hy4": {"model": "hy4std", "label": "Hy4", "providers": ["codebuddy"]},
+    "gemini": {"model": "gemini-3.8-flash-high", "label": "Gemini 3.8 Flash High", "providers": ["antigravity"]},
+    "swe2": {"model": "swe-2-flash-medium", "label": "SWE-2 Flash", "providers": ["devin"]}
+  },
+  "providerOnly": {
+    "cursor": ["grok-4.7", "composer-2.5"]
+  },
+  "roles": {
+    "检索与探索": ["haiku", "luna", "dsflash", "composer", "glmflash", "gemini", "hy4", "sonnet", "swe2"],
+    "方案设计": ["opus", "sonnet", "sol", "astra", "fable", "glm", "grok", "dsflash"],
+    "开发实现": ["sonnet", "sol", "opus", "composer", "glm", "astra", "swe2", "dsflash"],
+    "专项攻坚": ["opus", "astra", "sol", "grok", "fable", "glm", "dsflash", "sonnet"],
+    "验证测试": ["sol", "sonnet", "terra", "dsflash", "glm", "haiku", "gemini"],
+    "独立评审": ["dsflash", "sol", "sonnet", "grok", "glm", "opus", "astra"]
+  }
+}

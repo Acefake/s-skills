@@ -1,5 +1,13 @@
 # 变更记录
 
+## 1.0.15
+
+### 改动
+
+- `setup-s-models` 在 T3 中按本机目录推荐角色模型：新增 `references/model-allowlist.json`（白名单、各角色偏好顺序、`providerOnly`），`scripts/t3_catalog.py catalog` 合并能力快照与 search 结果，每个角色沿偏好顺序取本机可用的前 4 个，缺哪家就往后补；白名单零匹配时退回本机完整目录，首项为 inherit-parent。Cursor 只露出 Grok 4.7 与 Composer 2.5，Claude 模型只走 Claude。
+- 配置流程第 3 步改为弹窗：先问全部用推荐 / 逐个选 / 只改几个，再每个角色一次提问选首选模型、首选档位、次选模型、次选档位；用户填的编号或模型 ID 由 `t3_catalog.py pick` 校验。
+- `wukong.t3.json` 升到 schemaVersion 2，目标可带 `fallback` 保存顺序次选；check 同时校验次选，resolve 每项返回 `fallback`，角色行的显式档位只作用于首选。schemaVersion 1 仍可读取，configure 写入统一为 2。原先只记在 `s-model-fallbacks.md` 的次选，可经确认后迁进 `fallback`。
+
 ## 1.0.14
 
 ### 改动

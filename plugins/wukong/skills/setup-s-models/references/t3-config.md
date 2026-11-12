@@ -8,12 +8,17 @@ T3 新配置使用六角色；旧十五角色保留读取兼容，其他宿主�
 
 ```json
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "targets": {
     "implementation": {
       "providerInstanceId": "codex",
       "model": "gpt-6.1-sol",
-      "options": { "reasoningEffort": "medium" }
+      "options": { "reasoningEffort": "medium" },
+      "fallback": {
+        "providerInstanceId": "claudeAgent",
+        "model": "claude-sonnet-5-5",
+        "options": { "effort": "medium" }
+      }
     }
   }
 }
@@ -21,7 +26,9 @@ T3 新配置使用六角色；旧十五角色保留读取兼容，其他宿主�
 
 示例不是推荐覆盖值；使用本次能力目录确认的实例、模型和参数。`options` 仅接受目录支持的字符串或布尔值，不接受权限或命令字段。复杂模型 ID 原样放 JSON，不用逗号分割。
 
-推荐前扫描全部连接的 Agent 实例，展示可运行与禁用状态，按模型关键词补查被截断的候选目录；不要只保存父提供商的能力片段来推导角色。模型选择不等于平均使用所有 Agent。
+`fallback` 是该名额的顺序次选，可省略；字段与首选相同，不能再嵌套 `fallback`，也不能与首选完全相同。只有 schemaVersion 2 允许它；schemaVersion 1 仍可读取，`configure` 写入时统一输出 2。check 对首选和次选都按能力目录校验，resolve 每项返回 `fallback`（没有次选时为 `null`）。解析器不自动切换，何时改用次选按[混合三档与顺序备用](mixed-budget-profiles.md)的条件由主代理决定。
+
+推荐前扫描全部连接的 Agent 实例，展示可运行与禁用状态，按模型关键词补查被截断的候选目录；不要只保存父提供商的能力片段来推导角色。模型选择不等于平均使用所有 Agent。候选目录和每个角色的推荐由 `scripts/t3_catalog.py catalog` 按[模型白名单](model-allowlist.json)从本机目录计算，用户填的编号或模型 ID 用 `pick` 校验，流程见 SKILL.md 第 3 步。
 
 读新配置时，旧角色调用名映射到对应新行。读旧配置时仍可按原角色精确派发；若用新角色请求合并读取多个旧行且模型不同则报冲突，要求用户明确选择。新写入必须完整六行；六行与十五行混写时报错。映射只决定模型选择，不授权委派、运行测试或更改只读任务范围。
 
