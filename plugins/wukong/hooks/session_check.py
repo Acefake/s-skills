@@ -59,13 +59,13 @@ def build_message(check, root=PLUGIN_ROOT, version=None):
 def main():
     try:
         raw = sys.stdin.buffer.read()
+        message = build_message(run_check())
+        print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": message}}), flush=True)
         if journal:
             try:
                 journal.record(json.loads(raw.decode("utf-8")))
             except Exception:
                 pass
-        message = build_message(run_check())
-        print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": message}}))
     except Exception:
         pass
 

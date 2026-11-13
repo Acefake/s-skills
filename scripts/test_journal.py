@@ -158,6 +158,36 @@ class RecordTest(JournalCase):
         self.assertEqual([(r['event'], r['session']) for r in self.rows()], [('session', 's9')])
 
 
+    def test_missing_sqlite_module_is_silent(self):
+        code = ('import runpy, sys; sys.modules["sqlite3"] = None; sys.argv = [sys.argv[1]]; '
+                'runpy.run_path(sys.argv[0], run_name="__main__")')
+        result = subprocess.run([sys.executable, '-I', '-c', code, str(HOOKS / 'journal.py')],
+                                input=json.dumps(prompt('给接口加分页')).encode('utf-8'),
+                                capture_output=True, timeout=30, env=self.env)
+        self.assertEqual((result.returncode, result.stdout, result.stderr), (0, b'', b''))
+        self.assertFalse((self.home / 'journal.db').exists())
+
+    @unittest.skipUnless(os.name == 'posix', 'POSIX permissions')
+    def test_existing_loose_permissions_are_tightened(self):
+        self.home.mkdir(mode=0o755)
+        os.chmod(self.home, 0o755)
+        self.run_script(HOOKS / 'journal.py', {'hook_event_name': 'SessionStart'})
+        os.chmod(self.home / 'journal.db', 0o644)
+        self.run_script(HOOKS / 'journal.py', {'hook_event_name': 'SessionStart'})
+        self.assertEqual(self.home.stat().st_mode & 0o777, 0o700)
+        self.assertEqual((self.home / 'journal.db').stat().st_mode & 0o777, 0o600)
+
+    def test_hook_output_comes_before_the_journal(self):
+        conn = self.journal.connect(self.home)
+        conn.execute('BEGIN EXCLUSIVE')
+        try:
+            out = self.run_script(IMPROVE, prompt('把登录页的报错提示改清楚一点'))
+        finally:
+            conn.execute('ROLLBACK')
+            conn.close()
+        self.assertIn('prompt-sharpen', out)
+
+
 class ConcurrencyTest(JournalCase):
     def test_parallel_writers_lose_nothing(self):
         writer = (
@@ -203,14 +233,23 @@ class PruneTest(JournalCase):
         finally:
             conn.close()
 
+    def test_old_rows_go_on_every_append_even_below_the_cadence(self):
+        conn = self.journal.connect(self.home)
+        self.insert(conn, [200, 1])
+        conn.close()
+        self.journal.append({'at': int(time.time()), 'ts': 'x', 'event': 'task'}, self.home)
+        self.assertEqual(len(self.rows()), 2)
+
     def test_prune_runs_periodically_on_append(self):
         with mock.patch.object(self.journal, 'PRUNE_EVERY', 3):
             conn = self.journal.connect(self.home)
             self.insert(conn, [200])
             conn.close()
-            for _ in range(2):
+            with mock.patch.object(self.journal, 'MAX_ROWS', 1):
                 self.journal.append({'at': int(time.time()), 'ts': 'x', 'event': 'task'}, self.home)
-        self.assertEqual([r['id'] for r in self.rows()], [2, 3])
+                self.assertEqual([r['id'] for r in self.rows()], [2])
+                self.journal.append({'at': int(time.time()), 'ts': 'x', 'event': 'task'}, self.home)
+        self.assertEqual([r['id'] for r in self.rows()], [3])
 
 
 class DumpTest(JournalCase):
@@ -222,6 +261,12 @@ class DumpTest(JournalCase):
         self.assertEqual(len(items), 2)
         self.assertTrue(items[0]['text'].startswith('第 1 个'))
         self.assertNotIn('id', items[0])
+
+    def test_dump_handles_unusual_directory_names(self):
+        env = dict(self.env, WUKONG_HOME=str(Path(self.tmp.name) / 'we#ird?dir%20'))
+        self.run_script(HOOKS / 'journal.py', prompt('给接口加分页和排序'), env=env)
+        out = self.run_script(HOOKS / 'journal.py', {}, env=env, args=('--dump',))
+        self.assertEqual(json.loads(out)['event'], 'task')
 
     def test_dump_without_database_prints_nothing(self):
         self.assertEqual(self.run_script(HOOKS / 'journal.py', {}, args=('--dump',)), '')

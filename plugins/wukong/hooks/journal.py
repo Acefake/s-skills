@@ -18,17 +18,22 @@ replies and file contents are never read. ``WUKONG_JOURNAL=0`` turns it off.
 import json
 import os
 import re
-import sqlite3
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+try:
+    import sqlite3
+except Exception:  # 少数精简版 Python 没有 _sqlite3：不记录，也不报错。
+    sqlite3 = None
+
 SCHEMA_VERSION = 1
 MAX_AGE_SECONDS = 90 * 24 * 3600
 MAX_ROWS = 50000
 PRUNE_EVERY = 200
-LOCK_TIMEOUT = 2.0
+# 每条语句最多等这么久；一次记录最多几条语句，总等待仍远低于钩子的 5 秒超时。
+LOCK_TIMEOUT = 0.5
 TASK_EXCERPT = 80
 EXPLICIT_EXCERPT = 120
 SHORT_LIMIT = 4
@@ -149,6 +154,15 @@ def build_event(data, now=None):
     return record
 
 
+def _restrict(path, mode):
+    """Tighten permissions on files created elsewhere (e.g. by hand); best effort."""
+    try:
+        if os.name == "posix" and path.stat().st_mode & 0o777 != mode:
+            os.chmod(str(path), mode)
+    except OSError:
+        pass
+
+
 def connect(directory=None):
     """Open the journal, creating it with private permissions on first use."""
     directory = directory or journal_dir()
@@ -156,7 +170,9 @@ def connect(directory=None):
     old_umask = os.umask(0o077)
     try:
         directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+        _restrict(directory, 0o700)
         conn = sqlite3.connect(str(path), timeout=LOCK_TIMEOUT, isolation_level=None)
+        _restrict(path, 0o600)
     finally:
         os.umask(old_umask)
     try:
@@ -177,16 +193,17 @@ def connect(directory=None):
     return conn
 
 
-def prune(conn, now=None):
-    """Delete events older than 90 days and keep at most MAX_ROWS newest rows."""
+def prune(conn, now=None, cap=True):
+    """Delete events older than 90 days; with cap, keep at most MAX_ROWS newest rows."""
     now = time.time() if now is None else now
     conn.execute("BEGIN IMMEDIATE")
     try:
         conn.execute("DELETE FROM events WHERE at < ?", (int(now) - MAX_AGE_SECONDS,))
-        conn.execute(
-            "DELETE FROM events WHERE id <= (SELECT id FROM events ORDER BY id DESC LIMIT 1 OFFSET ?)",
-            (MAX_ROWS,),
-        )
+        if cap:
+            conn.execute(
+                "DELETE FROM events WHERE id <= (SELECT id FROM events ORDER BY id DESC LIMIT 1 OFFSET ?)",
+                (MAX_ROWS,),
+            )
         conn.execute("COMMIT")
     except Exception:
         conn.execute("ROLLBACK")
@@ -203,6 +220,7 @@ def append(record, directory=None):
                 "INSERT INTO events (%s) VALUES (%s)" % (", ".join(COLUMNS), ", ".join("?" * len(COLUMNS))),
                 values,
             ).lastrowid
+            conn.execute("DELETE FROM events WHERE at < ?", (int(time.time()) - MAX_AGE_SECONDS,))
             conn.execute("COMMIT")
         except Exception:
             conn.execute("ROLLBACK")
@@ -216,7 +234,7 @@ def append(record, directory=None):
 def record(data):
     """Record one hook payload. Safe to call from any hook; never raises."""
     try:
-        if not enabled():
+        if not enabled() or sqlite3 is None:
             return
         event = build_event(data)
         if event:
@@ -227,9 +245,9 @@ def record(data):
 
 def dump(limit=200, directory=None, out=sys.stdout):
     path = (directory or journal_dir()) / "journal.db"
-    if not path.exists():
+    if sqlite3 is None or not path.exists():
         return
-    conn = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=LOCK_TIMEOUT)
+    conn = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True, timeout=LOCK_TIMEOUT)
     try:
         rows = conn.execute(
             "SELECT %s FROM events ORDER BY id DESC LIMIT ?" % ", ".join(COLUMNS[1:]), (limit,)

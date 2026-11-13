@@ -103,11 +103,12 @@ def build_context(data):
 def main():
     try:
         data = json.loads(sys.stdin.buffer.read().decode("utf-8"))
-        if journal and data.get("hook_event_name") == "UserPromptSubmit":
-            journal.record(data)
         event, text = build_context(data)
         if text:
-            print(json.dumps({"hookSpecificOutput": {"hookEventName": event, "additionalContext": text}}))
+            print(json.dumps({"hookSpecificOutput": {"hookEventName": event, "additionalContext": text}}), flush=True)
+        # 先交出提醒再记日志：记录变慢或失败都不影响这一轮的输出。
+        if journal and event == "UserPromptSubmit":
+            journal.record(data)
     except Exception:
         pass
 
