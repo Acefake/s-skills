@@ -256,7 +256,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         incomplete = [
             '先用 wukong-router，按需加载技能，测试按验证分档。',
             complete.replace('2. 对照可用技能列表，加载对口的技能：任务落在它描述写的场景里。只是沾边的不加载。', ''),
-            complete.replace('| 中英翻译 | translate |', '| 中英翻译 | pptx |'),
+            complete.replace('| 写或改代码、整理目录 | code-style |', '| 写或改代码、整理目录 | pptx |'),
             complete[:complete.index('小改动（意图明确')],
         ]
         path = self.home / '.codex/AGENTS.md'

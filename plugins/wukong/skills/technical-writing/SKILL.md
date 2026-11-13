@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 要写得让一个疲惫的工程师第一遍就能看懂。四层规则都要用上。
 
-这里管 Markdown、README、RFC、设计说明、PR 说明和提交信息的句子。`.docx` 用 `docx`，幻灯片用 `pptx`，表格用 `xlsx`，PDF 用 `pdf`。把一段现成文字译成另一种语言用 `translate`。不要用这份标准去排 Word 的字体和修订。
+这里管 Markdown、README、RFC、设计说明、PR 说明和提交信息的句子。`.docx` 用 `docx`，幻灯片用 `pptx`，表格用 `xlsx`，PDF 用 `pdf`。不要用这份标准去排 Word 的字体和修订。
 
 有三条规则高于这四层：
 

@@ -50,14 +50,10 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 |---|---|
 | 新功能、改行为 | brainstorming，再领域实现技能；小改动按快路 |
 | bug、报错、结果不对、bug-fix、fix bug | systematic-debugging，再领域技能 |
-| Word、幻灯片、表格、PDF | docx、pptx、xlsx、pdf |
-| README、技术文档、RFC | technical-writing |
-| 中英翻译 | translate |
-| 专利挖掘、交底书、查新 | patent-disclosure |
-| 专利申请、权利要求、说明书、附图 | patent-application |
+| Word、幻灯片、表格、PDF、README、技术文档、RFC | 显式技能：用户点名 docx、pptx、xlsx、pdf、technical-writing 时加载；未点名直接做 |
 | 提交说明、提交、PR | commit-pr；集成方式未定用finishing-a-development-branch |
 | 审PR、分支、本地改动 | wukong-review，只读报告，含位置与P0/P1/P2 |
-| 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | archify；架构重构评审建议用户点名refactor-architecture（显式技能） |
+| 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | 点名archify时加载（显式技能）；架构重构评审建议用户点名refactor-architecture（显式技能） |
 | 教我、解释代码怎么工作 | 点名how时加载；未点名时直接讲解，不自动加载显式技能 |
 | 优化提示词，或对话无法补足且会影响结果的需求关键缺口 | prompt-sharpen，加载后先研究，必要时才提问；不以已读代码为加载前提。bug 由 systematic-debugging、新功能设计由 brainstorming 主导，不重复澄清 |
 | 建项目档案、同步项目记录、更新架构或规范文档 | project-memory |

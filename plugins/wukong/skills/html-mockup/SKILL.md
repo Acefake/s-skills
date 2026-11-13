@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 - 本技能只做静态设计稿和静态素材的截图。
 - 要打开真实应用点一遍、截真实界面，用 `control-ui`。
-- 用户选定方案后按图写代码，用 `impeccable`；点名要一套视觉方向，用 `frontend-design`。
+- 用户选定方案后按图写代码，用 `impeccable`。
 
 ## 何时用
 

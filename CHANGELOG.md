@@ -4,7 +4,11 @@
 
 ### 改动
 
-- 文档、设计、专利类 11 个低频技能改为点名调用（`disable-model-invocation: true`，Codex 同步关闭隐式调用）：`docx`、`pptx`、`xlsx`、`pdf`、`technical-writing`、`translate`、`html-mockup`、`apple-glass`、`archify`、`patent-disclosure`、`patent-application`。不再常驻技能列表，预计每次会话省约 1k token；用时直接点名，如「用 docx 做一份报告」。
+- 低频技能改为点名调用（`disable-model-invocation: true`，Codex 同步关闭隐式调用）：`docx`、`pptx`、`xlsx`、`pdf`、`technical-writing`、`html-mockup`、`apple-glass`、`archify`。不再常驻技能列表，用时直接点名，如「用 docx 做一份报告」。全局规则和 `wukong-router` 的路由表同步改为「点名时加载，未点名直接做」，触发用例去掉这些点名技能。
+- 删除 `translate`、`frontend-design`、`patent-disclosure`、`patent-application`。翻译由模型直接做，界面设计用 `impeccable`。全局规则去掉对应行，旧版规则冻结为 `full-instructions-v8.txt`，已安装的无标记规则仍能原位迁移。
+- 合并三个附属技能，正文移入宿主技能的 `references/`：`comment-sicko` → `no-comments`（同名子代理保留，改读新路径），`benchmark-checklist` → `principle-explain-the-number`，`ketchup` → `wukong-mode` 的 `catch-up.md`（autopilot 剧本的补进度回复照旧）。
+- `apple-glass` 改为通用的 Apple TV 风格界面语言，去掉影盒专属的仓库、路径和检查命令，类名前缀 `yb-` 改为 `ag-`。
+- 技能从 82 个减到 75 个：48 个自动，27 个点名。
 
 ## 1.0.16
 

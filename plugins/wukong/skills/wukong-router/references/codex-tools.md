@@ -114,4 +114,4 @@ profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/con
 
 ## no-comments
 
-用话派一个子智能体，点名内置 `explorer`。提示词只写：先读 `skills/comment-sicko/SKILL.md`，再审这个范围。文档写明这不会变成单独的只读沙箱。
+用话派一个子智能体，点名内置 `explorer`。提示词只写：先读 `skills/no-comments/references/comment-sicko.md`，再审这个范围。文档写明这不会变成单独的只读沙箱。

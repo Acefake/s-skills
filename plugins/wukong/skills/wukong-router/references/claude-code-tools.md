@@ -107,4 +107,4 @@ Claude Code 拉差异时，判断类用 `opus`，写代码类用 `sonnet`（完�
 
 ## no-comments
 
-`Agent`，`subagent_type: "Explore"`。提示词只写：先读 `skills/comment-sicko/SKILL.md`，再审这个范围。
+`Agent`，`subagent_type: "Explore"`。提示词只写：先读 `skills/no-comments/references/comment-sicko.md`，再审这个范围。

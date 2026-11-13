@@ -28,7 +28,7 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 6. **写规格。** 将确认的设计保存到 `docs/wukong/specs/YYYY-MM-DD-<topic>-design.md`，用户指定路径优先。只有用户已授权提交时，才按[commit-pr](../commit-pr/SKILL.md)提交规格。有 `elements-of-style:writing-clearly-and-concisely` 时使用它。
 7. **就地自检。** 按下节检查并修正，不另派一轮审查。
 8. **用户审阅。** 给出已写好的规格路径，请用户审阅；有修改就修订并重新自检，获批后才继续。
-9. **交接计划。** 调用[writing-plans](../writing-plans/SKILL.md)，不直接转入 frontend-design、mcp-builder 或其他实现技能。
+9. **交接计划。** 调用[writing-plans](../writing-plans/SKILL.md)，不直接转入 impeccable 或其他实现技能。
 
 ## 设计要求
 

@@ -11,7 +11,7 @@
 活跃 61：原来的 50 个（含 frontend-design）加上 11 个开发流程技能。
 归档 38：原来的 35 个，加上 3 个和现有技能重叠、因此不进 `skills/` 的开发流程技能。
 
-`frontend-design`（原「有主见的界面」）保留为手点技能，`disable-model-invocation: true`。日常做界面仍自动用 `impeccable`。
+`frontend-design`（原「有主见的界面」）曾保留为手点技能，1.0.17 删除。日常做界面用 `impeccable`。
 
 1.2.1 把 `description` 改成中文在前、英文 `Use when` 在后。1.2.2 起直接写中文句子：`……。Use when ... .`。英文 `Use when` 接在中文句号后面。技能和 agent 说明用同一写法。
 
@@ -41,7 +41,7 @@
 | 旧名 | 新名 | 状态 |
 |---|---|---|
 | s助手 | wukong-agent | 活跃 |
-| 专挑注释 | comment-sicko | 活跃 |
+| 专挑注释 | comment-sicko | 1.0.17 并入 no-comments，保留为子代理 |
 | 设置s模型 | setup-s-models | 活跃 |
 | 代码怎么工作 | how | 活跃 |
 | 代码为什么这样 | why | 活跃 |
@@ -56,15 +56,15 @@
 | 编写skill | author-skill | 活跃 |
 | 操作界面 | control-ui | 活跃 |
 | 操作命令行 | control-cli | 活跃 |
-| 基准测试清单 | benchmark-checklist | 活跃 |
+| 基准测试清单 | benchmark-checklist | 1.0.17 并入 principle-explain-the-number |
 | 决定记录日志 | show-me-your-work | 活跃 |
 | 自定流程搞定 | figure-it-out | 活跃 |
 | 定时循环 | timed-loop | 活跃 |
 | 反思并改skill | reflect | 活跃 |
 | 测试驱动修bug | tdd | 活跃 |
-| 补上对话进度 | ketchup | 活跃 |
+| 补上对话进度 | ketchup | 1.0.17 并入 wukong-mode（references/catch-up.md） |
 | 精致界面设计 | impeccable | 活跃 |
-| 有主见的界面 | frontend-design | 活跃 |
+| 有主见的界面 | frontend-design | 1.0.17 已删，用 impeccable |
 | 原则-偷懒守则 | principle-laziness-protocol | 活跃 |
 | 原则-基础优先 | principle-foundational-thinking | 活跃 |
 | 原则-从头重新设计 | principle-redesign-from-first-principles | 活跃 |
@@ -182,3 +182,5 @@
 | dispatching-parallel-agents | 与 wukong-mode 点名的 swarm 重叠，只留 swarm |
 | writing-skills | 与 wukong-mode 点名的 author-skill 重叠，只留 author-skill |
 | verification-before-completion | 与 wukong-mode 点名的 principle-prove-it-works 重叠，只留 principle-prove-it-works |
+
+1.0.17 删除 `translate`、`frontend-design`、`patent-disclosure`、`patent-application`；`ketchup` 并入 `wukong-mode` 的 `references/catch-up.md`，`benchmark-checklist` 并入 `principle-explain-the-number` 的 `references/benchmark-checklist.md`，`comment-sicko` 技能正文并入 `no-comments` 的 `references/comment-sicko.md`（同名子代理保留）。`apple-glass` 去掉影盒专属内容，改为通用的 Apple TV 风格界面语言，类名前缀 `yb-` 改为 `ag-`。

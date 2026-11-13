@@ -38,7 +38,7 @@ python scripts/global_instructions.py --host workbuddy
 
 提示词正文每次从当前插件的 [AGENTS.md](../../AGENTS.md) 读取，版本取自同一插件的 `plugin.json`，不从远端或其他缓存版本拼接。标记块同时记录版本和当前完整规则；版本或正文不同即为 `outdated`。检查返回的 `version` 表示本次期望版本，只有 `configured` 才表示目标已同步。
 
-[短规则](../../AGENTS-snippet.md)、[冻结的旧短规则](references/short-instructions-v1.txt) 和已登记的旧版完整规则（[v1](references/full-instructions-v1.txt)、[v2](references/full-instructions-v2.txt)、[v3](references/full-instructions-v3.txt)、[v4](references/full-instructions-v4.txt)、[v5](references/full-instructions-v5.txt)、[v6](references/full-instructions-v6.txt)、[v7](references/full-instructions-v7.txt)）用于识别迁移来源，包含省略两条专利路由的版本。历史快照保留当时的技能名，不随品牌改名更新。识别允许空白、换行和行内代码反引号差异，但要求完整规则独占对应行。检查时报告 `outdated`，显式 `--apply` 后原位替换；保留块外内容、BOM、换行风格和首份备份。出现多个无标记规则块时停止写入，避免猜测该改哪一份。
+[短规则](../../AGENTS-snippet.md)、[冻结的旧短规则](references/short-instructions-v1.txt) 和已登记的旧版完整规则（[v1](references/full-instructions-v1.txt)、[v2](references/full-instructions-v2.txt)、[v3](references/full-instructions-v3.txt)、[v4](references/full-instructions-v4.txt)、[v5](references/full-instructions-v5.txt)、[v6](references/full-instructions-v6.txt)、[v7](references/full-instructions-v7.txt)、[v8](references/full-instructions-v8.txt)）用于识别迁移来源，包含省略两条专利路由的版本。历史快照保留当时的技能名，不随品牌改名更新。识别允许空白、换行和行内代码反引号差异，但要求完整规则独占对应行。检查时报告 `outdated`，显式 `--apply` 后原位替换；保留块外内容、BOM、换行风格和首份备份。出现多个无标记规则块时停止写入，避免猜测该改哪一份。
 
 上一代 `<!-- s-wukong:instructions:start -->` / `<!-- s-wukong:instructions:end -->` 标记也会原位迁移为 `wukong` 标记；已有的 `.s-wukong.bak` 和 `.s-atlas.bak` 均保留不动。
 

@@ -131,7 +131,7 @@ com.example.app.shared
 - 叙述步骤的行内注释（`// 第一步：取数据`）、注释掉的代码、改动记录、和代码重复的话。
 - 行内注释只留「为什么」：外部约束、绕不开的坑、看起来不对但是对的写法。
 
-`no-comments`、`comment-sicko`、`deslop` 清注释时，按这一节保留文档注释。
+`no-comments`（含 comment-sicko 子代理）、`deslop` 清注释时，按这一节保留文档注释。
 
 ## 三、质量底线
 

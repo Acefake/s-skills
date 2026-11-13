@@ -5,13 +5,13 @@
 - **浮动玻璃侧栏**：离窗口边 12px（`--shell-inset`），展开 224、收起 64（只剩图标列，文字变 tooltip）。搜索框收在侧栏里，Ctrl/Cmd+F 聚焦它。
 - **顶部胶囊**：前进后退、窗口键各是一枚玻璃胶囊，高 44，离上沿 18；窗口键胶囊离右沿 22、宽 132。页面右上角的圆钮排在窗口键胶囊左边。
 - **内容区**顶部让出胶囊（`--shell-top`），左侧让出侧栏宽加间距（外壳按展开或收起写 `--shell-left`）。内容左右内边距 40、上下 32。
-- 胶囊滚到画面上时切成画面玻璃（`.yb-on-media`），用 `.yb-media-swap` 淡入淡出颜色。
+- 胶囊滚到画面上时切成画面玻璃（`.ag-on-media`），用 `.ag-media-swap` 淡入淡出颜色。
 - 手机宽度：侧栏变底栏（56 高，`UiNavItem layout="stack"`），注意 `env(safe-area-inset-*)`。
 
 ## Hero（首页、详情页）
 
-- 全幅背景图，`object-fit: cover`。底部放 `.yb-pblur`（详情 Hero 的 `--pblur-height` 是 50%，横卡是 62%），左侧叠 `--scrim-side-hero` 给文案一侧压暗，整块叠 `--scrim-fade-hero` 或 `--scrim-detail-hero`。
-- 整块加 `.yb-on-media`。深色主题下页面本身就是黑底，不需要渐隐；浅色主题用 `--hero-edge-mask` / `--hero-detail-mask` 在画面内部最后一段渐隐到页面底色，文案上移 `--hero-*-lift` 避开渐隐段。
+- 全幅背景图，`object-fit: cover`。底部放 `.ag-pblur`（详情 Hero 的 `--pblur-height` 是 50%，横卡是 62%），左侧叠 `--scrim-side-hero` 给文案一侧压暗，整块叠 `--scrim-fade-hero` 或 `--scrim-detail-hero`。
+- 整块加 `.ag-on-media`。深色主题下页面本身就是黑底，不需要渐隐；浅色主题用 `--hero-edge-mask` / `--hero-detail-mask` 在画面内部最后一段渐隐到页面底色，文案上移 `--hero-*-lift` 避开渐隐段。
 - 文案从上到下：小标签行（`--media-kicker`）、片名标志图（`--media-logo-shadow`）或 34 号大标题、元信息行（年份 · 类型 · 时长 + 规格标签 + 评分）、简介两三行、操作行（一个 primary「播放」+ 若干玻璃圆钮）、主创一行。
 - 多张轮播时底部是分页点（`--media-dot`）。
 
@@ -25,7 +25,7 @@
 4. 演职员：圆头像货架。
 5. 多版本：版本列表，默认最佳版本排第一，规格标签跟在后面。
 6. 信息区：键值排列，标签灰、值白，不画表格线。
-7. 页内分区导航：底部一枚玻璃胶囊（`.yb-glass`），选中项是更亮的内胶囊；首屏 Hero 还在身后时淡出且不可聚焦（`inert`）。
+7. 页内分区导航：底部一枚玻璃胶囊（`.ag-glass`），选中项是更亮的内胶囊；首屏 Hero 还在身后时淡出且不可聚焦（`inert`）。
 
 在线详情和本地详情用同一套布局。
 
@@ -44,7 +44,7 @@
 
 ## 播放器
 
-- 控制条、齿轮菜单、跳过片头按钮都是画面玻璃（`.yb-glass.is-media`）。
+- 控制条、齿轮菜单、跳过片头按钮都是画面玻璃（`.ag-glass.is-media`）。
 - 快捷键照 YouTube：空格 / K 暂停，←→ 5 秒、J / L 10 秒，↑↓ 音量，M 静音，F 全屏，C 字幕，`<` `>` 倍速，0–9 跳到对应十分位，Shift+N 下一集。输入框里和输入法组字时不响应。
 - 进度条上片头区间紫色（`--media-intro`）、片尾区间橙色（`--media-outro`）。
 

@@ -6,7 +6,7 @@
 
 收到任务后，在读文件、跑命令、提问或作答之前：
 
-0. 只改文案、注释、文档措辞、样式数值、配置值，或用户说不用测：不跑测试，看一眼 diff 就交付。对口的技能照常加载（比如翻译用 `translate`），没有对口的就直接改。
+0. 只改文案、注释、文档措辞、样式数值、配置值，或用户说不用测：不跑测试，看一眼 diff 就交付。对口的技能照常加载，没有对口的就直接改。
 
 1. 下表或技能描述能直接对上，就直接加载那个技能；对不上、拿不准或要跨模块，才加载 `wukong-router`。
 2. 对照可用技能列表，加载对口的技能：任务落在它描述写的场景里。只是沾边的不加载。表中技能名指 wukong 的技能；宿主另有同名技能（如 docx、pdf）时用 wukong 的。
@@ -17,17 +17,9 @@
 | --- | --- |
 | 新功能、加接口、改行为 | `brainstorming`，定下设计后 `writing-plans` |
 | bug、报错、按钮没反应、结果不对、修 bug、bug-fix、fix bug | `systematic-debugging` |
-| 写 README、写文档、RFC、PR 说明的句子 | `technical-writing`（Word 用 `docx`） |
-| Word、docx、修订、批注 | `docx` |
-| 幻灯片、pptx | `pptx` |
-| 表格、xlsx、公式 | `xlsx` |
-| PDF | `pdf` |
-| 专利交底书、专利挖掘、查新 | `patent-disclosure` |
-| 发明专利申请文件、权利要求书、说明书、专利附图 | `patent-application` |
+| Word、幻灯片、表格、PDF、README/RFC 文档、架构图 | 点名 `docx`、`pptx`、`xlsx`、`pdf`、`technical-writing`、`archify` 时加载；未点名时直接做 |
 | 提交、开 PR | `commit-pr`（还没决定怎么集成用 `finishing-a-development-branch`） |
 | 审 PR、审分支、审本地改动、代码审查 | `wukong-review` |
-| 中英翻译 | `translate` |
-| 画架构图、流程图、时序图、ER 图 | `archify` |
 | 教我、这块代码怎么工作 | 点名 `how` 时加载；未点名时直接讲解，保持显式调用政策 |
 | 界面卡顿、掉帧、滚动慢、INP 高 | `impeccable`（optimize） |
 | 界面设计、样式、交互 | `impeccable` |
