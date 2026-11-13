@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 当用户说 “reflect” 或 “/reflect” 时调用。
 
-带 `--me`、`--show`、`--undo`、`--forget`、`--off`，或用户说「更新 / 查看 / 撤销 / 删掉我的个人规则」时，是个人模式：不派审查者、不改任何 skill，按 [个人模式](references/personal.md) 做，下面的第 1～6 步都不适用。
+带 `--me`、`--show`、`--undo`、`--forget`、`--off`、`--on`，或用户说「更新 / 查看 / 撤销 / 删掉 / 关掉我的个人规则」「把这条记成我的规则」时，是个人模式：不派审查者、不改任何 skill，按 [个人模式](references/personal.md) 做，下面的第 1～6 步都不适用。
 
 如果对话很琐碎、跑题了，或者已经被一个已有 skill 覆盖、而父智能体也正确地照着做了，就跳过。一次性的事情不算经验。
 

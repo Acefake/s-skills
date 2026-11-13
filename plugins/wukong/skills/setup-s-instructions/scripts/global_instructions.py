@@ -137,6 +137,8 @@ def _marker_span(text, start, end):
         raise ConfigurationError('Incomplete or duplicate personal markers; repair them before applying')
     start_at, end_at = text.index(start), text.index(end)
     if (end_at < start_at or (start_at and text[start_at - 1] != '\n')
+            or text[start_at + len(start):].split('\n', 1)[0].strip()
+            or (end_at and text[end_at - 1] != '\n')
             or text[end_at + len(end):].split('\n', 1)[0].strip()):
         raise ConfigurationError('Invalid personal marker boundaries')
     return start_at, end_at + len(end)
@@ -162,9 +164,9 @@ def merge_personal(text, body):
     if span:
         start_at, end_after = span
         return text[:start_at] + block + text[end_after:]
-    library_end = next((marker for marker in (END, PREVIOUS_END, LEGACY_END) if marker in text), None)
-    if library_end:
-        at = text.index(library_end) + len(library_end)
+    markers = owned_markers(text)
+    if markers:
+        at = text.index(markers[1]) + len(markers[1])
         return text[:at] + newline * 2 + block + text[at:]
     separator = (newline if text.endswith(newline) else newline * 2) if text else ''
     return text + separator + block + newline
@@ -177,6 +179,7 @@ def write_preserving(path, original, updated):
         try:
             with backup.open('xb') as stream:
                 stream.write(original)
+            os.chmod(backup, stat.S_IMODE(path.stat().st_mode))
         except FileExistsError:
             pass
     mode = stat.S_IMODE(path.stat().st_mode) if original is not None else None
@@ -220,6 +223,17 @@ def sync_personal(host, body, *, home, codex_home=None, claude_config_dir=None, 
         block = f'{PERSONAL_START}\n{body.strip()}\n{PERSONAL_END}' if body.strip() else ''
         return dict(status='user_rules_verification_required', changed=False, target='Cursor User Rules', block=block)
     path = instruction_path(host, Path(home), codex_home, claude_config_dir)
+    changed = _sync_personal_file(path, body, apply)
+    if host == 'codex':
+        # Codex 只读 AGENTS.override.md（存在且非空时）或 AGENTS.md；另一份里留下的个人块一并清掉。
+        directory = Path(codex_home).expanduser() if codex_home is not None else Path(home) / '.codex'
+        for other in (directory / 'AGENTS.md', directory / 'AGENTS.override.md'):
+            if other != path and other.exists() and PERSONAL_START in other.read_text(encoding='utf-8-sig'):
+                changed = _sync_personal_file(other, '', apply) or changed
+    return dict(status='configured' if apply or not changed else 'outdated', changed=bool(apply and changed), target=str(path))
+
+
+def _sync_personal_file(path, body, apply):
     if path.is_symlink():
         raise ConfigurationError('Global instruction file is a symlink; inspect its destination before updating')
     original = path.read_bytes() if path.exists() else None
@@ -230,7 +244,7 @@ def sync_personal(host, body, *, home, codex_home=None, claude_config_dir=None, 
     changed = updated != (original or b'')
     if apply and changed:
         write_preserving(path, original, updated)
-    return dict(status='configured' if apply or not changed else 'outdated', changed=bool(apply and changed), target=str(path))
+    return changed
 
 
 def main():

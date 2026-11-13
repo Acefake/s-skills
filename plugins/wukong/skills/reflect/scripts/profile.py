@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """Personal rules for the wukong learning layer: collect, validate, apply, undo.
 
-The model does the judgment (grouping corrections into rules); this script does
-everything that must be exact: reading the local journal, enforcing the
-admission, expiry, safety and size rules, keeping backups, and writing the
-personal block through setup-s-instructions.
+The model does the judgment (grouping corrections into rules and citing the
+journal events behind each one); this script does everything that must be
+exact. It decides each rule's source and evidence from the cited events, so a
+draft cannot claim them; it enforces admission, expiry, safety and size; it
+keeps backups; and it writes the personal block through setup-s-instructions.
 
     profile.py collect [--since YYYY-MM-DD]
     profile.py validate DRAFT.json
     profile.py apply DRAFT.json --host HOST
+    profile.py add --id ID --kind KIND --text TEXT [--project NAME] --host HOST
     profile.py show | render
     profile.py forget RULE_ID --host HOST
     profile.py undo --host HOST
-    profile.py off --host HOST
+    profile.py off --host HOST | on --host HOST
 
 Data lives in ~/.wukong (or $WUKONG_HOME): profile.json is the source of truth,
 history/ keeps the 20 most recent versions. Every command prints one JSON object.
@@ -23,40 +25,66 @@ import os
 import re
 import sys
 import tempfile
+import unicodedata
+from contextlib import contextmanager
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+
+try:
+    import fcntl
+except ImportError:  # Windows
+    fcntl = None
+    try:
+        import msvcrt
+    except ImportError:
+        msvcrt = None
 
 PLUGIN = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PLUGIN / "hooks"))
 sys.path.insert(0, str(PLUGIN / "skills/setup-s-instructions/scripts"))
 import journal  # noqa: E402
-import global_instructions  # noqa: E402
+import global_instructions as gi  # noqa: E402
 
 SCHEMA_VERSION = 1
 # 与 scripts/context_budget.py 的 PERSONAL_LIMIT 保持一致（有测试核对）。
 PERSONAL_LIMIT = 500
 EXPIRE_DAYS = 56
 HISTORY_KEEP = 20
-MIN_EVIDENCE = 2
+MIN_SESSIONS = 2
 MAX_RULE_CHARS = 120
 COLLECT_LIMIT = 60
 KINDS = ("style", "route", "verify", "habit")
-SOURCES = ("learned", "explicit", "manual")
 KIND_TITLES = {"style": "回复", "route": "技能", "verify": "验证与审查", "habit": "习惯"}
+EVIDENCE_EVENTS = ("correction", "explicit")
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,39}$")
 CJK = re.compile(r"[\u3000-\u303f\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff00-\uffef]")
+MARKERS = (gi.START, gi.END, gi.PREVIOUS_START, gi.PREVIOUS_END, gi.LEGACY_START, gi.LEGACY_END,
+           gi.PERSONAL_START, gi.PERSONAL_END)
 
-# 放宽权限、跳过确认、碰安全的规则不能从对话里学，只能用户亲口说（source=manual）。
+# 下面三组只在规范化（NFKC、去零宽、转小写）之后的文字上匹配。
+# 放宽权限、跳过确认、发布部署、碰密钥和权限的规则不能从对话里学，只能用户用 add 亲口加。
 SENSITIVE = re.compile(
-    r"推送|\bpush\b|强制|--force|--no-verify|跳过(钩子|hook|检查|确认)|reset\s+--hard|git\s+clean|rm\s+-rf"
-    r"|删除(文件|分支|目录|数据|仓库)|不用(问|确认|请示)|无需确认|别问我|直接(提交|推送|合并|删除|发布)"
-    r"|自动(提交|推送|合并|发布)|密钥|secret|token|password|密码|凭据|权限|sudo|安全(检查|审查)",
-    re.IGNORECASE,
+    r"推送|强制|跳过(钩子|hook|检查|确认)|删除(文件|分支|目录|数据|仓库)|不用(问|确认|请示)|不必问|不要问|别问"
+    r"|无[需须]确认|不需要确认|直接(提交|推送|合并|删除|发布|部署)|自动(提交|推送|合并|发布|部署)|发布|部署"
+    r"|密钥|密码|凭据|权限|安全(检查|审查)"
+    r"|\bpush|\bforce\b|--force|--no-verify|reset\s+--hard|git\s+clean|rm\s+-rf|\bdeploy|\bpublish|\bmerge\b"
+    r"|\bdelete\b|without\s+ask|no\s+need\s+to\s+(ask|confirm)|don'?t\s+ask|skip\s+(the\s+)?(confirm|check|hook)"
+    r"|auto-?\s*(commit|push|merge|deploy)|commit\s+directly|api[\s_-]?key|access[\s_-]?token|secret[\s_-]?key"
+    r"|password|credential|\bsudo\b|permission"
 )
-URL = re.compile(r"https?://", re.IGNORECASE)
-COMMAND = re.compile(r"`\s*(git|rm|curl|wget|npm|pnpm|yarn|pip|sudo|chmod|chown|docker|kubectl)\b", re.IGNORECASE)
-# 验证与审查只能从纠正里学「收紧」；「放松」必须是用户明说。
-LOOSEN = re.compile(r"不跑|别跑|不用跑|跳过|不派|别派|不用派|不审|不用审|不用测|少测|不写测试|不测")
+URL = re.compile(r"https?://|www\.")
+COMMAND = re.compile(r"\b(git|npm|pnpm|yarn|pip|curl|wget|sudo|chmod|chown|docker|kubectl|rm)\s+-{0,2}[a-z]")
+# 放松验证或审查：只接受用户明说（日志里的 explicit 事件），不从纠正里推断。
+LOOSEN = re.compile(
+    r"不跑|别跑|不用跑|跳过|不派|别派|不用派|不审|不用审|不用测|少测|不写测试|不测"
+    r"|skip\s+(the\s+)?(test|review)|no\s+(test|review)|don'?t\s+(run\s+)?(test|review)|without\s+(test|review)"
+)
+
+
+def normalize(text):
+    text = unicodedata.normalize("NFKC", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Cf")
+    return text.lower()
 
 
 def estimate(text):
@@ -73,7 +101,7 @@ def today():
 
 
 def empty_profile():
-    return {"schemaVersion": SCHEMA_VERSION, "updated": None, "rules": []}
+    return {"schemaVersion": SCHEMA_VERSION, "updated": None, "enabled": True, "rules": []}
 
 
 def load_profile(directory=None):
@@ -81,7 +109,9 @@ def load_profile(directory=None):
     if not path.exists():
         return empty_profile()
     data = json.loads(path.read_text(encoding="utf-8"))
-    data.setdefault("rules", [])
+    if not isinstance(data, dict) or not isinstance(data.get("rules"), list):
+        raise ValueError("profile.json is not a profile")
+    data.setdefault("enabled", True)
     return data
 
 
@@ -99,7 +129,35 @@ def _write_private(path, data):
             os.unlink(temporary)
 
 
-# ---------------------------------------------------------------- collect
+@contextmanager
+def locked(directory):
+    """Serialize every write to profile.json and the personal block."""
+    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+    handle = open(str(directory / "profile.lock"), "a+")
+    try:
+        if fcntl:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        elif msvcrt:
+            msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+        yield
+    finally:
+        try:
+            if fcntl:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            elif msvcrt:
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+        finally:
+            handle.close()
+
+
+# ---------------------------------------------------------------- journal
+
+def _open_journal(directory):
+    path = directory / "journal.db"
+    if journal.sqlite3 is None or not path.exists():
+        return None
+    return journal.sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True, timeout=journal.LOCK_TIMEOUT)
+
 
 def collect(since=None, directory=None):
     """Summarize journal events since the last update for the model to group."""
@@ -112,21 +170,20 @@ def collect(since=None, directory=None):
         since = datetime.fromisoformat(since)
     if since.tzinfo is None:
         since = since.replace(tzinfo=timezone.utc)
-    result = {"since": since.isoformat(timespec="seconds"), "rules": profile["rules"],
+    result = {"since": since.isoformat(timespec="seconds"), "enabled": profile["enabled"], "rules": profile["rules"],
               "corrections": [], "explicit": [], "sessions": 0, "skills": {}}
-    path = directory / "journal.db"
-    if journal.sqlite3 is None or not path.exists():
+    conn = _open_journal(directory)
+    if conn is None:
         return result
-    conn = journal.sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True, timeout=journal.LOCK_TIMEOUT)
     try:
         at = int(since.timestamp())
         result["sessions"] = conn.execute(
             "SELECT count(DISTINCT session) FROM events WHERE at >= ? AND session != ''", (at,)).fetchone()[0]
         for kind, key in (("correction", "corrections"), ("explicit", "explicit")):
             rows = conn.execute(
-                "SELECT ts, session, project, text FROM events WHERE event = ? AND at >= ? ORDER BY at DESC LIMIT ?",
+                "SELECT id, ts, session, project, text FROM events WHERE event = ? AND at >= ? ORDER BY at DESC LIMIT ?",
                 (kind, at, COLLECT_LIMIT)).fetchall()
-            result[key] = [dict(zip(("ts", "session", "project", "text"), row)) for row in reversed(rows)]
+            result[key] = [dict(zip(("id", "ts", "session", "project", "text"), row)) for row in reversed(rows)]
         result["skills"] = dict(conn.execute(
             "SELECT name, count(*) FROM events WHERE event = 'skill' AND at >= ? GROUP BY name ORDER BY count(*) DESC",
             (at,)).fetchall())
@@ -135,52 +192,135 @@ def collect(since=None, directory=None):
     return result
 
 
-# ---------------------------------------------------------------- validate
+def load_events(ids, directory=None):
+    """Return {id: (event, session)} for the cited journal events that exist."""
+    ids = sorted({i for i in ids if isinstance(i, int) and not isinstance(i, bool)})
+    conn = _open_journal(directory or home())
+    if conn is None or not ids:
+        if conn is not None:
+            conn.close()
+        return {}
+    try:
+        found = {}
+        for start in range(0, len(ids), 500):
+            chunk = ids[start:start + 500]
+            rows = conn.execute("SELECT id, event, session FROM events WHERE id IN (%s)" % ",".join("?" * len(chunk)),
+                                chunk).fetchall()
+            found.update({row[0]: (row[1], row[2] or "event-%d" % row[0]) for row in rows})
+        return found
+    finally:
+        conn.close()
 
-def _parse_day(value):
-    return date.fromisoformat(value) if isinstance(value, str) else None
 
+# ---------------------------------------------------------------- checks
 
-def check_rule(rule):
-    """Return a list of reasons this rule cannot be stored."""
+def shape_errors(rule):
+    """Structure and rendering safety; applies to every rule, manual ones too."""
     reasons = []
     if not isinstance(rule, dict):
         return ["rule is not an object"]
-    if not ID_RE.match(str(rule.get("id", ""))):
+    if not isinstance(rule.get("id"), str) or not ID_RE.match(rule["id"]):
         reasons.append("id must be lowercase letters, digits and dashes, at most 40 characters")
     if rule.get("kind") not in KINDS:
         reasons.append("kind must be one of " + ", ".join(KINDS))
-    source = rule.get("source")
-    if source not in SOURCES:
-        reasons.append("source must be one of " + ", ".join(SOURCES))
     text = rule.get("text")
     if not isinstance(text, str) or not text.strip():
-        reasons.append("text is empty")
-        text = ""
-    elif len(text) > MAX_RULE_CHARS:
+        return reasons + ["text is empty"]
+    if len(text) > MAX_RULE_CHARS:
         reasons.append("text is longer than %d characters" % MAX_RULE_CHARS)
-    evidence = rule.get("evidence")
-    if not isinstance(evidence, int) or evidence < 1:
-        reasons.append("evidence must be a positive integer")
-    elif source == "learned" and evidence < MIN_EVIDENCE:
-        reasons.append("learned rules need evidence from at least %d sessions" % MIN_EVIDENCE)
-    for field in ("created", "lastSeen"):
-        try:
-            if _parse_day(rule.get(field)) is None:
-                raise ValueError
-        except ValueError:
-            reasons.append(field + " must be YYYY-MM-DD")
+    if any(unicodedata.category(ch) in ("Cc", "Zl", "Zp") for ch in text):
+        reasons.append("text must be one line without control characters")
+    flat = normalize(text)
+    if "<!--" in flat or "-->" in flat or any(normalize(marker) in flat for marker in MARKERS):
+        reasons.append("text must not contain HTML comments or block markers")
+    if flat.lstrip().startswith(("#", ">", "```", "---")):
+        reasons.append("text must not start a heading, quote, fence or rule")
     project = rule.get("project")
-    if project is not None and not (isinstance(project, str) and project.strip()):
+    if project is not None and not (isinstance(project, str) and project.strip() and "\n" not in project):
         reasons.append("project must be null or a project name")
-    if source != "manual":
-        if SENSITIVE.search(text):
-            reasons.append("touches permissions, confirmation or security; only the user can add it (source manual)")
-        if URL.search(text) or COMMAND.search(text):
-            reasons.append("contains a URL or a command; only the user can add it (source manual)")
-    if rule.get("kind") == "verify" and source == "learned" and LOOSEN.search(text):
-        reasons.append("loosening verification or review needs the user's explicit words (source explicit)")
     return reasons
+
+
+def safety_errors(text, source):
+    """What may be learned from the journal; manual rules skip these."""
+    if source == "manual":
+        return []
+    flat = normalize(text)
+    reasons = []
+    if SENSITIVE.search(flat):
+        reasons.append("touches pushing, confirmation, publishing, secrets or permissions; only the user can add it (profile.py add)")
+    if URL.search(flat) or COMMAND.search(flat):
+        reasons.append("contains a URL or a command; only the user can add it (profile.py add)")
+    if source == "learned" and LOOSEN.search(flat):
+        reasons.append("loosening tests or review needs the user's own words (cite an explicit event)")
+    return reasons
+
+
+# ---------------------------------------------------------------- settle
+
+def _day(value):
+    try:
+        return date.fromisoformat(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _same_text(a, b):
+    return normalize(a or "").split() == normalize(b or "").split()
+
+
+def resolve(draft, current, events, on):
+    """Turn a model draft into stored rules. Source, evidence and dates come from
+    the stored profile and the cited journal events, never from the draft."""
+    rules = draft.get("rules") if isinstance(draft, dict) else None
+    if not isinstance(rules, list):
+        return [], [{"id": None, "reason": "draft must be an object with a rules list"}]
+    stored = {r["id"]: r for r in current}
+    errors, out, seen = [], [], set()
+    for item in rules:
+        rid = item.get("id") if isinstance(item, dict) else None
+        label = rid if isinstance(rid, str) else None
+        problems = shape_errors(item)
+        if label in seen:
+            problems.append("duplicate id")
+        seen.add(label)
+        if problems:
+            errors.extend({"id": label, "reason": p} for p in problems)
+            continue
+        old = stored.get(rid)
+        refs = item.get("refs") or []
+        if not isinstance(refs, list):
+            errors.append({"id": rid, "reason": "refs must be a list of journal event ids"})
+            continue
+        rule = {"id": rid, "kind": item["kind"], "text": " ".join(item["text"].split()),
+                "project": item.get("project") or None}
+        if old and _same_text(old["text"], item["text"]) and not refs:
+            rule.update({k: old[k] for k in ("source", "evidence", "created", "lastSeen")})
+        else:
+            cited = [events.get(r) for r in refs]
+            if not refs or any(c is None or c[0] not in EVIDENCE_EVENTS for c in cited):
+                errors.append({"id": rid, "reason": "new or changed rules must cite existing correction or explicit events in refs"})
+                continue
+            sessions = {c[1] for c in cited}
+            explicit = any(c[0] == "explicit" for c in cited)
+            earlier = old["evidence"] if old else 0
+            if old and old["source"] in ("manual", "explicit"):
+                source = old["source"]
+            else:
+                source = "explicit" if explicit else "learned"
+            if source == "learned" and earlier + len(sessions) < MIN_SESSIONS:
+                errors.append({"id": rid, "reason": "learned rules need corrections from at least %d sessions" % MIN_SESSIONS})
+                continue
+            rule.update({"source": source, "evidence": earlier + len(sessions),
+                         "created": old["created"] if old else on.isoformat(), "lastSeen": on.isoformat()})
+        problems = safety_errors(rule["text"], rule["source"])
+        errors.extend({"id": rid, "reason": p} for p in problems)
+        if not problems:
+            out.append(rule)
+    learnable = " ".join(r["text"] for r in out if r["source"] != "manual")
+    if not errors and safety_errors(learnable, "explicit"):
+        errors.append({"id": None, "reason": "taken together the rules touch pushing, confirmation, secrets or commands"})
+    return out, errors
 
 
 def render(rules):
@@ -191,11 +331,10 @@ def render(rules):
     lines = ["## 个人习惯（自动学习，/reflect --show 查看来源）",
              "优先级：当次指令 > 项目规则 > 本节 > 上方通用规则。"]
     for kind in KINDS:
-        texts = [r["text"].strip() for r in active if r.get("kind") == kind]
+        texts = [" ".join(r["text"].split()).replace("<!--", "").replace("-->", "")
+                 for r in active if r.get("kind") == kind]
         if texts:
-            lines.append("")
-            lines.append("### " + KIND_TITLES[kind])
-            lines.extend("- " + text for text in texts)
+            lines += ["", "### " + KIND_TITLES[kind]] + ["- " + text for text in texts]
     return "\n".join(lines)
 
 
@@ -203,43 +342,39 @@ def _strength(rule):
     return (rule.get("evidence") or 0, rule.get("lastSeen") or "")
 
 
-def settle(draft, on=None):
-    """Validate a draft profile and apply expiry and the size cap.
-
-    Returns (rules to store, errors, dropped). Errors block writing; dropped
-    rules are removed automatically (expired, or the weakest learned rules
-    when the rendered block is over PERSONAL_LIMIT).
-    """
-    on = on or today()
-    rules = draft.get("rules") if isinstance(draft, dict) else None
-    if not isinstance(rules, list):
-        return [], [{"id": None, "reason": "draft must be an object with a rules list"}], []
-    errors, seen = [], set()
+def settle(rules, on):
+    """Apply expiry and the size cap. Returns (kept, dropped, errors)."""
+    dropped, kept, errors = [], [], []
     for rule in rules:
-        rid = rule.get("id") if isinstance(rule, dict) else None
-        for reason in check_rule(rule):
-            errors.append({"id": rid, "reason": reason})
-        if rid in seen:
-            errors.append({"id": rid, "reason": "duplicate id"})
-        seen.add(rid)
-    if errors:
-        return rules, errors, []
-    dropped, kept = [], []
-    for rule in rules:
-        stale = (on - _parse_day(rule["lastSeen"])).days > EXPIRE_DAYS
-        if rule["source"] == "learned" and stale:
+        seen = _day(rule.get("lastSeen")) or on
+        if rule.get("source") == "learned" and (on - seen).days > EXPIRE_DAYS:
             dropped.append({"id": rule["id"], "reason": "no new evidence for %d days" % EXPIRE_DAYS})
         else:
             kept.append(rule)
     while estimate(render(kept)) > PERSONAL_LIMIT:
-        learned = [r for r in kept if r["source"] == "learned" and not r.get("project")]
+        learned = [r for r in kept if r.get("source") == "learned" and not r.get("project")]
         if not learned:
             errors.append({"id": None, "reason": "explicit and manual rules alone exceed %d tokens; shorten them" % PERSONAL_LIMIT})
             break
         weakest = min(learned, key=_strength)
         kept.remove(weakest)
         dropped.append({"id": weakest["id"], "reason": "over the %d token cap, weakest learned rule" % PERSONAL_LIMIT})
-    return kept, errors, dropped
+    return kept, dropped, errors
+
+
+def check_stored(rules):
+    """Re-check rules loaded from disk (history, hand edits) before writing them."""
+    errors = []
+    for rule in rules:
+        rid = rule.get("id") if isinstance(rule, dict) else None
+        problems = shape_errors(rule)
+        if not problems:
+            if rule.get("source") not in ("learned", "explicit", "manual"):
+                problems.append("unknown source")
+            else:
+                problems = safety_errors(rule["text"], rule["source"])
+        errors.extend({"id": rid if isinstance(rid, str) else None, "reason": p} for p in problems)
+    return errors
 
 
 def diff(old_rules, new_rules):
@@ -253,14 +388,28 @@ def diff(old_rules, new_rules):
     }
 
 
-def validate(draft, directory=None):
-    current = load_profile(directory)["rules"]
-    kept, errors, dropped = settle(draft)
+def plan(draft, directory=None, on=None):
+    """Everything validate shows and apply writes, computed once."""
+    directory = directory or home()
+    on = on or today()
+    profile = load_profile(directory)
+    refs = [r for item in (draft.get("rules") or []) if isinstance(draft, dict) and isinstance(item, dict)
+            for r in (item.get("refs") or []) if isinstance(item.get("refs"), list)] if isinstance(draft, dict) else []
+    resolved, errors = resolve(draft, profile["rules"], load_events(refs, directory), on)
+    kept, dropped, cap_errors = settle(resolved, on) if not errors else ([], [], [])
+    errors += cap_errors
     body = render(kept) if not errors else ""
     return {"ok": not errors, "errors": errors, "dropped": dropped,
-            "diff": diff(current, kept) if not errors else None,
+            "diff": diff(profile["rules"], kept) if not errors else None,
             "projectRules": [r for r in kept if r.get("project")],
-            "tokens": estimate(body), "limit": PERSONAL_LIMIT, "block": body}
+            "enabled": profile["enabled"], "tokens": estimate(body), "limit": PERSONAL_LIMIT,
+            "block": body, "rules": kept}
+
+
+def validate(draft, directory=None):
+    report = plan(draft, directory)
+    report.pop("rules")
+    return report
 
 
 # ---------------------------------------------------------------- write
@@ -269,93 +418,154 @@ def _history(directory):
     return directory / "history"
 
 
-def backup(directory):
-    path = directory / "profile.json"
-    if not path.exists():
-        return None
+def _stamp():
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+
+
+def snapshot(directory, prefix="profile", data=None):
+    """Save a profile (default: the current one, empty on first use) into history."""
     folder = _history(directory)
     folder.mkdir(mode=0o700, parents=True, exist_ok=True)
-    stamp = datetime.now().strftime("%Y%m%dT%H%M%S%f")
-    target = folder / ("profile-%s.json" % stamp)
-    target.write_bytes(path.read_bytes())
-    os.chmod(str(target), 0o600)
-    for old in sorted(folder.glob("profile-*.json"))[:-HISTORY_KEEP]:
+    target = folder / ("%s-%s.json" % (prefix, _stamp()))
+    _write_private(target, load_profile(directory) if data is None else data)
+    for old in sorted(folder.glob(prefix + "-*.json"))[:-HISTORY_KEEP]:
         old.unlink()
     return target
 
 
-def write_block(rules, host, **paths):
-    return global_instructions.sync_personal(host, render(rules), apply=True, home=paths.get("home") or Path.home(),
-                                             codex_home=paths.get("codex_home"),
-                                             claude_config_dir=paths.get("claude_config_dir"))
+def _sync(body, host, paths):
+    return gi.sync_personal(host, body, apply=True, home=paths.get("home") or Path.home(),
+                            codex_home=paths.get("codex_home"), claude_config_dir=paths.get("claude_config_dir"))
 
 
-def store(rules, host, directory=None, **paths):
-    directory = directory or home()
-    saved = backup(directory)
+def store(rules, host, directory, paths, enabled=None, note=None):
+    """Write the global block first, then profile.json; roll the block back on failure."""
+    previous = load_profile(directory)
+    enabled = previous["enabled"] if enabled is None else enabled
+    write = _sync(render(rules) if enabled else "", host, paths)
     profile = {"schemaVersion": SCHEMA_VERSION,
                "updated": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
-               "rules": rules}
-    _write_private(directory / "profile.json", profile)
-    result = write_block(rules, host, **paths)
-    result["backup"] = str(saved) if saved else None
-    result["rules"] = len(rules)
-    return result
+               "enabled": enabled, "rules": rules}
+    try:
+        _write_private(directory / "profile.json", profile)
+    except Exception:
+        _sync(render(previous["rules"]) if previous["enabled"] else "", host, paths)
+        raise
+    saved = snapshot(directory, data=previous)
+    write.update({"backup": str(saved), "rules": len(rules), "enabled": enabled})
+    if note:
+        write["note"] = note
+    return write
 
 
 def apply(draft, host, directory=None, **paths):
-    report = validate(draft, directory)
-    if not report["ok"]:
-        return dict(report, applied=False)
-    kept, _, _ = settle(draft)
-    return dict(report, applied=True, write=store(kept, host, directory, **paths))
+    directory = directory or home()
+    with locked(directory):
+        report = plan(draft, directory)
+        if not report["ok"]:
+            report.pop("rules")
+            return dict(report, applied=False)
+        note = None if report["enabled"] else "personal block is off; rules saved but not written. Run on to turn it back on."
+        write = store(report.pop("rules"), host, directory, paths, note=note)
+        return dict(report, applied=True, write=write)
+
+
+def add(rule_id, kind, text, host, project=None, directory=None, **paths):
+    """Add a rule the user dictated. Only shape and the size cap apply."""
+    directory = directory or home()
+    with locked(directory):
+        rules = load_profile(directory)["rules"]
+        rule = {"id": rule_id, "kind": kind, "text": text or "", "project": project or None,
+                "source": "manual", "evidence": 1, "created": today().isoformat(), "lastSeen": today().isoformat()}
+        problems = shape_errors(rule) + (["id already exists"] if any(r["id"] == rule_id for r in rules) else [])
+        if problems:
+            return {"ok": False, "errors": [{"id": rule_id, "reason": p} for p in problems]}
+        rule["text"] = " ".join(rule["text"].split())
+        kept, dropped, errors = settle(rules + [rule], today())
+        if errors:
+            return {"ok": False, "errors": errors}
+        return {"ok": True, "dropped": dropped, "write": store(kept, host, directory, paths)}
 
 
 def forget(rule_id, host, directory=None, **paths):
-    rules = load_profile(directory)["rules"]
-    remaining = [r for r in rules if r.get("id") != rule_id]
-    if len(remaining) == len(rules):
-        return {"ok": False, "error": "no rule with id %s" % rule_id}
-    return {"ok": True, "write": store(remaining, host, directory, **paths)}
+    directory = directory or home()
+    with locked(directory):
+        rules = load_profile(directory)["rules"]
+        remaining = [r for r in rules if r.get("id") != rule_id]
+        if len(remaining) == len(rules):
+            return {"ok": False, "error": "no rule with id %s" % rule_id}
+        return {"ok": True, "write": store(remaining, host, directory, paths)}
 
 
 def undo(host, directory=None, **paths):
+    """Restore the version before the last write. The undone version is kept as undone-*.json."""
     directory = directory or home()
-    versions = sorted(_history(directory).glob("profile-*.json")) if _history(directory).exists() else []
-    if not versions:
-        return {"ok": False, "error": "no earlier version"}
-    latest = versions[-1]
-    data = json.loads(latest.read_text(encoding="utf-8"))
-    _write_private(directory / "profile.json", data)
-    latest.unlink()
-    return {"ok": True, "restored": latest.name, "write": write_block(data.get("rules", []), host, **paths)}
+    with locked(directory):
+        folder = _history(directory)
+        versions = sorted(folder.glob("profile-*.json")) if folder.exists() else []
+        if not versions:
+            return {"ok": False, "error": "no earlier version"}
+        latest = versions[-1]
+        data = json.loads(latest.read_text(encoding="utf-8"))
+        rules = data.get("rules") if isinstance(data, dict) else None
+        if not isinstance(rules, list):
+            return {"ok": False, "error": "%s is not a profile" % latest.name}
+        errors = check_stored(rules)
+        if errors:
+            return {"ok": False, "error": "%s does not pass the current checks" % latest.name, "errors": errors}
+        kept, dropped, cap_errors = settle(rules, today())
+        if cap_errors:
+            return {"ok": False, "errors": cap_errors}
+        undone = snapshot(directory, prefix="undone")
+        enabled = data.get("enabled", True)
+        write = _sync(render(kept) if enabled else "", host, paths)
+        _write_private(directory / "profile.json", dict(data, rules=kept, enabled=enabled,
+                                                        updated=datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")))
+        latest.unlink()
+        return {"ok": True, "restored": latest.name, "undone": str(undone), "dropped": dropped, "write": write}
 
 
-def off(host, **paths):
-    result = global_instructions.sync_personal(host, "", apply=True, home=paths.get("home") or Path.home(),
-                                               codex_home=paths.get("codex_home"),
-                                               claude_config_dir=paths.get("claude_config_dir"))
-    return {"ok": True, "write": result}
+def switch(host, enabled, directory=None, **paths):
+    directory = directory or home()
+    with locked(directory):
+        rules = load_profile(directory)["rules"]
+        return {"ok": True, "write": store(rules, host, directory, paths, enabled=enabled)}
+
+
+def off(host, directory=None, **paths):
+    return switch(host, False, directory, **paths)
+
+
+def on(host, directory=None, **paths):
+    return switch(host, True, directory, **paths)
 
 
 # ---------------------------------------------------------------- cli
 
+HOSTS = ("codex", "claude-code", "cursor", "workbuddy")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
-    collect_cmd = sub.add_parser("collect")
-    collect_cmd.add_argument("--since")
+    sub.add_parser("collect").add_argument("--since")
     sub.add_parser("show")
     sub.add_parser("render")
-    for name, extra in (("validate", "draft"), ("apply", "draft"), ("forget", "rule_id"), ("undo", None), ("off", None)):
+    sub.add_parser("validate").add_argument("draft")
+    writers = {"apply": ["draft"], "forget": ["rule_id"], "undo": [], "off": [], "on": [], "add": []}
+    for name, positional in writers.items():
         command = sub.add_parser(name)
-        if extra:
-            command.add_argument(extra)
-        if name != "validate":
-            command.add_argument("--host", required=True, choices=("codex", "claude-code", "cursor", "workbuddy"))
-            command.add_argument("--home", type=Path, default=None)
-            command.add_argument("--codex-home", type=Path, default=os.environ.get("CODEX_HOME") or None)
-            command.add_argument("--claude-config-dir", type=Path, default=os.environ.get("CLAUDE_CONFIG_DIR") or None)
+        for argument in positional:
+            command.add_argument(argument)
+        if name == "add":
+            command.add_argument("--id", required=True)
+            command.add_argument("--kind", required=True, choices=KINDS)
+            command.add_argument("--text", required=True)
+            command.add_argument("--project")
+        command.add_argument("--host", required=True, choices=HOSTS)
+        command.add_argument("--home", type=Path, default=None)
+        command.add_argument("--codex-home", type=Path, default=os.environ.get("CODEX_HOME") or None)
+        command.add_argument("--claude-config-dir", type=Path, default=os.environ.get("CLAUDE_CONFIG_DIR") or None)
     args = parser.parse_args(argv)
     paths = {key: getattr(args, key, None) for key in ("home", "codex_home", "claude_config_dir")}
     try:
@@ -364,18 +574,21 @@ def main(argv=None):
         elif args.command == "show":
             result = load_profile()
         elif args.command == "render":
-            result = {"block": render(load_profile()["rules"])}
+            profile = load_profile()
+            result = {"enabled": profile["enabled"], "block": render(profile["rules"])}
         elif args.command in ("validate", "apply"):
             draft = json.loads(Path(args.draft).read_text(encoding="utf-8"))
             result = validate(draft) if args.command == "validate" else apply(draft, args.host, **paths)
+        elif args.command == "add":
+            result = add(args.id, args.kind, args.text, args.host, args.project, **paths)
         elif args.command == "forget":
             result = forget(args.rule_id, args.host, **paths)
         elif args.command == "undo":
             result = undo(args.host, **paths)
         else:
-            result = off(args.host, **paths)
-    except (global_instructions.ConfigurationError, OSError, ValueError) as error:
-        result = {"ok": False, "error": str(error)}
+            result = (off if args.command == "off" else on)(args.host, **paths)
+    except (gi.ConfigurationError, OSError, ValueError, TypeError, KeyError) as error:
+        result = {"ok": False, "error": "%s: %s" % (type(error).__name__, error)}
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result.get("ok", True) is not False else 1
 
