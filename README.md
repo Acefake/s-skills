@@ -133,7 +133,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 
 ## 技能一览
 
-[![wukong 技能全景：任务路由与 82 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
+[![wukong 技能全景：任务路由与 75 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
 
 [全景图源（HTML）](docs/architecture/wukong-panorama.html) · [架构说明](docs/architecture.md) · [组件关系图](docs/architecture/wukong.html)
 

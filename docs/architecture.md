@@ -4,7 +4,7 @@ wukong 是一套由代理读取的技能与本地工具，不是独立运行的 
 
 当前版本 **1.0.17**，共 **75** 个技能：**48** 个可按描述自动选用，**27** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
 
-![wukong 全景卡片图：任务路由与 82 个技能](s-skills-route.png)
+![wukong 全景卡片图：任务路由与 75 个技能](s-skills-route.png)
 
 [全景卡片图源（HTML）](architecture/wukong-panorama.html) · [组件关系补充图](architecture/wukong.html) · [安装与使用](../README.md)
 
@@ -18,7 +18,7 @@ wukong 是一套由代理读取的技能与本地工具，不是独立运行的 
 | 专项技能 | 29 | 理解架构、界面操作、专项审查、Office、专利和表达 |
 | 做事原则 | 24 | 按具体问题选用的 `principle-*` |
 
-主图和上表已覆盖 82 张卡片，包含 `prompt-sharpen`、`project-memory` 和显式调用的 `release`。浅色实底为自动技能，白底虚线为显式技能。卡片链接指向提交 356bf14 的源码快照（`release` 与 `automate-me` 卡片固定在 `ba550e7`），每个技能恰好出现一次，卡片标题链接到对应源码。HTML 是 4500 像素宽的独立可编辑图源，可缩小或横向浏览；PNG 预览可直接放大查看。
+主图和上表已覆盖 75 张卡片，包含 `prompt-sharpen`、`project-memory` 和显式调用的 `release`。浅色实底为自动技能，白底虚线为显式技能。卡片链接指向提交 356bf14 的源码快照（`release` 与 `automate-me` 卡片固定在 `ba550e7`），每个技能恰好出现一次，卡片标题链接到对应源码。HTML 是 4500 像素宽的独立可编辑图源，可缩小或横向浏览；PNG 预览可直接放大查看。
 
 组件关系图作为补充保留，表示逻辑职责，不表示分别部署的服务。其 [JSON 图源](architecture/wukong.architecture.json) 的节点证据固定在 [cfd0823](https://github.com/Acefake/s-skills/commit/cfd0823ff5483f272bcd41f9bae7e3a377655220)，可追溯到具体文件和行号。
 
@@ -78,7 +78,7 @@ Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md
 
 ## 四、源码证据和维护方式
 
-主图维护 [全景 HTML](architecture/wukong-panorama.html)：保留上方路由、下方五栏和卡片的“何时／作用”，同步技能总数、分区数量与自动／显式政策。更新后核对每个技能恰好出现一次、卡片文字无溢出，再以浏览器截图更新 PNG。当前预览为 4500×4450，不裁掉卡片或页脚。不要用组件关系图替代全景卡片主图。
+主图维护 [全景 HTML](architecture/wukong-panorama.html)：保留上方路由、下方五栏和卡片的“何时／作用”，同步技能总数、分区数量与自动／显式政策。卡片与技能一一对应、自动／显式政策一致由 `scripts/check_marketplace.py` 检查；更新后确认卡片文字无溢出，再以浏览器截图更新 PNG。当前预览为 4500×5043，不裁掉卡片或页脚。不要用组件关系图替代全景卡片主图。
 
 组件关系补充图单独维护 [JSON 图源](architecture/wukong.architecture.json)，使用 `archify finalize architecture` 生成其 HTML，并保留仓库证据校验、严格产物检查和浏览器检查。它与主图是两种视角，不共用 PNG 预览。
 

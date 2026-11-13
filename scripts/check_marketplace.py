@@ -446,6 +446,29 @@ def check_supported_hosts(problems: Problems) -> None:
                 problems.add(f"{path.relative_to(ROOT)}:{number}: unsupported host {match.group(0)}")
 
 
+def check_panorama(problems: Problems) -> None:
+    """Keep the panorama cards one-to-one with the skills and their invocation policy."""
+    panorama = ROOT / "docs/architecture/wukong-panorama.html"
+    skills_root = ROOT / "plugins/wukong/skills"
+    cards = re.findall(r'data-skill="([a-z0-9-]+)" data-policy="(auto|explicit)"', panorama.read_text(encoding="utf-8"))
+    names = [name for name, _ in cards]
+    for name in sorted({name for name in names if names.count(name) > 1}):
+        problems.add(f"panorama: duplicate card {name}")
+    active = {path.name for path in skills_root.iterdir() if path.is_dir()}
+    for name in sorted(set(names) - active):
+        problems.add(f"panorama: card for missing skill {name}")
+    for name in sorted(active - set(names)):
+        problems.add(f"panorama: no card for skill {name}")
+    for name, policy in cards:
+        skill = skills_root / name / "SKILL.md"
+        if not skill.is_file():
+            continue
+        text = skill.read_text(encoding="utf-8")
+        explicit = bool(re.search(r"^disable-model-invocation:\s*true\s*$", text[3:text.find("\n---", 3)], re.M))
+        if (policy == "explicit") != explicit:
+            problems.add(f"panorama: {name} card says {policy}, SKILL.md disagrees")
+
+
 def main() -> int:
     problems = Problems()
     try:
@@ -458,6 +481,7 @@ def main() -> int:
         check_skill_references(problems)
         check_agent_descriptions(problems)
         check_supported_hosts(problems)
+        check_panorama(problems)
     except FileNotFoundError as exc:
         problems.add(f"missing file: {exc.filename}")
     except json.JSONDecodeError as exc:
