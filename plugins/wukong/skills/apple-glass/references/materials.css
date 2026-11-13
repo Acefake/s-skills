@@ -164,17 +164,17 @@ textarea:where(.ui-textarea) {
  * 玻璃材质：只给浮动控件（侧栏、圆钮、胶囊、浮层、播放器控制条），内容卡片用实色。
  * 取值全在 tokens.css 的 --glass-*；降低透明度时那里把底色换成实色、滤镜换成 none，这里不用判断。
  * is-media：压在海报 / 视频画面上，两套主题都是深色玻璃（文字用 --media-text）。
- * 底色由 .yb-glass 提供，使用方不要再写 background / backdrop-filter / box-shadow，否则会盖掉材质；
+ * 底色由 .ag-glass 提供，使用方不要再写 background / backdrop-filter / box-shadow，否则会盖掉材质；
  * 基类自带 background 的组件（如 UiIconButton overlay）在自己的双类选择器里显式写 --glass-media-bg。
  * 状态类包 :where()（特异性同基类、写在后面所以生效），页面一个 class 就能覆盖。
  */
-.yb-glass {
+.ag-glass {
   background: var(--glass-bg);
   -webkit-backdrop-filter: var(--glass-filter);
   backdrop-filter: var(--glass-filter);
   box-shadow: var(--glass-shadow);
 }
-.yb-glass:where(.is-media) {
+.ag-glass:where(.is-media) {
   background: var(--glass-media-bg);
   color: var(--media-text);
   box-shadow: var(--glass-media-shadow);
@@ -188,7 +188,7 @@ textarea:where(.ui-textarea) {
  * - is-rating：分级圆标（16+）
  * 字重 700 / 800 是字标本身的样式，按视觉纪律逐条豁免。
  */
-.yb-spec {
+.ag-spec {
   display: inline-grid;
   flex: 0 0 auto;
   place-items: center;
@@ -204,16 +204,16 @@ textarea:where(.ui-textarea) {
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
-.yb-spec:where(.is-solid) {
+.ag-spec:where(.is-solid) {
   background: var(--spec-bg);
   color: var(--spec-text);
 }
-.yb-spec:where(.is-outline) {
+.ag-spec:where(.is-outline) {
   border: 1.4px solid var(--spec-line);
   color: var(--spec-line);
   font-weight: 700; /* style-tokens: visual（规格字标） */
 }
-.yb-spec:where(.is-rating) {
+.ag-spec:where(.is-rating) {
   width: 22px;
   height: 22px;
   padding: 0;
@@ -223,17 +223,17 @@ textarea:where(.ui-textarea) {
   font-size: var(--text-3xs);
   letter-spacing: -0.02em;
 }
-.yb-spec:where(.is-dolby) {
+.ag-spec:where(.is-dolby) {
   height: auto;
   padding: 0;
   color: var(--spec-line);
   text-align: center;
 }
-.yb-spec-brand {
+.ag-spec-brand {
   font-size: var(--text-2xs);
   letter-spacing: 0.01em;
 }
-.yb-spec-line {
+.ag-spec-line {
   margin-top: var(--space-0_5);
   margin-right: -0.12em;
   font-size: var(--text-4xs);
@@ -243,10 +243,10 @@ textarea:where(.ui-textarea) {
 
 /*
  * 渐进模糊（Hero 背景、横版剧照卡底部）：三层递增的背景模糊各自用 mask 渐显，最上一层暗化。
- * 结构：<span class="yb-pblur"><i /><i /><i /><i /></span>，放在图片之后；高度由 --pblur-height 定（默认 60%），
+ * 结构：<span class="ag-pblur"><i /><i /><i /><i /></span>，放在图片之后；高度由 --pblur-height 定（默认 60%），
  * 暗化由 --pblur-tint 定。降低透明度时不做模糊，只留暗化（低配机器上多层 backdrop-filter 开销大）。
  */
-.yb-pblur {
+.ag-pblur {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -254,36 +254,36 @@ textarea:where(.ui-textarea) {
   height: var(--pblur-height, 60%);
   pointer-events: none;
 }
-.yb-pblur > i {
+.ag-pblur > i {
   position: absolute;
   inset: 0;
 }
-.yb-pblur > i:nth-child(1) {
+.ag-pblur > i:nth-child(1) {
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   -webkit-mask: var(--pblur-mask-1);
   mask: var(--pblur-mask-1);
 }
-.yb-pblur > i:nth-child(2) {
+.ag-pblur > i:nth-child(2) {
   -webkit-backdrop-filter: blur(12px) saturate(1.2);
   backdrop-filter: blur(12px) saturate(1.2);
   -webkit-mask: var(--pblur-mask-2);
   mask: var(--pblur-mask-2);
 }
-.yb-pblur > i:nth-child(3) {
+.ag-pblur > i:nth-child(3) {
   -webkit-backdrop-filter: blur(30px) saturate(1.35);
   backdrop-filter: blur(30px) saturate(1.35);
   -webkit-mask: var(--pblur-mask-3);
   mask: var(--pblur-mask-3);
 }
-.yb-pblur > i:nth-child(4) {
+.ag-pblur > i:nth-child(4) {
   background: var(--pblur-tint, var(--scrim-fade-card));
 }
-:root[data-transparency='reduced'] .yb-pblur > i:not(:last-child) {
+:root[data-transparency='reduced'] .ag-pblur > i:not(:last-child) {
   display: none;
 }
 @media (prefers-reduced-transparency: reduce) {
-  .yb-pblur > i:not(:last-child) {
+  .ag-pblur > i:not(:last-child) {
     display: none;
   }
 }

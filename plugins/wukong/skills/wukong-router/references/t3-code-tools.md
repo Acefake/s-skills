@@ -34,7 +34,7 @@ python <scripts>/t3_targets.py resolve --host <底层宿主> --project <项目�
 
 ## 派发选择
 
-用户或全局规则「只读检索派发」已授权多个独立调查时，按[并发只读检索](../../wukong-mode/references/subagents.md#并发只读检索)拆成多个任务并发提交。一个任务的首选/次选仍只启动一个，不用新顶层线程代替子代理，不把目录列出多个目标当成同时启动授权。
+用户或全局规则（细则见 wukong-router「只读检索派发」）已授权多个独立调查时，按[并发只读检索](../../wukong-mode/references/subagents.md#并发只读检索)拆成多个任务并发提交。一个任务的首选/次选仍只启动一个，不用新顶层线程代替子代理，不把目录列出多个目标当成同时启动授权。
 
 - 同提供商、原生工具支持的模型，且没有额外参数和隔离要求：用原生子代理并等待。
 - 跨提供商、用户指定额外设置、独立 worktree 或点名 `delegate_task`：用 T3 `delegate_task`，设置放 `target.options`。

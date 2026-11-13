@@ -147,4 +147,4 @@ alwaysApply: true
 
 ## no-comments
 
-`Task`，`subagent_type: "comment-sicko"`（`agents/comment-sicko.md`）。软件不认这个类型时，用只读的 `generalPurpose`（`readonly: true`），提示词只写：先读 `skills/comment-sicko/SKILL.md`，再审这个范围。
+`Task`，`subagent_type: "comment-sicko"`（`agents/comment-sicko.md`）。软件不认这个类型时，用只读的 `generalPurpose`（`readonly: true`），提示词只写：先读 `skills/no-comments/references/comment-sicko.md`，再审这个范围。

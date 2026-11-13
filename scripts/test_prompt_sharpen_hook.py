@@ -1,5 +1,6 @@
 """Keep the optional prompt-sharpen hook aligned with the skill and its docs."""
 import json
+import os
 import subprocess
 import sys
 import unittest
@@ -8,6 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIR = ROOT / 'plugins/wukong/skills/prompt-sharpen'
 HOOK = SKILL_DIR / 'scripts/improve_hook.py'
+# 钩子会写本地使用日志；测试里关掉，不碰真实的 ~/.wukong。
+os.environ['WUKONG_JOURNAL'] = '0'
 
 
 def run_hook(payload):
@@ -62,6 +65,12 @@ class PromptSharpenHookTest(unittest.TestCase):
                        '<task-notification>done</task-notification>',
                        '  <system-reminder>x</system-reminder>'):
             self.assertIsNone(run_hook(prompt_event(prompt)), prompt)
+
+    def test_confirmations_and_very_short_prompts_stay_silent(self):
+        for prompt in ('可以', '好的。', '继续', '按你说的做', 'OK', 'lgtm', '修一下', ' 嗯 '):
+            self.assertIsNone(run_hook(prompt_event(prompt)), prompt)
+        for prompt in ('可以把登录改一下吗', '修一下登录页', '继续优化首页性能'):
+            self.assertIsNotNone(run_hook(prompt_event(prompt)), prompt)
 
     def test_long_running_bash_gets_background_reminder(self):
         for command in ('npm run dev', 'pnpm start', 'tail -f app.log', 'vite', 'python -m http.server'):

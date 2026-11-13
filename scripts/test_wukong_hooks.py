@@ -12,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HOOKS = ROOT / 'plugins/wukong/hooks'
 PRE_COMMIT = ROOT / 'scripts/git-hooks/pre-commit'
+# 钩子会写本地使用日志；测试里关掉，不碰真实的 ~/.wukong。
+os.environ['WUKONG_JOURNAL'] = '0'
 
 
 def load(name):
@@ -135,7 +137,8 @@ class RegistrationTest(unittest.TestCase):
         self.assertEqual(set(hooks), {'SessionStart', 'UserPromptSubmit', 'PreToolUse'})
         self.assertEqual(hooks['PreToolUse'][0]['matcher'], 'Bash')
         commands = [h['command'] for entries in hooks.values() for e in entries for h in e['hooks']]
-        for script in ('hooks/session_check.py', 'hooks/git_guard.py', 'skills/prompt-sharpen/scripts/improve_hook.py'):
+        self.assertIn('Skill', [entry.get('matcher') for entry in hooks['PreToolUse']])
+        for script in ('hooks/session_check.py', 'hooks/git_guard.py', 'hooks/journal.py', 'skills/prompt-sharpen/scripts/improve_hook.py'):
             matching = [c for c in commands if '${CLAUDE_PLUGIN_ROOT}/' + script in c]
             self.assertTrue(matching, script)
             self.assertTrue(all(c.startswith('python3 ') and '|| python ' in c for c in matching), script)

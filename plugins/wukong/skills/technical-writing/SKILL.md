@@ -1,6 +1,7 @@
 ---
 name: technical-writing
 description: "「写 README」「写文档」「写 RFC」「改 PR 说明」。Markdown 和技术说明的分层标准。Word 用 docx。Use when writing or reviewing a README, technical documentation, an RFC, a PR description, or a commit message."
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
@@ -13,7 +14,7 @@ description: "「写 README」「写文档」「写 RFC」「改 PR 说明」。
 
 要写得让一个疲惫的工程师第一遍就能看懂。四层规则都要用上。
 
-这里管 Markdown、README、RFC、设计说明、PR 说明和提交信息的句子。`.docx` 用 `docx`，幻灯片用 `pptx`，表格用 `xlsx`，PDF 用 `pdf`。把一段现成文字译成另一种语言用 `translate`。不要用这份标准去排 Word 的字体和修订。
+这里管 Markdown、README、RFC、设计说明、PR 说明和提交信息的句子。`.docx` 用 `docx`，幻灯片用 `pptx`，表格用 `xlsx`，PDF 用 `pdf`。不要用这份标准去排 Word 的字体和修订。
 
 有三条规则高于这四层：
 

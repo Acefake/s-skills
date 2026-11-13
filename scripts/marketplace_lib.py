@@ -30,7 +30,7 @@ DOC_VERSION_REFS = {
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "wukong": 82,
+    "wukong": 75,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.
@@ -41,6 +41,7 @@ RETIRED_SKILLS = frozenset({
     "apple-design",
     "arena",
     "ask-sonner",
+    "benchmark-checklist",
     "blast-radius",
     "break-ui",
     "correct",
@@ -50,12 +51,16 @@ RETIRED_SKILLS = frozenset({
     "emil-design",
     "expo-animate",
     "find-animation-opportunities",
+    "frontend-design",
     "improve-animations",
     "in-your-own-words",
+    "ketchup",
     "learn",
     "maintain-verification-skill",
     "make-bot-ui",
     "native-mobile-feel",
+    "patent-application",
+    "patent-disclosure",
     "pick-frontend-lib",
     "plain-language",
     "premium-visual",
@@ -69,6 +74,7 @@ RETIRED_SKILLS = frozenset({
     "taste-skill",
     "teach",
     "test-driven-development",
+    "translate",
     "typescript-best-practices",
     "ui-ux-pro-max",
     "verification-before-completion",

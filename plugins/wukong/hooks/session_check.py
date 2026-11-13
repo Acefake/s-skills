@@ -11,6 +11,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+try:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import journal
+except Exception:
+    journal = None
+
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 CHECK = PLUGIN_ROOT / "skills/setup-s-instructions/scripts/global_instructions.py"
 
@@ -52,9 +58,14 @@ def build_message(check, root=PLUGIN_ROOT, version=None):
 
 def main():
     try:
-        sys.stdin.buffer.read()
+        raw = sys.stdin.buffer.read()
         message = build_message(run_check())
-        print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": message}}))
+        print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": message}}), flush=True)
+        if journal:
+            try:
+                journal.record(json.loads(raw.decode("utf-8")))
+            except Exception:
+                pass
     except Exception:
         pass
 

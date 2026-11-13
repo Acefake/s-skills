@@ -37,11 +37,11 @@ color: yellow
 | 有争议的设计 | 上线前用 **interrogate** |
 | 不简单的多步骤工作 | 写下产出检查点（Feature 第 4 步） |
 | 任何文字界面，包括给用户的回复 | **unslop**，并先读 [writing-the-reply.md](references/writing-the-reply.md)。给智能体的文字还要遵循 **author-skill** |
-| 文档、RFC、readme、PR 说明或提交信息的句子 | **technical-writing**。Word 用 **docx**，幻灯片用 **pptx**，表格用 **xlsx**，PDF 用 **pdf**，中英翻译用 **translate**。提交或开 PR 的步骤用 **commit-pr**，集成方式还没定用 **finishing-a-development-branch** |
+| 文档、RFC、readme、PR 说明或提交信息的句子 | **technical-writing**。Word 用 **docx**，幻灯片用 **pptx**，表格用 **xlsx**，PDF 用 **pdf**。提交或开 PR 的步骤用 **commit-pr**，集成方式还没定用 **finishing-a-development-branch** |
 | 提交之前 | 代码里的 AI 腔用 **deslop**，文字用 **unslop** |
 | 已授权的实现清理 | **no-comments**。只读审查和调查不清理，直接报告 |
 | 上线界面、IDE 或命令行 | 先在同一个界面上复现。界面用 **control-ui**，命令行用 **control-cli**。回复里写明实际跑了什么 |
-| 基准、自测性能，或报告加速或退化 | 行动前用 **benchmark-checklist** |
+| 基准、自测性能，或报告加速或退化 | 行动前按 **principle-explain-the-number** 的基准测试清单 |
 | 任何关于 PR 状态的请求 | [babysit.md](playbooks/babysit.md)，不要走软件自带的同名 skill。只是开了 PR 不会触发 |
 | 合入或上线一串已经变绿的 PR | [shipping.md](playbooks/shipping.md)。绿不等于可以合入 |
 | Bugbot 或智能体安全审查的评论 | [bugbot-triage.md](references/bugbot-triage.md)，分诊为修复、驳回或询问 |

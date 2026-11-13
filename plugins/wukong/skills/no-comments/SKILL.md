@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 # 不要注释
 
-派出只读的 **comment-sicko**，收集候选删除和理由。父任务核实报告后，在已授权范围内修改。
+派出只读的 **comment-sicko** 子代理（规则见 [comment-sicko.md](references/comment-sicko.md)），收集候选删除和理由。父任务核实报告后，在已授权范围内修改。
 
 尊重 comment-sicko 的新鲜视角。
 
@@ -31,7 +31,7 @@ disable-model-invocation: true
 
 ## 宿主适配
 
-规则在 [`comment-sicko`](../comment-sicko/SKILL.md)。派的时候只给范围，不要把那些规则再写一遍。
+规则在 [comment-sicko.md](references/comment-sicko.md)。派的时候只给范围，不要把那些规则再写一遍。
 
 
 Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

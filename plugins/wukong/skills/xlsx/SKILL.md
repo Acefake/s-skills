@@ -1,6 +1,7 @@
 ---
 name: xlsx
 description: "「做表格」「做个 Excel」「写 xlsx」「加公式」「CSV 转成表」。创建、修改、分析 .xlsx 和 .xlsm。派生数字写成单元格公式，保存后用 LibreOffice 重算。Use when a task produces or modifies a spreadsheet, turns CSV or TSV into one, or needs its values, formulas, or formatting read."
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。

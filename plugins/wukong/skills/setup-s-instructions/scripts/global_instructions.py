@@ -14,6 +14,9 @@ LEGACY_START = '<!-- s-atlas:instructions:start -->'
 LEGACY_END = '<!-- s-atlas:instructions:end -->'
 PREVIOUS_START = '<!-- s-wukong:instructions:start -->'
 PREVIOUS_END = '<!-- s-wukong:instructions:end -->'
+# 个人学习层写的块。和上面的库块分开：库升级不碰它，写它也不碰库块。
+PERSONAL_START = '<!-- wukong:personal:start -->'
+PERSONAL_END = '<!-- wukong:personal:end -->'
 
 
 class ConfigurationError(Exception):
@@ -126,15 +129,62 @@ def merge_instructions(text):
     return text + separator + block + newline
 
 
+def _marker_span(text, start, end):
+    """Return (start_at, end_after) of one well-formed marker pair, or None."""
+    if start not in text and end not in text:
+        return None
+    if text.count(start) != 1 or text.count(end) != 1:
+        raise ConfigurationError('Incomplete or duplicate personal markers; repair them before applying')
+    start_at, end_at = text.index(start), text.index(end)
+    if (end_at < start_at or (start_at and text[start_at - 1] != '\n')
+            or text[start_at + len(start):].split('\n', 1)[0].strip()
+            or (end_at and text[end_at - 1] != '\n')
+            or text[end_at + len(end):].split('\n', 1)[0].strip()):
+        raise ConfigurationError('Invalid personal marker boundaries')
+    return start_at, end_at + len(end)
+
+
+def merge_personal(text, body):
+    """Replace, insert or (for an empty body) remove the personal block only."""
+    newline = '\r\n' if '\r\n' in text else '\n'
+    span = _marker_span(text, PERSONAL_START, PERSONAL_END)
+    body = body.strip()
+    if not body:
+        if not span:
+            return text
+        start_at, end_after = span
+        tail = text[end_after:]
+        if tail.startswith(newline):
+            tail = tail[len(newline):]
+        head = text[:start_at]
+        if head.endswith(newline * 2):
+            head = head[:-len(newline)]
+        return head + tail
+    block = f'{PERSONAL_START}\n{body}\n{PERSONAL_END}'.replace('\n', newline)
+    if span:
+        start_at, end_after = span
+        return text[:start_at] + block + text[end_after:]
+    markers = owned_markers(text)
+    if markers:
+        at = text.index(markers[1]) + len(markers[1])
+        return text[:at] + newline * 2 + block + text[at:]
+    separator = (newline if text.endswith(newline) else newline * 2) if text else ''
+    return text + separator + block + newline
+
+
 def write_preserving(path, original, updated):
     path.parent.mkdir(parents=True, exist_ok=True)
     if original is not None:
         backup = path.with_name(path.name + '.wukong.bak')
+        source_mode = stat.S_IMODE(path.stat().st_mode)
         try:
             with backup.open('xb') as stream:
                 stream.write(original)
+            os.chmod(backup, source_mode)
         except FileExistsError:
-            pass
+            # 早先留下的备份可能比原文件宽松：只收紧，不放宽。
+            if not backup.is_symlink() and stat.S_IMODE(backup.stat().st_mode) & ~source_mode:
+                os.chmod(backup, stat.S_IMODE(backup.stat().st_mode) & source_mode)
     mode = stat.S_IMODE(path.stat().st_mode) if original is not None else None
     fd, temporary = tempfile.mkstemp(prefix=path.name + '.', dir=path.parent)
     try:
@@ -168,6 +218,36 @@ def sync_global(host, *, home, codex_home=None, claude_config_dir=None, apply=Fa
         write_preserving(path, original, updated)
         status = 'configured'
     return dict(status=status, changed=bool(apply and changed), target=str(path), version=plugin_version())
+
+
+def sync_personal(host, body, *, home, codex_home=None, claude_config_dir=None, apply=False):
+    """Write the personal block; an empty body removes it. Cursor gets the block to paste."""
+    if host == 'cursor':
+        block = f'{PERSONAL_START}\n{body.strip()}\n{PERSONAL_END}' if body.strip() else ''
+        return dict(status='user_rules_verification_required', changed=False, target='Cursor User Rules', block=block)
+    path = instruction_path(host, Path(home), codex_home, claude_config_dir)
+    changed = _sync_personal_file(path, body, apply)
+    if host == 'codex':
+        # Codex 只读 AGENTS.override.md（存在且非空时）或 AGENTS.md；另一份里留下的个人块一并清掉。
+        directory = Path(codex_home).expanduser() if codex_home is not None else Path(home) / '.codex'
+        for other in (directory / 'AGENTS.md', directory / 'AGENTS.override.md'):
+            if other != path and other.exists() and PERSONAL_START in other.read_text(encoding='utf-8-sig'):
+                changed = _sync_personal_file(other, '', apply) or changed
+    return dict(status='configured' if apply or not changed else 'outdated', changed=bool(apply and changed), target=str(path))
+
+
+def _sync_personal_file(path, body, apply):
+    if path.is_symlink():
+        raise ConfigurationError('Global instruction file is a symlink; inspect its destination before updating')
+    original = path.read_bytes() if path.exists() else None
+    text = original.decode('utf-8-sig') if original is not None else ''
+    updated = merge_personal(text, body).encode('utf-8')
+    if original is not None and original.startswith(b'\xef\xbb\xbf'):
+        updated = b'\xef\xbb\xbf' + updated
+    changed = updated != (original or b'')
+    if apply and changed:
+        write_preserving(path, original, updated)
+    return changed
 
 
 def main():

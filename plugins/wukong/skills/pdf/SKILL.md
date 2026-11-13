@@ -1,6 +1,7 @@
 ---
 name: pdf
 description: "「读这份 PDF」「填 PDF 表」「合并 PDF」「拆分 PDF」「扫描件 OCR」。提取文字和表格、填写表单，以及压平、旋转、盖章和加密。Use when a task takes a .pdf as input or must produce one."
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。

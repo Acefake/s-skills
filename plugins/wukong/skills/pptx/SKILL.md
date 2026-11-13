@@ -1,6 +1,7 @@
 ---
 name: pptx
 description: "「做幻灯片」「做一份 PPT」「写 pptx」「改演示文稿」。用 HTML 或模板创建、修改、阅读 PowerPoint，含备注。中文指定 CJK 字体并留余量。Use when a task produces or modifies a .pptx, or needs its text, layout, or notes read."
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。

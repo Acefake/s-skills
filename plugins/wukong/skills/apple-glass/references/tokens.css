@@ -1,8 +1,8 @@
 /*
- * 影盒设计令牌（design tokens）。
+ * Apple Glass 设计令牌（design tokens）。
  *
  * 方向：Apple TV（iOS 26）风格，深色优先。纯黑底，内容卡片用 #1c1c1e 系实色分层，
- * 色彩交给海报；只有浮动控件（侧栏、圆钮、胶囊、浮层）用玻璃材质（--glass-*，.yb-glass）。
+ * 色彩交给海报；只有浮动控件（侧栏、圆钮、胶囊、浮层）用玻璃材质（--glass-*，.ag-glass）。
  * 强调色只用于选中、焦点和链接，主按钮在深色下为白底黑字。
  *
  * 规则：组件里不写裸的字号、圆角、阴影和颜色，一律引用这里的变量。
@@ -190,7 +190,7 @@
   --icon-lg: 18px;
 
   /*
-   * ── 玻璃材质（.yb-glass，只给浮动控件）──
+   * ── 玻璃材质（.ag-glass，只给浮动控件）──
    * 轻底色 + 背景模糊提饱和 + 顶部内高光 + 0.5px 发丝边 + 投影。
    * is-media（--glass-media-*）是压在画面上的版本（海报、视频上的圆钮、播放器顶栏 / 控制栏 / 齿轮菜单、
    * 跳过片头按钮），两套主题都是深色；画面上的玻璃只用这一套。
@@ -257,7 +257,7 @@
     rgba(0, 0, 0, 0.22) 45%,
     rgba(0, 0, 0, 0.42) 100%
   );
-  /* 渐进模糊三层各自的渐显遮罩（.yb-pblur；mask 只取透明度） */
+  /* 渐进模糊三层各自的渐显遮罩（.ag-pblur；mask 只取透明度） */
   --pblur-mask-1: linear-gradient(transparent 0%, #000 22%);
   --pblur-mask-2: linear-gradient(transparent 12%, #000 42%);
   --pblur-mask-3: linear-gradient(transparent 28%, #000 62%);
@@ -314,7 +314,7 @@
 
   /*
    * ── AI 助手 ──
-   * 窗口正中的一列：空闲时是独立的玻璃输入胶囊，有对话后同一列展开成玻璃面板（.yb-glass）；
+   * 窗口正中的一列：空闲时是独立的玻璃输入胶囊，有对话后同一列展开成玻璃面板（.ag-glass）；
    * 唯一的彩色是输入胶囊上沿 1px 的蓝紫粉渐变（思考时变亮）。
    */
   --assistant-streak-blue: rgba(110, 170, 255, 0.95);
@@ -501,7 +501,7 @@
  * 压在画面上的区域（条目详情的 Hero）：画面总是深色，无论哪套主题都取深色版的文字、玻璃、
  * 主按钮与规格标签；Hero 下部的渐进模糊压到这里的 --bg-content（黑），浅色主题下不会盖一层白雾。
  */
-.yb-on-media {
+.ag-on-media {
   color-scheme: dark;
   --bg-content: #000000;
   --bg-fill-secondary: #2c2c2e;
@@ -537,7 +537,7 @@
 }
 
 /* 外壳控件在主题玻璃与画面玻璃之间切换时的颜色过渡（不用 @property，只过渡最终计算值） */
-.yb-media-swap {
+.ag-media-swap {
   transition:
     background-color var(--duration-fast) ease,
     color var(--duration-fast) ease,

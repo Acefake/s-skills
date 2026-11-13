@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.16，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
+<p align="center">当前版本 1.0.17，共 <strong>75</strong> 个技能：48 个按描述自动选用，27 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -109,13 +109,13 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 
 ## 验证分档
 
-按改动定档，同一份代码已验证就复用，不重跑。代码改动交付前先自审，第 2 档以上再加只读独立评审。
+按改动定档，同一份代码已验证就复用，不重跑。代码改动交付前先自审（第 0、1 档只看 diff）；第 3 档或涉及权限、并发、共享状态、数据删除时，再加只读独立评审。
 
 | 档 | 适用 | 验证 |
 |---|---|---|
 | 0 | 文案、注释、文档措辞、样式数值、配置值；只读任务；用户说不用测 | 不跑测试，看 diff |
-| 1 | 意图明确、1–2 个文件且不改接口、数据结构或依赖的小改动 | lint 或类型检查，加已有测试 |
-| 2 | 修 bug、加功能、改行为 | 有便宜稳定的测试点就先写失败测试，再验证所在模块 |
+| 1 | 意图明确、1–2 个文件且不改接口、数据结构或依赖的小改动，含这种范围的修 bug | lint 或类型检查，加已有测试 |
+| 2 | 其他修 bug、加功能、改行为 | 有便宜稳定的测试点就先写失败测试，再验证所在模块 |
 | 3 | 跨模块、改接口或依赖、迁移；非第 0 档的提交或合并前 | 全量测试一次 |
 
 提交、推送、改写历史、外部消息和清理工作区，都只按你已有的授权执行。细则见 [wukong-router](plugins/wukong/skills/wukong-router/SKILL.md)。
@@ -125,15 +125,16 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 装上插件后自动注册，只加提醒或请求确认，不改写你的输入：
 
 - 会话开始：记下插件版本，检查全局技能提示词是否过期。
-- 每条提示词附一段评估说明，含糊时才加载 `prompt-sharpen`；以 `*`、`#`、`/` 开头的不介入。
+- 每条提示词附一段评估说明，含糊时才加载 `prompt-sharpen`；以 `*`、`#`、`/` 开头的、「可以」「继续」这类确认和 4 个字以内的消息不介入。
 - 长时间运行的命令：提醒放到后台。
 - 强制推送、`--no-verify`、`reset --hard`、`git clean`：先请你确认。
+- 本地使用日志：记下加载了哪些技能、你的纠正和任务摘要，存在本机 `~/.wukong/journal.db`（SQLite），不上传、不进对话。供以后的个人学习使用，`WUKONG_JOURNAL=0` 关闭。
 
 说明和关闭方法见 [钩子说明](plugins/wukong/hooks/README.md)。Codex 要手动配置，见 [Codex 配置](plugins/wukong/skills/prompt-sharpen/references/hook.md)。
 
 ## 技能一览
 
-[![wukong 技能全景：任务路由与 82 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
+[![wukong 技能全景：任务路由与 75 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
 
 [全景图源（HTML）](docs/architecture/wukong-panorama.html) · [架构说明](docs/architecture.md) · [组件关系图](docs/architecture/wukong.html)
 
@@ -183,39 +184,32 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 | `finishing-a-development-branch` | 自动 | 收尾开发分支 |
 | `release` | 点名 | 显式发版：确认版本，写只含新增、改动、修复的发版说明，打 tag 并创建 GitHub Release |
 
-### 专项技能（29）
+### 专项技能（22）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
 | `how` | 点名 | 改之前讲清代码怎么串 |
 | `why` | 点名 | 查为什么这样设计 |
 | `refactor-architecture` | 点名 | 找浅模块和耦合，出 HTML 报告，再逐个追问定案 |
-| `archify` | 自动 | 画架构图、流程图、时序图、ER 图等，出可交互单文件 HTML，需要 Node 18+ |
+| `archify` | 点名 | 画架构图、流程图、时序图、ER 图等，出可交互单文件 HTML，需要 Node 18+ |
 | `impeccable` | 自动 | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
-| `apple-glass` | 自动 | 影盒的界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
-| `frontend-design` | 点名 | 点名时给一份有主见的视觉方向，不带检查脚本 |
-| `html-mockup` | 自动 | 手写 HTML/CSS 出静态设计稿，Playwright 截图交付；真实界面截图用 `control-ui` |
+| `apple-glass` | 点名 | Apple TV 风格界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
+| `html-mockup` | 点名 | 手写 HTML/CSS 出静态设计稿，Playwright 截图交付；真实界面截图用 `control-ui` |
 | `control-ui` | 自动 | 在真浏览器里操作界面取证 |
 | `control-cli` | 自动 | 在本地操作命令行或 TUI |
 | `e2e-testing` | 自动 | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |
-| `benchmark-checklist` | 点名 | 报告性能数字前先审核 |
-| `no-comments` | 点名 | 只读审查注释，由父任务核实后修改 |
-| `comment-sicko` | 点名 | 只读审查注释的子智能体，交由父任务核实修改 |
+| `no-comments` | 点名 | 派 comment-sicko 子代理只读审查注释，由父任务核实后修改 |
 | `interrogate` | 点名 | 多模型对抗审查 |
-| `docx` | 自动 | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
-| `pptx` | 自动 | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
-| `xlsx` | 自动 | 带公式的工作簿，保存后用 LibreOffice 重算 |
-| `pdf` | 自动 | 提取、填表、合并拆分、OCR 和新建 PDF |
-| `patent-disclosure` | 自动 | 做中国发明专利挖掘、查新、写技术交底书，输出 Markdown 和 Word |
-| `patent-application` | 自动 | 起草中国发明专利申请文件（摘要、权利要求书、说明书、附图）并输出 Word |
-| `technical-writing` | 自动 | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
+| `docx` | 点名 | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
+| `pptx` | 点名 | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
+| `xlsx` | 点名 | 带公式的工作簿，保存后用 LibreOffice 重算 |
+| `pdf` | 点名 | 提取、填表、合并拆分、OCR 和新建 PDF |
+| `technical-writing` | 点名 | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
 | `wukong-proposal` | 自动 | 写中文方案：先问清目标，列提纲，再按固定结构起草打磨 |
-| `translate` | 自动 | 中英翻译，可中英对照。代码、命令、路径不译 |
 | `unslop` | 点名 | 去掉文字里的 AI 腔 |
 | `author-skill` | 点名 | 按规范写或大改 SKILL.md |
 | `automate-me` | 点名 | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |
-| `reflect` | 点名 | 把这次对话的教训改进技能 |
-| `ketchup` | 点名 | 补上你离开后这次对话的变化 |
+| `reflect` | 点名 | 把这次对话的教训改进技能；`--me` 把本机使用日志归纳成个人规则，`--show`/`--undo`/`--forget`/`--off`/`--on` 查看、撤销、删除、关闭、打开 |
 
 ### 原则 principle-*（24）
 

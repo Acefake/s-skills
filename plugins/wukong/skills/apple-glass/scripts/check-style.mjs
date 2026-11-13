@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 影盒界面语言的样式检查（独立版，不依赖仓库里的基线文件）。
+ * Apple Glass 界面语言的样式检查（独立版，不依赖仓库里的基线文件）。
  *
  * 查 .css 文件和 .vue 的 <style> 块：
  *   - font-size / border-radius / 间距属性里的裸 px（0、1px 除外）

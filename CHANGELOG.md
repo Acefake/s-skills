@@ -1,5 +1,24 @@
 # 变更记录
 
+## 1.0.17
+
+### 新增
+
+- 本地使用日志（个人学习层第 1 期）：`hooks/journal.py` 把会话开始、技能加载、用户纠正、明说的偏好和任务摘要写进本机 SQLite 数据库 `~/.wukong/journal.db`。每条一个事务，多会话并发写不丢数据；不打印、不占上下文、不上传；原话只留前 80 字并脱敏，90 天以前或超过 5 万条自动删除，`WUKONG_JOURNAL=0` 关闭，`journal.py --dump` 查看。设计见 `docs/wukong/specs/2026-11-13-personal-learning-design.md`。
+- 个人规则（个人学习层第 2 期）：`reflect --me` 读本机使用日志，把反复出现的纠正和明说的偏好归纳成个人规则，展示差异并确认后写进全局规则里单独的 `wukong:personal` 块；库块升级不碰它。`reflect/scripts/profile.py` 按规则引用的日志编号自己算来源和证据（学来的至少 2 个会话，明说的 1 次），并负责 8 周过期、500 token 上限、禁学内容（推送、跳过确认、发布、密钥、网址、命令，以及从纠正里推断的放松测试或审查；中英文和全角写法都拦）、拒绝能破坏规则块的文字、加锁写入、写入失败不改规则、备份 20 份；另有 `--show`、`--undo`、`--forget`、`--off`、`--on`，用户亲口要求的规则走 `add`。
+- 常驻上下文上限：`scripts/context_budget.py` 估算每个会话常驻的 token（自动技能描述、全局规则、钩子注入），`check_marketplace` 超过 5650 就失败。本版实测约 5380，1.0.16 约 6980。
+
+### 改动
+
+- 低频技能改为点名调用（`disable-model-invocation: true`，Codex 同步关闭隐式调用）：`docx`、`pptx`、`xlsx`、`pdf`、`technical-writing`、`html-mockup`、`apple-glass`、`archify`。不再常驻技能列表，用时直接点名，如「用 docx 做一份报告」。全局规则和 `wukong-router` 的路由表同步改为「点名时加载，未点名直接做」，触发用例去掉这些点名技能。
+- 删除 `translate`、`frontend-design`、`patent-disclosure`、`patent-application`。翻译由模型直接做，界面设计用 `impeccable`。全局规则去掉对应行，旧版规则冻结为 `full-instructions-v8.txt`，已安装的无标记规则仍能原位迁移。
+- 合并三个附属技能，正文移入宿主技能的 `references/`：`comment-sicko` → `no-comments`（同名子代理保留，改读新路径），`benchmark-checklist` → `principle-explain-the-number`，`ketchup` → `wukong-mode` 的 `catch-up.md`（autopilot 剧本的补进度回复照旧）。
+- `apple-glass` 改为通用的 Apple TV 风格界面语言，去掉影盒专属的仓库、路径和检查命令，类名前缀 `yb-` 改为 `ag-`。
+- 技能从 82 个减到 75 个：48 个自动，27 个点名。
+- 小任务提速：只动一两个文件、不改接口的修 bug 归第 1 档，不强制先写失败测试；第 0、1 档自审只看 diff。独立评审子代理只在第 3 档（跨模块、改接口或依赖、迁移）或涉及权限、并发、共享状态、数据删除时派，原先任何修 bug 哪怕一行都会派。
+- 全局规则「只读检索派发」细则移到 `wukong-router`，全局只留一句授权；旧规则冻结为 `full-instructions-v9.txt`。
+- prompt-sharpen 钩子跳过「可以」「继续」这类确认和 4 个字以内的消息，这些消息不再附约 300 token 的评估说明。
+
 ## 1.0.16
 
 ### 修复

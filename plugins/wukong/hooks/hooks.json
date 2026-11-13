@@ -1,5 +1,5 @@
 {
-  "description": "wukong: session start check, prompt-sharpen nudge, long-running command reminder, and an ask before risky git commands",
+  "description": "wukong: session start check, prompt-sharpen nudge, long-running command reminder, an ask before risky git commands, and a local usage journal",
   "hooks": {
     "SessionStart": [
       {
@@ -35,6 +35,16 @@
           {
             "type": "command",
             "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/git_guard.py\" || python \"${CLAUDE_PLUGIN_ROOT}/hooks/git_guard.py\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/journal.py\" || python \"${CLAUDE_PLUGIN_ROOT}/hooks/journal.py\"",
             "timeout": 5
           }
         ]

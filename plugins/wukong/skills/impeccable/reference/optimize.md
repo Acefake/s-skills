@@ -213,7 +213,7 @@ Hold every interactive surface to these budgets. A missed budget is a bug.
 | CLS | < 0.1 |
 | First-route JS | code-split per route, aim for < 170 KB gzip |
 
-Measure on a production build with 4× CPU throttling in DevTools. Dev-mode numbers do not count. Record the same interaction in the Performance panel before and after the change; if the number did not improve, revert and try another direction. Vet reported numbers with `benchmark-checklist`.
+Measure on a production build with 4× CPU throttling in DevTools. Dev-mode numbers do not count. Record the same interaction in the Performance panel before and after the change; if the number did not improve, revert and try another direction. Vet reported numbers with the benchmark checklist in `principle-explain-the-number`.
 
 ## Core Web Vitals Optimization
 

@@ -4,6 +4,7 @@ description: "「画架构图」「流程图」「时序图」「数据流图」
 license: Apache-2.0
 metadata:
   version: "3.2"
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
