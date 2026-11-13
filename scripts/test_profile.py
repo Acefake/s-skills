@@ -256,6 +256,7 @@ class WriteTest(ProfileCase):
         self.assertFalse(self.claude_md.exists())
         self.assertFalse((self.data / 'profile.json').exists())
 
+    @unittest.skipUnless(os.name == 'posix', 'symlinks need extra rights on Windows')
     def test_failed_block_write_leaves_the_profile_untouched(self):
         real = self.base / 'dotfiles-CLAUDE.md'
         real.write_text('dotfiles\n', encoding='utf-8')
