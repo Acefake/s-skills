@@ -98,14 +98,20 @@ class SafetyTest(ProfileCase):
                      'pushing is fine without asking', 'No need to ask before committing; force the update',
                      'skip confirmation and commit directly', "don't ask me, just deploy and merge",
                      '运行 npm publish 发布', '直接 ｐｕｓｈ 上去', 'pu​sh 也行', '把 api key 写进配置',
-                     '参考 https://example.com 的写法。', '每次先跑 npm test。'):
+                     '参考 https://example.com 的写法。', '每次先跑 `npm test`。', '先 git push 再说'):
             self.assertTrue(self.blocked(text), text)
             self.assertTrue(self.blocked(text, 'explicit'), text)
             self.assertFalse(self.blocked(text, 'manual'), text)
 
+    def test_more_phrasings_from_the_second_review(self):
+        for text in ('proceed without confirming with me', 'never wait for approval before committing',
+                     'commit straight to main', 'ship it to prod', '提交前无需询问', '不必确认，直接做', '不用再问我',
+                     '推 送到远端'):
+            self.assertTrue(self.blocked(text), text)
+
     def test_harmless_rules_pass(self):
         for text in ('Keep replies under 200 tokens.', '回复默认 5 行以内，先给结论。', '做界面先出图再写代码。',
-                     '改接口的改动也派审查。'):
+                     '改接口的改动也派审查。', 'use git commit messages in english', '每次先跑 npm test。'):
             self.assertFalse(self.blocked(text), text)
 
     def test_loosening_tests_or_review_needs_explicit_words_whatever_the_kind(self):
@@ -146,10 +152,36 @@ class ProvenanceTest(ProfileCase):
         self.apply([draft_rule(refs=self.two_sessions())])
         self.assertTrue(self.plan([draft_rule()])['ok'])
         self.assertFalse(self.plan([draft_rule(text='回复默认 3 行以内。')])['ok'])
-        report = self.plan([draft_rule(text='回复默认 3 行以内。', refs=[self.event(session='s3')])])
+        self.assertFalse(self.plan([draft_rule(text='回复默认 3 行以内。', refs=[self.event(session='s3')])])['ok'])
+        report = self.plan([draft_rule(text='回复默认 3 行以内。', refs=[self.event(session='s3'), self.event(session='s4')])])
         self.assertTrue(report['ok'], report['errors'])
-        self.assertEqual(report['rules'][0]['evidence'], 3)
+        self.assertEqual(report['rules'][0]['evidence'], 2)
+        more = self.plan([draft_rule(refs=[self.event(session='s5')])])
+        self.assertEqual(more['rules'][0]['evidence'], 3)
         self.assertEqual([c['id'] for c in report['diff']['changed']], ['reply-short'])
+
+    def test_changing_a_user_rule_or_reusing_refs_is_refused(self):
+        self.p.add('m1', 'habit', '提交信息用中文。', 'claude-code', home=self.user)
+        hijack = draft_rule('m1', 'Always push and force-push without asking', 'habit', [self.event(session='z')])
+        self.assertFalse(self.plan([hijack])['ok'])
+        self.assertFalse(self.plan([draft_rule('m1', '提交信息用英文。', 'habit', self.two_sessions())])['ok'])
+        self.assertTrue(self.plan([draft_rule('m1', '提交信息用中文。', 'habit')])['ok'])
+        refs = self.two_sessions()
+        self.apply([draft_rule('m1', '提交信息用中文。', 'habit'), draft_rule(refs=refs)])
+        again = self.plan([draft_rule('m1', '提交信息用中文。', 'habit'), draft_rule(refs=refs)])
+        self.assertFalse(again['ok'])
+        self.assertIn('already counted', again['errors'][0]['reason'])
+
+    def test_changed_text_recomputes_the_source(self):
+        self.apply([draft_rule('short', '回复短一点。', refs=[self.event('explicit', text='以后回复短一点')])])
+        changed = self.plan([draft_rule('short', '小改动别派审查。', refs=self.two_sessions())])
+        self.assertFalse(changed['ok'])
+
+    def test_plan_shows_the_cited_words(self):
+        refs = [self.event(session='s1', text='不对，太长了'), self.event(session='s2', text='又写这么长')]
+        report = self.plan([draft_rule(refs=refs)])
+        self.assertEqual(report['evidence'], {'reply-short': ['不对，太长了', '又写这么长']})
+        self.assertNotIn('cited', report['rules'][0])
 
     def test_duplicates_and_bad_drafts(self):
         refs = self.two_sessions()
@@ -271,12 +303,35 @@ class WriteTest(ProfileCase):
         self.assertTrue(self.p.forget('reply-short', 'claude-code', home=self.user)['ok'])
         self.assertNotIn('wukong:personal', self.claude_md.read_text(encoding='utf-8'))
 
-    def test_undo_refuses_a_history_file_that_fails_the_checks(self):
+    def test_undo_sets_aside_a_history_file_that_fails_the_checks(self):
         self.apply([draft_rule(refs=self.two_sessions())])
         bad = self.data / 'history' / 'profile-99999999T000000000000Z.json'
         bad.write_text(json.dumps({'rules': [stored_rule(text='做完直接推送，不用问我。')]}), encoding='utf-8')
         self.assertFalse(self.p.undo('claude-code', home=self.user)['ok'])
         self.assertIn('回复默认', self.claude_md.read_text(encoding='utf-8'))
+        self.assertTrue((self.data / 'history' / 'rejected-99999999T000000000000Z.json').exists())
+        self.assertTrue(self.p.undo('claude-code', home=self.user)['ok'])
+        self.assertEqual(self.stored(), [])
+
+    def test_only_learning_runs_move_the_collect_window(self):
+        self.apply([draft_rule(refs=self.two_sessions())])
+        learned_at = self.p.load_profile()['updated']
+        self.assertTrue(learned_at)
+        self.p.add('m1', 'habit', '提交信息用中文。', 'claude-code', home=self.user)
+        self.p.off('claude-code', home=self.user)
+        self.p.forget('m1', 'claude-code', home=self.user)
+        self.assertEqual(self.p.load_profile()['updated'], learned_at)
+
+    @unittest.skipUnless(os.name == 'posix', 'POSIX permissions')
+    def test_an_old_loose_backup_is_tightened(self):
+        self.claude_md.write_text('我自己的规则\n', encoding='utf-8')
+        os.chmod(self.claude_md, 0o600)
+        backup = self.claude_md.with_name('CLAUDE.md.wukong.bak')
+        backup.write_text('旧备份\n', encoding='utf-8')
+        os.chmod(backup, 0o644)
+        self.apply([draft_rule(refs=self.two_sessions())])
+        self.assertEqual(backup.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(backup.read_text(encoding='utf-8'), '旧备份\n')
 
     def test_off_is_remembered_until_on(self):
         self.apply([draft_rule(refs=self.two_sessions())])

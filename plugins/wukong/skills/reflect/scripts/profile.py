@@ -52,6 +52,7 @@ EXPIRE_DAYS = 56
 HISTORY_KEEP = 20
 MIN_SESSIONS = 2
 MAX_RULE_CHARS = 120
+USED_REFS_KEEP = 50
 COLLECT_LIMIT = 60
 KINDS = ("style", "route", "verify", "habit")
 KIND_TITLES = {"style": "回复", "route": "技能", "verify": "验证与审查", "habit": "习惯"}
@@ -64,16 +65,23 @@ MARKERS = (gi.START, gi.END, gi.PREVIOUS_START, gi.PREVIOUS_END, gi.LEGACY_START
 # 下面三组只在规范化（NFKC、去零宽、转小写）之后的文字上匹配。
 # 放宽权限、跳过确认、发布部署、碰密钥和权限的规则不能从对话里学，只能用户用 add 亲口加。
 SENSITIVE = re.compile(
-    r"推送|强制|跳过(钩子|hook|检查|确认)|删除(文件|分支|目录|数据|仓库)|不用(问|确认|请示)|不必问|不要问|别问"
-    r"|无[需须]确认|不需要确认|直接(提交|推送|合并|删除|发布|部署)|自动(提交|推送|合并|发布|部署)|发布|部署"
+    r"推送|强制|跳过(钩子|hook|检查|确认)|删除(文件|分支|目录|数据|仓库)"
+    r"|(不用|不必|无需|无须|不需要|别|不要|勿)再?(问|确认|询问|请示|等|审批|批准)"
+    r"|直接(提交|推送|合并|删除|发布|部署|上线)|自动(提交|推送|合并|发布|部署|上线)|发布|部署|上线|生产环境"
     r"|密钥|密码|凭据|权限|安全(检查|审查)"
     r"|\bpush|\bforce\b|--force|--no-verify|reset\s+--hard|git\s+clean|rm\s+-rf|\bdeploy|\bpublish|\bmerge\b"
-    r"|\bdelete\b|without\s+ask|no\s+need\s+to\s+(ask|confirm)|don'?t\s+ask|skip\s+(the\s+)?(confirm|check|hook)"
+    r"|\bdelete\b|\bship\b|\bprod(uction)?\b|without\s+(ask|confirm|approv|check)|no\s+need\s+to\s+(ask|confirm)"
+    r"|don'?t\s+(ask|confirm|wait)|(never|not?)\s+wait\s+for\s+(approval|confirmation|me)"
+    r"|skip\s+(the\s+)?(confirm|check|hook|approv)|straight\s+to\s+(main|master)|(main|master)\s+directly"
     r"|auto-?\s*(commit|push|merge|deploy)|commit\s+directly|api[\s_-]?key|access[\s_-]?token|secret[\s_-]?key"
     r"|password|credential|\bsudo\b|permission"
 )
 URL = re.compile(r"https?://|www\.")
-COMMAND = re.compile(r"\b(git|npm|pnpm|yarn|pip|curl|wget|sudo|chmod|chown|docker|kubectl|rm)\s+-{0,2}[a-z]")
+COMMAND = re.compile(
+    r"`[^`]*\b(git|npm|pnpm|yarn|pip|curl|wget|sudo|chmod|chown|docker|kubectl|rm)\b[^`]*`"
+    r"|\b(curl|wget|sudo|chmod|chown|kubectl)\s+\S|\brm\s+-|\bgit\s+(push|reset|clean|rebase|checkout|tag|branch\s+-)"
+    r"|\b(npm|pnpm|yarn)\s+(publish|install|add|run|exec)\b|\bpip\s+install\b|\bdocker\s+(run|push|rm|exec)\b"
+)
 # 放松验证或审查：只接受用户明说（日志里的 explicit 事件），不从纠正里推断。
 LOOSEN = re.compile(
     r"不跑|别跑|不用跑|跳过|不派|别派|不用派|不审|不用审|不用测|少测|不写测试|不测"
@@ -193,7 +201,7 @@ def collect(since=None, directory=None):
 
 
 def load_events(ids, directory=None):
-    """Return {id: (event, session)} for the cited journal events that exist."""
+    """Return {id: (event, session, text)} for the cited journal events that exist."""
     ids = sorted({i for i in ids if isinstance(i, int) and not isinstance(i, bool)})
     conn = _open_journal(directory or home())
     if conn is None or not ids:
@@ -204,9 +212,9 @@ def load_events(ids, directory=None):
         found = {}
         for start in range(0, len(ids), 500):
             chunk = ids[start:start + 500]
-            rows = conn.execute("SELECT id, event, session FROM events WHERE id IN (%s)" % ",".join("?" * len(chunk)),
+            rows = conn.execute("SELECT id, event, session, text FROM events WHERE id IN (%s)" % ",".join("?" * len(chunk)),
                                 chunk).fetchall()
-            found.update({row[0]: (row[1], row[2] or "event-%d" % row[0]) for row in rows})
+            found.update({row[0]: (row[1], row[2] or "event-%d" % row[0], row[3] or "") for row in rows})
         return found
     finally:
         conn.close()
@@ -246,8 +254,10 @@ def safety_errors(text, source):
     if source == "manual":
         return []
     flat = normalize(text)
+    # 再查一遍去掉空白的版本，拦「推 送」这类拆字写法。
+    squeezed = re.sub(r"\s+", "", flat)
     reasons = []
-    if SENSITIVE.search(flat):
+    if SENSITIVE.search(flat) or SENSITIVE.search(squeezed):
         reasons.append("touches pushing, confirmation, publishing, secrets or permissions; only the user can add it (profile.py add)")
     if URL.search(flat) or COMMAND.search(flat):
         reasons.append("contains a URL or a command; only the user can add it (profile.py add)")
@@ -294,17 +304,27 @@ def resolve(draft, current, events, on):
             continue
         rule = {"id": rid, "kind": item["kind"], "text": " ".join(item["text"].split()),
                 "project": item.get("project") or None}
-        if old and _same_text(old["text"], item["text"]) and not refs:
+        same_text = bool(old) and _same_text(old["text"], item["text"])
+        if same_text and not refs:
             rule.update({k: old[k] for k in ("source", "evidence", "created", "lastSeen")})
+            rule["refs"] = list(old.get("refs") or [])
+        elif old and old["source"] == "manual" and not same_text:
+            errors.append({"id": rid, "reason": "rules the user added change only through add or forget"})
+            continue
         else:
+            used = set(old.get("refs") or []) if old else set()
             cited = [events.get(r) for r in refs]
             if not refs or any(c is None or c[0] not in EVIDENCE_EVENTS for c in cited):
                 errors.append({"id": rid, "reason": "new or changed rules must cite existing correction or explicit events in refs"})
                 continue
+            if used & set(refs):
+                errors.append({"id": rid, "reason": "refs already counted for this rule: %s" % sorted(used & set(refs))})
+                continue
             sessions = {c[1] for c in cited}
             explicit = any(c[0] == "explicit" for c in cited)
-            earlier = old["evidence"] if old else 0
-            if old and old["source"] in ("manual", "explicit"):
+            # 文字不变时只是加证据，来源保留；文字一改就按这次引用重算，不继承。
+            earlier = old["evidence"] if same_text else 0
+            if same_text and old["source"] in ("manual", "explicit"):
                 source = old["source"]
             else:
                 source = "explicit" if explicit else "learned"
@@ -312,7 +332,9 @@ def resolve(draft, current, events, on):
                 errors.append({"id": rid, "reason": "learned rules need corrections from at least %d sessions" % MIN_SESSIONS})
                 continue
             rule.update({"source": source, "evidence": earlier + len(sessions),
-                         "created": old["created"] if old else on.isoformat(), "lastSeen": on.isoformat()})
+                         "created": old["created"] if old else on.isoformat(), "lastSeen": on.isoformat(),
+                         "refs": sorted(used | set(refs))[-USED_REFS_KEEP:],
+                         "cited": [c[2] for c in cited]})
         problems = safety_errors(rule["text"], rule["source"])
         errors.extend({"id": rid, "reason": p} for p in problems)
         if not problems:
@@ -396,11 +418,14 @@ def plan(draft, directory=None, on=None):
     refs = [r for item in (draft.get("rules") or []) if isinstance(draft, dict) and isinstance(item, dict)
             for r in (item.get("refs") or []) if isinstance(item.get("refs"), list)] if isinstance(draft, dict) else []
     resolved, errors = resolve(draft, profile["rules"], load_events(refs, directory), on)
+    # 引用的原话只给用户确认时看：规则和它的依据是否真的相关，由用户判断。
+    evidence = {r["id"]: r.pop("cited") for r in resolved if "cited" in r}
     kept, dropped, cap_errors = settle(resolved, on) if not errors else ([], [], [])
     errors += cap_errors
     body = render(kept) if not errors else ""
     return {"ok": not errors, "errors": errors, "dropped": dropped,
             "diff": diff(profile["rules"], kept) if not errors else None,
+            "evidence": evidence if not errors else {},
             "projectRules": [r for r in kept if r.get("project")],
             "enabled": profile["enabled"], "tokens": estimate(body), "limit": PERSONAL_LIMIT,
             "block": body, "rules": kept}
@@ -438,14 +463,17 @@ def _sync(body, host, paths):
                             codex_home=paths.get("codex_home"), claude_config_dir=paths.get("claude_config_dir"))
 
 
-def store(rules, host, directory, paths, enabled=None, note=None):
-    """Write the global block first, then profile.json; roll the block back on failure."""
+def store(rules, host, directory, paths, enabled=None, note=None, learned=False):
+    """Write the global block first, then profile.json; roll the block back on failure.
+
+    Only a learning run (apply) moves `updated`, which is where the next collect starts;
+    add, forget, undo, off and on keep it so no journal window is skipped."""
     previous = load_profile(directory)
     enabled = previous["enabled"] if enabled is None else enabled
     write = _sync(render(rules) if enabled else "", host, paths)
-    profile = {"schemaVersion": SCHEMA_VERSION,
-               "updated": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
-               "enabled": enabled, "rules": rules}
+    updated = (datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+               if learned else previous.get("updated"))
+    profile = {"schemaVersion": SCHEMA_VERSION, "updated": updated, "enabled": enabled, "rules": rules}
     try:
         _write_private(directory / "profile.json", profile)
     except Exception:
@@ -466,7 +494,7 @@ def apply(draft, host, directory=None, **paths):
             report.pop("rules")
             return dict(report, applied=False)
         note = None if report["enabled"] else "personal block is off; rules saved but not written. Run on to turn it back on."
-        write = store(report.pop("rules"), host, directory, paths, note=note)
+        write = store(report.pop("rules"), host, directory, paths, note=note, learned=True)
         return dict(report, applied=True, write=write)
 
 
@@ -512,7 +540,11 @@ def undo(host, directory=None, **paths):
             return {"ok": False, "error": "%s is not a profile" % latest.name}
         errors = check_stored(rules)
         if errors:
-            return {"ok": False, "error": "%s does not pass the current checks" % latest.name, "errors": errors}
+            # 移开它，下次撤销就能继续往前；文件保留，不删。
+            aside = latest.with_name(latest.name.replace("profile-", "rejected-", 1))
+            os.replace(str(latest), str(aside))
+            return {"ok": False, "error": "%s does not pass the current checks; set aside as %s, run undo again to go further back"
+                    % (latest.name, aside.name), "errors": errors}
         kept, dropped, cap_errors = settle(rules, today())
         if cap_errors:
             return {"ok": False, "errors": cap_errors}
@@ -520,7 +552,7 @@ def undo(host, directory=None, **paths):
         enabled = data.get("enabled", True)
         write = _sync(render(kept) if enabled else "", host, paths)
         _write_private(directory / "profile.json", dict(data, rules=kept, enabled=enabled,
-                                                        updated=datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")))
+                                                        updated=load_profile(directory).get("updated")))
         latest.unlink()
         return {"ok": True, "restored": latest.name, "undone": str(undone), "dropped": dropped, "write": write}
 

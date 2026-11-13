@@ -176,12 +176,15 @@ def write_preserving(path, original, updated):
     path.parent.mkdir(parents=True, exist_ok=True)
     if original is not None:
         backup = path.with_name(path.name + '.wukong.bak')
+        source_mode = stat.S_IMODE(path.stat().st_mode)
         try:
             with backup.open('xb') as stream:
                 stream.write(original)
-            os.chmod(backup, stat.S_IMODE(path.stat().st_mode))
+            os.chmod(backup, source_mode)
         except FileExistsError:
-            pass
+            # 早先留下的备份可能比原文件宽松：只收紧，不放宽。
+            if not backup.is_symlink() and stat.S_IMODE(backup.stat().st_mode) & ~source_mode:
+                os.chmod(backup, stat.S_IMODE(backup.stat().st_mode) & source_mode)
     mode = stat.S_IMODE(path.stat().st_mode) if original is not None else None
     fd, temporary = tempfile.mkstemp(prefix=path.name + '.', dir=path.parent)
     try:
