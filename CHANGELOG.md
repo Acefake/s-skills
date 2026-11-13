@@ -2,6 +2,11 @@
 
 ## 1.0.17
 
+### 新增
+
+- 本地使用日志（个人学习层第 1 期）：`hooks/journal.py` 把会话开始、技能加载、用户纠正、明说的偏好和任务摘要追加到本机 `~/.wukong/journal.jsonl`。不打印、不占上下文、不上传；原话只留前 80 字并脱敏，90 天或 2 MB 自动裁剪，`WUKONG_JOURNAL=0` 关闭。设计见 `docs/wukong/specs/2026-11-13-personal-learning-design.md`。
+- 常驻上下文上限：`scripts/context_budget.py` 估算每个会话常驻的 token（自动技能描述、全局规则、钩子注入），`check_marketplace` 超过 5650 就失败。本版实测约 5380，1.0.16 约 6980。
+
 ### 改动
 
 - 低频技能改为点名调用（`disable-model-invocation: true`，Codex 同步关闭隐式调用）：`docx`、`pptx`、`xlsx`、`pdf`、`technical-writing`、`html-mockup`、`apple-glass`、`archify`。不再常驻技能列表，用时直接点名，如「用 docx 做一份报告」。全局规则和 `wukong-router` 的路由表同步改为「点名时加载，未点名直接做」，触发用例去掉这些点名技能。

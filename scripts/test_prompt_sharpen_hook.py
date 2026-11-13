@@ -1,5 +1,6 @@
 """Keep the optional prompt-sharpen hook aligned with the skill and its docs."""
 import json
+import os
 import subprocess
 import sys
 import unittest
@@ -8,6 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIR = ROOT / 'plugins/wukong/skills/prompt-sharpen'
 HOOK = SKILL_DIR / 'scripts/improve_hook.py'
+# 钩子会写本地使用日志；测试里关掉，不碰真实的 ~/.wukong。
+os.environ['WUKONG_JOURNAL'] = '0'
 
 
 def run_hook(payload):

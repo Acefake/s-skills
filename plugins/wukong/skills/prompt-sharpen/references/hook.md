@@ -13,7 +13,7 @@
 - `UserPromptSubmit`：给每条提示词附一段评估说明。模型结合对话判断是否存在影响结果的关键缺口；有缺口则加载 `prompt-sharpen` 后研究，必要时才提问。不能只因有动作就放行，也不能只因提示词短就介入。明确要求优化提示词时加载；信息足够时直接执行。以 `*`、`#`、`/` 开头的提示词、系统消息、「可以」「继续」这类确认，以及 4 个字以内的消息不介入，这不影响显式斜杠命令由宿主路由技能。
 - `PreToolUse`（只匹配 `Bash`）：命令是 dev server、watch、`tail -f` 这类长时间运行的进程时，提醒用 `run_in_background`。
 
-只加提醒，不改写提示词，不拦截工具，出错时静默退出。流程和绕过规则改写自 [severity1/claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver)（MIT，见 [LICENSE-prompt-improver](../../../LICENSE-prompt-improver)），只保留这两条，不含它的做法评估、工作流、计划模式等提醒，那些和 wukong 的技能路由、模型配置重复。
+只加提醒，不改写提示词，不拦截工具，出错时静默退出。同一进程还会往本地写使用日志，不进对话，说明见[插件钩子](../../../hooks/README.md#本地使用日志)。流程和绕过规则改写自 [severity1/claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver)（MIT，见 [LICENSE-prompt-improver](../../../LICENSE-prompt-improver)），只保留这两条，不含它的做法评估、工作流、计划模式等提醒，那些和 wukong 的技能路由、模型配置重复。
 
 ## 代价
 

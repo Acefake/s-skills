@@ -25,6 +25,7 @@ try:
 except ModuleNotFoundError:
     sys.exit("jsonschema missing, run: python -m pip install -r requirements-dev.txt")
 
+import context_budget
 from marketplace_lib import (
     AGENT_NAME_RE,
     CLAUDE_NAME_RE,
@@ -482,6 +483,8 @@ def main() -> int:
         check_agent_descriptions(problems)
         check_supported_hosts(problems)
         check_panorama(problems)
+        for problem in context_budget.problems():
+            problems.add(problem)
     except FileNotFoundError as exc:
         problems.add(f"missing file: {exc.filename}")
     except json.JSONDecodeError as exc:

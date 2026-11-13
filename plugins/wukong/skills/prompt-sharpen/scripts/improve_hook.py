@@ -15,6 +15,13 @@ fails the turn: any error exits silently with no output.
 import json
 import re
 import sys
+from pathlib import Path
+
+try:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "hooks"))
+    import journal
+except Exception:
+    journal = None
 
 MACHINE_PREFIXES = (
     "<task-notification>",
@@ -96,6 +103,8 @@ def build_context(data):
 def main():
     try:
         data = json.loads(sys.stdin.buffer.read().decode("utf-8"))
+        if journal and data.get("hook_event_name") == "UserPromptSubmit":
+            journal.record(data)
         event, text = build_context(data)
         if text:
             print(json.dumps({"hookSpecificOutput": {"hookEventName": event, "additionalContext": text}}))
