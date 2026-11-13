@@ -5,7 +5,8 @@ Ported from severity1/claude-code-prompt-improver (MIT, see LICENSE-prompt-impro
 Two events, both read the hook payload from stdin and print one JSON object:
 
 - UserPromptSubmit: attach the evaluation note. Prompts starting with ``*``,
-  ``#`` or ``/`` and harness-generated messages are left alone.
+  ``#`` or ``/``, harness-generated messages, confirmations such as "可以" or
+  "继续", and prompts of at most four characters are left alone.
 - PreToolUse (Bash): remind the model to run long-lived commands in the background.
 
 The hook only adds context. It never rewrites a prompt, blocks a tool call, or
@@ -42,6 +43,13 @@ EVALUATION = """提示词评估
 
 QUOTE_LIMIT = 200
 
+# 确认、继续这类回复和极短消息没有可澄清的需求，附评估说明只会拖慢这一轮。
+SHORT_LIMIT = 4
+CONFIRMATION = re.compile(
+    r"^(可以|好|好的|行|嗯|对|是|是的|没问题|同意|确认|继续|开始|做吧|就这样|按你说的(做|来)?|ok|okay|yes|y|go|lgtm)[。.!！~～\s]*$",
+    re.IGNORECASE,
+)
+
 BACKGROUND = (
     "这看起来是长时间运行或不会退出的进程（开发服务器、watch、tail -f）。"
     "用 run_in_background 放到后台，不要卡住本轮。"
@@ -58,6 +66,9 @@ def evaluate_prompt(data):
     if prompt[0] in "*#/":
         return ""
     if prompt.lstrip().startswith(MACHINE_PREFIXES):
+        return ""
+    compact = "".join(prompt.split())
+    if len(compact) <= SHORT_LIMIT or CONFIRMATION.match(prompt.strip()):
         return ""
     quoted = prompt if len(prompt) <= QUOTE_LIMIT else prompt[:QUOTE_LIMIT] + "…（原话过长已截断，以原消息为准）"
     escaped = quoted.replace("\\", "\\\\").replace('"', '\\"')

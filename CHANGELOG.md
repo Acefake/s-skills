@@ -9,6 +9,9 @@
 - 合并三个附属技能，正文移入宿主技能的 `references/`：`comment-sicko` → `no-comments`（同名子代理保留，改读新路径），`benchmark-checklist` → `principle-explain-the-number`，`ketchup` → `wukong-mode` 的 `catch-up.md`（autopilot 剧本的补进度回复照旧）。
 - `apple-glass` 改为通用的 Apple TV 风格界面语言，去掉影盒专属的仓库、路径和检查命令，类名前缀 `yb-` 改为 `ag-`。
 - 技能从 82 个减到 75 个：48 个自动，27 个点名。
+- 小任务提速：只动一两个文件、不改接口的修 bug 归第 1 档，不强制先写失败测试；第 0、1 档自审只看 diff。独立评审子代理只在第 3 档（跨模块、改接口或依赖、迁移）或涉及权限、并发、共享状态、数据删除时派，原先任何修 bug 哪怕一行都会派。
+- 全局规则「只读检索派发」细则移到 `wukong-router`，全局只留一句授权；旧规则冻结为 `full-instructions-v9.txt`。
+- prompt-sharpen 钩子跳过「可以」「继续」这类确认和 4 个字以内的消息，这些消息不再附约 300 token 的评估说明。
 
 ## 1.0.16
 

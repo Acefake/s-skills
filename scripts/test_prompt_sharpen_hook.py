@@ -63,6 +63,12 @@ class PromptSharpenHookTest(unittest.TestCase):
                        '  <system-reminder>x</system-reminder>'):
             self.assertIsNone(run_hook(prompt_event(prompt)), prompt)
 
+    def test_confirmations_and_very_short_prompts_stay_silent(self):
+        for prompt in ('可以', '好的。', '继续', '按你说的做', 'OK', 'lgtm', '修一下', ' 嗯 '):
+            self.assertIsNone(run_hook(prompt_event(prompt)), prompt)
+        for prompt in ('可以把登录改一下吗', '修一下登录页', '继续优化首页性能'):
+            self.assertIsNotNone(run_hook(prompt_event(prompt)), prompt)
+
     def test_long_running_bash_gets_background_reminder(self):
         for command in ('npm run dev', 'pnpm start', 'tail -f app.log', 'vite', 'python -m http.server'):
             out = run_hook(bash_event(command))
