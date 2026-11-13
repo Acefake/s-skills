@@ -14,6 +14,9 @@ LEGACY_START = '<!-- s-atlas:instructions:start -->'
 LEGACY_END = '<!-- s-atlas:instructions:end -->'
 PREVIOUS_START = '<!-- s-wukong:instructions:start -->'
 PREVIOUS_END = '<!-- s-wukong:instructions:end -->'
+# 个人学习层写的块。和上面的库块分开：库升级不碰它，写它也不碰库块。
+PERSONAL_START = '<!-- wukong:personal:start -->'
+PERSONAL_END = '<!-- wukong:personal:end -->'
 
 
 class ConfigurationError(Exception):
@@ -126,6 +129,47 @@ def merge_instructions(text):
     return text + separator + block + newline
 
 
+def _marker_span(text, start, end):
+    """Return (start_at, end_after) of one well-formed marker pair, or None."""
+    if start not in text and end not in text:
+        return None
+    if text.count(start) != 1 or text.count(end) != 1:
+        raise ConfigurationError('Incomplete or duplicate personal markers; repair them before applying')
+    start_at, end_at = text.index(start), text.index(end)
+    if (end_at < start_at or (start_at and text[start_at - 1] != '\n')
+            or text[end_at + len(end):].split('\n', 1)[0].strip()):
+        raise ConfigurationError('Invalid personal marker boundaries')
+    return start_at, end_at + len(end)
+
+
+def merge_personal(text, body):
+    """Replace, insert or (for an empty body) remove the personal block only."""
+    newline = '\r\n' if '\r\n' in text else '\n'
+    span = _marker_span(text, PERSONAL_START, PERSONAL_END)
+    body = body.strip()
+    if not body:
+        if not span:
+            return text
+        start_at, end_after = span
+        tail = text[end_after:]
+        if tail.startswith(newline):
+            tail = tail[len(newline):]
+        head = text[:start_at]
+        if head.endswith(newline * 2):
+            head = head[:-len(newline)]
+        return head + tail
+    block = f'{PERSONAL_START}\n{body}\n{PERSONAL_END}'.replace('\n', newline)
+    if span:
+        start_at, end_after = span
+        return text[:start_at] + block + text[end_after:]
+    library_end = next((marker for marker in (END, PREVIOUS_END, LEGACY_END) if marker in text), None)
+    if library_end:
+        at = text.index(library_end) + len(library_end)
+        return text[:at] + newline * 2 + block + text[at:]
+    separator = (newline if text.endswith(newline) else newline * 2) if text else ''
+    return text + separator + block + newline
+
+
 def write_preserving(path, original, updated):
     path.parent.mkdir(parents=True, exist_ok=True)
     if original is not None:
@@ -168,6 +212,25 @@ def sync_global(host, *, home, codex_home=None, claude_config_dir=None, apply=Fa
         write_preserving(path, original, updated)
         status = 'configured'
     return dict(status=status, changed=bool(apply and changed), target=str(path), version=plugin_version())
+
+
+def sync_personal(host, body, *, home, codex_home=None, claude_config_dir=None, apply=False):
+    """Write the personal block; an empty body removes it. Cursor gets the block to paste."""
+    if host == 'cursor':
+        block = f'{PERSONAL_START}\n{body.strip()}\n{PERSONAL_END}' if body.strip() else ''
+        return dict(status='user_rules_verification_required', changed=False, target='Cursor User Rules', block=block)
+    path = instruction_path(host, Path(home), codex_home, claude_config_dir)
+    if path.is_symlink():
+        raise ConfigurationError('Global instruction file is a symlink; inspect its destination before updating')
+    original = path.read_bytes() if path.exists() else None
+    text = original.decode('utf-8-sig') if original is not None else ''
+    updated = merge_personal(text, body).encode('utf-8')
+    if original is not None and original.startswith(b'\xef\xbb\xbf'):
+        updated = b'\xef\xbb\xbf' + updated
+    changed = updated != (original or b'')
+    if apply and changed:
+        write_preserving(path, original, updated)
+    return dict(status='configured' if apply or not changed else 'outdated', changed=bool(apply and changed), target=str(path))
 
 
 def main():

@@ -44,6 +44,8 @@ python scripts/global_instructions.py --host workbuddy
 
 其他自定义改写不做关键词式替换。遇到相似但无法完整识别的规则，先比较冲突和归属，不把它当作最新版或直接叠加。Cursor 同样使用脚本返回的当前版本 block；只能通过真实 User Rules 读取和更新能力完成迁移，没有能力时交付替换内容并标记待操作。
 
+个人学习层另有一对标记 `<!-- wukong:personal:start -->` / `<!-- wukong:personal:end -->`，只由 `reflect --me` 等个人模式写入，放在库块之后。本技能更新库块时不读、不改个人块；个人块写入也不碰库块。
+
 ## 3. 核验和报告
 
 Codex、Claude Code、WorkBuddy 再执行一次不带 `--apply` 的检查，预期 configured；第二次 apply 应 changed=false。Cursor 以真实 User Rules 回读为准，无法回读则标记待核验。

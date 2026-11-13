@@ -1,6 +1,6 @@
 ---
 name: reflect
-description: "「/reflect」「把这次教训写进技能」。派三个审查者，把经验改成对现有 skill 的具体修改。Use when this conversation produced a lesson that should be written into an existing skill."
+description: "「/reflect」「把这次教训写进技能」「/reflect --me」「更新我的个人规则」。默认派三个审查者把经验改成对现有 skill 的修改；--me 等个人模式把本机使用日志归纳成个人规则。Use when a lesson should be written into an existing skill, or the user wants their personal rules learned from the local journal updated, shown, undone or removed."
 disable-model-invocation: true
 ---
 
@@ -14,7 +14,11 @@ disable-model-invocation: true
 
 从当前对话里挖出持久有用的经验，然后把它们落实成对 skill 的修改。
 
-当用户说 “reflect” 或 “/reflect” 时调用。如果对话很琐碎、跑题了，或者已经被一个已有 skill 覆盖、而父智能体也正确地照着做了，就跳过。一次性的事情不算经验。
+当用户说 “reflect” 或 “/reflect” 时调用。
+
+带 `--me`、`--show`、`--undo`、`--forget`、`--off`，或用户说「更新 / 查看 / 撤销 / 删掉我的个人规则」时，是个人模式：不派审查者、不改任何 skill，按 [个人模式](references/personal.md) 做，下面的第 1～6 步都不适用。
+
+如果对话很琐碎、跑题了，或者已经被一个已有 skill 覆盖、而父智能体也正确地照着做了，就跳过。一次性的事情不算经验。
 
 ## 1. 找到当前的对话记录
 

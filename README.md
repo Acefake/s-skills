@@ -209,7 +209,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 | `unslop` | 点名 | 去掉文字里的 AI 腔 |
 | `author-skill` | 点名 | 按规范写或大改 SKILL.md |
 | `automate-me` | 点名 | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |
-| `reflect` | 点名 | 把这次对话的教训改进技能 |
+| `reflect` | 点名 | 把这次对话的教训改进技能；`--me` 把本机使用日志归纳成个人规则，`--show`/`--undo`/`--forget`/`--off` 查看、撤销、删除、关闭 |
 
 ### 原则 principle-*（24）
 
