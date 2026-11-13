@@ -263,7 +263,9 @@ class DumpTest(JournalCase):
         self.assertNotIn('id', items[0])
 
     def test_dump_handles_unusual_directory_names(self):
-        env = dict(self.env, WUKONG_HOME=str(Path(self.tmp.name) / 'we#ird?dir%20'))
+        # Windows 文件名不允许 ?，只在 POSIX 上测它。
+        name = 'we#ird?dir%20' if os.name == 'posix' else 'we#ird dir%20'
+        env = dict(self.env, WUKONG_HOME=str(Path(self.tmp.name) / name))
         self.run_script(HOOKS / 'journal.py', prompt('给接口加分页和排序'), env=env)
         out = self.run_script(HOOKS / 'journal.py', {}, env=env, args=('--dump',))
         self.assertEqual(json.loads(out)['event'], 'task')
