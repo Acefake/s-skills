@@ -1,6 +1,7 @@
 ---
 name: docx
 description: "「写个 Word」「做一份 docx」「改修订」「加批注」「读这份 Word」。创建、修改、审阅 Word，含脚注、表格、图片和页面设置。中文必须设置 w:eastAsia。Use when a task produces or modifies a .docx, reviews or redlines one, or needs its text, comments, or tracked changes read."
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。

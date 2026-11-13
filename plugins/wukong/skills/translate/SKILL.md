@@ -1,6 +1,7 @@
 ---
 name: translate
 description: "「翻译成英文」「译成中文」「中英对照」「帮我翻译这段」。代码、命令、路径和 Markdown 结构保持原样，中文用白话。Use when translating text or documents between Chinese and English, including a bilingual version."
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。

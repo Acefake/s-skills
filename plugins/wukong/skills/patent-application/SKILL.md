@@ -1,6 +1,7 @@
 ---
 name: patent-application
 description: "「写专利申请」「权利要求书」「说明书」「专利附图」。起草中国发明专利申请文件（摘要、权利要求书、说明书和附图）并输出 Word，或套用模板版式、修页眉页码、重画专利配图。Use when drafting a Chinese invention patent application, matching a template layout, fixing headers and page numbers, or redrawing patent figures."
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。

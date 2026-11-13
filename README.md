@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.16，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
+<p align="center">当前版本 1.0.17，共 <strong>82</strong> 个技能：59 个按描述自动选用，23 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -190,11 +190,11 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 | `how` | 点名 | 改之前讲清代码怎么串 |
 | `why` | 点名 | 查为什么这样设计 |
 | `refactor-architecture` | 点名 | 找浅模块和耦合，出 HTML 报告，再逐个追问定案 |
-| `archify` | 自动 | 画架构图、流程图、时序图、ER 图等，出可交互单文件 HTML，需要 Node 18+ |
+| `archify` | 点名 | 画架构图、流程图、时序图、ER 图等，出可交互单文件 HTML，需要 Node 18+ |
 | `impeccable` | 自动 | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
-| `apple-glass` | 自动 | 影盒的界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
+| `apple-glass` | 点名 | 影盒的界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
 | `frontend-design` | 点名 | 点名时给一份有主见的视觉方向，不带检查脚本 |
-| `html-mockup` | 自动 | 手写 HTML/CSS 出静态设计稿，Playwright 截图交付；真实界面截图用 `control-ui` |
+| `html-mockup` | 点名 | 手写 HTML/CSS 出静态设计稿，Playwright 截图交付；真实界面截图用 `control-ui` |
 | `control-ui` | 自动 | 在真浏览器里操作界面取证 |
 | `control-cli` | 自动 | 在本地操作命令行或 TUI |
 | `e2e-testing` | 自动 | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |
@@ -202,15 +202,15 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 | `no-comments` | 点名 | 只读审查注释，由父任务核实后修改 |
 | `comment-sicko` | 点名 | 只读审查注释的子智能体，交由父任务核实修改 |
 | `interrogate` | 点名 | 多模型对抗审查 |
-| `docx` | 自动 | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
-| `pptx` | 自动 | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
-| `xlsx` | 自动 | 带公式的工作簿，保存后用 LibreOffice 重算 |
-| `pdf` | 自动 | 提取、填表、合并拆分、OCR 和新建 PDF |
-| `patent-disclosure` | 自动 | 做中国发明专利挖掘、查新、写技术交底书，输出 Markdown 和 Word |
-| `patent-application` | 自动 | 起草中国发明专利申请文件（摘要、权利要求书、说明书、附图）并输出 Word |
-| `technical-writing` | 自动 | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
+| `docx` | 点名 | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
+| `pptx` | 点名 | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
+| `xlsx` | 点名 | 带公式的工作簿，保存后用 LibreOffice 重算 |
+| `pdf` | 点名 | 提取、填表、合并拆分、OCR 和新建 PDF |
+| `patent-disclosure` | 点名 | 做中国发明专利挖掘、查新、写技术交底书，输出 Markdown 和 Word |
+| `patent-application` | 点名 | 起草中国发明专利申请文件（摘要、权利要求书、说明书、附图）并输出 Word |
+| `technical-writing` | 点名 | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
 | `wukong-proposal` | 自动 | 写中文方案：先问清目标，列提纲，再按固定结构起草打磨 |
-| `translate` | 自动 | 中英翻译，可中英对照。代码、命令、路径不译 |
+| `translate` | 点名 | 中英翻译，可中英对照。代码、命令、路径不译 |
 | `unslop` | 点名 | 去掉文字里的 AI 腔 |
 | `author-skill` | 点名 | 按规范写或大改 SKILL.md |
 | `automate-me` | 点名 | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |

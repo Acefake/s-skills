@@ -1,6 +1,7 @@
 ---
 name: patent-disclosure
 description: "「写专利交底书」「专利挖掘」「查新」「保护点」。做中国发明专利挖掘、查新、写技术交底书，或修改已有交底书，按国知局质量要求输出 Markdown 和 Word。Use when mining Chinese invention patent points, searching prior art, or writing and revising a technical disclosure."
+disable-model-invocation: true
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。

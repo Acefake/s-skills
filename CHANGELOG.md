@@ -1,5 +1,11 @@
 # 变更记录
 
+## 1.0.17
+
+### 改动
+
+- 文档、设计、专利类 11 个低频技能改为点名调用（`disable-model-invocation: true`，Codex 同步关闭隐式调用）：`docx`、`pptx`、`xlsx`、`pdf`、`technical-writing`、`translate`、`html-mockup`、`apple-glass`、`archify`、`patent-disclosure`、`patent-application`。不再常驻技能列表，预计每次会话省约 1k token；用时直接点名，如「用 docx 做一份报告」。
+
 ## 1.0.16
 
 ### 修复
