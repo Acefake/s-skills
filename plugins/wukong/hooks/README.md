@@ -12,7 +12,7 @@
 
 ## 本地使用日志
 
-[journal.py](journal.py) 给个人学习层攒数据（设计见 [个人学习层方案](../../../docs/wukong/specs/2026-11-13-personal-learning-design.md)）。它不打印任何东西，所以不占对话上下文；出错、拿不到锁（每条语句最多等 0.5 秒）或 Python 没有 `sqlite3` 模块时静默跳过；钩子先输出提醒再记录，记录慢了也不影响提醒。
+[journal.py](journal.py) 给个人学习层攒数据（设计见 [个人学习层方案](../../../docs/wukong/specs/2026-11-13-personal-learning-design.md)）。它不打印任何东西，所以不占对话上下文；出错、一次记录等锁总共超过 3 秒或 Python 没有 `sqlite3` 模块时静默跳过；钩子先输出提醒再记录，记录慢了也不影响提醒。
 
 - 位置：SQLite 数据库 `~/.wukong/journal.db`，设了 `WUKONG_HOME` 时放在那个目录。目录权限 700，数据库及 WAL 文件只有你自己能读写；已有的目录或数据库权限偏松时会自动收紧。
 - 稳定性：每条记录是一个事务，崩溃不会写出半条；多个会话同时写由 SQLite 加锁排队，不丢数据。用 Python 自带的 `sqlite3`，不需要装依赖。

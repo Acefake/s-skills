@@ -60,7 +60,7 @@
 ### 约束
 
 - 存储用 SQLite（Python 自带 `sqlite3`，无依赖），表 `events(id, at, ts, event, session, project, name, via, text)`，`at` 为秒级时间戳并建索引，`PRAGMA user_version` 记录结构版本。
-- 每条记录一个事务（`BEGIN IMMEDIATE`），WAL 模式、`synchronous = FULL`：崩溃不留半条，多个会话并发写由 SQLite 锁排队。每条语句拿不到锁最多等 0.5 秒，超时就放弃这一条；调用它的钩子先输出提醒再记录，不卡会话。
+- 每条记录一个事务（`BEGIN IMMEDIATE`），WAL 模式、`synchronous = FULL`：崩溃不留半条，多个会话并发写由 SQLite 锁排队。一次记录等锁总共最多 3 秒（多会话排队不丢数据），超时就放弃这一条；调用它的钩子先输出提醒再记录，不卡会话。
 - 不打印任何东西：零上下文成本。任何异常（含数据库损坏、目录不可写）静默跳过，不影响会话。
 - 目录 700，数据库及 WAL 文件 600，已有文件权限偏松时收紧。每次写入顺带删 90 天以前的记录；每写 200 条再只保留最新 5 万条。
 - 没有 `sqlite3` 模块的 Python 上静默不记录。

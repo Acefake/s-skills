@@ -600,6 +600,8 @@ def main(argv=None):
         command.add_argument("--codex-home", type=Path, default=os.environ.get("CODEX_HOME") or None)
         command.add_argument("--claude-config-dir", type=Path, default=os.environ.get("CLAUDE_CONFIG_DIR") or None)
     args = parser.parse_args(argv)
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")  # Windows 控制台默认不是 UTF-8
     paths = {key: getattr(args, key, None) for key in ("home", "codex_home", "claude_config_dir")}
     try:
         if args.command == "collect":

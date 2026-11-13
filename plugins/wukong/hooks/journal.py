@@ -32,8 +32,8 @@ SCHEMA_VERSION = 1
 MAX_AGE_SECONDS = 90 * 24 * 3600
 MAX_ROWS = 50000
 PRUNE_EVERY = 200
-# 每条语句最多等这么久；一次记录最多几条语句，总等待仍远低于钩子的 5 秒超时。
-LOCK_TIMEOUT = 0.5
+# 一次记录等锁的总时限（不是每条语句）：多会话排队时不丢数据，最坏也远低于钩子的 5 秒超时。
+LOCK_TIMEOUT = 3.0
 TASK_EXCERPT = 80
 EXPLICIT_EXCERPT = 120
 SHORT_LIMIT = 4
@@ -163,8 +163,15 @@ def _restrict(path, mode):
         pass
 
 
-def connect(directory=None):
+def _within(conn, deadline):
+    """Let the next statement wait only for what is left of the call's lock budget."""
+    remaining = max(0.0, deadline - time.monotonic())
+    conn.execute("PRAGMA busy_timeout = %d" % int(remaining * 1000))
+
+
+def connect(directory=None, deadline=None):
     """Open the journal, creating it with private permissions on first use."""
+    deadline = time.monotonic() + LOCK_TIMEOUT if deadline is None else deadline
     directory = directory or journal_dir()
     path = directory / "journal.db"
     old_umask = os.umask(0o077)
@@ -176,15 +183,18 @@ def connect(directory=None):
     finally:
         os.umask(old_umask)
     try:
-        conn.execute("PRAGMA busy_timeout = %d" % int(LOCK_TIMEOUT * 1000))
+        _within(conn, deadline)
         if conn.execute("PRAGMA user_version").fetchone()[0] != SCHEMA_VERSION:
+            _within(conn, deadline)
             conn.execute("BEGIN IMMEDIATE")
             if conn.execute("PRAGMA user_version").fetchone()[0] != SCHEMA_VERSION:
                 for statement in filter(None, (s.strip() for s in SCHEMA.split(";"))):
                     conn.execute(statement)
                 conn.execute("PRAGMA user_version = %d" % SCHEMA_VERSION)
             conn.execute("COMMIT")
+        _within(conn, deadline)
         if conn.execute("PRAGMA journal_mode").fetchone()[0].lower() != "wal":
+            _within(conn, deadline)
             conn.execute("PRAGMA journal_mode = WAL")
         conn.execute("PRAGMA synchronous = FULL")
     except Exception:
@@ -193,9 +203,11 @@ def connect(directory=None):
     return conn
 
 
-def prune(conn, now=None, cap=True):
+def prune(conn, now=None, cap=True, deadline=None):
     """Delete events older than 90 days; with cap, keep at most MAX_ROWS newest rows."""
     now = time.time() if now is None else now
+    if deadline is not None:
+        _within(conn, deadline)
     conn.execute("BEGIN IMMEDIATE")
     try:
         conn.execute("DELETE FROM events WHERE at < ?", (int(now) - MAX_AGE_SECONDS,))
@@ -211,9 +223,11 @@ def prune(conn, now=None, cap=True):
 
 
 def append(record, directory=None):
-    conn = connect(directory)
+    deadline = time.monotonic() + LOCK_TIMEOUT
+    conn = connect(directory, deadline)
     try:
         values = tuple(record.get(column, "" if column in ("session", "project") else None) for column in COLUMNS)
+        _within(conn, deadline)
         conn.execute("BEGIN IMMEDIATE")
         try:
             row = conn.execute(
@@ -226,7 +240,7 @@ def append(record, directory=None):
             conn.execute("ROLLBACK")
             raise
         if row % PRUNE_EVERY == 0:
-            prune(conn)
+            prune(conn, deadline=deadline)
     finally:
         conn.close()
 
@@ -262,6 +276,9 @@ def dump(limit=200, directory=None, out=sys.stdout):
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     if argv[:1] == ["--dump"]:
+        # Windows 控制台默认不是 UTF-8，中文摘要会报错。
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8")
         limit = int(argv[2]) if argv[1:2] == ["--limit"] and len(argv) > 2 else 200
         dump(limit)
         return
