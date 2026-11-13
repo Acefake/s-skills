@@ -128,7 +128,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 - 每条提示词附一段评估说明，含糊时才加载 `prompt-sharpen`；以 `*`、`#`、`/` 开头的、「可以」「继续」这类确认和 4 个字以内的消息不介入。
 - 长时间运行的命令：提醒放到后台。
 - 强制推送、`--no-verify`、`reset --hard`、`git clean`：先请你确认。
-- 本地使用日志：记下加载了哪些技能、你的纠正和任务摘要，存在本机 `~/.wukong/`，不上传、不进对话。供以后的个人学习使用，`WUKONG_JOURNAL=0` 关闭。
+- 本地使用日志：记下加载了哪些技能、你的纠正和任务摘要，存在本机 `~/.wukong/journal.db`（SQLite），不上传、不进对话。供以后的个人学习使用，`WUKONG_JOURNAL=0` 关闭。
 
 说明和关闭方法见 [钩子说明](plugins/wukong/hooks/README.md)。Codex 要手动配置，见 [Codex 配置](plugins/wukong/skills/prompt-sharpen/references/hook.md)。
 

@@ -1,14 +1,16 @@
-"""Cover the local usage journal: what it records, what it hides, and that it stays silent."""
+"""Cover the local usage journal: what it records, what it hides, and that it stays silent and safe."""
 import importlib.util
 import json
 import os
+import sqlite3
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
-from unittest import mock
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 HOOKS = ROOT / 'plugins/wukong/hooks'
@@ -36,19 +38,24 @@ class JournalCase(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def run_script(self, script, payload, env=None):
+    def run_script(self, script, payload, env=None, args=()):
         result = subprocess.run(
-            [sys.executable, '-I', str(script)], input=json.dumps(payload).encode('utf-8'),
-            capture_output=True, timeout=30, env=env or self.env,
+            [sys.executable, '-I', str(script), *args], input=json.dumps(payload).encode('utf-8'),
+            capture_output=True, timeout=60, env=env or self.env,
         )
         self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', 'replace'))
         return result.stdout.decode('utf-8')
 
-    def lines(self):
-        path = self.home / 'journal.jsonl'
+    def rows(self):
+        path = self.home / 'journal.db'
         if not path.exists():
             return []
-        return [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines()]
+        conn = sqlite3.connect(str(path))
+        conn.row_factory = sqlite3.Row
+        try:
+            return [dict(r) for r in conn.execute('SELECT * FROM events ORDER BY id')]
+        finally:
+            conn.close()
 
 
 class ClassifyTest(JournalCase):
@@ -75,37 +82,46 @@ class ClassifyTest(JournalCase):
 
 
 class RecordTest(JournalCase):
-    def test_hook_payloads_become_one_line_each(self):
+    def test_hook_payloads_become_one_row_each(self):
         with mock.patch.dict(os.environ, {'WUKONG_HOME': str(self.home), 'WUKONG_JOURNAL': '1'}):
             self.journal.record({'hook_event_name': 'SessionStart', 'session_id': 's1', 'cwd': '/work/acme-api'})
             self.journal.record({'hook_event_name': 'PreToolUse', 'tool_name': 'Skill', 'tool_input': {'skill': 'wukong:tdd'}, 'session_id': 's1'})
             self.journal.record({'hook_event_name': 'PreToolUse', 'tool_name': 'Bash', 'tool_input': {'command': 'ls'}})
             self.journal.record(prompt('不对，别派审查了'))
-        events = self.lines()
-        self.assertEqual([e['event'] for e in events], ['session', 'skill', 'correction'])
-        self.assertEqual(events[0]['project'], 'acme-api')
-        self.assertEqual(events[1]['name'], 'wukong:tdd')
-        for event in events:
-            self.assertTrue(set(event) >= {'ts', 'event', 'session', 'project'})
-            datetime.fromisoformat(event['ts'])
+        rows = self.rows()
+        self.assertEqual([r['event'] for r in rows], ['session', 'skill', 'correction'])
+        self.assertEqual(rows[0]['project'], 'acme-api')
+        self.assertEqual((rows[1]['name'], rows[1]['via']), ('wukong:tdd', 'tool'))
+        for row in rows:
+            datetime.fromisoformat(row['ts'])
+            self.assertAlmostEqual(row['at'], time.time(), delta=60)
 
-    def test_files_are_private(self):
+    def test_database_is_private_and_versioned(self):
         self.run_script(HOOKS / 'journal.py', {'hook_event_name': 'SessionStart'})
+        path = self.home / 'journal.db'
         if os.name == 'posix':
-            self.assertEqual((self.home / 'journal.jsonl').stat().st_mode & 0o777, 0o600)
             self.assertEqual(self.home.stat().st_mode & 0o777, 0o700)
+            for name in ('journal.db', 'journal.db-wal', 'journal.db-shm'):
+                extra = self.home / name
+                if extra.exists():
+                    self.assertEqual(extra.stat().st_mode & 0o077, 0, name)
+        conn = sqlite3.connect(str(path))
+        try:
+            self.assertEqual(conn.execute('PRAGMA user_version').fetchone()[0], self.journal.SCHEMA_VERSION)
+            self.assertEqual(conn.execute('PRAGMA journal_mode').fetchone()[0].lower(), 'wal')
+        finally:
+            conn.close()
 
     def test_script_prints_nothing_and_survives_bad_input(self):
         self.assertEqual(self.run_script(HOOKS / 'journal.py', prompt('给订单服务加导出接口')), '')
         bad = subprocess.run([sys.executable, '-I', str(HOOKS / 'journal.py')], input=b'not json',
                              capture_output=True, timeout=30, env=self.env)
         self.assertEqual((bad.returncode, bad.stdout, bad.stderr), (0, b'', b''))
-        self.assertEqual(len(self.lines()), 1)
+        self.assertEqual(len(self.rows()), 1)
 
     def test_switch_off(self):
-        env = dict(self.env, WUKONG_JOURNAL='0')
-        self.run_script(HOOKS / 'journal.py', {'hook_event_name': 'SessionStart'}, env=env)
-        self.assertEqual(self.lines(), [])
+        self.run_script(HOOKS / 'journal.py', {'hook_event_name': 'SessionStart'}, env=dict(self.env, WUKONG_JOURNAL='0'))
+        self.assertFalse((self.home / 'journal.db').exists())
 
     def test_unwritable_home_fails_silently(self):
         blocker = Path(self.tmp.name) / 'file'
@@ -113,50 +129,102 @@ class RecordTest(JournalCase):
         env = dict(self.env, WUKONG_HOME=str(blocker / 'sub'))
         self.assertEqual(self.run_script(HOOKS / 'journal.py', {'hook_event_name': 'SessionStart'}, env=env), '')
 
+    def test_corrupt_database_fails_silently(self):
+        self.home.mkdir(parents=True)
+        (self.home / 'journal.db').write_bytes(b'not a database' * 100)
+        self.assertEqual(self.run_script(HOOKS / 'journal.py', {'hook_event_name': 'SessionStart'}), '')
+
+    def test_held_lock_gives_up_without_blocking_the_session(self):
+        conn = self.journal.connect(self.home)
+        conn.execute('BEGIN EXCLUSIVE')
+        try:
+            started = time.monotonic()
+            self.assertEqual(self.run_script(HOOKS / 'journal.py', {'hook_event_name': 'SessionStart'}), '')
+            self.assertLess(time.monotonic() - started, self.journal.LOCK_TIMEOUT + 3)
+        finally:
+            conn.execute('ROLLBACK')
+            conn.close()
+        self.assertEqual(self.rows(), [])
+
     def test_prompt_hook_records_through_the_same_process(self):
         out = self.run_script(IMPROVE, prompt('把登录页的报错提示改清楚一点'))
         self.assertIn('prompt-sharpen', out)
-        self.assertEqual([e['event'] for e in self.lines()], ['task'])
+        self.assertEqual([r['event'] for r in self.rows()], ['task'])
         self.run_script(IMPROVE, {'hook_event_name': 'PreToolUse', 'tool_name': 'Bash', 'tool_input': {'command': 'npm run dev'}})
-        self.assertEqual(len(self.lines()), 1)
+        self.assertEqual(len(self.rows()), 1)
 
     def test_session_hook_records_a_session(self):
         self.run_script(HOOKS / 'session_check.py', {'hook_event_name': 'SessionStart', 'session_id': 's9'})
-        self.assertEqual([(e['event'], e['session']) for e in self.lines()], [('session', 's9')])
+        self.assertEqual([(r['event'], r['session']) for r in self.rows()], [('session', 's9')])
+
+
+class ConcurrencyTest(JournalCase):
+    def test_parallel_writers_lose_nothing(self):
+        writer = (
+            'import importlib.util, sys\n'
+            'spec = importlib.util.spec_from_file_location("j", sys.argv[1]); j = importlib.util.module_from_spec(spec)\n'
+            'spec.loader.exec_module(j)\n'
+            'for i in range(25):\n'
+            '    j.record({"hook_event_name": "UserPromptSubmit", "prompt": "任务编号 %s-%d 给接口加分页" % (sys.argv[2], i), "session_id": sys.argv[2]})\n'
+        )
+        procs = [subprocess.Popen([sys.executable, '-I', '-c', writer, str(HOOKS / 'journal.py'), 'w%d' % n], env=self.env)
+                 for n in range(8)]
+        for proc in procs:
+            self.assertEqual(proc.wait(timeout=120), 0)
+        rows = self.rows()
+        self.assertEqual(len(rows), 200)
+        self.assertEqual({r['session'] for r in rows}, {'w%d' % n for n in range(8)})
 
 
 class PruneTest(JournalCase):
-    def write(self, records):
-        self.home.mkdir(parents=True)
-        path = self.home / 'journal.jsonl'
-        path.write_text(''.join(json.dumps(r) + '\n' for r in records), encoding='utf-8')
-        return path
+    def insert(self, conn, ages_in_days):
+        now = time.time()
+        for age in ages_in_days:
+            at = int(now - age * 86400)
+            conn.execute('INSERT INTO events (at, ts, event) VALUES (?, ?, ?)', (at, 'x', 'task'))
 
-    def test_old_lines_are_dropped(self):
-        now = datetime.now(timezone.utc)
-        old = (now - timedelta(days=120)).isoformat()
-        new = (now - timedelta(days=1)).isoformat()
-        path = self.write([{'ts': old, 'event': 'task'}, {'ts': new, 'event': 'skill'}])
-        self.journal.prune(path, now)
-        self.assertEqual([json.loads(l)['event'] for l in path.read_text().splitlines()], ['skill'])
+    def test_old_rows_are_dropped(self):
+        conn = self.journal.connect(self.home)
+        try:
+            self.insert(conn, [120, 91, 89, 1])
+            self.journal.prune(conn)
+            self.assertEqual(conn.execute('SELECT count(*) FROM events').fetchone()[0], 2)
+        finally:
+            conn.close()
 
-    def test_large_file_is_cut_to_the_newest_lines(self):
-        now = datetime.now(timezone.utc)
-        record = {'ts': now.isoformat(), 'event': 'task', 'text': 'x' * 900}
-        path = self.write([dict(record, n=i) for i in range(2600)])
-        self.assertGreater(path.stat().st_size, self.journal.MAX_BYTES)
-        self.journal.prune(path, now)
-        kept = [json.loads(l)['n'] for l in path.read_text().splitlines()]
-        self.assertLessEqual(path.stat().st_size, self.journal.KEEP_BYTES)
-        self.assertEqual(kept[-1], 2599)
-        self.assertEqual(kept, sorted(kept))
+    def test_row_cap_keeps_the_newest(self):
+        conn = self.journal.connect(self.home)
+        try:
+            with mock.patch.object(self.journal, 'MAX_ROWS', 10):
+                self.insert(conn, [0] * 25)
+                self.journal.prune(conn)
+            ids = [r[0] for r in conn.execute('SELECT id FROM events ORDER BY id')]
+            self.assertEqual(ids, list(range(16, 26)))
+        finally:
+            conn.close()
 
-    def test_small_recent_file_is_untouched(self):
-        now = datetime.now(timezone.utc)
-        path = self.write([{'ts': now.isoformat(), 'event': 'task'}])
-        before = path.read_bytes()
-        self.journal.prune(path, now)
-        self.assertEqual(path.read_bytes(), before)
+    def test_prune_runs_periodically_on_append(self):
+        with mock.patch.object(self.journal, 'PRUNE_EVERY', 3):
+            conn = self.journal.connect(self.home)
+            self.insert(conn, [200])
+            conn.close()
+            for _ in range(2):
+                self.journal.append({'at': int(time.time()), 'ts': 'x', 'event': 'task'}, self.home)
+        self.assertEqual([r['id'] for r in self.rows()], [2, 3])
+
+
+class DumpTest(JournalCase):
+    def test_dump_prints_recent_events_as_json_lines(self):
+        for i in range(3):
+            self.run_script(HOOKS / 'journal.py', prompt('第 %d 个任务：给接口加分页' % i))
+        out = self.run_script(HOOKS / 'journal.py', {}, args=('--dump', '--limit', '2'))
+        items = [json.loads(line) for line in out.splitlines()]
+        self.assertEqual(len(items), 2)
+        self.assertTrue(items[0]['text'].startswith('第 1 个'))
+        self.assertNotIn('id', items[0])
+
+    def test_dump_without_database_prints_nothing(self):
+        self.assertEqual(self.run_script(HOOKS / 'journal.py', {}, args=('--dump',)), '')
 
 
 if __name__ == '__main__':

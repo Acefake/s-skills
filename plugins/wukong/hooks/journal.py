@@ -1,28 +1,54 @@
 #!/usr/bin/env python3
 """Record local usage events for the personal learning layer.
 
-Appends one JSON line per event to ``~/.wukong/journal.jsonl`` (or
-``$WUKONG_HOME/journal.jsonl``). It never prints, so it adds nothing to the
-model context, and any error is swallowed so a session never breaks.
+Writes one row per event to the SQLite database ``~/.wukong/journal.db`` (or
+``$WUKONG_HOME/journal.db``). Every write is a transaction, so a crash cannot
+leave a half-written record, and concurrent sessions are serialized by SQLite's
+own locking. The hook never prints, so it adds nothing to the model context,
+and any error (including a lock it cannot get within two seconds) is swallowed
+so a session never breaks.
 
 Events: ``session`` (SessionStart), ``skill`` (PreToolUse on Skill, or a slash
 command), ``correction`` / ``explicit`` / ``task`` (UserPromptSubmit). Only a
 short, redacted excerpt of the user's own message is kept; tool output, model
 replies and file contents are never read. ``WUKONG_JOURNAL=0`` turns it off.
+
+    python3 journal.py --dump [--limit N]   print recent events as JSON lines
 """
 import json
 import os
 import re
+import sqlite3
 import sys
-from datetime import datetime, timedelta, timezone
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
-MAX_BYTES = 2 * 1024 * 1024
-KEEP_BYTES = 1536 * 1024
-MAX_AGE = timedelta(days=90)
+SCHEMA_VERSION = 1
+MAX_AGE_SECONDS = 90 * 24 * 3600
+MAX_ROWS = 50000
+PRUNE_EVERY = 200
+LOCK_TIMEOUT = 2.0
 TASK_EXCERPT = 80
 EXPLICIT_EXCERPT = 120
 SHORT_LIMIT = 4
+
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS events (
+    id      INTEGER PRIMARY KEY,
+    at      INTEGER NOT NULL,
+    ts      TEXT    NOT NULL,
+    event   TEXT    NOT NULL,
+    session TEXT    NOT NULL DEFAULT '',
+    project TEXT    NOT NULL DEFAULT '',
+    name    TEXT,
+    via     TEXT,
+    text    TEXT
+);
+CREATE INDEX IF NOT EXISTS events_at ON events(at);
+CREATE INDEX IF NOT EXISTS events_event_at ON events(event, at);
+"""
+COLUMNS = ("at", "ts", "event", "session", "project", "name", "via", "text")
 
 MACHINE_PREFIXES = (
     "<task-notification>",
@@ -54,7 +80,7 @@ REDACTIONS = (
 )
 
 
-def journal_path():
+def journal_dir():
     home = os.environ.get("WUKONG_HOME")
     return Path(home) if home else Path.home() / ".wukong"
 
@@ -70,8 +96,7 @@ def redact(text):
 
 
 def excerpt(text, limit):
-    text = " ".join(text.split())
-    return redact(text[:limit])
+    return redact(" ".join(text.split())[:limit])
 
 
 def classify_prompt(prompt):
@@ -95,7 +120,7 @@ def classify_prompt(prompt):
     return "task", {"text": excerpt(stripped, TASK_EXCERPT)}
 
 
-def build_event(data):
+def build_event(data, now=None):
     """Map a hook payload to one journal record, or None."""
     event = data.get("hook_event_name")
     if event == "SessionStart":
@@ -112,8 +137,10 @@ def build_event(data):
         kind, extra = "skill", {"name": name.strip(), "via": "tool"}
     else:
         return None
+    now = time.time() if now is None else now
     record = {
-        "ts": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
+        "at": int(now),
+        "ts": datetime.fromtimestamp(now, timezone.utc).astimezone().isoformat(timespec="seconds"),
         "event": kind,
         "session": str(data.get("session_id") or ""),
         "project": Path(str(data.get("cwd") or "")).name,
@@ -122,49 +149,68 @@ def build_event(data):
     return record
 
 
-def _first_timestamp(path):
-    with path.open("rb") as handle:
-        line = handle.readline()
+def connect(directory=None):
+    """Open the journal, creating it with private permissions on first use."""
+    directory = directory or journal_dir()
+    path = directory / "journal.db"
+    old_umask = os.umask(0o077)
     try:
-        return datetime.fromisoformat(json.loads(line)["ts"])
+        directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+        conn = sqlite3.connect(str(path), timeout=LOCK_TIMEOUT, isolation_level=None)
+    finally:
+        os.umask(old_umask)
+    try:
+        conn.execute("PRAGMA busy_timeout = %d" % int(LOCK_TIMEOUT * 1000))
+        if conn.execute("PRAGMA user_version").fetchone()[0] != SCHEMA_VERSION:
+            conn.execute("BEGIN IMMEDIATE")
+            if conn.execute("PRAGMA user_version").fetchone()[0] != SCHEMA_VERSION:
+                for statement in filter(None, (s.strip() for s in SCHEMA.split(";"))):
+                    conn.execute(statement)
+                conn.execute("PRAGMA user_version = %d" % SCHEMA_VERSION)
+            conn.execute("COMMIT")
+        if conn.execute("PRAGMA journal_mode").fetchone()[0].lower() != "wal":
+            conn.execute("PRAGMA journal_mode = WAL")
+        conn.execute("PRAGMA synchronous = FULL")
     except Exception:
-        return None
+        conn.close()
+        raise
+    return conn
 
 
-def prune(path, now=None):
-    """Drop lines older than MAX_AGE and keep the file under MAX_BYTES."""
-    now = now or datetime.now(timezone.utc)
-    size = path.stat().st_size
-    first = _first_timestamp(path)
-    if size <= MAX_BYTES and (first is None or now - first <= MAX_AGE):
-        return
-    kept, total = [], 0
-    for line in reversed(path.read_bytes().splitlines(keepends=True)):
-        try:
-            stamp = datetime.fromisoformat(json.loads(line)["ts"])
-        except Exception:
-            continue
-        if now - stamp > MAX_AGE or total + len(line) > KEEP_BYTES:
-            break
-        kept.append(line)
-        total += len(line)
-    temp = path.with_name(path.name + ".%d.tmp" % os.getpid())
-    temp.write_bytes(b"".join(reversed(kept)))
-    os.chmod(temp, 0o600)
-    os.replace(temp, path)
+def prune(conn, now=None):
+    """Delete events older than 90 days and keep at most MAX_ROWS newest rows."""
+    now = time.time() if now is None else now
+    conn.execute("BEGIN IMMEDIATE")
+    try:
+        conn.execute("DELETE FROM events WHERE at < ?", (int(now) - MAX_AGE_SECONDS,))
+        conn.execute(
+            "DELETE FROM events WHERE id <= (SELECT id FROM events ORDER BY id DESC LIMIT 1 OFFSET ?)",
+            (MAX_ROWS,),
+        )
+        conn.execute("COMMIT")
+    except Exception:
+        conn.execute("ROLLBACK")
+        raise
 
 
 def append(record, directory=None):
-    directory = directory or journal_path()
-    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
-    path = directory / "journal.jsonl"
-    line = (json.dumps(record, ensure_ascii=False) + "\n").encode("utf-8")
-    fd = os.open(str(path), os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
+    conn = connect(directory)
     try:
-        os.write(fd, line)
+        values = tuple(record.get(column, "" if column in ("session", "project") else None) for column in COLUMNS)
+        conn.execute("BEGIN IMMEDIATE")
+        try:
+            row = conn.execute(
+                "INSERT INTO events (%s) VALUES (%s)" % (", ".join(COLUMNS), ", ".join("?" * len(COLUMNS))),
+                values,
+            ).lastrowid
+            conn.execute("COMMIT")
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
+        if row % PRUNE_EVERY == 0:
+            prune(conn)
     finally:
-        os.close(fd)
-    prune(path)
+        conn.close()
 
 
 def record(data):
@@ -179,7 +225,28 @@ def record(data):
         pass
 
 
-def main():
+def dump(limit=200, directory=None, out=sys.stdout):
+    path = (directory or journal_dir()) / "journal.db"
+    if not path.exists():
+        return
+    conn = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=LOCK_TIMEOUT)
+    try:
+        rows = conn.execute(
+            "SELECT %s FROM events ORDER BY id DESC LIMIT ?" % ", ".join(COLUMNS[1:]), (limit,)
+        ).fetchall()
+    finally:
+        conn.close()
+    for row in reversed(rows):
+        item = {key: value for key, value in zip(COLUMNS[1:], row) if value not in (None, "")}
+        out.write(json.dumps(item, ensure_ascii=False) + "\n")
+
+
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["--dump"]:
+        limit = int(argv[2]) if argv[1:2] == ["--limit"] and len(argv) > 2 else 200
+        dump(limit)
+        return
     try:
         record(json.loads(sys.stdin.buffer.read().decode("utf-8")))
     except Exception:

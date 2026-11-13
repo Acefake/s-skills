@@ -27,7 +27,7 @@
   scripts/context_budget.py       常驻 token 上限检查（含个人块上限）
 
 本地（每人不同，插件升级不碰）
-  ~/.wukong/journal.jsonl         事件日志
+  ~/.wukong/journal.db            事件日志（SQLite）
   ~/.wukong/profile.json          个人规则（唯一真相）
   ~/.wukong/history/              每次写入前的 profile.json 备份
   ~/.wukong/my-skills.json        个人技能登记表（来源证据、创建时间、使用次数）
@@ -59,8 +59,11 @@
 
 ### 约束
 
-- 只追加写文件，不打印任何东西：零上下文成本。任何异常静默退出，不影响会话。
-- 文件权限 600。超过 2 MB 或 90 天的行在下次写入时裁掉。
+- 存储用 SQLite（Python 自带 `sqlite3`，无依赖），表 `events(id, at, ts, event, session, project, name, via, text)`，`at` 为秒级时间戳并建索引，`PRAGMA user_version` 记录结构版本。
+- 每条记录一个事务（`BEGIN IMMEDIATE`），WAL 模式、`synchronous = FULL`：崩溃不留半条，多个会话并发写由 SQLite 锁排队。拿不到锁最多等 2 秒，超时就放弃这一条，不卡会话。
+- 不打印任何东西：零上下文成本。任何异常（含数据库损坏、目录不可写）静默跳过，不影响会话。
+- 目录 700，数据库及 WAL 文件 600。每写 200 条检查一次：删掉 90 天以前的记录，只保留最新 5 万条。
+- `journal.py --dump [--limit N]` 以 JSON 行导出最近记录，便于用户自己查看。
 - 环境变量 `WUKONG_JOURNAL=0` 关闭记录。
 - `UserPromptSubmit` 并进现有 `improve_hook.py` 的同一个进程调用（新增一个函数），不多起一个 Python 进程；`PreToolUse` 的 `Skill` matcher 新增一项。
 
@@ -118,7 +121,7 @@
 
 技能 `reflect` 新增轻量模式，不派子代理，正文放 `references/personal.md`，`SKILL.md` 只加一节入口，保持主流程不变。
 
-1. `profile.py collect`：读 `journal.jsonl` 自上次生成以来的事件，输出候选 JSON：纠正和明说的原话（按会话分组）、各技能加载次数、30 天未加载的技能、现有规则的命中情况。只输出摘要，不把整份日志读进上下文。
+1. `profile.py collect`：用 SQL 查询 `journal.db` 自上次生成以来的事件，输出候选 JSON：纠正和明说的原话（按会话分组）、各技能加载次数、30 天未加载的技能、现有规则的命中情况。只输出摘要，不把整份日志读进上下文。
 2. 模型做语义归类：把说法不同、意思相同的纠正归成一条候选规则，写成一句可执行的话；对照现有规则决定新增、加证据、改写或删除。
 3. `profile.py validate`：检查准入门槛、禁学内容、体积上限、字段格式；不通过就带原因退回第 2 步，最多一轮。
 4. 在对话里展示差异（新增 / 修改 / 过期删除各几条，逐条列出），用提问工具弹窗：「写入 / 先不写」。
@@ -270,7 +273,7 @@
 
 ## 12. 测试
 
-- `journal.py`：各事件格式正确；脱敏覆盖密钥、邮箱、URL 查询串；超 2 MB / 90 天裁剪；`WUKONG_JOURNAL=0` 不写；任何异常不输出、不报错；不向 stdout 打印。
+- `journal.py`：各事件格式正确；脱敏覆盖密钥、邮箱、URL 查询串；90 天和 5 万条裁剪；8 个进程并发写不丢一条；锁被占用时 2 秒内放弃；数据库损坏时静默；`--dump` 输出；`WUKONG_JOURNAL=0` 不写；任何异常不输出、不报错；不向 stdout 打印。
 - `profile.py validate`：`learned` 单会话证据被拒；禁学内容（推送、`--no-verify`、「不用问我」等）被拒；`verify` 放松类只接受 `explicit`；超 500 token 时按规则淘汰。
 - 过期：`learned` 超 8 周删除，`explicit`/`manual` 保留。
 - `apply` / `undo`：写入前备份；`undo` 恢复上一版并重写个人块；`history/` 只留 20 份。

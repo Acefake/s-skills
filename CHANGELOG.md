@@ -4,7 +4,7 @@
 
 ### 新增
 
-- 本地使用日志（个人学习层第 1 期）：`hooks/journal.py` 把会话开始、技能加载、用户纠正、明说的偏好和任务摘要追加到本机 `~/.wukong/journal.jsonl`。不打印、不占上下文、不上传；原话只留前 80 字并脱敏，90 天或 2 MB 自动裁剪，`WUKONG_JOURNAL=0` 关闭。设计见 `docs/wukong/specs/2026-11-13-personal-learning-design.md`。
+- 本地使用日志（个人学习层第 1 期）：`hooks/journal.py` 把会话开始、技能加载、用户纠正、明说的偏好和任务摘要写进本机 SQLite 数据库 `~/.wukong/journal.db`。每条一个事务，多会话并发写不丢数据；不打印、不占上下文、不上传；原话只留前 80 字并脱敏，90 天以前或超过 5 万条自动删除，`WUKONG_JOURNAL=0` 关闭，`journal.py --dump` 查看。设计见 `docs/wukong/specs/2026-11-13-personal-learning-design.md`。
 - 常驻上下文上限：`scripts/context_budget.py` 估算每个会话常驻的 token（自动技能描述、全局规则、钩子注入），`check_marketplace` 超过 5650 就失败。本版实测约 5380，1.0.16 约 6980。
 
 ### 改动
