@@ -74,6 +74,7 @@ SENSITIVE = re.compile(
     r"|don'?t\s+(ask|confirm|wait)|(never|not?)\s+wait\s+for\s+(approval|confirmation|me)"
     r"|skip\s+(the\s+)?(confirm|check|hook|approv)|straight\s+to\s+(main|master)|(main|master)\s+directly"
     r"|auto-?\s*(commit|push|merge|deploy)|commit\s+directly|api[\s_-]?key|access[\s_-]?token|secret[\s_-]?key"
+    r"|\brelease\s+(it|this|them|now)\b|\bland\s+(it|this|them)\b|no\s+(confirmation|approval)"
     r"|password|credential|\bsudo\b|permission"
 )
 URL = re.compile(r"https?://|www\.")

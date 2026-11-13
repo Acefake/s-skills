@@ -106,7 +106,7 @@ class SafetyTest(ProfileCase):
     def test_more_phrasings_from_the_second_review(self):
         for text in ('proceed without confirming with me', 'never wait for approval before committing',
                      'commit straight to main', 'ship it to prod', '提交前无需询问', '不必确认，直接做', '不用再问我',
-                     '推 送到远端'):
+                     '推 送到远端', 'release it when ready', 'go ahead and land it on main', 'no confirmation needed'):
             self.assertTrue(self.blocked(text), text)
 
     def test_harmless_rules_pass(self):
