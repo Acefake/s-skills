@@ -26,6 +26,8 @@
 
 ## Codex 手动配置
 
+升级或插件改名后，先运行当前插件的 `skills/setup-s-instructions/scripts/codex_hooks.py` 检查旧路径。默认只读；明确授权迁移后加 `--apply`，只修已注册的已知内置命令，不安装缺失项、不改其他插件，保留首份 `hooks.json.wukong.bak`。`CODEX_HOME` 和 `--codex-home` 可指定实际配置目录。迁移后需要在新会话 `/hooks` 核对并批准；路径检查通过不等于运行时已经生效。
+
 在 `~/.codex/hooks.json` 的 `UserPromptSubmit` 和 `PreToolUse` 数组里各加一项，已有其他钩子时并进去，不要覆盖。`<路径>` 换成本机 `improve_hook.py` 的绝对路径；Windows 上 `commandWindows` 用 `python`，其余用 `command`：
 
 ```json

@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.17，共 <strong>75</strong> 个技能：48 个按描述自动选用，27 个需点名调用。</p>
+<p align="center">当前版本 1.0.18，共 <strong>75</strong> 个技能：48 个按描述自动选用，27 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -71,6 +71,8 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 没装过的那一行跳过即可。CodeBuddy 的命令同上（`/plugin uninstall s-atlas@s-skills`，再 `/plugin install wukong@s-skills`）。Codex、Cursor 在插件管理入口卸载 `s-atlas` 或 `s-wukong` 后装 `wukong`；本地安装的 Codex、WorkBuddy 删掉 `.agents/skills/` 或 `.codebuddy/skills/` 里的 `s-agent`、`s-init`、`s-mode`、`s-proposal`、`s-review`、`s-router` 后重跑安装脚本。
 
 装好后开新会话，点名一次 `wukong-init`：它会把全局规则里的旧标记块原位换成 `wukong` 标记块，旧技能名一并更新。标记块外你自己写的提到 `s-atlas` 的句子不会被改，需要手动换成 `wukong`。项目里的 `s-atlas.t3.json`、`s-wukong.t3.json` 仍可读取，下次写入时改名为 `wukong.t3.json`。
+
+Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/setup-s-instructions/scripts/codex_hooks.py`。发现旧路径后，确认预览再加 `--apply`，脚本保留其他钩子及首份备份；不会自动添加缺失项或批准钩子。迁移后在新会话 `/hooks` 核对批准。`wukong-init` 与日常自检也会检查这一项，全局规则已同步不代表钩子路径仍有效。
 
 ## 初始化
 

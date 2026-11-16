@@ -32,6 +32,8 @@
 
 Codex 不读插件自带的钩子。要用时，照[钩子说明](../skills/prompt-sharpen/references/hook.md)里的「Codex 手动配置」，把对应脚本加进 `~/.codex/hooks.json`。加了 `improve_hook.py` 就会同时记录本地使用日志；Codex 没有 `Skill` 工具，技能加载只能从斜杠命令记到。`git_guard.py` 的 `ask` 在 Codex 里是否被支持没有验证过。
 
+从旧品牌或旧缓存升级时，用当前插件的 `skills/setup-s-instructions/scripts/codex_hooks.py` 检查用户级注册路径；显式 `--apply` 才迁移。日常自检和 `wukong-init` 都会提示这项状态，不再只检查全局规则。迁移不会修改宿主钩子信任信息，仍需在 `/hooks` 核对批准；没有日志时不能仅凭插件已启用就宣称自动记录生效。
+
 ## 提交前检查（给本仓库的维护者）
 
 [scripts/git-hooks/pre-commit](../../../scripts/git-hooks/pre-commit) 在提交前运行 `check_marketplace`，内容变了没升版本就拦下。检查的是工作区，不是暂存区，只暂存部分改动时结果可能和实际提交的内容不一致。找不到 Python 3.10+ 或 jsonschema 时提示并放行，CI 仍会检查。它是 git 钩子，不随插件分发，启用：

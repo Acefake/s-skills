@@ -264,6 +264,12 @@ def main():
     except (ConfigurationError, OSError, UnicodeError) as error:
         print(json.dumps(dict(status='error', error=str(error))))
         return 1
+    if args.host == 'codex':
+        from codex_hooks import ConfigurationError as HookError, sync_hooks
+        try:
+            result['hooks'] = sync_hooks(args.home, args.codex_home)
+        except (HookError, OSError, UnicodeError, ValueError) as error:
+            result['hooks'] = dict(status='error', changed=False, error=str(error))
     print(json.dumps(result))
     return 0 if result['status'] == 'configured' else (3 if args.host == 'cursor' else 2)
 

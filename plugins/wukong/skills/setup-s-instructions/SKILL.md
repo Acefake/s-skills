@@ -48,6 +48,16 @@ python scripts/global_instructions.py --host workbuddy
 
 ## 3. 核验和报告
 
+### Codex 钩子升级
+
+Codex 安装插件不会自动迁移用户级 `hooks.json`。`global_instructions.py --host codex` 会在 `hooks` 字段附带只读检查，也可单独运行本目录的 `scripts/codex_hooks.py`；它沿用 `CODEX_HOME`，也支持 `--codex-home`。这项结果与全局提示词状态分开报告，不能用提示词 `configured` 代替钩子检查。全局提示词的 `--apply` 不会顺带迁移钩子。
+
+- `outdated`：展示 `changes`；仅在用户授权修复钩子后加 `--apply`。迁移只改已知 Python 调用中指向 `s-atlas`、`s-wukong` 或旧 `wukong` 缓存的内置脚本路径，目标取当前脚本所属插件；保留其他钩子、元数据、BOM、换行风格和首份 `hooks.json.wukong.bak`，第二次运行不再写入。
+- `missing`：不自动安装钩子。需要启用时按 [Codex 手动配置](../prompt-sharpen/references/hook.md#codex-手动配置) 给出完整预览，获得安装授权再添加。
+- `manual_review`、`error`：不写文件，报告自定义命令、无效 JSON 或符号链接等实际问题；不做全文件字符串替换。
+
+迁移不会修改 Codex 的 `trusted_hash` 或代替用户批准。写入后检查路径，再提示在新会话 `/hooks` 核对并批准变更。只有看到宿主真实触发及日志新增，才能报告“自动记录已生效”；手动脚本测试要单独说明，不能冒充宿主触发。
+
 Codex、Claude Code、WorkBuddy 再执行一次不带 `--apply` 的检查，预期 configured；第二次 apply 应 changed=false。Cursor 以真实 User Rules 回读为准，无法回读则标记待核验。
 
 报告宿主、当前插件版本、目标位置、是否修改、备份位置（若创建）、未完成项。提示新会话会加载全局规则；不保证当前会话立即重载。不提交或公开用户的全局配置内容。
