@@ -30,7 +30,7 @@ DOC_VERSION_REFS = {
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "wukong": 75,
+    "wukong": 78,
 }
 
 # Skills removed from the repo in 1.3.0. Active skills must not name them.

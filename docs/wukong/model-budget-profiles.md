@@ -80,7 +80,7 @@ Terra 6.1 不设为默认代码评审者；任务包含截图、布局或界面�
 
 ## CodeBuddy DeepSeek 评审
 
-技能已接入[DeepSeek 评审规则](../../plugins/wukong/skills/setup-s-models/references/glm-review-trial.md)，省、中档 DP 首选、Sol 次选，高档 DP 与 Sol 共两个独立名额。
+技能已接入[DeepSeek 评审规则](../../plugins/wukong/skills/setup-s-models/references/deepseek-review.md)，省、中档 DP 首选、Sol 次选，高档 DP 与 Sol 共两个独立名额。
 
 实际目标为 acpRegistry_codebuddy_code / deepseek-v4.1-flash，显式 thought_level: enabled。当前目录默认 max，因此不能省略该选项，也不把 enabled 等价为 medium。GLM 因用户反馈慢而取消，HY4 未做本轮实测。
 

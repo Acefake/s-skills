@@ -21,7 +21,7 @@ Luna max 保留本预设来源用户的显式偏好，不是官方默认；向�
 
 专项攻坚角色行只有一个名额，高档也按首选 → 次选配置。任务确需并发攻坚且已获授权时，由主代理另外明确分工，不把额外代理写成该行的逗号列表。独立评审名额遵从预算和任务授权，不能因为表中有次选就增加名额。可只用一个评审时，不自动启动另一个。Sol、Sonnet 评审默认 medium，DP 默认显式 enabled；高风险项明确说明原因后再考虑提供商支持的较高档位；不按预算机械升到 xhigh/max。
 
-用户已选定 CodeBuddy DeepSeek-V4.1-Flash 作为首选评审，具体规则见[DeepSeek 评审](glm-review-trial.md)。省、中档一名评审，Sol 为次选；高档由 DeepSeek 与 Sol 各占一个独立名额。DP 使用 thought_level: enabled，不套用 medium 参数。此次已做一轮修复复核，不宣称全面评测通过。
+用户已选定 CodeBuddy DeepSeek-V4.1-Flash 作为首选评审，具体规则见[DeepSeek 评审](deepseek-review.md)。省、中档一名评审，Sol 为次选；高档由 DeepSeek 与 Sol 各占一个独立名额。DP 使用 thought_level: enabled，不套用 medium 参数。此次已做一轮修复复核，不宣称全面评测通过。
 
 ## 模型与参数
 

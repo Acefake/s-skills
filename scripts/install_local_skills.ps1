@@ -1,11 +1,39 @@
-param(
+﻿param(
     [ValidateSet('codex', 'workbuddy')]
     [string]$HostName = 'codex'
 )
 
 $ErrorActionPreference = 'Stop'
+
+# 只认指向本仓库旧插件目录（改名前的 s-atlas、s-wukong）的 Junction；其他目录一律不碰。
+function Test-IsLegacySkillJunction {
+    param(
+        [System.IO.FileSystemInfo]$Item,
+        [string[]]$LegacyRoots
+    )
+    if ($Item.LinkType -ne 'Junction') {
+        return $false
+    }
+    $rawTarget = @($Item.Target) | Where-Object { $_ } | Select-Object -First 1
+    if (-not $rawTarget) {
+        return $false
+    }
+    $normalizedTarget = ([System.IO.Path]::GetFullPath([string]$rawTarget)).TrimEnd('\')
+    foreach ($legacyRoot in $LegacyRoots) {
+        $prefix = ([System.IO.Path]::GetFullPath($legacyRoot)).TrimEnd('\') + '\'
+        if ($normalizedTarget.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+    }
+    return $false
+}
+
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $sourceRoot = Join-Path $repoRoot 'plugins/wukong/skills'
+$legacySourceRoots = @(
+    (Join-Path $repoRoot 'plugins\s-atlas\skills'),
+    (Join-Path $repoRoot 'plugins\s-wukong\skills')
+)
 $adapterDirectory = if ($HostName -eq 'workbuddy') { '.codebuddy' } else { '.agents' }
 $adapterRoot = Join-Path $repoRoot $adapterDirectory
 $destinationRoot = Join-Path $adapterRoot 'skills'
@@ -43,14 +71,21 @@ if ($HostName -eq 'workbuddy') {
 }
 New-Item -ItemType Directory -Path $destinationRoot -Force | Out-Null
 $skills = Get-ChildItem -LiteralPath $sourceRoot -Directory | Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') }
-# Validate every destination before creating any links.
+# Validate every destination before creating or migrating any links.
 foreach ($skill in $skills) {
     $destination = Join-Path $destinationRoot $skill.Name
     if (Test-Path -LiteralPath $destination) {
         $existing = Get-Item -LiteralPath $destination -Force
-        if ($existing.LinkType -ne 'Junction' -or [string]$existing.Target -ne $skill.FullName) {
+        $isCurrent = $existing.LinkType -eq 'Junction' -and [string]$existing.Target -eq $skill.FullName
+        $isLegacy = Test-IsLegacySkillJunction -Item $existing -LegacyRoots $legacySourceRoots
+        if (-not ($isCurrent -or $isLegacy)) {
             throw "Destination belongs to another installation: $destination"
         }
+    }
+}
+foreach ($entry in @(Get-ChildItem -LiteralPath $destinationRoot -Force)) {
+    if (Test-IsLegacySkillJunction -Item $entry -LegacyRoots $legacySourceRoots) {
+        [System.IO.Directory]::Delete($entry.FullName, $false)
     }
 }
 foreach ($skill in $skills) {

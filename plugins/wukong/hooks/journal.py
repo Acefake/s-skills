@@ -77,11 +77,38 @@ CORRECTION = re.compile(
     re.IGNORECASE,
 )
 
+PLACEHOLDER = "[已隐藏]"
+REDACT_SCAN_LIMIT = 4096
+LONG_TOKEN = re.compile(r"[A-Za-z0-9_\-+=]{20,}")
+SLASH_SECRET = re.compile(r"(?<![A-Za-z0-9/_:-])[A-Za-z0-9+/]{32,}={0,2}(?![A-Za-z0-9/_-])")
+
+
+def _redact_long_token(match):
+    token = match.group(0)
+    if re.fullmatch(r"[A-Za-z_-]+", token) or re.fullmatch(r"\d{4}-\d{2}-\d{2}-[a-z0-9-]+", token):
+        return token
+    return PLACEHOLDER
+
+
+def _redact_slash_secret(match):
+    token = match.group(0)
+    if "/" not in token:
+        return token
+    has_b64_punct = "+" in token or "=" in token
+    has_mixed_entropy = any(c.isupper() for c in token) and any(c.islower() for c in token) and any(c.isdigit() for c in token)
+    return PLACEHOLDER if (has_b64_punct or has_mixed_entropy) else token
+
+
 REDACTIONS = (
-    (re.compile(r"\b(sk|pk|rk|ghp|gho|ghu|ghs|github_pat|xox[abprs]|AKIA|AIza)[-_A-Za-z0-9]{8,}"), "[已隐藏]"),
-    (re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+"), "[已隐藏]"),
-    (re.compile(r"(https?://[^\s?#]+)\?\S*"), r"\1?[已隐藏]"),
-    (re.compile(r"[A-Za-z0-9_\-+/=]{20,}"), "[已隐藏]"),
+    (re.compile(r"\b(sk|pk|rk|ghp|gho|ghu|ghs|github_pat|xox[abprs]|AKIA|AIza)[-_A-Za-z0-9]{8,}"), PLACEHOLDER),
+    (re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b"), PLACEHOLDER),
+    (re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/-]{8,}=*"), "Bearer " + PLACEHOLDER),
+    # 值只取 ASCII 可见字符，「token: 一段中文」这类正常说明不会被吞掉。
+    (re.compile(r"(?i)\b(bearer|token|secret|password|passwd|api[_-]?key)\s*[:=]\s*[\x21-\x7e]+"), r"\1=" + PLACEHOLDER),
+    (re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+"), PLACEHOLDER),
+    (re.compile(r"(https?://[^\s?#]+)\?\S*"), r"\1?" + PLACEHOLDER),
+    (LONG_TOKEN, _redact_long_token),
+    (SLASH_SECRET, _redact_slash_secret),
 )
 
 
@@ -101,7 +128,15 @@ def redact(text):
 
 
 def excerpt(text, limit):
-    return redact(" ".join(text.split())[:limit])
+    normalized = " ".join(text.split())[:max(limit * 16, REDACT_SCAN_LIMIT)]
+    redacted = redact(normalized)
+    if len(redacted) <= limit:
+        return redacted
+    cut = redacted[:limit]
+    for i in range(1, len(PLACEHOLDER)):
+        if cut.endswith(PLACEHOLDER[:i]) and redacted[limit - i:limit - i + len(PLACEHOLDER)] == PLACEHOLDER:
+            return redacted[:limit - i + len(PLACEHOLDER)]
+    return cut
 
 
 def classify_prompt(prompt):

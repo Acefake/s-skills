@@ -40,15 +40,14 @@ LONG_RUNNING = re.compile(
     re.IGNORECASE,
 )
 
-EVALUATION = """提示词评估
-
-用户原话："{prompt}"
-
-结合原话和对话历史判断是否有关键缺口：存在多个合理解释、会明显改变结果且上下文无法确定，或缺少的目标、作用对象、范围、约束、验收会影响实现且上下文补不上。需求短、没文件名不算缺口；只说了动作或属于讨论，也不等于信息足够。
-有缺口，或用户明确要求澄清、优化提示词时，加载 wukong:prompt-sharpen（因缺口加载先指出具体缺口，用户点名则直接加载，不虚构缺口）：先研究项目，能确认的自行补齐，合理推定的注明假设，只问必须由用户决定的问题，不为次要细节、常规实现选择或其他未知阻塞。
-信息足够、普通事实问答或对既定方案的简短确认，直接执行，按全局规则用对口技能。bug 由 systematic-debugging、新功能设计由 brainstorming 主导，不重复澄清；只读诊断可先收集证据。"""
-
-QUOTE_LIMIT = 200
+EVALUATION = (
+    "提示词评估：结合对话判断是否有关键缺口——存在多个合理解释且会明显改变结果，"
+    "或缺少的目标、作用对象、范围、约束、验收影响实现且上下文补不上。"
+    "需求短、没文件名不算缺口；只说了动作也不等于信息足够。"
+    "有缺口或用户要求澄清、优化提示词时，加载 wukong:prompt-sharpen（因缺口加载先点明缺口，不虚构）。"
+    "信息足够、事实问答或对既定方案的确认直接执行；"
+    "bug 走 systematic-debugging、新功能走 brainstorming，不重复澄清。"
+)
 
 # 确认、继续这类回复和极短消息没有可澄清的需求，附评估说明只会拖慢这一轮。
 SHORT_LIMIT = 4
@@ -77,9 +76,7 @@ def evaluate_prompt(data):
     compact = "".join(prompt.split())
     if len(compact) <= SHORT_LIMIT or CONFIRMATION.match(prompt.strip()):
         return ""
-    quoted = prompt if len(prompt) <= QUOTE_LIMIT else prompt[:QUOTE_LIMIT] + "…（原话过长已截断，以原消息为准）"
-    escaped = quoted.replace("\\", "\\\\").replace('"', '\\"')
-    return EVALUATION.format(prompt=escaped)
+    return EVALUATION
 
 
 def remind_background(data):

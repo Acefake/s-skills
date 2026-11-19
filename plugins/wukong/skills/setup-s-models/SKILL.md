@@ -11,7 +11,7 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
 配置预算统一展示省、中、高三档，不要求用户额外选择“三档预设”。支持跨提供商编排时读取[混合三档与顺序备用](references/mixed-budget-profiles.md)，仅原生工具时读取[原生三档](references/native-budget-profiles.md)。高写入工具时映射为“大”；旧“大/不限”配置仍可读取，但“不限”不再作为新配置的预算选项。已有模型与显式档位优先，预设中的显式角色档位优先于通用预算映射。配置备用顺序不授权额外并行代理。
 
-用户通过 T3 编排使用 DeepSeek-V4.1-Flash 评审时，读取[DeepSeek 评审](references/glm-review-trial.md)。此预设由用户选择 DP4.1 Flash enabled 首选、Sol medium 备用；高档 DP 与 Sol 各一名。用户选型不代表总体效果已验证，不自动覆盖项目已有配置。
+用户通过 T3 编排使用 DeepSeek-V4.1-Flash 评审时，读取[DeepSeek 评审](references/deepseek-review.md)。此预设由用户选择 DP4.1 Flash enabled 首选、Sol medium 备用；高档 DP 与 Sol 各一名。用户选型不代表总体效果已验证，不自动覆盖项目已有配置。
 
 ## 检测当前环境
 

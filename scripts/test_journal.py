@@ -80,6 +80,47 @@ class ClassifyTest(JournalCase):
             self.assertNotIn(secret, extra['text'])
         self.assertIn('[已隐藏]', extra['text'])
 
+    def test_secret_crossing_excerpt_boundary_is_redacted_before_truncation(self):
+        text = '请检查配置：' + '测' * 67 + 'sk-proj-SECRET1234567890'
+        kind, extra = self.journal.classify_prompt(text)
+        self.assertEqual(kind, 'task')
+        self.assertNotIn('sk-proj', extra['text'])
+        self.assertNotIn('SECRET', extra['text'])
+        self.assertTrue(extra['text'].endswith('[已隐藏]'), extra['text'])
+
+    def test_skill_names_and_paths_survive_redaction_while_high_entropy_secrets_hide(self):
+        keep = (
+            '用 finishing-a-development-branch 处理 '
+            'plugins/wukong/skills/setup-s-models/SKILL.md '
+            '和 docs/2026-11-13-personal-learning-design.md '
+            '参考 https://github.com/Acefake/s-skills'
+        )
+        redacted = self.journal.redact(keep)
+        self.assertEqual(redacted, keep)
+
+        leaks = (
+            'hex=a1b2c3d4e5f60718293a4b5c6d7e8f90 '
+            'jwt=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U '
+            'password=my-secret-pass '
+            'aws=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
+        )
+        hidden = self.journal.redact(leaks)
+        for secret in (
+            'a1b2c3d4e5f60718293a4b5c6d7e8f90',
+            'eyJhbGciOiJIUzI1NiJ9',
+            'my-secret-pass',
+            'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+        ):
+            self.assertNotIn(secret, hidden)
+        self.assertIn('[已隐藏]', hidden)
+
+    def test_bearer_header_is_hidden_but_chinese_prose_after_token_is_kept(self):
+        hidden = self.journal.redact('Authorization: Bearer abc.def.ghi 已发出')
+        self.assertNotIn('abc.def.ghi', hidden)
+        self.assertIn('已发出', hidden)
+        prose = 'token: 用来换取访问权限的字符串，password: 由用户保管'
+        self.assertEqual(self.journal.redact(prose), prose)
+
 
 class RecordTest(JournalCase):
     def test_hook_payloads_become_one_row_each(self):

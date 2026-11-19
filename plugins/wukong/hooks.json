@@ -1,0 +1,11 @@
+{
+  "wukong-session": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python3 hooks/agy_hook.py || python hooks/agy_hook.py",
+        "timeout": 10
+      }
+    ]
+  }
+}

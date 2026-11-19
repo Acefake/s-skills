@@ -130,6 +130,26 @@ class SessionCheckTest(unittest.TestCase):
         finally:
             self.check.CHECK = load('session_check').CHECK
 
+    def test_in_process_check_respects_claude_config_dir(self):
+        gi_path = ROOT / 'plugins/wukong/skills/setup-s-instructions/scripts/global_instructions.py'
+        spec = importlib.util.spec_from_file_location('gi_test', gi_path)
+        gi = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(gi)
+        with tempfile.TemporaryDirectory() as tmp:
+            old_dir = os.environ.get('CLAUDE_CONFIG_DIR')
+            os.environ['CLAUDE_CONFIG_DIR'] = tmp
+            try:
+                missing = self.check.run_check()
+                self.assertEqual(missing['status'], 'missing')
+                (Path(tmp) / 'CLAUDE.md').write_text(gi.managed_block() + '\n', encoding='utf-8')
+                configured = self.check.run_check()
+                self.assertEqual(configured['status'], 'configured')
+            finally:
+                if old_dir is None:
+                    os.environ.pop('CLAUDE_CONFIG_DIR', None)
+                else:
+                    os.environ['CLAUDE_CONFIG_DIR'] = old_dir
+
 
 class RegistrationTest(unittest.TestCase):
     def test_hooks_json_wires_every_script_with_a_python_fallback(self):
@@ -197,6 +217,79 @@ class PreCommitTest(unittest.TestCase):
     def test_script_is_executable_in_the_git_index(self):
         listing = subprocess.run(['git', 'ls-files', '-s', 'scripts/git-hooks/pre-commit'], cwd=ROOT, capture_output=True, text=True).stdout
         self.assertTrue(listing.startswith('100755') or not listing, listing)
+
+
+class AgyPluginCompatTest(unittest.TestCase):
+    def test_rules_agents_md_matches_plugin_agents_md(self):
+        plugin = ROOT / 'plugins/wukong'
+        self.assertEqual((plugin / 'rules/AGENTS.md').read_bytes(), (plugin / 'AGENTS.md').read_bytes())
+
+    def test_root_hooks_json_registers_session_start(self):
+        data = json.loads((ROOT / 'plugins/wukong/hooks.json').read_text(encoding='utf-8'))
+        handlers = data['wukong-session']['SessionStart']
+        self.assertTrue(any('hooks/agy_hook.py' in h['command'] for h in handlers))
+
+    def test_agy_hook_outputs_empty_json_and_respects_throttle_and_clean_check(self):
+        from unittest import mock
+        hook = load('agy_hook')
+        with tempfile.TemporaryDirectory() as tmp:
+            state = Path(tmp) / 'agy-update.json'
+            with mock.patch.dict(os.environ, {'WUKONG_AUTO_UPDATE': '0'}):
+                self.assertFalse(hook.maybe_auto_update(path=state))
+            with mock.patch.dict(os.environ, {'WUKONG_AUTO_UPDATE': '1'}), \
+                 mock.patch.object(hook, 'is_clean_branch', return_value=False) as clean_mock, \
+                 mock.patch.object(hook, 'trigger_background_pull') as pull_mock:
+                self.assertFalse(hook.maybe_auto_update(now=1000, path=state))
+                clean_mock.assert_called_once()
+                pull_mock.assert_not_called()
+                # Throttled within 24h: does not re-check git status or pull.
+                self.assertFalse(hook.maybe_auto_update(now=1100, path=state))
+                self.assertEqual(clean_mock.call_count, 1)
+            with mock.patch.dict(os.environ, {'WUKONG_AUTO_UPDATE': '1'}), \
+                 mock.patch.object(hook, 'is_clean_branch', return_value=True), \
+                 mock.patch.object(hook, 'trigger_background_pull') as pull_mock:
+                self.assertTrue(hook.maybe_auto_update(now=1000 + 90000, path=state))
+                pull_mock.assert_called_once()
+
+        env = dict(os.environ, WUKONG_AUTO_UPDATE='0', WUKONG_JOURNAL='0')
+        proc = subprocess.run(
+            [sys.executable, '-I', str(HOOKS / 'agy_hook.py')],
+            input=b'{"hookEventName":"SessionStart"}',
+            capture_output=True, timeout=20, env=env,
+        )
+        self.assertEqual(proc.returncode, 0)
+        self.assertEqual(json.loads(proc.stdout.decode('utf-8')), {})
+
+    def test_agy_hook_lock_prevents_concurrent_pull_and_reclaims_stale_lock(self):
+        from unittest import mock
+        hook = load('agy_hook')
+        with tempfile.TemporaryDirectory() as tmp:
+            state = Path(tmp) / 'agy-update.json'
+            lock = state.with_suffix('.lock')
+            # Active lock held by another session: skips without pulling.
+            lock.write_text('99999', encoding='utf-8')
+            now = lock.stat().st_mtime + 10
+            with mock.patch.dict(os.environ, {'WUKONG_AUTO_UPDATE': '1'}), \
+                 mock.patch.object(hook, 'is_clean_branch', return_value=True), \
+                 mock.patch.object(hook, 'trigger_background_pull') as pull_mock:
+                self.assertFalse(hook.maybe_auto_update(now=now, path=state))
+                pull_mock.assert_not_called()
+            # Stale lock (> STALE_LOCK_SECONDS): reclaimed and pulls once, then lock is released.
+            stale_now = lock.stat().st_mtime + hook.STALE_LOCK_SECONDS + 5
+            with mock.patch.dict(os.environ, {'WUKONG_AUTO_UPDATE': '1'}), \
+                 mock.patch.object(hook, 'is_clean_branch', return_value=True), \
+                 mock.patch.object(hook, 'trigger_background_pull') as pull_mock:
+                self.assertTrue(hook.maybe_auto_update(now=stale_now, path=state))
+                pull_mock.assert_called_once()
+                self.assertFalse(lock.exists())
+
+    def test_agy_hook_rejects_detached_head(self):
+        from unittest import mock
+        hook = load('agy_hook')
+        with mock.patch.object(hook, '_git_output', side_effect=[(0, ''), (0, 'HEAD')]):
+            self.assertFalse(hook.is_clean_branch(ROOT))
+        with mock.patch.object(hook, '_git_output', side_effect=[(0, ''), (0, 'main')]):
+            self.assertTrue(hook.is_clean_branch(ROOT))
 
 
 if __name__ == '__main__':

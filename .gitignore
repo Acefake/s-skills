@@ -22,3 +22,6 @@ plugins/*/evals/results/
 # 本地发布产物和宿主缓存，不入库
 artifacts/
 .plugins-cache.json
+
+# setup-s-models 生成的本机配置备份
+*.t3.json.s-models.bak

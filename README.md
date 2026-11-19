@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.18，共 <strong>75</strong> 个技能：48 个按描述自动选用，27 个需点名调用。</p>
+<p align="center">当前版本 1.0.19，共 <strong>78</strong> 个技能：48 个按描述自动选用，30 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -136,7 +136,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 
 ## 技能一览
 
-[![wukong 技能全景：任务路由与 75 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
+[![wukong 技能全景：任务路由与 78 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
 
 [全景图源（HTML）](docs/architecture/wukong-panorama.html) · [架构说明](docs/architecture.md) · [组件关系图](docs/architecture/wukong.html)
 
@@ -186,7 +186,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `finishing-a-development-branch` | 自动 | 收尾开发分支 |
 | `release` | 点名 | 显式发版：确认版本，写只含新增、改动、修复的发版说明，打 tag 并创建 GitHub Release |
 
-### 专项技能（22）
+### 专项技能（25）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
@@ -197,6 +197,9 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `impeccable` | 自动 | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
 | `apple-glass` | 点名 | Apple TV 风格界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
 | `html-mockup` | 点名 | 手写 HTML/CSS 出静态设计稿，Playwright 截图交付；真实界面截图用 `control-ui` |
+| `mcp-builder` | 点名 | 设计工具契约，实现 MCP 服务并联调 |
+| `remotion-create` | 点名 | 用 React 编排视频镜头、字幕和音轨，渲染并抽查成片 |
+| `theme-factory` | 点名 | 为 PPT、文档、报告和网页统一配色与字体，附十套预设 |
 | `control-ui` | 自动 | 在真浏览器里操作界面取证 |
 | `control-cli` | 自动 | 在本地操作命令行或 TUI |
 | `e2e-testing` | 自动 | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |

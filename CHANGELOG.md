@@ -1,5 +1,28 @@
 # 变更记录
 
+## 1.0.19
+
+### 新增
+
+- `mcp-builder`（设计工具契约、实现并联调 MCP 服务）、`remotion-create`（用 Remotion 编排并渲染视频）、`theme-factory`（统一配色和字体，附十套预设）。三者都为点名调用（`disable-model-invocation: true`，Codex 同步关闭隐式调用）；`mcp-builder`、`theme-factory` 改编自 Anthropic Agent Skills（Apache 2.0），署名见 `docs/third-party-licenses.md`。共 78 个技能，其中 48 个按描述自动选用、30 个点名。
+
+### 改动
+
+- `prompt-sharpen` 的每条提示词评估说明不再复述用户原话，缺口判断标准保留，约 318 → 约 184 token；加上三个新技能改为点名调用，常驻上下文实测约 5380 → 约 5250（上限 5650）。
+- 本地使用日志先脱敏再截断，修复密钥落在截断位置时前缀原样写入 `journal.db` 的问题；新增 JWT、`Bearer` 请求头和 `token`/`password`/`api_key` 键值的脱敏；技能名、日期文件名和仓库路径不再被当成长串抹掉，`token: 中文说明` 这类文字也不再被吞掉。
+- `SessionStart` 钩子改为同进程加载全局规则检查，不再嵌套起第二个 Python 进程，实测启动耗时约 286 ms → 约 150 ms。
+
+### 修复
+
+- `scripts/install_local_skills.ps1` 能识别并迁移指向本仓库旧插件目录（`plugins/s-atlas`、`plugins/s-wukong`）的 Junction，并清理其中已退役技能的残留链接；指向其他位置的链接和真实目录仍然拒绝，且校验先于任何清理。
+- `docs/architecture.md` 的专项技能数量与「专利」旧描述与实际不符。
+
+## 1.0.18
+
+### 修复
+
+- Codex：补齐钩子升级检测与迁移（`codex_hooks.py`），日常自检和 `wukong-init` 会提示旧路径钩子。
+
 ## 1.0.17
 
 ### 新增

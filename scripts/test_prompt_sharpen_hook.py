@@ -34,31 +34,24 @@ def bash_event(command):
 
 
 class PromptSharpenHookTest(unittest.TestCase):
-    def test_prompt_gets_evaluation_that_names_the_skill(self):
-        out = run_hook(prompt_event('把登录弄好一点'))
+    def test_prompt_gets_compact_evaluation_that_names_the_skill(self):
+        prompt = '把登录弄好一点'
+        out = run_hook(prompt_event(prompt))
         self.assertEqual(out['hookEventName'], 'UserPromptSubmit')
-        self.assertIn('把登录弄好一点', out['additionalContext'])
-        self.assertIn('wukong:prompt-sharpen', out['additionalContext'])
+        context = out['additionalContext']
+        self.assertIn('wukong:prompt-sharpen', context)
+        self.assertNotIn(prompt, context)
+        self.assertLess(len(context), 260)
+        for criterion in ('目标', '范围', '约束', '验收', '没文件名不算缺口', '只说了动作'):
+            self.assertIn(criterion, context)
 
-    def test_quotes_and_backslashes_are_escaped_in_the_quoted_prompt(self):
-        out = run_hook(prompt_event('改 "a\\b"'))
-        self.assertIn('"改 \\"a\\\\b\\""', out['additionalContext'])
-
-    def test_long_prompt_is_quoted_only_in_part(self):
-        prompt = '甲' * 199 + '乙' + '丙' * 3000
-        context = run_hook(prompt_event(prompt))['additionalContext']
-        self.assertIn('甲' * 199 + '乙…（原话过长已截断，以原消息为准）"', context)
-        self.assertNotIn('丙', context)
-
-    def test_prompt_at_limit_is_quoted_whole(self):
-        context = run_hook(prompt_event('甲' * 200))['additionalContext']
-        self.assertIn('"' + '甲' * 200 + '"', context)
-        self.assertNotIn('已截断', context)
-        self.assertIn('已截断', run_hook(prompt_event('甲' * 201))['additionalContext'])
-
-    def test_truncation_happens_before_escaping(self):
-        context = run_hook(prompt_event('甲' * 198 + '\\"' + '丙' * 10))['additionalContext']
-        self.assertIn('甲' * 198 + '\\\\\\"…', context)
+    def test_long_prompt_produces_fixed_size_context(self):
+        short_context = run_hook(prompt_event('改一下登录页'))['additionalContext']
+        long_prompt = '甲' * 199 + '乙' + '丙' * 3000
+        long_context = run_hook(prompt_event(long_prompt))['additionalContext']
+        self.assertEqual(long_context, short_context)
+        self.assertNotIn('甲', long_context)
+        self.assertNotIn('丙', long_context)
 
     def test_bypass_prefixes_and_machine_events_stay_silent(self):
         for prompt in ('*直接做', '#记住这个', '/deslop', '', '   ',

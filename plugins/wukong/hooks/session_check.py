@@ -6,8 +6,9 @@ build is loaded and whether the global skill instructions are current. It runs
 the read-only check in setup-s-instructions (no --apply), never writes
 configuration, and exits silently on any error so a session always starts.
 """
+import importlib.util
 import json
-import subprocess
+import os
 import sys
 from pathlib import Path
 
@@ -29,18 +30,30 @@ UNKNOWN_TEXT = "暂时无法确认全局技能提示词。"
 
 
 def run_check():
-    """Return the parsed check result, or None when it cannot be read."""
+    """Return the check result by loading global_instructions in-process, or None on failure."""
+    if not CHECK.is_file():
+        return None
+    prev_bytecode = sys.dont_write_bytecode
     try:
-        result = subprocess.run(
-            [sys.executable, "-B", str(CHECK), "--host", "claude-code"],
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            timeout=10,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-        return json.loads(result.stdout.decode("utf-8"))
+        sys.dont_write_bytecode = True
+        spec = importlib.util.spec_from_file_location("wukong_global_instructions", CHECK)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        try:
+            return module.sync_global(
+                "claude-code",
+                home=Path.home(),
+                claude_config_dir=os.environ.get("CLAUDE_CONFIG_DIR") or None,
+                apply=False,
+            )
+        except (module.ConfigurationError, OSError, UnicodeError) as error:
+            return {"status": "error", "error": str(error)}
     except Exception:
         return None
+    finally:
+        sys.dont_write_bytecode = prev_bytecode
 
 
 def plugin_version():
