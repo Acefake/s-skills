@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -12,6 +13,15 @@ import t3_targets as t3
 ALLOWLIST = Path(__file__).resolve().parents[1] / 'references/model-allowlist.json'
 RECOMMEND_LIMIT = 4
 INHERIT = {'n': None, 'key': 'inherit-parent', 'label': '跟随当前对话模型'}
+SUBSCRIPTION_TIERS = ('low', 'medium', 'high')
+PLAN_BUDGETS = ('省', '中', '高', '超高')
+TIER_RANK = {'low': 0, 'medium': 1, 'high': 2}
+EFFORT_ORDER = ('low', 'medium', 'high', 'xhigh', 'max')
+EFFORT_KEYS = ('reasoningEffort', 'reasoning_effort', 'effort', 'thought_level')
+HEAVY_RE = re.compile(r'(?:^|[-_.])(opus|astra|ultra|o3|o4|r1|pro-max|thinking)(?:$|[-_.])', re.I)
+LIGHT_RE = re.compile(r'(?:^|[-_.])(haiku|flash|mini|lite|nano|luna|fast|instant|hy4)(?:$|[-_.])', re.I)
+VERSION_RE = re.compile(r'(\d+)(?:[.-](\d+))?')
+HIGH_FREQ_ROLES = {'检索与探索', '验证测试', '独立评审'}
 
 
 def load_allowlist(data: dict) -> dict:
@@ -184,28 +194,344 @@ def coerce(value: str, allowed: list) -> str | bool:
     return value
 
 
+def parse_version(model_id: str) -> tuple[int, int]:
+    """提取模型 ID 中的主次版本号用于同档比较，找不到返回 (0, 0)。"""
+    best = (0, 0)
+    for m in VERSION_RE.finditer(model_id):
+        major = int(m.group(1))
+        minor = int(m.group(2)) if m.group(2) is not None else 0
+        if major <= 99 and (major, minor) > best:
+            best = (major, minor)
+    return best
+
+
+def classify_model(provider: dict, model: dict) -> dict:
+    """按模型 ID 特征与实时 options 元数据生成能力画像，不依赖写死白名单。"""
+    mid = model['id']
+    if HEAVY_RE.search(mid):
+        cap_tier = 'heavy'
+    elif LIGHT_RE.search(mid):
+        cap_tier = 'light'
+    else:
+        cap_tier = 'balanced'
+
+    effort_key, effort_values = None, []
+    for opt in model.get('options', []):
+        if opt.get('id') in EFFORT_KEYS:
+            effort_key = opt['id']
+            effort_values = [v for v in opt.get('values', []) if isinstance(v, str)]
+            break
+    ranked = [v for v in EFFORT_ORDER if v in effort_values]
+    max_effort = ranked[-1] if ranked else ('enabled' if 'enabled' in effort_values else None)
+    return {
+        'providerInstanceId': provider['providerInstanceId'],
+        'providerName': provider.get('displayName') or provider['providerInstanceId'],
+        'model': mid,
+        'capTier': cap_tier,
+        'version': parse_version(mid),
+        'effortKey': effort_key,
+        'effortValues': effort_values,
+        'maxEffort': max_effort,
+        'hasReasoning': effort_key is not None,
+        'options': model.get('options', []),
+    }
+
+
+def resolve_provider_tier(provider: dict, provider_tiers: dict[str, str] | None) -> str:
+    """按提供商识别词解析订阅额度档位（low/medium/high），支持 all 兜底，默认 medium。"""
+    if not provider_tiers:
+        return 'medium'
+    for word, tier in provider_tiers.items():
+        if word.lower() != 'all' and matches(provider, word):
+            return tier
+    return provider_tiers.get('all', 'medium')
+
+
+def select_options(profile: dict, role: str, budget: str, sub_tier: str) -> dict:
+    """结合角色、预算与订阅档位，从模型自身合法 options 中选出最优参数。"""
+    chosen = {}
+    for opt in profile['options']:
+        if opt.get('id') == 'serviceTier' and 'default' in opt.get('values', []):
+            chosen['serviceTier'] = 'default'
+    key = profile['effortKey']
+    vals = profile['effortValues']
+    if not key or not vals:
+        return chosen
+    if key == 'thought_level':
+        if budget in ('高', '超高') and 'high' in vals and sub_tier != 'low':
+            chosen[key] = 'high'
+        elif 'enabled' in vals:
+            chosen[key] = 'enabled'
+        else:
+            chosen[key] = vals[0]
+        return chosen
+
+    desired_map = {
+        '省': {'检索与探索': 'low', '专项攻坚': 'medium' if sub_tier == 'low' else 'high'},
+        '中': {'检索与探索': 'low', '专项攻坚': 'high'},
+        '高': {'检索与探索': 'medium', '方案设计': 'high', '开发实现': 'high', '专项攻坚': 'high', '独立评审': 'high'},
+        '超高': {'检索与探索': 'medium', '方案设计': 'max', '开发实现': 'high', '专项攻坚': 'max', '验证测试': 'high', '独立评审': 'max'},
+    }
+    desired = desired_map[budget].get(role, 'medium')
+    if sub_tier == 'low' and budget == '省' and desired in ('high', 'xhigh', 'max'):
+        desired = 'medium'
+    order = [v for v in EFFORT_ORDER if v in vals]
+    if not order:
+        chosen[key] = vals[0]
+        return chosen
+    if desired in order:
+        chosen[key] = desired
+        return chosen
+    target_idx = EFFORT_ORDER.index(desired)
+    lower = [v for v in order if EFFORT_ORDER.index(v) <= target_idx]
+    chosen[key] = lower[-1] if lower else order[0]
+    return chosen
+
+
+def _role_score(profile: dict, role: str, budget: str, sub_tier: str,
+                avoid_provider: str | None = None,
+                allowlist_rank: int | None = None) -> float:
+    cap = profile['capTier']
+    # 角色×预算的能力偏好分
+    table = {
+        '省': {
+            '检索与探索': {'light': 100, 'balanced': 55, 'heavy': 5},
+            '方案设计': {'balanced': 100, 'heavy': 60, 'light': 45},
+            '开发实现': {'balanced': 100, 'light': 50, 'heavy': 40},
+            '专项攻坚': {'heavy': 105, 'balanced': 90, 'light': 30},
+            '验证测试': {'balanced': 95, 'light': 80, 'heavy': 30},
+            '独立评审': {'balanced': 95, 'light': 85, 'heavy': 45},
+        },
+        '中': {
+            '检索与探索': {'light': 100, 'balanced': 60, 'heavy': 10},
+            '方案设计': {'balanced': 95, 'heavy': 92, 'light': 35},
+            '开发实现': {'balanced': 100, 'heavy': 65, 'light': 35},
+            '专项攻坚': {'heavy': 110, 'balanced': 85, 'light': 20},
+            '验证测试': {'balanced': 100, 'light': 70, 'heavy': 35},
+            '独立评审': {'balanced': 95, 'light': 80, 'heavy': 75},
+        },
+        '高': {
+            '检索与探索': {'light': 95, 'balanced': 75, 'heavy': 15},
+            '方案设计': {'heavy': 110, 'balanced': 85, 'light': 20},
+            '开发实现': {'balanced': 100, 'heavy': 90, 'light': 25},
+            '专项攻坚': {'heavy': 115, 'balanced': 80, 'light': 15},
+            '验证测试': {'balanced': 100, 'light': 65, 'heavy': 55},
+            '独立评审': {'heavy': 105, 'balanced': 95, 'light': 65},
+        },
+        '超高': {
+            '检索与探索': {'light': 90, 'balanced': 85, 'heavy': 25},
+            '方案设计': {'heavy': 120, 'balanced': 80, 'light': 15},
+            '开发实现': {'heavy': 110, 'balanced': 95, 'light': 15},
+            '专项攻坚': {'heavy': 125, 'balanced': 75, 'light': 10},
+            '验证测试': {'balanced': 100, 'heavy': 90, 'light': 45},
+            '独立评审': {'heavy': 120, 'balanced': 90, 'light': 40},
+        },
+    }
+    score = float(table[budget][role][cap])
+
+    # 订阅额度稀缺保护与分流
+    if sub_tier == 'low':
+        if cap == 'heavy' and budget == '省':
+            score -= 200  # 入门订阅省档严禁烧旗舰
+        elif cap == 'heavy' and budget == '中' and role != '专项攻坚':
+            score -= 40
+        if role in HIGH_FREQ_ROLES and budget in ('省', '中'):
+            score -= 28  # 高频角色尽量分流到充裕池
+    elif sub_tier == 'high':
+        if role in HIGH_FREQ_ROLES:
+            score += 22
+        else:
+            score += 10
+    else:  # medium
+        if role in HIGH_FREQ_ROLES and budget in ('省', '中'):
+            score += 10
+
+    # 推理能力与版本新鲜度加分
+    if profile['hasReasoning']:
+        score += 12 if role in ('方案设计', '专项攻坚', '独立评审') else 4
+    major, minor = profile['version']
+    score += min(major, 20) * 0.5 + min(minor, 9) * 0.05
+
+    # 跨提供商多样性加分（用于独立评审避开开发实现、或次选容灾）
+    if avoid_provider and profile['providerInstanceId'] != avoid_provider:
+        score += 24
+
+    # 若在白名单同角色偏好里，给温和加权（不排斥新模型）
+    if allowlist_rank is not None:
+        score += max(0, 8 - allowlist_rank)
+    return score
+
+
+def _reason_text(profile: dict, sub_tier: str, role: str, is_fallback: bool = False,
+                 cross_from: str | None = None) -> str:
+    cap_cn = {'light': '轻量快模', 'balanced': '主力编码', 'heavy': '旗舰强推理'}[profile['capTier']]
+    tier_cn = {'low': '入门池', 'medium': '标准池', 'high': '充裕池'}[sub_tier]
+    parts = [cap_cn, tier_cn]
+    if profile['hasReasoning']:
+        parts.append(f"支持 {profile['effortKey']}")
+    if is_fallback and cross_from and profile['providerInstanceId'] != cross_from:
+        parts.append('跨提供商容灾')
+    elif not is_fallback and role == '独立评审' and cross_from and profile['providerInstanceId'] != cross_from:
+        parts.append('与实现跨提供商')
+    return ' · '.join(parts)
+
+
+def smart_plan(caps: dict, budget: str = '中', provider_tiers: dict[str, str] | None = None,
+               allowlist: dict | None = None) -> dict:
+    """按模型能力画像 + 订阅额度 + 四档预算（省/中/高/超高）生成完整六角色推荐方案。"""
+    if budget not in PLAN_BUDGETS:
+        raise t3.ConfigError(f'未知预算 {budget!r}：请使用 省、中、高、超高')
+    if provider_tiers:
+        for k, v in provider_tiers.items():
+            if v not in SUBSCRIPTION_TIERS:
+                raise t3.ConfigError(f'订阅档位 {k}={v!r} 无效：请使用 low、medium、high')
+
+    providers = [p for p in caps['providers'] if runnable(caps, p)]
+    resolved_tiers = {p['providerInstanceId']: resolve_provider_tier(p, provider_tiers) for p in providers}
+
+    # 根据订阅池自动推荐默认预算
+    tier_values = list(resolved_tiers.values())
+    if tier_values and all(t == 'low' for t in tier_values):
+        recommended_budget = '省'
+    elif tier_values and all(t == 'high' for t in tier_values):
+        recommended_budget = '高'
+    else:
+        recommended_budget = '中'
+
+    warnings = []
+    if tier_values and all(t == 'low' for t in tier_values) and budget in ('高', '超高'):
+        warnings.append('当前所有可用提供商均为入门额度（low），使用高/超高档极易触发限流，建议降为省/中档或仅对专项攻坚升档。')
+
+    # 收集所有可见模型的能力画像
+    profiles = []
+    allow_ranks: dict[str, dict[tuple[str, str], int]] = {r: {} for r in t3.SIX_ROLES}
+    if allowlist is not None:
+        found, _ = allowlisted(allowlist, providers)
+        for role in t3.SIX_ROLES:
+            for idx, key in enumerate(allowlist['roles'][role]):
+                if key in found:
+                    allow_ranks[role][(found[key]['providerInstanceId'], found[key]['model'])] = idx
+    for p in providers:
+        for m in p.get('models', []):
+            if allowlist is not None and not visible(allowlist, p, m['id']):
+                continue
+            profiles.append(classify_model(p, m))
+
+    def pick_best(role: str, avoid_provider: str | None = None,
+                  exclude_pairs: set[tuple[str, str]] | None = None,
+                  min_sub_rank: int | None = None) -> dict | None:
+        excluded = exclude_pairs or set()
+        candidates = [pf for pf in profiles if (pf['providerInstanceId'], pf['model']) not in excluded]
+        if not candidates:
+            return None
+        # 入门订阅省档严禁选 heavy（除非本机只有 heavy）
+        if budget == '省':
+            non_low_heavy = [pf for pf in candidates
+                             if not (pf['capTier'] == 'heavy' and resolved_tiers[pf['providerInstanceId']] == 'low')]
+            if non_low_heavy:
+                candidates = non_low_heavy
+
+        def key_fn(pf):
+            st = resolved_tiers[pf['providerInstanceId']]
+            s = _role_score(pf, role, budget, st, avoid_provider=avoid_provider,
+                            allowlist_rank=allow_ranks[role].get((pf['providerInstanceId'], pf['model'])))
+            if min_sub_rank is not None and TIER_RANK[st] >= min_sub_rank:
+                s += 10
+            return (s, pf['version'], pf['model'])
+
+        return max(candidates, key=key_fn)
+
+    def make_target(pf: dict, role: str, is_fallback: bool = False, cross_from: str | None = None) -> dict:
+        st = resolved_tiers[pf['providerInstanceId']]
+        return {
+            'providerInstanceId': pf['providerInstanceId'],
+            'model': pf['model'],
+            'options': select_options(pf, role, budget, st),
+            'capTier': pf['capTier'],
+            'subscriptionTier': st,
+            'reason': _reason_text(pf, st, role, is_fallback=is_fallback, cross_from=cross_from),
+        }
+
+    # 先决定「开发实现」，以便「独立评审」优先跨提供商
+    order = ('开发实现', '检索与探索', '方案设计', '专项攻坚', '验证测试', '独立评审')
+    role_plans: dict[str, dict] = {}
+    impl_provider: str | None = None
+
+    for role in order:
+        avoid = impl_provider if role == '独立评审' else None
+        primary_pf = pick_best(role, avoid_provider=avoid)
+        if primary_pf is None:
+            role_plans[role] = {'primary': INHERIT, 'fallback': None}
+            continue
+        if role == '开发实现':
+            impl_provider = primary_pf['providerInstanceId']
+        primary_pair = (primary_pf['providerInstanceId'], primary_pf['model'])
+        primary_tier_rank = TIER_RANK[resolved_tiers[primary_pf['providerInstanceId']]]
+        fb_pf = pick_best(role, avoid_provider=primary_pf['providerInstanceId'],
+                          exclude_pairs={primary_pair}, min_sub_rank=primary_tier_rank)
+        plan_entry = {
+            'primary': make_target(primary_pf, role, is_fallback=False, cross_from=avoid),
+            'fallback': make_target(fb_pf, role, is_fallback=True,
+                                    cross_from=primary_pf['providerInstanceId']) if fb_pf else None,
+        }
+        if role == '独立评审' and budget in ('高', '超高'):
+            second_pf = pick_best(role, avoid_provider=primary_pf['providerInstanceId'],
+                                  exclude_pairs={primary_pair})
+            if second_pf is not None:
+                second_pair = (second_pf['providerInstanceId'], second_pf['model'])
+                second_fb = pick_best(role, avoid_provider=second_pf['providerInstanceId'],
+                                      exclude_pairs={primary_pair, second_pair})
+                plan_entry['secondReviewer'] = {
+                    'primary': make_target(second_pf, role, is_fallback=False,
+                                           cross_from=primary_pf['providerInstanceId']),
+                    'fallback': make_target(second_fb, role, is_fallback=True,
+                                            cross_from=second_pf['providerInstanceId']) if second_fb else None,
+                }
+        role_plans[role] = plan_entry
+
+    ordered_roles = {role: role_plans[role] for role in t3.SIX_ROLES}
+    return {
+        'schemaVersion': 1,
+        'budget': budget,
+        'recommendedBudget': recommended_budget,
+        'providerTiers': resolved_tiers,
+        'warnings': warnings,
+        'roles': ordered_roles,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     """CLI 边界：读取快照与白名单，错误以 JSON 写到 stderr 并返回 1。"""
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
-    for name in ('catalog', 'pick'):
+    for name in ('catalog', 'pick', 'plan'):
         item = sub.add_parser(name)
         item.add_argument('--capabilities', type=Path, action='append', required=True,
                           help='第一份为不带 search 的基础快照，其余为 search 结果')
         item.add_argument('--allowlist', type=Path, default=ALLOWLIST)
-        item.add_argument('--all', action='store_true', help='同时列出白名单外的本机模型')
+        if name in ('catalog', 'pick'):
+            item.add_argument('--all', action='store_true', help='同时列出白名单外的本机模型')
         if name == 'pick':
             item.add_argument('--choice', required=True, help='编号或模型 ID')
             item.add_argument('--option', action='append', default=[], help='key=value')
+        if name == 'plan':
+            item.add_argument('--budget', default='中', choices=PLAN_BUDGETS, help='省 / 中 / 高 / 超高')
+            item.add_argument('--tier', action='append', default=[],
+                              help='提供商订阅档位，如 claudeAgent=low、codex=medium、all=low')
     args = parser.parse_args(argv)
     try:
         caps = merge_snapshots([t3.load_json(path) for path in args.capabilities])
-        catalog = build(load_allowlist(t3.load_json(args.allowlist)), caps, args.all)
-        if args.command == 'catalog':
-            result = catalog
+        allow = load_allowlist(t3.load_json(args.allowlist)) if args.allowlist and args.allowlist.is_file() else None
+        if args.command == 'plan':
+            tiers = dict(parse_option(text) for text in args.tier)
+            result = smart_plan(caps, budget=args.budget, provider_tiers=tiers, allowlist=allow)
         else:
-            options = dict(parse_option(text) for text in args.option)
-            result = {'schemaVersion': 1, 'target': pick(catalog, args.choice, options)}
+            catalog = build(load_allowlist(t3.load_json(args.allowlist)), caps, args.all)
+            if args.command == 'catalog':
+                result = catalog
+            else:
+                options = dict(parse_option(text) for text in args.option)
+                result = {'schemaVersion': 1, 'target': pick(catalog, args.choice, options)}
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except (OSError, ValueError) as exc:

@@ -205,6 +205,72 @@ class CliTest(unittest.TestCase):
             self.assertEqual(code, 1)
             self.assertIn('编号', json.loads(err)['error'])
 
+    def test_plan_command_runs_end_to_end(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp, 'base.json')
+            base.write_text(json.dumps(caps(CLAUDE, CODEX, CODEBUDDY)), encoding='utf-8')
+            code, out, err = self.run_cli(
+                'plan', '--capabilities', str(base),
+                '--budget', '省',
+                '--tier', 'claudeAgent=low', '--tier', 'codex=low', '--tier', 'codebuddy=high',
+            )
+            self.assertEqual(code, 0, err)
+            data = json.loads(out)
+            self.assertEqual(data['budget'], '省')
+            self.assertEqual(data['recommendedBudget'], '中')
+            self.assertEqual(set(data['roles']), set(t3.SIX_ROLES))
+            # Claude is low-tier in 省 budget: must never assign opus anywhere.
+            for role, entry in data['roles'].items():
+                self.assertNotEqual(entry['primary']['model'], 'claude-opus-5-5', role)
+
+
+class SmartPlanTest(unittest.TestCase):
+    def test_unseen_future_models_are_classified_and_ranked_by_capability(self):
+        future_a = provider('futureA', ['alpha-7-mini', 'alpha-7.2-pro', 'alpha-7.2-opus'], EFFORT, 'Future A')
+        future_b = provider('futureB', ['beta-4-flash', 'beta-4-neon', 'beta-4-r1'], REASONING, 'Future B')
+        plan = cat.smart_plan(caps(future_a, future_b, parent=('futureA', 'alpha-7.2-pro')), budget='中')
+        self.assertEqual(plan['roles']['检索与探索']['primary']['capTier'], 'light')
+        self.assertEqual(plan['roles']['专项攻坚']['primary']['capTier'], 'heavy')
+        self.assertEqual(plan['roles']['开发实现']['primary']['capTier'], 'balanced')
+        # 独立评审优先与开发实现跨提供商
+        self.assertNotEqual(
+            plan['roles']['独立评审']['primary']['providerInstanceId'],
+            plan['roles']['开发实现']['primary']['providerInstanceId'],
+        )
+
+    def test_entry_level_subscription_protects_quota_and_warns_on_high_budget(self):
+        plan_low = cat.smart_plan(
+            caps(CLAUDE, CODEX, CODEBUDDY),
+            budget='省',
+            provider_tiers={'claudeAgent': 'low', 'codex': 'low', 'codebuddy': 'high'},
+            allowlist=allowlist(),
+        )
+        # 省档入门订阅池不烧旗舰，高频角色优先分流到充裕池 codebuddy
+        self.assertEqual(plan_low['roles']['检索与探索']['primary']['providerInstanceId'], 'acpRegistry_codebuddy_code')
+        self.assertEqual(plan_low['roles']['独立评审']['primary']['providerInstanceId'], 'acpRegistry_codebuddy_code')
+        self.assertNotEqual(plan_low['roles']['专项攻坚']['primary']['model'], 'claude-opus-5-5')
+        self.assertNotEqual(plan_low['roles']['专项攻坚']['primary']['model'], 'gpt-6-astra')
+
+        # 全部提供商都是入门额度时，默认推荐省档；强选高/超高弹出限流预警
+        all_low = cat.smart_plan(
+            caps(CLAUDE, CODEX),
+            budget='超高',
+            provider_tiers={'all': 'low'},
+            allowlist=allowlist(),
+        )
+        self.assertEqual(all_low['recommendedBudget'], '省')
+        self.assertTrue(all_low['warnings'])
+        self.assertIn('secondReviewer', all_low['roles']['独立评审'])
+        self.assertNotEqual(
+            all_low['roles']['独立评审']['primary']['providerInstanceId'],
+            all_low['roles']['独立评审']['secondReviewer']['primary']['providerInstanceId'],
+        )
+
+    def test_ultra_budget_alias_in_s_models(self):
+        import s_models
+        self.assertEqual(s_models.normalize_budget('超高'), '不限')
+        self.assertEqual(s_models.normalize_budget('ultra'), '不限')
+
 
 if __name__ == '__main__':
     unittest.main()

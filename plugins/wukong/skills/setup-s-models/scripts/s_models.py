@@ -88,6 +88,8 @@ BUDGETS = {
 }
 BUDGET_ALIASES = {
     '高': '大',
+    '超高': '不限',
+    'ultra': '不限', 'max': '不限',
     'small': '省', 'medium': '中', 'large': '大', 'unlimited': '不限',
     'skip': INHERIT, INHERIT: INHERIT,
 }
@@ -111,7 +113,7 @@ def normalize_budget(name: str) -> str:
         return value
     if value.lower() in BUDGET_ALIASES:
         return BUDGET_ALIASES[value.lower()]
-    raise SModelsError(f'未知预算 {name!r}：用 省、中、高 或 inherit-parent；兼容旧 大/不限')
+    raise SModelsError(f'未知预算 {name!r}：用 省、中、高、超高 或 inherit-parent；兼容旧 大/不限')
 
 
 def budget_line(budget: str, effort: str | None = None) -> str:
