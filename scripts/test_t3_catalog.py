@@ -266,6 +266,17 @@ class SmartPlanTest(unittest.TestCase):
             all_low['roles']['独立评审']['secondReviewer']['primary']['providerInstanceId'],
         )
 
+    def test_newer_unlisted_generation_outranks_older_allowlisted_model(self):
+        codex_new = provider('codex', ['gpt-6-luna', 'gpt-6.1-sol', 'gpt-6.2-sol', 'gpt-6-astra'], REASONING, 'Codex')
+        plan = cat.smart_plan(
+            caps(codex_new, parent=('codex', 'gpt-6.2-sol')),
+            budget='省',
+            provider_tiers={'codex': 'low'},
+            allowlist=allowlist(),
+        )
+        self.assertEqual(plan['roles']['开发实现']['primary']['model'], 'gpt-6.2-sol')
+        self.assertEqual(plan['roles']['方案设计']['primary']['model'], 'gpt-6.2-sol')
+
     def test_ultra_budget_alias_in_s_models(self):
         import s_models
         self.assertEqual(s_models.normalize_budget('超高'), '不限')

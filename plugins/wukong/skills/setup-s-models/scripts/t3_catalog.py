@@ -290,7 +290,8 @@ def select_options(profile: dict, role: str, budget: str, sub_tier: str) -> dict
 
 def _role_score(profile: dict, role: str, budget: str, sub_tier: str,
                 avoid_provider: str | None = None,
-                allowlist_rank: int | None = None) -> float:
+                allowlist_rank: int | None = None,
+                gen_lag: int = 0) -> float:
     cap = profile['capTier']
     # 角色×预算的能力偏好分
     table = {
@@ -346,19 +347,18 @@ def _role_score(profile: dict, role: str, budget: str, sub_tier: str,
         if role in HIGH_FREQ_ROLES and budget in ('省', '中'):
             score += 10
 
-    # 推理能力与版本新鲜度加分
+    # 推理能力与同提供商同档代际优先：老一代扣分（-6/代），不因不同厂商版本号起点不同而偏置
     if profile['hasReasoning']:
         score += 12 if role in ('方案设计', '专项攻坚', '独立评审') else 4
-    major, minor = profile['version']
-    score += min(major, 20) * 0.5 + min(minor, 9) * 0.05
+    score -= gen_lag * 6.0
 
     # 跨提供商多样性加分（用于独立评审避开开发实现、或次选容灾）
     if avoid_provider and profile['providerInstanceId'] != avoid_provider:
         score += 24
 
-    # 若在白名单同角色偏好里，给温和加权（不排斥新模型）
+    # 白名单仅做同代微调（最大 +0.8），绝不让旧版白名单压过新版同档模型
     if allowlist_rank is not None:
-        score += max(0, 8 - allowlist_rank)
+        score += max(0.0, (8 - allowlist_rank) * 0.1)
     return score
 
 
@@ -417,6 +417,18 @@ def smart_plan(caps: dict, budget: str = '中', provider_tiers: dict[str, str] |
                 continue
             profiles.append(classify_model(p, m))
 
+    # 计算每个模型在「同提供商 + 同能力档位」内的代际落后步数（0 = 最新代）
+    group_versions: dict[tuple[str, str], list[tuple[int, int]]] = {}
+    for pf in profiles:
+        g = (pf['providerInstanceId'], pf['capTier'])
+        group_versions.setdefault(g, [])
+        if pf['version'] not in group_versions[g]:
+            group_versions[g].append(pf['version'])
+    for g in group_versions:
+        group_versions[g].sort(reverse=True)
+    for pf in profiles:
+        pf['genLag'] = group_versions[(pf['providerInstanceId'], pf['capTier'])].index(pf['version'])
+
     def pick_best(role: str, avoid_provider: str | None = None,
                   exclude_pairs: set[tuple[str, str]] | None = None,
                   min_sub_rank: int | None = None) -> dict | None:
@@ -434,7 +446,8 @@ def smart_plan(caps: dict, budget: str = '中', provider_tiers: dict[str, str] |
         def key_fn(pf):
             st = resolved_tiers[pf['providerInstanceId']]
             s = _role_score(pf, role, budget, st, avoid_provider=avoid_provider,
-                            allowlist_rank=allow_ranks[role].get((pf['providerInstanceId'], pf['model'])))
+                            allowlist_rank=allow_ranks[role].get((pf['providerInstanceId'], pf['model'])),
+                            gen_lag=pf['genLag'])
             if min_sub_rank is not None and TIER_RANK[st] >= min_sub_rank:
                 s += 10
             return (s, pf['version'], pf['model'])

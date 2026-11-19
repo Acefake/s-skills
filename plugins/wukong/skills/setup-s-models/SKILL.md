@@ -9,7 +9,7 @@ description: "「/setup-s-models」「配置 s 模型」「s 的预算」。一�
 
 普通模式和 T3 统一使用六角色：检索与探索、方案设计、开发实现、专项攻坚、验证测试、独立评审。角色只决定已授权任务的模型，不代表启动六个代理。角色分工和旧键映射见[角色键对照](references/role-keys.md)，具体路径与工具见[宿主适配](../../HOSTS.md)。
 
-配置预算统一展示省、中、高三档，不要求用户额外选择“三档预设”。支持跨提供商编排时读取[混合三档与顺序备用](references/mixed-budget-profiles.md)，仅原生工具时读取[原生三档](references/native-budget-profiles.md)。高写入工具时映射为“大”；旧“大/不限”配置仍可读取，但“不限”不再作为新配置的预算选项。已有模型与显式档位优先，预设中的显式角色档位优先于通用预算映射。配置备用顺序不授权额外并行代理。
+配置预算统一展示省、中、高、超高四档，并结合各提供商订阅额度（入门 `low` / 标准 `medium` / 高配 `high`）按当前宿主**实时发现的可用模型能力动态推荐最新代**，绝不照抄文档里的旧版本号。支持跨提供商编排时优先使用 `scripts/t3_catalog.py plan` 并参考[混合方案与顺序备用](references/mixed-budget-profiles.md)；仅原生工具时读取[原生动态选模](references/native-budget-profiles.md)。高写入工具时映射为“大”，超高映射为“不限”。已有模型与显式档位优先，预设中的显式角色档位优先于通用预算映射。配置备用顺序不授权额外并行代理。
 
 用户通过 T3 编排使用 DeepSeek-V4.1-Flash 评审时，读取[DeepSeek 评审](references/deepseek-review.md)。此预设由用户选择 DP4.1 Flash enabled 首选、Sol medium 备用；高档 DP 与 Sol 各一名。用户选型不代表总体效果已验证，不自动覆盖项目已有配置。
 
