@@ -110,6 +110,7 @@ class ResolveTest(unittest.TestCase):
         for mutate in (
             lambda c: c['targets']['review'].update(model='unknown'),
             lambda c: c['targets']['review'].update(options={'reasoningEffort': 'medium'}),
+            lambda c: c.update(schemaVersion=4),
             lambda c: c.update(schemaVersion=3),
             lambda c: c['targets']['review'].update(options={'effort': 1}),
             lambda c: c['targets']['review'].update(runtimeMode='full-access'),

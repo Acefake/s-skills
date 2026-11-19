@@ -60,18 +60,59 @@ def unique_keys(pairs: list) -> dict:
 
 
 def validate_targets(config: dict) -> dict:
-    """严格校验目标结构，拒绝权限字段和非字符串/布尔参数；只有 schemaVersion 2 允许 fallback。"""
+    """严格校验目标结构，拒绝权限字段和非字符串/布尔参数；schemaVersion 2 允许 fallback，3 支持运行时动态策略。"""
     version = config.get('schemaVersion')
-    if set(config) != {'schemaVersion', 'targets'} or type(version) is not int or version not in (1, 2):
-        raise ConfigError('目标配置必须是 schemaVersion 1 或 2 和 targets')
-    targets = config['targets']
+    if type(version) is not int or version not in (1, 2, 3):
+        raise ConfigError('目标配置必须是 schemaVersion 1、2 或 3')
+    if version == 3:
+        allowed_keys = {'schemaVersion', 'mode', 'budget', 'providerTiers', 'targets'}
+        if set(config) - allowed_keys or config.get('mode') != 'dynamic':
+            raise ConfigError('schemaVersion 3 动态配置必须设置 mode: "dynamic" 且仅含 budget、providerTiers、targets')
+        if config.get('budget') not in ('省', '中', '高', '超高'):
+            raise ConfigError('schemaVersion 3 动态配置的 budget 必须是 省、中、高 或 超高')
+        tiers = config.get('providerTiers', {})
+        if not isinstance(tiers, dict) or any(
+            not isinstance(k, str) or not k or v not in ('low', 'medium', 'high') for k, v in tiers.items()
+        ):
+            raise ConfigError('schemaVersion 3 的 providerTiers 仅接受 low、medium、high')
+        targets = config.get('targets', {})
+    else:
+        if set(config) != {'schemaVersion', 'targets'}:
+            raise ConfigError('目标配置必须是 schemaVersion 1 或 2 和 targets')
+        targets = config['targets']
     if not isinstance(targets, dict):
         raise ConfigError('targets 必须是对象')
     for alias, target in targets.items():
         if not ALIAS.fullmatch(alias):
             raise ConfigError(f'非法目标别名: {alias}')
-        validate_target(alias, target, version == 2)
+        validate_target(alias, target, version >= 2)
     return targets
+
+
+def effective_targets(config: dict, caps: dict) -> dict:
+    """静态配置直接返回 targets；schemaVersion 3 动态策略在运行时结合实时能力快照生成，并允许 targets 逐项覆写。"""
+    manual = validate_targets(config)
+    if config.get('schemaVersion') != 3:
+        return manual
+    import t3_catalog
+    if not t3_catalog.ALLOWLIST.is_file():
+        raise ConfigError(f'缺少模型策略白名单，无法保证 providerOnly 约束: {t3_catalog.ALLOWLIST}')
+    allow = t3_catalog.load_allowlist(load_json(t3_catalog.ALLOWLIST))
+    pinned_review = None
+    if 'review' in manual:
+        pinned_review = (manual['review']['providerInstanceId'], manual['review']['model'])
+    pinned_review2 = None
+    if 'review2' in manual:
+        pinned_review2 = (manual['review2']['providerInstanceId'], manual['review2']['model'])
+    generated = t3_catalog.dynamic_targets(
+        caps,
+        budget=config['budget'],
+        provider_tiers=config.get('providerTiers') or {},
+        allowlist=allow,
+        pinned_review=pinned_review,
+        pinned_review2=pinned_review2,
+    )
+    return {**generated, **manual}
 
 
 def validate_target(name: str, target: dict, allow_fallback: bool) -> None:
@@ -258,6 +299,8 @@ def resolve_item(name: str, level: str | None, default: str, targets: dict,
         return {'executor': 'native' if native and not force else 'delegate_task', 'target': target, 'fallback': None}
     alias = name[3:] if name.startswith('t3:') else None
     if alias is not None and alias not in targets:
+        if alias == 'review2':
+            raise ConfigError(f'目标别名不存在: {name}（当前可用模型目录不足以生成第二名独立评审）')
         raise ConfigError(f'目标别名不存在: {name}')
     source = targets[alias] if alias is not None else {
         'providerInstanceId': caps.get('inheritedProviderInstanceId'), 'model': name}
@@ -289,10 +332,11 @@ def parent_options(caps: dict) -> dict:
 
 
 def resolve(text: str, role: str, config: dict, capabilities: dict,
-            native_models: list | None = None, worktree: bool = False, delegate: bool = False) -> dict:
+            native_models: list | None = None, worktree: bool = False, delegate: bool = False,
+            *, precomputed_targets: dict | None = None) -> dict:
     """返回版本化解析结果；native_models 必须来自原生工具定义。"""
-    targets = validate_targets(config)
     caps = capability_catalog(capabilities)
+    targets = precomputed_targets if precomputed_targets is not None else effective_targets(config, caps)
     key, items, default = role_items(text, role)
     resolved = [resolve_item(name, level, default, targets, caps, native_models or [], worktree or delegate)
                 for name, level in items]
@@ -309,15 +353,18 @@ def complete_role_config(text: str) -> dict:
 
 def check(text: str, config: dict, capabilities: dict) -> dict:
     """校验全部已配置角色和未被引用的目标；不启动实际任务。"""
-    targets = validate_targets(config)
     caps = capability_catalog(capabilities)
+    targets = effective_targets(config, caps)
     for target in targets.values():
         for item in filter(None, (target, target.get('fallback'))):
             model = model_capability(caps, item['providerInstanceId'], item['model'])
             validate_options(model, item.get('options', {}))
     checked = complete_role_config(text)
+    if config.get('schemaVersion') == 3 and checked.get('budget'):
+        if s_models.normalize_budget(config['budget']) != s_models.normalize_budget(checked['budget']):
+            raise ConfigError(f"动态配置 budget（{config['budget']}）与规则段预算（{checked['budget']}）不一致")
     for role in checked['rows']:
-        resolve(text, role, config, caps)
+        resolve(text, role, config, caps, precomputed_targets=targets)
     return {'schemaVersion': 1, 'status': 'ok', 'validation': 'capability-snapshot-only', 'notes': checked['notes']}
 
 
@@ -482,7 +529,8 @@ def configure(rules: Path, project: Path, block: str, config: dict, capabilities
         existing = '---\ndescription: s per-role model choices (overrides skill defaults)\nalwaysApply: true\n---\n' + existing
     merged, _ = s_models.merged_text(existing, block.strip())
     check(merged, config, capabilities)
-    config = {**config, 'schemaVersion': 2}
+    if config.get('schemaVersion') == 1:
+        config = {**config, 'schemaVersion': 2}
     rules_data = (s_models.BOM if bom else b'') + merged.replace('\n', newline).encode('utf-8')
     target_data = (json.dumps(config, ensure_ascii=False, indent=2) + '\n').encode('utf-8')
     changes = [(p, originals[p], data) for p, data in ((target_path, target_data), (rules, rules_data))]

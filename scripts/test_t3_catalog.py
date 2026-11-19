@@ -219,9 +219,9 @@ class CliTest(unittest.TestCase):
             self.assertEqual(data['budget'], '省')
             self.assertEqual(data['recommendedBudget'], '中')
             self.assertEqual(set(data['roles']), set(t3.SIX_ROLES))
-            # Claude is low-tier in 省 budget: must never assign opus anywhere.
-            for role, entry in data['roles'].items():
-                self.assertNotEqual(entry['primary']['model'], 'claude-opus-5-5', role)
+            # Claude is low-tier in 省 budget: must never assign opus to high-frequency roles.
+            for role in ('检索与探索', '方案设计', '开发实现', '验证测试', '独立评审'):
+                self.assertNotEqual(data['roles'][role]['primary']['model'], 'claude-opus-5-5', role)
 
 
 class SmartPlanTest(unittest.TestCase):
@@ -245,11 +245,13 @@ class SmartPlanTest(unittest.TestCase):
             provider_tiers={'claudeAgent': 'low', 'codex': 'low', 'codebuddy': 'high'},
             allowlist=allowlist(),
         )
-        # 省档入门订阅池不烧旗舰，高频角色优先分流到充裕池 codebuddy
+        # 省档入门订阅池高频角色优先分流到充裕池 codebuddy，高频角色不烧旗舰
         self.assertEqual(plan_low['roles']['检索与探索']['primary']['providerInstanceId'], 'acpRegistry_codebuddy_code')
         self.assertEqual(plan_low['roles']['独立评审']['primary']['providerInstanceId'], 'acpRegistry_codebuddy_code')
-        self.assertNotEqual(plan_low['roles']['专项攻坚']['primary']['model'], 'claude-opus-5-5')
-        self.assertNotEqual(plan_low['roles']['专项攻坚']['primary']['model'], 'gpt-6-astra')
+        for role in ('检索与探索', '方案设计', '开发实现', '验证测试', '独立评审'):
+            self.assertNotEqual(plan_low['roles'][role]['primary']['capTier'], 'heavy', role)
+        # 低频专项攻坚仍保留旗舰（但思考档位受限于入门省档）
+        self.assertEqual(plan_low['roles']['专项攻坚']['primary']['capTier'], 'heavy')
 
         # 全部提供商都是入门额度时，默认推荐省档；强选高/超高弹出限流预警
         all_low = cat.smart_plan(
@@ -266,16 +268,130 @@ class SmartPlanTest(unittest.TestCase):
             all_low['roles']['独立评审']['secondReviewer']['primary']['providerInstanceId'],
         )
 
-    def test_newer_unlisted_generation_outranks_older_allowlisted_model(self):
-        codex_new = provider('codex', ['gpt-6-luna', 'gpt-6.1-sol', 'gpt-6.2-sol', 'gpt-6-astra'], REASONING, 'Codex')
+    def test_newer_unlisted_generation_outranks_older_allowlisted_model_without_hurting_terra(self):
+        codex_new = provider('codex', ['gpt-6-luna', 'gpt-6.1-sol', 'gpt-6.2-sol', 'gpt-6.1-terra', 'gpt-6-astra'],
+                             REASONING, 'Codex')
         plan = cat.smart_plan(
             caps(codex_new, parent=('codex', 'gpt-6.2-sol')),
             budget='省',
             provider_tiers={'codex': 'low'},
             allowlist=allowlist(),
         )
+        self.assertEqual(plan['roles']['检索与探索']['primary']['model'], 'gpt-6-luna')
         self.assertEqual(plan['roles']['开发实现']['primary']['model'], 'gpt-6.2-sol')
-        self.assertEqual(plan['roles']['方案设计']['primary']['model'], 'gpt-6.2-sol')
+        self.assertEqual(plan['roles']['专项攻坚']['primary']['model'], 'gpt-6-astra')
+        # 单宿主 Codex 下 terra 不被 sol 6.2 跨家族误伤，用于独立评审/验证测试错开 sol
+        self.assertEqual(plan['roles']['独立评审']['primary']['model'], 'gpt-6.1-terra')
+        self.assertEqual(plan['roles']['验证测试']['primary']['model'], 'gpt-6.1-terra')
+
+    def test_all_other_single_hosts_allocate_dynamically(self):
+        # 1. 纯 Claude：开发用 sonnet，评审错开家族用 fable，攻坚用 opus，检索用 haiku
+        claude_plan = cat.smart_plan(caps(CLAUDE, parent=('claudeAgent', 'claude-sonnet-5-5')), budget='省')
+        self.assertEqual(claude_plan['roles']['检索与探索']['primary']['model'], 'claude-haiku-5-5')
+        self.assertEqual(claude_plan['roles']['开发实现']['primary']['model'], 'claude-sonnet-5-5')
+        self.assertEqual(claude_plan['roles']['专项攻坚']['primary']['model'], 'claude-opus-5-5')
+        self.assertEqual(claude_plan['roles']['独立评审']['primary']['model'], 'claude-fable-5-2')
+
+        # 2. 纯 CodeBuddy：开发用 glm-5.3，评审错开家族用带思考参数的 deepseek-v4.1-flash
+        cb_plan = cat.smart_plan(caps(CODEBUDDY, parent=('acpRegistry_codebuddy_code', 'glm-5.3')),
+                                 budget='省', allowlist=allowlist())
+        self.assertEqual(cb_plan['roles']['开发实现']['primary']['model'], 'glm-5.3')
+        self.assertEqual(cb_plan['roles']['独立评审']['primary']['model'], 'deepseek-v4.1-flash')
+
+        # 3. 纯 Antigravity：多模型时自动按家族/档位错开
+        agy = provider('antigravity', ['gemini-4-flash', 'gemini-4-neon', 'gemini-4-ultra'], THOUGHT, 'Antigravity')
+        agy_plan = cat.smart_plan(caps(agy, parent=('antigravity', 'gemini-4-neon')), budget='省')
+        self.assertEqual(agy_plan['roles']['检索与探索']['primary']['model'], 'gemini-4-flash')
+        self.assertEqual(agy_plan['roles']['开发实现']['primary']['model'], 'gemini-4-neon')
+        self.assertEqual(agy_plan['roles']['专项攻坚']['primary']['model'], 'gemini-4-ultra')
+        self.assertNotEqual(agy_plan['roles']['独立评审']['primary']['model'], 'gemini-4-neon')
+
+        # 4. 纯 Devin 单模型：优雅降级并发出单模提示
+        devin_plan = cat.smart_plan(caps(DEVIN, parent=('acpRegistry_devin', 'swe-2-flash-medium')), budget='省')
+        self.assertEqual(devin_plan['roles']['开发实现']['primary']['model'], 'swe-2-flash-medium')
+        self.assertIsNone(devin_plan['roles']['开发实现']['fallback'])
+        self.assertTrue(any('1 个可用模型' in w for w in devin_plan['warnings']))
+
+    def test_schema_v3_dynamic_policy_resolves_latest_models_at_runtime_without_editing_config(self):
+        block = (
+            '# s 模型配置\n'
+            '# 预算: 省（medium）\n'
+            '检索与探索: t3:lookup\n'
+            '方案设计: t3:design\n'
+            '开发实现: t3:implementation\n'
+            '专项攻坚: t3:hard\n'
+            '验证测试: t3:test\n'
+            '独立评审: t3:review\n'
+            '# s 模型配置结束\n'
+        )
+        dynamic_cfg = {
+            'schemaVersion': 3,
+            'mode': 'dynamic',
+            'budget': '省',
+            'providerTiers': {'codex': 'low'},
+            'targets': {},
+        }
+        # 同一份配置文件，宿主机从 6.1 升级到 6.3 后自动解析到最新代，无需改配置
+        snap_61 = caps(provider('codex', ['gpt-6-luna', 'gpt-6.1-sol', 'gpt-6.1-terra', 'gpt-6-astra'], REASONING, 'Codex'),
+                       parent=('codex', 'gpt-6.1-sol'))
+        snap_63 = caps(provider('codex', ['gpt-6-luna', 'gpt-6.1-sol', 'gpt-6.3-sol', 'gpt-6.1-terra', 'gpt-6-astra'], REASONING, 'Codex'),
+                       parent=('codex', 'gpt-6.3-sol'))
+        self.assertEqual(t3.check(block, dynamic_cfg, snap_61)['status'], 'ok')
+        self.assertEqual(t3.resolve(block, '开发实现', dynamic_cfg, snap_61)['items'][0]['target']['model'], 'gpt-6.1-sol')
+        self.assertEqual(t3.resolve(block, '开发实现', dynamic_cfg, snap_63)['items'][0]['target']['model'], 'gpt-6.3-sol')
+        self.assertEqual(t3.resolve(block, '独立评审', dynamic_cfg, snap_63)['items'][0]['target']['model'], 'gpt-6.1-terra')
+
+        # 允许在 targets 里仅锁定某一个别名，其余仍保持全动态
+        pinned = {**dynamic_cfg, 'targets': {'hard': {'providerInstanceId': 'codex', 'model': 'gpt-6.3-sol', 'options': {'reasoningEffort': 'high'}}}}
+        self.assertEqual(t3.resolve(block, '专项攻坚', pinned, snap_63)['items'][0]['target']['model'], 'gpt-6.3-sol')
+        self.assertEqual(t3.resolve(block, '开发实现', pinned, snap_63)['items'][0]['target']['model'], 'gpt-6.3-sol')
+
+        # 规则段预算与 v3 budget 不一致时 check 报错
+        mismatched = {**dynamic_cfg, 'budget': '中'}
+        with self.assertRaises(t3.ConfigError):
+            t3.check(block, mismatched, snap_63)
+
+        # configure(v3, apply=True) 往返必须保留 schemaVersion: 3，且读回后 check 仍通过
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp)
+            rules = project / 'AGENTS.md'
+            res = t3.configure(rules, project, block, dynamic_cfg, snap_63, apply=True)
+            self.assertTrue(res['applied'])
+            written = json.loads((project / t3.TARGET_FILE).read_text(encoding='utf-8'))
+            self.assertEqual(written['schemaVersion'], 3)
+            self.assertEqual(written['mode'], 'dynamic')
+            self.assertEqual(t3.check(rules.read_text(encoding='utf-8'), written, snap_63)['status'], 'ok')
+
+        # 高预算下手工 pin review 时，review2 自动避开已 pin 的评审目标，不重复派同一个模型
+        high_block = block.replace('省（medium）', '大（xhigh）').replace('独立评审: t3:review', '独立评审: t3:review, t3:review2')
+        high_cfg = {
+            'schemaVersion': 3,
+            'mode': 'dynamic',
+            'budget': '高',
+            'providerTiers': {'claudeAgent': 'high', 'codex': 'high'},
+            'targets': {'review': {'providerInstanceId': 'codex', 'model': 'gpt-6-astra', 'options': {'reasoningEffort': 'high'}}},
+        }
+        both = caps(CLAUDE, CODEX)
+        self.assertEqual(t3.check(high_block, high_cfg, both)['status'], 'ok')
+        review_items = t3.resolve(high_block, '独立评审', high_cfg, both)['items']
+        self.assertEqual(len(review_items), 2)
+        self.assertNotEqual(review_items[0]['target']['model'], review_items[1]['target']['model'])
+
+        # 反向手工 pin review2 时，动态 review 也避开 review2，不重复派同一个模型
+        high_cfg_pin2 = {
+            'schemaVersion': 3,
+            'mode': 'dynamic',
+            'budget': '高',
+            'providerTiers': {'claudeAgent': 'high', 'codex': 'high'},
+            'targets': {'review2': {'providerInstanceId': 'codex', 'model': 'gpt-6-astra', 'options': {'reasoningEffort': 'high'}}},
+        }
+        self.assertEqual(t3.check(high_block, high_cfg_pin2, both)['status'], 'ok')
+        review_items_2 = t3.resolve(high_block, '独立评审', high_cfg_pin2, both)['items']
+        self.assertEqual(len(review_items_2), 2)
+        self.assertNotEqual(review_items_2[0]['target']['model'], review_items_2[1]['target']['model'])
+
+        # 档位后缀归并进同一家族
+        self.assertEqual(cat.model_family('gemini-3.8-flash-high'), cat.model_family('gemini-4-flash'))
 
     def test_ultra_budget_alias_in_s_models(self):
         import s_models

@@ -19,7 +19,7 @@ TIER_RANK = {'low': 0, 'medium': 1, 'high': 2}
 EFFORT_ORDER = ('low', 'medium', 'high', 'xhigh', 'max')
 EFFORT_KEYS = ('reasoningEffort', 'reasoning_effort', 'effort', 'thought_level')
 HEAVY_RE = re.compile(r'(?:^|[-_.])(opus|astra|ultra|o3|o4|r1|pro-max|thinking)(?:$|[-_.])', re.I)
-LIGHT_RE = re.compile(r'(?:^|[-_.])(haiku|flash|mini|lite|nano|luna|fast|instant|hy4)(?:$|[-_.])', re.I)
+LIGHT_RE = re.compile(r'(?:^|[-_.])(haiku|flash|mini|lite|nano|luna|fast|instant|hy4(?:std)?)(?:$|[-_.])', re.I)
 VERSION_RE = re.compile(r'(\d+)(?:[.-](\d+))?')
 HIGH_FREQ_ROLES = {'检索与探索', '验证测试', '独立评审'}
 
@@ -205,6 +205,14 @@ def parse_version(model_id: str) -> tuple[int, int]:
     return best
 
 
+def model_family(model_id: str) -> str:
+    """去掉版本号与尾部思考档位后缀提取模型家族骨架，确保同家族才比代际。"""
+    cleaned = re.sub(r'-(?:low|medium|high|xhigh|max)$', '', model_id.lower())
+    cleaned = re.sub(r'(?:^|[-_.])v?\d+(?:[.-]\d+)*(?=$|[-_.])', '-', cleaned)
+    cleaned = re.sub(r'[-_.]+', '-', cleaned).strip('-')
+    return cleaned or model_id.lower()
+
+
 def classify_model(provider: dict, model: dict) -> dict:
     """按模型 ID 特征与实时 options 元数据生成能力画像，不依赖写死白名单。"""
     mid = model['id']
@@ -227,12 +235,14 @@ def classify_model(provider: dict, model: dict) -> dict:
         'providerInstanceId': provider['providerInstanceId'],
         'providerName': provider.get('displayName') or provider['providerInstanceId'],
         'model': mid,
+        'family': model_family(mid),
         'capTier': cap_tier,
         'version': parse_version(mid),
         'effortKey': effort_key,
         'effortValues': effort_values,
         'maxEffort': max_effort,
         'hasReasoning': effort_key is not None,
+        'reasoningLight': cap_tier == 'light' and effort_key is not None,
         'options': model.get('options', []),
     }
 
@@ -290,6 +300,7 @@ def select_options(profile: dict, role: str, budget: str, sub_tier: str) -> dict
 
 def _role_score(profile: dict, role: str, budget: str, sub_tier: str,
                 avoid_provider: str | None = None,
+                avoid_family: tuple[str, str] | None = None,
                 allowlist_rank: int | None = None,
                 gen_lag: int = 0) -> float:
     cap = profile['capTier']
@@ -299,17 +310,17 @@ def _role_score(profile: dict, role: str, budget: str, sub_tier: str,
             '检索与探索': {'light': 100, 'balanced': 55, 'heavy': 5},
             '方案设计': {'balanced': 100, 'heavy': 60, 'light': 45},
             '开发实现': {'balanced': 100, 'light': 50, 'heavy': 40},
-            '专项攻坚': {'heavy': 105, 'balanced': 90, 'light': 30},
-            '验证测试': {'balanced': 95, 'light': 80, 'heavy': 30},
-            '独立评审': {'balanced': 95, 'light': 85, 'heavy': 45},
+            '专项攻坚': {'heavy': 108, 'balanced': 88, 'light': 30},
+            '验证测试': {'balanced': 90, 'light': 88, 'heavy': 30},
+            '独立评审': {'balanced': 95, 'light': 85, 'heavy': 65},
         },
         '中': {
             '检索与探索': {'light': 100, 'balanced': 60, 'heavy': 10},
             '方案设计': {'balanced': 95, 'heavy': 92, 'light': 35},
             '开发实现': {'balanced': 100, 'heavy': 65, 'light': 35},
-            '专项攻坚': {'heavy': 110, 'balanced': 85, 'light': 20},
-            '验证测试': {'balanced': 100, 'light': 70, 'heavy': 35},
-            '独立评审': {'balanced': 95, 'light': 80, 'heavy': 75},
+            '专项攻坚': {'heavy': 112, 'balanced': 85, 'light': 20},
+            '验证测试': {'balanced': 100, 'light': 75, 'heavy': 35},
+            '独立评审': {'balanced': 95, 'light': 80, 'heavy': 80},
         },
         '高': {
             '检索与探索': {'light': 95, 'balanced': 75, 'heavy': 15},
@@ -330,31 +341,32 @@ def _role_score(profile: dict, role: str, budget: str, sub_tier: str,
     }
     score = float(table[budget][role][cap])
 
-    # 订阅额度稀缺保护与分流
+    # 订阅额度稀缺保护与分流：入门省档只对高频角色禁旗舰，低频专项攻坚仍可保留旗舰(low/medium)
     if sub_tier == 'low':
-        if cap == 'heavy' and budget == '省':
-            score -= 200  # 入门订阅省档严禁烧旗舰
+        if cap == 'heavy' and budget == '省' and role != '专项攻坚':
+            score -= 200
         elif cap == 'heavy' and budget == '中' and role != '专项攻坚':
             score -= 40
         if role in HIGH_FREQ_ROLES and budget in ('省', '中'):
-            score -= 28  # 高频角色尽量分流到充裕池
+            score -= 28
     elif sub_tier == 'high':
-        if role in HIGH_FREQ_ROLES:
-            score += 22
-        else:
-            score += 10
+        score += 22 if role in HIGH_FREQ_ROLES else 10
     else:  # medium
         if role in HIGH_FREQ_ROLES and budget in ('省', '中'):
             score += 10
 
-    # 推理能力与同提供商同档代际优先：老一代扣分（-6/代），不因不同厂商版本号起点不同而偏置
+    # 推理能力（含带思考参数的轻量模在省/中独立评审中的高性价比优势）与同家族代际优先
     if profile['hasReasoning']:
         score += 12 if role in ('方案设计', '专项攻坚', '独立评审') else 4
+    if profile['reasoningLight'] and role == '独立评审' and budget in ('省', '中'):
+        score += 6
     score -= gen_lag * 6.0
 
-    # 跨提供商多样性加分（用于独立评审避开开发实现、或次选容灾）
+    # 多样性加分：优先跨提供商；单宿主时优先跨模型家族（避免同模自审/全挤同一模型）
     if avoid_provider and profile['providerInstanceId'] != avoid_provider:
         score += 24
+    if avoid_family and (profile['providerInstanceId'], profile['family']) != avoid_family:
+        score += 18
 
     # 白名单仅做同代微调（最大 +0.8），绝不让旧版白名单压过新版同档模型
     if allowlist_rank is not None:
@@ -377,7 +389,9 @@ def _reason_text(profile: dict, sub_tier: str, role: str, is_fallback: bool = Fa
 
 
 def smart_plan(caps: dict, budget: str = '中', provider_tiers: dict[str, str] | None = None,
-               allowlist: dict | None = None) -> dict:
+               allowlist: dict | None = None,
+               pinned_review: tuple[str, str] | None = None,
+               pinned_review2: tuple[str, str] | None = None) -> dict:
     """按模型能力画像 + 订阅额度 + 四档预算（省/中/高/超高）生成完整六角色推荐方案。"""
     if budget not in PLAN_BUDGETS:
         raise t3.ConfigError(f'未知预算 {budget!r}：请使用 省、中、高、超高')
@@ -417,27 +431,31 @@ def smart_plan(caps: dict, budget: str = '中', provider_tiers: dict[str, str] |
                 continue
             profiles.append(classify_model(p, m))
 
-    # 计算每个模型在「同提供商 + 同能力档位」内的代际落后步数（0 = 最新代）
+    # 计算每个模型在「同提供商 + 同模型家族」内的代际落后步数（0 = 该家族最新代，不跨家族误伤）
     group_versions: dict[tuple[str, str], list[tuple[int, int]]] = {}
     for pf in profiles:
-        g = (pf['providerInstanceId'], pf['capTier'])
+        g = (pf['providerInstanceId'], pf['family'])
         group_versions.setdefault(g, [])
         if pf['version'] not in group_versions[g]:
             group_versions[g].append(pf['version'])
     for g in group_versions:
         group_versions[g].sort(reverse=True)
     for pf in profiles:
-        pf['genLag'] = group_versions[(pf['providerInstanceId'], pf['capTier'])].index(pf['version'])
+        pf['genLag'] = group_versions[(pf['providerInstanceId'], pf['family'])].index(pf['version'])
+
+    if len(profiles) == 1:
+        warnings.append('当前仅检测到 1 个可用模型，所有角色将共用该模型并仅靠推理档位区分，无法提供跨模型独立评审。')
 
     def pick_best(role: str, avoid_provider: str | None = None,
+                  avoid_family: tuple[str, str] | None = None,
                   exclude_pairs: set[tuple[str, str]] | None = None,
                   min_sub_rank: int | None = None) -> dict | None:
         excluded = exclude_pairs or set()
         candidates = [pf for pf in profiles if (pf['providerInstanceId'], pf['model']) not in excluded]
         if not candidates:
             return None
-        # 入门订阅省档严禁选 heavy（除非本机只有 heavy）
-        if budget == '省':
+        # 入门订阅省档仅对高频角色屏蔽 heavy，低频专项攻坚仍保留旗舰
+        if budget == '省' and role != '专项攻坚':
             non_low_heavy = [pf for pf in candidates
                              if not (pf['capTier'] == 'heavy' and resolved_tiers[pf['providerInstanceId']] == 'low')]
             if non_low_heavy:
@@ -446,6 +464,7 @@ def smart_plan(caps: dict, budget: str = '中', provider_tiers: dict[str, str] |
         def key_fn(pf):
             st = resolved_tiers[pf['providerInstanceId']]
             s = _role_score(pf, role, budget, st, avoid_provider=avoid_provider,
+                            avoid_family=avoid_family,
                             allowlist_rank=allow_ranks[role].get((pf['providerInstanceId'], pf['model'])),
                             gen_lag=pf['genLag'])
             if min_sub_rank is not None and TIER_RANK[st] >= min_sub_rank:
@@ -465,38 +484,49 @@ def smart_plan(caps: dict, budget: str = '中', provider_tiers: dict[str, str] |
             'reason': _reason_text(pf, st, role, is_fallback=is_fallback, cross_from=cross_from),
         }
 
-    # 先决定「开发实现」，以便「独立评审」优先跨提供商
+    # 先决定「开发实现」，以便「独立评审」和省档「验证测试」优先跨提供商 / 跨模型家族
     order = ('开发实现', '检索与探索', '方案设计', '专项攻坚', '验证测试', '独立评审')
     role_plans: dict[str, dict] = {}
     impl_provider: str | None = None
+    impl_family: tuple[str, str] | None = None
 
     for role in order:
-        avoid = impl_provider if role == '独立评审' else None
-        primary_pf = pick_best(role, avoid_provider=avoid)
+        avoid_p = impl_provider if role == '独立评审' else None
+        avoid_f = impl_family if role == '独立评审' or (role == '验证测试' and budget == '省') else None
+        excl_p = {pinned_review2} if role == '独立评审' and pinned_review2 else None
+        primary_pf = pick_best(role, avoid_provider=avoid_p, avoid_family=avoid_f, exclude_pairs=excl_p)
         if primary_pf is None:
             role_plans[role] = {'primary': INHERIT, 'fallback': None}
             continue
         if role == '开发实现':
             impl_provider = primary_pf['providerInstanceId']
+            impl_family = (primary_pf['providerInstanceId'], primary_pf['family'])
         primary_pair = (primary_pf['providerInstanceId'], primary_pf['model'])
+        primary_fam = (primary_pf['providerInstanceId'], primary_pf['family'])
         primary_tier_rank = TIER_RANK[resolved_tiers[primary_pf['providerInstanceId']]]
         fb_pf = pick_best(role, avoid_provider=primary_pf['providerInstanceId'],
+                          avoid_family=primary_fam,
                           exclude_pairs={primary_pair}, min_sub_rank=primary_tier_rank)
         plan_entry = {
-            'primary': make_target(primary_pf, role, is_fallback=False, cross_from=avoid),
+            'primary': make_target(primary_pf, role, is_fallback=False, cross_from=avoid_p),
             'fallback': make_target(fb_pf, role, is_fallback=True,
                                     cross_from=primary_pf['providerInstanceId']) if fb_pf else None,
         }
         if role == '独立评审' and budget in ('高', '超高'):
-            second_pf = pick_best(role, avoid_provider=primary_pf['providerInstanceId'],
-                                  exclude_pairs={primary_pair})
+            review1_pair = pinned_review or primary_pair
+            review1_provider = review1_pair[0]
+            review1_fam = (review1_pair[0], model_family(review1_pair[1]))
+            second_pf = pick_best(role, avoid_provider=review1_provider,
+                                  avoid_family=review1_fam, exclude_pairs={review1_pair})
             if second_pf is not None:
                 second_pair = (second_pf['providerInstanceId'], second_pf['model'])
+                second_fam = (second_pf['providerInstanceId'], second_pf['family'])
                 second_fb = pick_best(role, avoid_provider=second_pf['providerInstanceId'],
-                                      exclude_pairs={primary_pair, second_pair})
+                                      avoid_family=second_fam,
+                                      exclude_pairs={review1_pair, second_pair})
                 plan_entry['secondReviewer'] = {
                     'primary': make_target(second_pf, role, is_fallback=False,
-                                           cross_from=primary_pf['providerInstanceId']),
+                                           cross_from=review1_provider),
                     'fallback': make_target(second_fb, role, is_fallback=True,
                                             cross_from=second_pf['providerInstanceId']) if second_fb else None,
                 }
@@ -511,6 +541,52 @@ def smart_plan(caps: dict, budget: str = '中', provider_tiers: dict[str, str] |
         'warnings': warnings,
         'roles': ordered_roles,
     }
+
+
+ROLE_ALIASES = {
+    '检索与探索': 'lookup',
+    '方案设计': 'design',
+    '开发实现': 'implementation',
+    '专项攻坚': 'hard',
+    '验证测试': 'test',
+    '独立评审': 'review',
+}
+
+
+def _strip_meta(entry_obj: dict) -> dict:
+    return {
+        'providerInstanceId': entry_obj['providerInstanceId'],
+        'model': entry_obj['model'],
+        'options': dict(entry_obj.get('options') or {}),
+    }
+
+
+def dynamic_targets(caps: dict, budget: str = '中', provider_tiers: dict[str, str] | None = None,
+                    allowlist: dict | None = None,
+                    pinned_review: tuple[str, str] | None = None,
+                    pinned_review2: tuple[str, str] | None = None) -> dict:
+    """把 smart_plan 结果转为标准 T3 targets 字典（供 schemaVersion 3 运行时动态解析）。"""
+    plan = smart_plan(caps, budget=budget, provider_tiers=provider_tiers, allowlist=allowlist,
+                      pinned_review=pinned_review, pinned_review2=pinned_review2)
+    targets: dict[str, dict] = {}
+    for role, alias in ROLE_ALIASES.items():
+        slot = plan['roles'][role]
+        primary = slot.get('primary')
+        if not primary or primary.get('key') == 'inherit-parent':
+            continue
+        target = _strip_meta(primary)
+        fb = slot.get('fallback')
+        if fb and not t3.same_target(target, _strip_meta(fb)):
+            target['fallback'] = _strip_meta(fb)
+        targets[alias] = target
+        if role == '独立评审' and slot.get('secondReviewer'):
+            sr = slot['secondReviewer']
+            sr_target = _strip_meta(sr['primary'])
+            sr_fb = sr.get('fallback')
+            if sr_fb and not t3.same_target(sr_target, _strip_meta(sr_fb)):
+                sr_target['fallback'] = _strip_meta(sr_fb)
+            targets['review2'] = sr_target
+    return targets
 
 
 def main(argv: list[str] | None = None) -> int:

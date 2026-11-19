@@ -51,7 +51,7 @@ Luna max 保留本预设来源用户的显式偏好，不是官方默认；向�
 
 ## 持久化与解析边界
 
-`s_models.py` 与 `t3_targets.py` 角色行里的逗号列表是派发列表，不能用来序列化备用，也不能写箭头模型名或把备用伪装为第二个评审。T3 的次选保存在 `wukong.t3.json`（schemaVersion 2）对应目标的 `fallback` 字段，格式见 [T3 模型目标配置](t3-config.md)。
+`s_models.py` 与 `t3_targets.py` 角色行里的逗号列表是派发列表，不能用来序列化备用，也不能写箭头模型名或把备用伪装为第二个评审。T3 的次选保存在 `wukong.t3.json`（schemaVersion 2 / 3）对应目标的 `fallback` 字段，格式见 [T3 模型目标配置](t3-config.md)。
 
 高档独立评审用两个完整别名表达：角色行写 `独立评审: t3:review, t3:review2`，`targets.review` 保存 CodeBuddy DP 的完整首选及其 `fallback`，`targets.review2` 保存 Codex Sol 的完整首选及其 `fallback`。第二名额也必须通过别名明确 provider/model/options，不能直接追加裸模型名来假定其提供商。
 
