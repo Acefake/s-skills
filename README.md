@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.22，共 <strong>78</strong> 个技能：48 个按描述自动选用，30 个需点名调用。</p>
+<p align="center">当前版本 1.0.23，共 <strong>54</strong> 个技能：24 个按描述自动选用，30 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -136,7 +136,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 
 ## 技能一览
 
-[![wukong 技能全景：任务路由与 78 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
+[![wukong 技能全景：任务路由与 54 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
 
 [全景图源（HTML）](docs/architecture/wukong-panorama.html) · [架构说明](docs/architecture.md) · [组件关系图](docs/architecture/wukong.html)
 
@@ -169,15 +169,15 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 |---|---|---|
 | `prompt-sharpen` | 自动 | 需求含糊时先读项目、再问清缺口，改写成能直接执行的提示词 |
 | `project-memory` | 自动 | 在项目里建立并维护架构、规范、决策记录，改动后按 diff 只更新受影响的部分 |
-| `brainstorming` | 自动 | 做功能前先把方案磨清 |
-| `writing-plans` | 自动 | 把活写成可执行计划 |
+| `brainstorming` | 自动 | 做功能前先把方案磨清；含 4 条原则 |
+| `writing-plans` | 自动 | 把活写成可执行计划；含 2 条原则 |
 | `using-git-worktrees` | 自动 | 用 worktree 隔开工作 |
 | `executing-plans` | 自动 | 按写好的计划做 |
-| `subagent-driven-development` | 自动 | 用子智能体推进计划 |
-| `systematic-debugging` | 自动 | 按证据排错 |
+| `subagent-driven-development` | 自动 | 用子智能体推进计划；含 3 条原则 |
+| `systematic-debugging` | 自动 | 按证据排错；含 3 条原则 |
 | `tdd` | 自动 | 修 bug 时有便宜的测试点就先写失败测试 |
-| `test-strategy` | 自动 | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java |
-| `code-style` | 自动 | 按模块就近放文件、写文档注释、质量底线；覆盖 TS/React、Vue、Go、Java |
+| `test-strategy` | 自动 | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java；含 1 条原则 |
+| `code-style` | 自动 | 按模块就近放文件、写文档注释、质量底线；覆盖 TS/React、Vue、Go、Java；含 11 条设计原则 |
 | `deslop` | 自动 | 提交前清掉代码里的 AI 味 |
 | `requesting-code-review` | 自动 | 发起代码审查 |
 | `receiving-code-review` | 自动 | 处理审查意见 |
@@ -215,40 +215,6 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `author-skill` | 点名 | 按规范写或大改 SKILL.md |
 | `automate-me` | 点名 | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |
 | `reflect` | 点名 | 把这次对话的教训改进技能；`--me` 把本机使用日志归纳成个人规则，`--show`/`--undo`/`--forget`/`--off`/`--on` 查看、撤销、删除、关闭、打开 |
-
-### 原则 principle-*（24）
-
-<details>
-<summary>24 条，都按描述自动选用</summary>
-
-| 技能 | 调用 | 用途 |
-|---|---|---|
-| `principle-attack-the-premise` | 自动 | 同一前提反复修不好就先验证前提 |
-| `principle-boundary-discipline` | 自动 | 区分输入校验与业务约束，避免重复防御 |
-| `principle-build-the-lever` | 自动 | 不简单的活做成可再跑的工具 |
-| `principle-encode-lessons-in-structure` | 自动 | 第二次出现的教训写成检查 |
-| `principle-exhaust-the-design-space` | 自动 | 没先例时先做几个方案再选 |
-| `principle-experience-first` | 自动 | 取舍时先顾使用体验 |
-| `principle-explain-the-number` | 自动 | 相信数字前先解释它量的是什么 |
-| `principle-fix-root-causes` | 自动 | 在第一次出错的地方修 |
-| `principle-foundational-thinking` | 自动 | 写逻辑前先定数据结构 |
-| `principle-guard-the-context-window` | 自动 | 大块内容交给子智能体 |
-| `principle-laziness-protocol` | 自动 | 能删就删，只留最小改动 |
-| `principle-make-operations-idempotent` | 自动 | 崩溃重试后仍落到同一结果 |
-| `principle-migrate-callers-then-delete-legacy-apis` | 自动 | 迁完调用方再删旧 API |
-| `principle-minimize-reader-load` | 自动 | 减少读者要记住的层数 |
-| `principle-model-the-domain` | 自动 | 把领域写进一个结构 |
-| `principle-never-block-on-the-human` | 自动 | 可撤销的事先做再给人看 |
-| `principle-outcome-oriented-execution` | 自动 | 迁移直接走向目标结构 |
-| `principle-prove-it-works` | 自动 | 完成前对照真实结果验证 |
-| `principle-redesign-from-first-principles` | 自动 | 新需求按第一性原理重做设计 |
-| `principle-separate-before-serializing-shared-state` | 自动 | 并发写入前先去掉共享 |
-| `principle-sequence-verifiable-units` | 自动 | 拆成可验证的小步 |
-| `principle-subtract-before-you-add` | 自动 | 先删多余的再加 |
-| `principle-test-behavior-not-implementation` | 自动 | 测使用者能看到的行为 |
-| `principle-type-system-discipline` | 自动 | 让非法状态无法表示 |
-
-</details>
 
 Office、PDF 类技能需要 Python 3.12、Node.js（在技能目录里 `npm install` 一次）、LibreOffice、poppler；读 docx 要 pandoc，中文渲染检查要 Noto CJK，扫描件 OCR 要 Tesseract。`archify` 需要 Node 18+。
 

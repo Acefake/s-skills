@@ -89,7 +89,7 @@ disable-model-invocation: true
 定案以后要动手：
 - 只动一个模块簇：按 wukong-mode 的 `playbooks/refactoring.md` 做，先锁住行为（特征测试或对拍脚本），再小步迁移，每步保持绿，最后证明行为没变。
 - 跨多个模块或要分几个 PR：先 `writing-plans` 写分步计划，再按上面的步骤逐段做。
-- 新接口上测什么用 `test-strategy` 定；先映射并迁移旧测试的有效行为覆盖，再删除重复或绑定旧实现的测试。旧调用方按 `principle-migrate-callers-then-delete-legacy-apis` 迁完再删。
+- 新接口上测什么用 `test-strategy` 定；先映射并迁移旧测试的有效行为覆盖，再删除重复或绑定旧实现的测试。旧调用方按 [migrate-callers-then-delete-legacy-apis](../code-style/references/principles/migrate-callers-then-delete-legacy-apis.md) 迁完再删。
 
 ### 5. 守住
 

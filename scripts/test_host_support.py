@@ -240,9 +240,17 @@ class HostSupportTest(unittest.TestCase):
                 junction(dest_skills/name, target)
                 target.rmdir()
 
+            def dangling_junction(name, target):
+                # 目标先建后删，只留下悬空 Junction。
+                target.mkdir(parents=True)
+                junction(dest_skills/name, target)
+                target.rmdir()
+
             dangling_legacy_junction('one')
             dangling_legacy_junction('retired-skill')
             junction(dest_skills/'foreign', foreign_target)
+            dangling_junction('removed-skill', plugin/'skills/removed-skill')
+            dangling_junction('foreign-gone', root/'other-repo/skills/gone')
 
             result = subprocess.run(
                 [shell, '-NoProfile', '-File', str(root/'scripts/install_local_skills.ps1')],
@@ -254,6 +262,8 @@ class HostSupportTest(unittest.TestCase):
             self.assertFalse(os.path.lexists(str(dest_skills/'retired-skill')))
             self.assertTrue((dest_skills/'foreign').exists())
             self.assertTrue(foreign_target.is_dir())
+            self.assertFalse(os.path.lexists(str(dest_skills/'removed-skill')))
+            self.assertTrue(os.path.lexists(str(dest_skills/'foreign-gone')))
 
             # 场景一：插件技能名上已有一个真实目录。必须拒绝，原内容不动，
             # 并且校验先于清理，所以同一轮里的旧 Junction 也不能被删。
@@ -262,6 +272,7 @@ class HostSupportTest(unittest.TestCase):
             (dest_skills/'two').mkdir()
             (dest_skills/'two/keep.txt').write_text('keep', encoding='utf-8')
             dangling_legacy_junction('stale')
+            dangling_junction('removed-later', plugin/'skills/removed-later')
             rejected = subprocess.run(
                 [shell, '-NoProfile', '-File', str(root/'scripts/install_local_skills.ps1')],
                 capture_output=True, text=True, env=powershell_environment(shell),
@@ -270,6 +281,7 @@ class HostSupportTest(unittest.TestCase):
             self.assertIn('two', rejected.stdout + rejected.stderr)
             self.assertEqual((dest_skills/'two/keep.txt').read_text(encoding='utf-8'), 'keep')
             self.assertTrue(os.path.lexists(str(dest_skills/'stale')))
+            self.assertTrue(os.path.lexists(str(dest_skills/'removed-later')))
 
             # 场景二：插件技能名上是指向别处的 Junction，同样拒绝且不改动它。
             shutil.rmtree(dest_skills/'two')

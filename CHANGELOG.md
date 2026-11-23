@@ -1,5 +1,12 @@
 # 变更记录
 
+## 1.0.23
+
+### 改动
+
+- 24 个 `principle-*` 不再作为自动技能常驻，正文原样迁入所属技能的 `references/principles/`：调试类归 `systematic-debugging`，设计类归 `brainstorming`，计划类归 `writing-plans`，测试类归 `test-strategy`，子代理协作类归 `subagent-driven-development`，代码设计类归 `code-style`。所属技能新增原则索引节，全库引用改为指向新文件。常驻上下文约 5,248 → 约 3,572 token，自动技能 48 → 24，技能总数 78 → 54。
+- `install_local_skills.ps1` 会清理指向已删除技能的悬空 Junction，安装冲突被拒时不清理。
+
 ## 1.0.19
 
 ### 新增

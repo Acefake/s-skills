@@ -50,7 +50,7 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 ## 4. 结构化强制检查
 
-如果某个 Accepted 条目用一条 lint 规则、一个脚本、一个元数据标记或一个运行时检查来强制执行会更可靠，就把它移到 Backlog。见 **principle-encode-lessons-in-structure** 原则 skill。
+如果某个 Accepted 条目用一条 lint 规则、一个脚本、一个元数据标记或一个运行时检查来强制执行会更可靠，就把它移到 Backlog。见 [encode-lessons-in-structure](../code-style/references/principles/encode-lessons-in-structure.md) 原则。
 
 ## 5. 应用
 

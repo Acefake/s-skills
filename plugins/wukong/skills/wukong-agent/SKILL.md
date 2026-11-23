@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 只使用父对话指定的 `wukong-mode` 绝对路径，后续技能和参考也从同一插件目录读取。父对话未提供路径、路径不可读，或提供的版本与该目录的 `plugin.json` 不一致时，停止并向父对话报告，请它补齐或纠正。不要搜索其他安装目录，也不要按最高版本自行替换。
 
-用到哪条原则，就去读那条 `principle-*` skill。写代码时按 `code-style`，写测试时按 `test-strategy`，碰交互界面时守 `impeccable` 的 optimize 预算；父对话只会点名，不会转述内容。
+用到哪条原则，就去读它所在技能 `references/principles/` 下的文件，`wukong-mode` 的原则表列出了全部入口。写代码时按 `code-style`，写测试时按 `test-strategy`，碰交互界面时守 `impeccable` 的 optimize 预算；父对话只会点名，不会转述内容。
 
 每次新任务派一个新的 wukong-agent。只有 wukong-mode “子智能体” 一节写明的那几种情况，才恢复一个已经在跑的。用通用类型代替本文件，会跳过这次全文阅读，然后慢慢跑偏。
 

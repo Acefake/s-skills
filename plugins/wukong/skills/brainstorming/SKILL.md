@@ -23,8 +23,8 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 1. **探索上下文。** 阅读当前结构、文档、近期提交和已有模式。
 2. **判断范围。** 需求跨多个独立子系统、难以放进一份规格时，拆成独立子项目，先完成第一个的规格、计划与实现循环。
 3. **澄清目标与约束。** 围绕目的、限制和成功标准提问；每条消息只问一个问题。
-4. **比较方案。** 提出 2–3 种做法，先说推荐项并解释取舍。没有先例的交互或架构决定，先做两三个便宜原型再选，见 [principle-exhaust-the-design-space](../principle-exhaust-the-design-space/SKILL.md)。
-5. **呈现设计。** 按复杂度分节，简单部分几句话，复杂部分最多约 200–300 词。覆盖架构、组件、数据流、错误处理和测试，先定核心类型和数据结构再谈逻辑（[principle-foundational-thinking](../principle-foundational-thinking/SKILL.md)），每节取得用户确认；发现不一致就回到澄清。
+4. **比较方案。** 提出 2–3 种做法，先说推荐项并解释取舍。没有先例的交互或架构决定，先做两三个便宜原型再选，见 [exhaust-the-design-space](references/principles/exhaust-the-design-space.md)。
+5. **呈现设计。** 按复杂度分节，简单部分几句话，复杂部分最多约 200–300 词。覆盖架构、组件、数据流、错误处理和测试，先定核心类型和数据结构再谈逻辑（[foundational-thinking](references/principles/foundational-thinking.md)），每节取得用户确认；发现不一致就回到澄清。
 6. **写规格。** 将确认的设计保存到 `docs/wukong/specs/YYYY-MM-DD-<topic>-design.md`，用户指定路径优先。只有用户已授权提交时，才按[commit-pr](../commit-pr/SKILL.md)提交规格。有 `elements-of-style:writing-clearly-and-concisely` 时使用它。
 7. **就地自检。** 按下节检查并修正，不另派一轮审查。
 8. **用户审阅。** 给出已写好的规格路径，请用户审阅；有修改就修订并重新自检，获批后才继续。
@@ -35,7 +35,7 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 - 遵循已有代码模式，聚焦当前目标。只将确实影响本次工作的结构问题纳入设计，不捆绑无关重构。
 - 按清楚的职责、接口和边界拆单元。每个单元说明做什么、怎样使用、依赖什么，并能独立理解和测试。
 - 文件和边界应让后续实现一次能看清相关内容；避免职责缠绕，但不为拆分而拆分。
-- 保持最小必要范围，不为猜测中的未来需要添加功能。范围取舍选让人用着顺的，少做但做好，不为好写而将就（[principle-experience-first](../principle-experience-first/SKILL.md)）。
+- 保持最小必要范围，不为猜测中的未来需要添加功能。范围取舍选让人用着顺的，少做但做好，不为好写而将就（[experience-first](references/principles/experience-first.md)）。
 
 ## 规格自检与审阅
 
@@ -51,3 +51,10 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 只有具体问题用图比用文字更清楚时才提议，不因任务涉及界面就自动启用。第一次需要时单独询问，用户同意后才打开；拒绝后继续文字讨论，不再重复提议。
 
 邀请方式、逐题选择和启动前的阅读要求见[视觉伴侣使用边界](references/visual-companion.md)。接受伴侣不表示后续每个问题都走浏览器。
+
+## 原则
+
+- [exhaust-the-design-space](references/principles/exhaust-the-design-space.md)：没有先例的界面交互或架构决定，先做两三个原型再选。
+- [experience-first](references/principles/experience-first.md)：产品和范围取舍选让人用着顺的，少做但做好。
+- [foundational-thinking](references/principles/foundational-thinking.md)：写逻辑前先定核心类型和数据结构。
+- [redesign-from-first-principles](references/principles/redesign-from-first-principles.md)：新需求要整合进已有设计时重做这一层，不补在旧形状上。

@@ -18,8 +18,8 @@ description: "「写个实现计划」「先拆步骤」「动手改代码之前
 
 1. 检查规格是否覆盖多个独立子系统；需要时拆成可独立交付和验证的子项目计划。
 2. 列出要新增、修改和测试的精确文件路径。沿用已有目录模式，让一起变化的内容就近放置；职责已经过多时才纳入必要拆分。
-3. 定义单元的输入、输出与接口，确保任务间使用的名称、签名和约束一致。同一数据形状在多个任务里出现时收成一个类型，见 [principle-model-the-domain](../principle-model-the-domain/SKILL.md)。
-4. 按可独立验收的改动划任务。设置、脚手架和文档并入对应交付物，不为了步骤数量拆任务。每个任务结束时系统处在可验证的状态，见 [principle-sequence-verifiable-units](../principle-sequence-verifiable-units/SKILL.md)。
+3. 定义单元的输入、输出与接口，确保任务间使用的名称、签名和约束一致。同一数据形状在多个任务里出现时收成一个类型，见 [model-the-domain](../code-style/references/principles/model-the-domain.md)。
+4. 按可独立验收的改动划任务。设置、脚手架和文档并入对应交付物，不为了步骤数量拆任务。每个任务结束时系统处在可验证的状态，见 [sequence-verifiable-units](references/principles/sequence-verifiable-units.md)。
 
 ## 写任务
 
@@ -52,3 +52,8 @@ description: "「写个实现计划」「先拆步骤」「动手改代码之前
 2. **主任务执行。** 当前会话或接续会话使用[executing-plans](../executing-plans/SKILL.md)，分批执行并设检查点。
 
 已有实现授权和执行方式时继续，不重复询问。仅要求写计划时交付计划，不自行开始实现。
+
+## 原则
+
+- [sequence-verifiable-units](references/principles/sequence-verifiable-units.md)：多步工作每步停在可验证的状态。
+- [outcome-oriented-execution](references/principles/outcome-oriented-execution.md)：目标已定的重写和迁移直接走向目标结构，不留过渡代码。

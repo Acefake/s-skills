@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-development
-description: "「在这个会话里派子智能体做」「按计划逐个任务做」。任务互相独立时用。要换会话按检查点做，用 executing-plans。Use when you are executing an implementation plan of independent tasks in the current session."
+description: "「在这个会话里派子智能体做」「按计划逐个任务做」「多个子代理会写同一文件」。任务互相独立时用。要换会话按检查点做，用 executing-plans。Use when you are executing an implementation plan of independent tasks in the current session, or parallel agents might write the same file."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
@@ -14,13 +14,13 @@ T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md
 
 按任务派发全新的实现者子代理来执行计划：每项任务之后做一次任务评审（规格符合性 + 代码质量），最后再做一次覆盖整个分支的宽泛评审。
 
-**为何使用子代理：** 你把任务委托给上下文隔离的专职代理。通过精确编写它们的指令和上下文，确保它们保持聚焦并完成任务。它们绝不应继承你本次会话的上下文或历史——你只构造它们真正需要的内容。这也为你自己保留协调工作所需的上下文：大段输出和长文件留在子代理里，主线程只收摘要，见 [principle-guard-the-context-window](../principle-guard-the-context-window/SKILL.md)。
+**为何使用子代理：** 你把任务委托给上下文隔离的专职代理。通过精确编写它们的指令和上下文，确保它们保持聚焦并完成任务。它们绝不应继承你本次会话的上下文或历史——你只构造它们真正需要的内容。这也为你自己保留协调工作所需的上下文：大段输出和长文件留在子代理里，主线程只收摘要，见 [guard-the-context-window](references/principles/guard-the-context-window.md)。
 
 **核心原则：** 每项任务使用全新子代理 + 任务评审（规格 + 质量） + 收尾时的宽泛终审 = 高质量、快速迭代
 
 **叙述：** 在工具调用之间，最多用一行简短叙述——台账和工具结果承担记录。
 
-**持续执行：** 不要在任务之间停下来向人类伙伴确认。按计划执行全部任务，中途不要停下。唯一可以停下的理由是：你无法解决的 BLOCKED 状态、真正阻碍进展的歧义，或全部任务已完成。「要我继续吗？」这类询问和进度摘要会浪费他们的时间——他们要求你执行计划，那就执行。可撤销的工作先做完再给人看，见 [principle-never-block-on-the-human](../principle-never-block-on-the-human/SKILL.md)。
+**持续执行：** 不要在任务之间停下来向人类伙伴确认。按计划执行全部任务，中途不要停下。唯一可以停下的理由是：你无法解决的 BLOCKED 状态、真正阻碍进展的歧义，或全部任务已完成。「要我继续吗？」这类询问和进度摘要会浪费他们的时间——他们要求你执行计划，那就执行。可撤销的工作先做完再给人看，见 [never-block-on-the-human](references/principles/never-block-on-the-human.md)。
 
 ## 何时使用
 
@@ -113,3 +113,9 @@ digraph process {
 - [implementer-prompt.md](implementer-prompt.md) - 派发实现者子代理
 - [task-reviewer-prompt.md](task-reviewer-prompt.md) - 派发任务评审者子代理（规格符合性 + 代码质量）
 - 覆盖整个分支的终审：使用 requesting-code-review 的 [code-reviewer.md](../requesting-code-review/code-reviewer.md)
+
+## 原则
+
+- [guard-the-context-window](references/principles/guard-the-context-window.md)：大段输出、长文件和计划只在主线程留摘要。
+- [never-block-on-the-human](references/principles/never-block-on-the-human.md)：可撤销的工作做完再给人看，不为能自己答的问题停下。
+- [separate-before-serializing-shared-state](references/principles/separate-before-serializing-shared-state.md)：多个参与者可能写同一文件、分支、键或对象时，先消除共享。

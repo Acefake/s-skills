@@ -58,7 +58,7 @@ ts	phase	decision	why	evidence	result
 ## 规则
 
 - 只追加。一个错误的决定，用新的一行来取代它。永远不要编辑或删除历史。
-- 优先用提交进代码库的脚本产生的证据，而不是手工做的一次性证据（见 **principle-encode-lessons-in-structure** 原则 skill）。
+- 优先用提交进代码库的脚本产生的证据，而不是手工做的一次性证据（见 [encode-lessons-in-structure](../code-style/references/principles/encode-lessons-in-structure.md) 原则）。
 
 ## 对照对话记录审查日志
 

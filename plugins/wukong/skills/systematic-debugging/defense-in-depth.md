@@ -1,6 +1,6 @@
 # 按风险分配校验职责
 
-找到无效数据的来源后，按 [边界原则](../principle-boundary-discipline/SKILL.md) 确定每个约束由哪里保证。不要沿调用链重复同一检查，也不要因为数据已经通过入口校验就删除业务检查。
+找到无效数据的来源后，按 [边界原则](../code-style/references/principles/boundary-discipline.md) 确定每个约束由哪里保证。不要沿调用链重复同一检查，也不要因为数据已经通过入口校验就删除业务检查。
 
 ## 区分检查的职责
 
