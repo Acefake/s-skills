@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.23，共 <strong>54</strong> 个技能：24 个按描述自动选用，30 个需点名调用。</p>
+<p align="center">当前版本 1.0.24，共 <strong>54</strong> 个技能：24 个按描述自动选用，30 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
