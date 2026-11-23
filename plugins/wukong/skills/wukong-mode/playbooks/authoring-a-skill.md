@@ -9,6 +9,6 @@
 3. Follow wukong-router verification levels. Prose-only rule edits are level 0: review the diff without running tests. For executable changes, use the applicable existing checks.
 4. Run **Opening a PR** only when authorized; otherwise deliver local edits and the diff review.
 
-When in doubt, delete. Keep only prose that changes a decision. Tell it to do the thing and skip the reason. Explain only when the rule is confusing without one. Match tone to scope. Point at structural sources (types, READMEs, config) per the **principle-encode-lessons-in-structure** principle skill. Delegate to other skills by path. Don't restate. A workflow you keep hitting but isn't captured → propose a new skill.
+When in doubt, delete. Keep only prose that changes a decision. Tell it to do the thing and skip the reason. Explain only when the rule is confusing without one. Match tone to scope. Point at structural sources (types, READMEs, config) per the [encode-lessons-in-structure](../../code-style/references/principles/encode-lessons-in-structure.md) principle. Delegate to other skills by path. Don't restate. A workflow you keep hitting but isn't captured → propose a new skill.
 
 **Reply:** summary of the skill, key design decisions, validation notes.

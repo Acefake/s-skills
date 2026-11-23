@@ -11,7 +11,7 @@ Be scientific. Every shipped line traces to runtime evidence. Belt-and-suspender
 3. Plan the fix. Use `architect` only for substantial unresolved choices about ownership, state, or interfaces. A fix that crosses a function boundary but follows an established design does not need architecture exploration. Delegate implementation to a subagent using your configured bug-fix model (the `开发实现` line, or the old `bug-fix` line, in the s model config from setup-s-models; if the app cannot set a sub-agent model, omit it and say so. Do not paste a Cursor model slug into another app) with a specific scope.
 4. Verify on the same surface. The original repro now passes. "Inconclusive" or wrong-surface is not a pass. Flag it. Unit tests show branch behavior, not bug absence.
 5. When commits are authorized and TDD applies, put the failing repro before the fix in history. Otherwise preserve the local changes and repro evidence. See the **tdd** skill for the failing-test-first cadence when the bug has a cheap local test path. Skip it when the test would be expensive, integration-heavy, or unclear.
-   This is the canonical **principle-sequence-verifiable-units** principle skill, the failing test first and the fix on top.
+   This is the canonical [sequence-verifiable-units](../../writing-plans/references/principles/sequence-verifiable-units.md) principle, the failing test first and the fix on top.
 6. Run **Opening a PR** only when authorized; otherwise deliver local changes and verification results.
 
 **Reply:** what was broken, root cause, fix, how you verified. Paste failing-then-passing repro output verbatim.

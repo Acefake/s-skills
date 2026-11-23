@@ -402,15 +402,13 @@ SKILL_NAME_RES = (
 
 
 def skill_reference_problems(text: str, active: set[str], archived: set[str]) -> list[str]:
-    """Return references to retired skills, or principles missing their prefix."""
+    """Return references to retired skills."""
     found: list[str] = []
     for pattern in SKILL_NAME_RES:
         for match in pattern.finditer(text):
             name = match.group(1)
             if name in archived and name not in active:
                 found.append(f"names retired skill `{name}`")
-            elif name not in active and f"principle-{name}" in active:
-                found.append(f"names `{name}` without the principle- prefix")
     return found
 
 

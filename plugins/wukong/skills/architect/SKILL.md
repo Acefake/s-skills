@@ -34,7 +34,7 @@ disable-model-invocation: true
 
 先判断职责归属、状态模型或接口是否存在实质未决选择。已有模式明确、只是机械移动或局部提取时，记录沿用的约定和最小草图即可。存在实质选择时，用设计草图任务和阶段 A 的摸底产物，自己写出草图。
 
-存在多个可行设计时，比较至少两个有实际取舍的候选，按 **principle-exhaust-the-design-space** 探索。约束已确定唯一合理形状时，记录依据并沿用，不为了凑候选制造额外层级或抽象。
+存在多个可行设计时，比较至少两个有实际取舍的候选，按 [exhaust-the-design-space](../brainstorming/references/principles/exhaust-the-design-space.md) 探索。约束已确定唯一合理形状时，记录依据并沿用，不为了凑候选制造额外层级或抽象。
 
 在定稿之前，用 [`references/design-red-flags.md`](references/design-red-flags.md) 筛查每一个候选。假设下一个贡献者是一个智能体：它只看到自己打开的文件，照抄离它最近的例子，走能编译通过的最短路径。优先选那种“一个从单个文件看起来正确的改动，对整个仓库也是正确的”的设计。
 
@@ -48,7 +48,7 @@ disable-model-invocation: true
 
 当调用者明确要求时，才加一个检查点：“/architect with checkpoint”（带检查点）、“stop and show me before implementing”（实现之前先停下来给我看），或者类似的话。那时就把定稿的设计展示出来，暂停等待批准。
 
-不管哪种情况，草图都可以作为单独的一个提交，这就是 **principle-foundational-thinking** 原则 skill 里“先搭脚手架”的方式。按照 **principle-outcome-oriented-execution** 原则 skill，在填充过程中出现计划好的、范围明确的破坏是可以的。如果想在实现之前对设计施加对抗性的压力，就对定稿的草图运行 **interrogate** skill。
+不管哪种情况，草图都可以作为单独的一个提交，这就是 [foundational-thinking](../brainstorming/references/principles/foundational-thinking.md) 原则 里“先搭脚手架”的方式。按照 [outcome-oriented-execution](../writing-plans/references/principles/outcome-oriented-execution.md) 原则，在填充过程中出现计划好的、范围明确的破坏是可以的。如果想在实现之前对设计施加对抗性的压力，就对定稿的草图运行 **interrogate** skill。
 
 如果人对形状提出异议（在检查点上或者事后），就把它当作阶段 A 的证据。在写更多代码之前，重新摸底，重跑阶段 B。
 
@@ -58,7 +58,7 @@ disable-model-invocation: true
 
 ## 阶段 E：架构错了就推倒重来
 
-如果实现一直产生草图吸收不了的摩擦，就把草图扔掉。按照 **principle-redesign-from-first-principles** 和 **principle-fix-root-causes** 这两个原则 skill，不要在一个错误的设计上硬接修补。
+如果实现一直产生草图吸收不了的摩擦，就把草图扔掉。按照 [redesign-from-first-principles](../brainstorming/references/principles/redesign-from-first-principles.md) 和 [fix-root-causes](../systematic-debugging/references/principles/fix-root-causes.md) 这两个原则，不要在一个错误的设计上硬接修补。
 
 信号是一种*模式*，而不是单个的情况。迹象有：
 
@@ -74,8 +74,8 @@ disable-model-invocation: true
 推倒重来时：
 
 1. 对已经建好的部分重新运行 **how** skill。
-2. 按照 **principle-redesign-from-first-principles**，重新设计，就好像这些新约束从第一天起就是假设一样。
-3. 按照 **principle-subtract-before-you-add** 原则 skill，先做减法再做加法。新的草图在变大之前，应该比旧的更小。
+2. 按照 [redesign-from-first-principles](../brainstorming/references/principles/redesign-from-first-principles.md)，重新设计，就好像这些新约束从第一天起就是假设一样。
+3. 按照 [subtract-before-you-add](../code-style/references/principles/subtract-before-you-add.md) 原则，先做减法再做加法。新的草图在变大之前，应该比旧的更小。
 4. 回到阶段 B，重新画草图。
 
 ## 产出

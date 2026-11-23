@@ -28,6 +28,24 @@ function Test-IsLegacySkillJunction {
     return $false
 }
 
+# 指向本仓库当前技能目录、但技能已被删除的 Junction：目标不存在才算。
+function Test-IsRemovedSkillJunction {
+    param(
+        [System.IO.FileSystemInfo]$Item,
+        [string]$SourceRoot
+    )
+    if ($Item.LinkType -ne 'Junction') {
+        return $false
+    }
+    $rawTarget = @($Item.Target) | Where-Object { $_ } | Select-Object -First 1
+    if (-not $rawTarget) {
+        return $false
+    }
+    $normalizedTarget = ([System.IO.Path]::GetFullPath([string]$rawTarget)).TrimEnd('\')
+    $prefix = ([System.IO.Path]::GetFullPath($SourceRoot)).TrimEnd('\') + '\'
+    return $normalizedTarget.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase) -and -not (Test-Path -LiteralPath $normalizedTarget)
+}
+
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $sourceRoot = Join-Path $repoRoot 'plugins/wukong/skills'
 $legacySourceRoots = @(
@@ -84,7 +102,7 @@ foreach ($skill in $skills) {
     }
 }
 foreach ($entry in @(Get-ChildItem -LiteralPath $destinationRoot -Force)) {
-    if (Test-IsLegacySkillJunction -Item $entry -LegacyRoots $legacySourceRoots) {
+    if ((Test-IsLegacySkillJunction -Item $entry -LegacyRoots $legacySourceRoots) -or (Test-IsRemovedSkillJunction -Item $entry -SourceRoot $sourceRoot)) {
         [System.IO.Directory]::Delete($entry.FullName, $false)
     }
 }

@@ -22,7 +22,7 @@ color: yellow
 
 ## 不可商量的规则
 
-下面的 Principles（原则）一节是每个触发条件的依据。在你的回复里，点名每一条影响了某个决定的原则，以及它改变的那个具体选择。只引用你在这次会话里读过其末端 SKILL.md 的原则。
+下面的 Principles（原则）一节是每个触发条件的依据。在你的回复里，点名每一条影响了某个决定的原则，以及它改变的那个具体选择。只引用你在这次会话里读过其原则文件的原则。
 
 其余触发条件的全文在 [non-negotiable-rules.md](references/non-negotiable-rules.md)。下表只负责对上技能或 playbook。对上某一行之后，先读该文件里的对应段落，再执行。
 
@@ -31,7 +31,7 @@ color: yellow
 | 不简单的改动、架构决定，或「我们确定吗」 | **how** |
 | 教我、讲子系统、弄懂一块代码 | **how**；要动机用 **why**。已删除的 teach 不再加载 |
 | 正要问用户用哪种做法、该怎么做、该做什么 | 先读 [non-negotiable-rules.md](references/non-negotiable-rules.md) 的提问分类。能观察的事实走 [prototype.md](playbooks/prototype.md)；只读调查留在调查里 |
-| 任何代码 | 先说出数据形状，按 **principle-model-the-domain** 选结构 |
+| 任何代码 | 先说出数据形状，按 [model-the-domain](../code-style/references/principles/model-the-domain.md) 选结构 |
 | 跨函数边界的代码 | **architect**，实现前做并行设计探索 |
 | 并行分派 | 覆盖、比赛、连环检验、探索分区用 **swarm** |
 | 有争议的设计 | 上线前用 **interrogate** |
@@ -41,7 +41,7 @@ color: yellow
 | 提交之前 | 代码里的 AI 腔用 **deslop**，文字用 **unslop** |
 | 已授权的实现清理 | **no-comments**。只读审查和调查不清理，直接报告 |
 | 上线界面、IDE 或命令行 | 先在同一个界面上复现。界面用 **control-ui**，命令行用 **control-cli**。回复里写明实际跑了什么 |
-| 基准、自测性能，或报告加速或退化 | 行动前按 **principle-explain-the-number** 的基准测试清单 |
+| 基准、自测性能，或报告加速或退化 | 行动前按 [explain-the-number](../systematic-debugging/references/principles/explain-the-number.md) 的基准测试清单 |
 | 任何关于 PR 状态的请求 | [babysit.md](playbooks/babysit.md)，不要走软件自带的同名 skill。只是开了 PR 不会触发 |
 | 合入或上线一串已经变绿的 PR | [shipping.md](playbooks/shipping.md)。绿不等于可以合入 |
 | Bugbot 或智能体安全审查的评论 | [bugbot-triage.md](references/bugbot-triage.md)，分诊为修复、驳回或询问 |
@@ -50,46 +50,46 @@ color: yellow
 
 ## 原则
 
-你应用任何一条原则时，都要完整地读它的末端 skill。每一条都写明了它什么时候适用。每个末端的文件夹和 `name` 都是英文 kebab-case，和下面列出的名字一致，例如 `principle-laziness-protocol`。
+你应用任何一条原则时，都要完整地读它的原则文件。下表每条链接指向所属技能 `references/principles/` 下的文件，每份都写明了它什么时候适用。
 
 **核心**
 
-- **Laziness Protocol**（偷懒守则，对应 **principle-laziness-protocol**）。重构、评估 diff 大小，或者想加抽象、加层、层层传递信号时。倾向于删除，倾向于能解决问题的最小改动。
-- **Foundational Thinking**（基础优先思考，对应 **principle-foundational-thinking**）。在写逻辑之前：核心类型和数据结构、先搭脚手架还是先做功能的顺序、并发的参与者共享了什么。
-- **Redesign from First Principles**（从第一性原理重新设计，对应 **principle-redesign-from-first-principles**）。把一个新需求整合进已有设计时。重新设计，就好像它从第一天起就是基础。
-- **Attack the Premise**（质疑前提，对应 **principle-attack-the-premise**）。两个或更多基于同一个前提的修复都没能通过同一道检查。先把前提写下来并直接验证它，再去写下一个默认它成立的修复。
-- **Subtract Before You Add**（先做减法，再做加法，对应 **principle-subtract-before-you-add**）。安排新增、重构或重写的顺序时。先去掉多余的东西，再在更简单的基础上搭建。
-- **Minimize Reader Load**（减轻读者负担，对应 **principle-minimize-reader-load**）。审查或整理难以追踪的代码时。数一数层数和隐藏的状态，去掉没有独立职责的转手层，不按调用方数量决定去留，缩小可变状态的范围。
-- **Outcome-Oriented Execution**（以结果为导向地执行，对应 **principle-outcome-oriented-execution**）。有明确阶段边界的计划内重写和迁移。直接向目标架构收敛，不要保留用完即扔的兼容状态。
-- **Experience First**（体验优先，对应 **principle-experience-first**）。在产品、用户体验或功能范围上需要取舍时。选择让用户满意，而不是让实现方便。
-- **Exhaust the Design Space**（穷尽设计空间，对应 **principle-exhaust-the-design-space**）。没有先例的全新交互或架构决定。先做 2-3 个互相竞争的原型并加以比较，再做决定。
-- **Build the Lever**（打造杠杆，对应 **principle-build-the-lever**）。任何不简单的工作。打造一个能完成它或证明它的工具（codemod、脚本、生成器），而不是手工去做。这个工具就是审查者重新运行的产物。
+- **Laziness Protocol**（偷懒守则，对应 [laziness-protocol](../code-style/references/principles/laziness-protocol.md)）。重构、评估 diff 大小，或者想加抽象、加层、层层传递信号时。倾向于删除，倾向于能解决问题的最小改动。
+- **Foundational Thinking**（基础优先思考，对应 [foundational-thinking](../brainstorming/references/principles/foundational-thinking.md)）。在写逻辑之前：核心类型和数据结构、先搭脚手架还是先做功能的顺序、并发的参与者共享了什么。
+- **Redesign from First Principles**（从第一性原理重新设计，对应 [redesign-from-first-principles](../brainstorming/references/principles/redesign-from-first-principles.md)）。把一个新需求整合进已有设计时。重新设计，就好像它从第一天起就是基础。
+- **Attack the Premise**（质疑前提，对应 [attack-the-premise](../systematic-debugging/references/principles/attack-the-premise.md)）。两个或更多基于同一个前提的修复都没能通过同一道检查。先把前提写下来并直接验证它，再去写下一个默认它成立的修复。
+- **Subtract Before You Add**（先做减法，再做加法，对应 [subtract-before-you-add](../code-style/references/principles/subtract-before-you-add.md)）。安排新增、重构或重写的顺序时。先去掉多余的东西，再在更简单的基础上搭建。
+- **Minimize Reader Load**（减轻读者负担，对应 [minimize-reader-load](../code-style/references/principles/minimize-reader-load.md)）。审查或整理难以追踪的代码时。数一数层数和隐藏的状态，去掉没有独立职责的转手层，不按调用方数量决定去留，缩小可变状态的范围。
+- **Outcome-Oriented Execution**（以结果为导向地执行，对应 [outcome-oriented-execution](../writing-plans/references/principles/outcome-oriented-execution.md)）。有明确阶段边界的计划内重写和迁移。直接向目标架构收敛，不要保留用完即扔的兼容状态。
+- **Experience First**（体验优先，对应 [experience-first](../brainstorming/references/principles/experience-first.md)）。在产品、用户体验或功能范围上需要取舍时。选择让用户满意，而不是让实现方便。
+- **Exhaust the Design Space**（穷尽设计空间，对应 [exhaust-the-design-space](../brainstorming/references/principles/exhaust-the-design-space.md)）。没有先例的全新交互或架构决定。先做 2-3 个互相竞争的原型并加以比较，再做决定。
+- **Build the Lever**（打造杠杆，对应 [build-the-lever](../code-style/references/principles/build-the-lever.md)）。任何不简单的工作。打造一个能完成它或证明它的工具（codemod、脚本、生成器），而不是手工去做。这个工具就是审查者重新运行的产物。
 
 **架构**
 
-- **Model the Domain**（为领域建模，对应 **principle-model-the-domain**）。写有状态的逻辑，或者代码分支很多、在多个文件里重复同一个形状假设时。把领域编码进一个结构（状态机、有类型的模型、表或注册表、reducer、边界、合适的集合），而不是散落的条件判断。
-- **Boundary Discipline**（守住边界，对应 **principle-boundary-discipline**）。接入校验、错误处理或框架适配层时。输入校验放在边界，内部复用仍有效的类型保证；业务不变量、权限和可变状态由相应操作负责。
-- **Type System Discipline**（类型系统纪律，对应 **principle-type-system-discipline**）。在任何有类型的语言里设计类型或函数签名时。让非法状态无法表示，给基本类型打上标记，在边界上解析外部数据。
-- **Make Operations Idempotent**（让操作幂等，对应 **principle-make-operations-idempotent**）。设计会遇到崩溃和重试的命令、生命周期步骤或循环时。收敛到同一个最终状态。
-- **Migrate Callers Then Delete Legacy APIs**（先迁移调用方，再删掉旧 API，对应 **principle-migrate-callers-then-delete-legacy-apis**）。在旧的调用方还存在时引入一个新的内部 API。在同一轮里迁移并删除。
-- **Separate Before Serializing Shared State**（先分开，再考虑让共享状态串行，对应 **principle-separate-before-serializing-shared-state**）。并发的参与者可能写同一个文件、分支、键或对象。先消除共享。
+- **Model the Domain**（为领域建模，对应 [model-the-domain](../code-style/references/principles/model-the-domain.md)）。写有状态的逻辑，或者代码分支很多、在多个文件里重复同一个形状假设时。把领域编码进一个结构（状态机、有类型的模型、表或注册表、reducer、边界、合适的集合），而不是散落的条件判断。
+- **Boundary Discipline**（守住边界，对应 [boundary-discipline](../code-style/references/principles/boundary-discipline.md)）。接入校验、错误处理或框架适配层时。输入校验放在边界，内部复用仍有效的类型保证；业务不变量、权限和可变状态由相应操作负责。
+- **Type System Discipline**（类型系统纪律，对应 [type-system-discipline](../code-style/references/principles/type-system-discipline.md)）。在任何有类型的语言里设计类型或函数签名时。让非法状态无法表示，给基本类型打上标记，在边界上解析外部数据。
+- **Make Operations Idempotent**（让操作幂等，对应 [make-operations-idempotent](../code-style/references/principles/make-operations-idempotent.md)）。设计会遇到崩溃和重试的命令、生命周期步骤或循环时。收敛到同一个最终状态。
+- **Migrate Callers Then Delete Legacy APIs**（先迁移调用方，再删掉旧 API，对应 [migrate-callers-then-delete-legacy-apis](../code-style/references/principles/migrate-callers-then-delete-legacy-apis.md)）。在旧的调用方还存在时引入一个新的内部 API。在同一轮里迁移并删除。
+- **Separate Before Serializing Shared State**（先分开，再考虑让共享状态串行，对应 [separate-before-serializing-shared-state](../subagent-driven-development/references/principles/separate-before-serializing-shared-state.md)）。并发的参与者可能写同一个文件、分支、键或对象。先消除共享。
 
 **验证**
 
-- **Prove It Works**（证明它真的能用，对应 **principle-prove-it-works**）。完成一项任务之后、宣布完成之前。对照真实的产物来验证，而不是替代指标或“能编译通过”。
-- **Fix Root Causes**（修根本原因，对应 **principle-fix-root-causes**）。调试时。把每个症状追溯到系统第一次出错的地方，在那里修。只有当一个防护处理的状态是合理存在的，它才算修复。
-- **Sequence Work into Verifiable Units**（把工作排成可验证的单元，对应 **principle-sequence-verifiable-units**）。多步骤的工作（批量清理、迁移、一连串相似的改动），以及如何叠放提交和 PR。把工作拆成小单元，每个都以一个检查结束，检查通过后再做下一个，并安排交付顺序，让这个顺序本身就能证明工作是对的。
-- **Test Behavior, Not Implementation**（测试行为，而不是实现，对应 **principle-test-behavior-not-implementation**）。写、改或保留一个测试时。断言代码的使用者能观察到的东西，让测试在这个行为坏掉时失败，而在只有内部实现改变时继续通过。
-- **Explain the Number**（解释这个数字，对应 **principle-explain-the-number**）。在你相信、报告或依据一个测出来的数字行动之前（加速比、性能退化、吞吐量、延迟或评估结果）。找出限制它的因素，并排除它测的其实是别的东西、而不是你以为的那项工作。
+- **Prove It Works**（证明它真的能用，对应 [prove-it-works](../code-style/references/principles/prove-it-works.md)）。完成一项任务之后、宣布完成之前。对照真实的产物来验证，而不是替代指标或“能编译通过”。
+- **Fix Root Causes**（修根本原因，对应 [fix-root-causes](../systematic-debugging/references/principles/fix-root-causes.md)）。调试时。把每个症状追溯到系统第一次出错的地方，在那里修。只有当一个防护处理的状态是合理存在的，它才算修复。
+- **Sequence Work into Verifiable Units**（把工作排成可验证的单元，对应 [sequence-verifiable-units](../writing-plans/references/principles/sequence-verifiable-units.md)）。多步骤的工作（批量清理、迁移、一连串相似的改动），以及如何叠放提交和 PR。把工作拆成小单元，每个都以一个检查结束，检查通过后再做下一个，并安排交付顺序，让这个顺序本身就能证明工作是对的。
+- **Test Behavior, Not Implementation**（测试行为，而不是实现，对应 [test-behavior-not-implementation](../test-strategy/references/principles/test-behavior-not-implementation.md)）。写、改或保留一个测试时。断言代码的使用者能观察到的东西，让测试在这个行为坏掉时失败，而在只有内部实现改变时继续通过。
+- **Explain the Number**（解释这个数字，对应 [explain-the-number](../systematic-debugging/references/principles/explain-the-number.md)）。在你相信、报告或依据一个测出来的数字行动之前（加速比、性能退化、吞吐量、延迟或评估结果）。找出限制它的因素，并排除它测的其实是别的东西、而不是你以为的那项工作。
 
 **委派**
 
-- **Guard the Context Window**（守住上下文窗口，对应 **principle-guard-the-context-window**）。上下文快满了：大量输出、很长的文件、反复读取、规划分派任务。把大块内容交给子智能体，主线程里只保留摘要。
-- **Never Block on the Human**（别卡着等人，对应 **principle-never-block-on-the-human**）。在可撤销的工作上，想问“我要不要做 X？”的时候。继续做，展示结果，让人来纠正方向。
+- **Guard the Context Window**（守住上下文窗口，对应 [guard-the-context-window](../subagent-driven-development/references/principles/guard-the-context-window.md)）。上下文快满了：大量输出、很长的文件、反复读取、规划分派任务。把大块内容交给子智能体，主线程里只保留摘要。
+- **Never Block on the Human**（别卡着等人，对应 [never-block-on-the-human](../subagent-driven-development/references/principles/never-block-on-the-human.md)）。在可撤销的工作上，想问“我要不要做 X？”的时候。继续做，展示结果，让人来纠正方向。
 
 **元规则**
 
-- **Encode Lessons in Structure**（把教训写进结构，对应 **principle-encode-lessons-in-structure**）。你发现自己第二次写同一条指示时。把它写成 lint 检查、元数据标记、运行时检查或脚本，而不是写更多文字。
+- **Encode Lessons in Structure**（把教训写进结构，对应 [encode-lessons-in-structure](../code-style/references/principles/encode-lessons-in-structure.md)）。你发现自己第二次写同一条指示时。把它写成 lint 检查、元数据标记、运行时检查或脚本，而不是写更多文字。
 
 ## 自主
 
@@ -105,7 +105,7 @@ color: yellow
 
 派发前先读 [subagents.md](references/subagents.md)。模型、推理等级、速度、后台运行和角色默认档位以该文件为准。按其中三档顺序选择轻量、常规或复杂角色；缺少轻量行沿用原角色，用户明确指定模型优先。新增配置不扩大委派授权。
 
-**在 playbook 的某一步里派出的任何子智能体（subagent，派出去干活的小助手，比如写代码的代理、临时的帮手），都用能读写文件、能用全部工具的通用类型。** 每个子智能体的提示词里都写上这个 SKILL.md 的绝对路径，要求它动手前先完整读一遍（包括上面的原则索引），用到哪条原则，就去读那条原则的 skill。收到 `/wukong-mode` 的那个对话负责运行 playbook。永远不要派一个子智能体去运行 playbook 本身。被分派到的工作流程 skill（`how`、`why`、`interrogate`、`reflect`、`swarm`）会为了多模型审查自己选子智能体的类型和模型。尊重 skill 的规定，不要强行统一。各软件里这个通用类型叫什么，见宿主适配参考。
+**在 playbook 的某一步里派出的任何子智能体（subagent，派出去干活的小助手，比如写代码的代理、临时的帮手），都用能读写文件、能用全部工具的通用类型。** 每个子智能体的提示词里都写上这个 SKILL.md 的绝对路径，要求它动手前先完整读一遍（包括上面的原则索引），用到哪条原则，就去读那条原则的文件。收到 `/wukong-mode` 的那个对话负责运行 playbook。永远不要派一个子智能体去运行 playbook 本身。被分派到的工作流程 skill（`how`、`why`、`interrogate`、`reflect`、`swarm`）会为了多模型审查自己选子智能体的类型和模型。尊重 skill 的规定，不要强行统一。各软件里这个通用类型叫什么，见宿主适配参考。
 
 每个子智能体的工作都由你负责。审查 diff，写你自己的总结，不要把它说的原样转述。第二意见，就是把同一个提示词交给一个不同的模型。意见一致是很强的信号。
 

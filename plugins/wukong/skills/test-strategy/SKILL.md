@@ -77,7 +77,7 @@ description: "「测什么」「放在哪一层测」「补测试方案」。给
 
 ## 写测试时的规矩
 
-- 测行为，不测实现，见 `principle-test-behavior-not-implementation`。
+- 测行为，不测实现，见 [test-behavior-not-implementation](references/principles/test-behavior-not-implementation.md)。
 - 每个测试只证明一件事，名字说清条件和预期，比如 `rejects expired token`、`TestTransfer_InsufficientFunds`。
 - 不用 `sleep` 等异步结果，用框架的等待（`findBy*`、`waitFor`、`Eventually`、Awaitility）。
 - 时间、随机数、ID 生成从外部注入，测试里固定下来。
@@ -92,3 +92,7 @@ description: "「测什么」「放在哪一层测」「补测试方案」。给
 2. 明确不测的部分和理由。
 3. 方案列出建议新增或修改的测试文件；执行任务列出实际改动。
 4. 方案列出建议命令、预期结果和未验证项；执行任务报告实际命令、结果及修前失败证据。未运行的检查明确标注，不能当作通过。
+
+## 原则
+
+- [test-behavior-not-implementation](references/principles/test-behavior-not-implementation.md)：写、改或保留测试时，断言使用者能看到的东西。

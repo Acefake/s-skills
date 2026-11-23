@@ -1,6 +1,6 @@
 ---
 name: code-style
-description: "「文件放哪」「补文档注释」「看代码规范」。写或改 TypeScript、React、Vue、Go、Java 时按模块就近放文件。仓库已有规范优先。Use when writing, changing, or reviewing TypeScript, React, Vue, Go, or Java code, to apply the owner's module layout, doc comment, and quality rules."
+description: "「文件放哪」「补文档注释」「看代码规范」「校验放哪」「类型怎么设计」「能删就删」。写或改 TypeScript、React、Vue、Go、Java 时按模块就近放文件，含边界校验、类型、领域建模、幂等、迁移旧接口等设计原则。仓库已有规范优先。Use when writing, changing, or reviewing TypeScript, React, Vue, Go, or Java code, to apply the owner's module layout, doc comment, quality, and design rules."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
@@ -135,11 +135,11 @@ com.example.app.shared
 
 ## 三、质量底线
 
-细则在各原则技能里，这里只列必须过的几条：
+细则在下面「设计原则」列出的文件里，这里只列必须过的几条：
 
-- 类型严格、外部输入在边界解析：`principle-type-system-discipline`、`principle-boundary-discipline`。TS 开 `strict`，不用 `any` 和 `as` 绕类型。
-- 错误不吞，在第一次出错的地方修：`principle-fix-root-causes`。Go 的 `err` 带上下文返回（`%w`），Java 不 catch 了只打日志。
-- 不留死代码和多余抽象：`principle-subtract-before-you-add`、`deslop`。
+- 类型严格、外部输入在边界解析：[type-system-discipline](references/principles/type-system-discipline.md)、[boundary-discipline](references/principles/boundary-discipline.md)。TS 开 `strict`，不用 `any` 和 `as` 绕类型。
+- 错误不吞，在第一次出错的地方修：[fix-root-causes](../systematic-debugging/references/principles/fix-root-causes.md)。Go 的 `err` 带上下文返回（`%w`），Java 不 catch 了只打日志。
+- 不留死代码和多余抽象：[subtract-before-you-add](references/principles/subtract-before-you-add.md)、`deslop`。
 - 函数体不超过 50 行，嵌套不超过 3 层；超了就拆函数或提前返回。
 - 异步统一用 async/await。不留 `console.log`。try-catch 只放在真正要处理错误的调用侧，不层层包裹。
 - 改动带测试：`test-strategy`。
@@ -149,6 +149,22 @@ com.example.app.shared
 ## 审查时
 
 按一、二、三节逐项看 diff，每条问题写出文件、行和改法。只是不合个人偏好、但仓库规范允许的，标成建议，不算阻塞。
+
+## 设计原则
+
+按场景读对应文件：
+
+- [boundary-discipline](references/principles/boundary-discipline.md)：加校验、错误处理或框架适配时，防护集中在边界，业务放纯函数。
+- [type-system-discipline](references/principles/type-system-discipline.md)：设计类型或签名时，在边界解析外部数据，穷尽变体。
+- [model-the-domain](references/principles/model-the-domain.md)：同一数据形状或状态判断在多处重复时，收成一个结构。
+- [minimize-reader-load](references/principles/minimize-reader-load.md)：代码难追时，去掉没有独立职责的转手层，缩小可变状态。
+- [laziness-protocol](references/principles/laziness-protocol.md)：重构或评估改动时，留能解决问题的最小改动。
+- [subtract-before-you-add](references/principles/subtract-before-you-add.md)：新增、重构或重写前，先删死代码和多余校验。
+- [migrate-callers-then-delete-legacy-apis](references/principles/migrate-callers-then-delete-legacy-apis.md)：引入新内部 API 时，同一轮迁完调用方并删掉旧的。
+- [make-operations-idempotent](references/principles/make-operations-idempotent.md)：命令、生命周期或循环中断重跑要落到同一结果。
+- [build-the-lever](references/principles/build-the-lever.md)：不简单的活做成可再跑的工具。
+- [encode-lessons-in-structure](references/principles/encode-lessons-in-structure.md)：同一教训第二次出现，写成 lint、标记或脚本。
+- [prove-it-works](references/principles/prove-it-works.md)：宣布完成前，对照真实产物核验。
 
 ## 交付前自审
 

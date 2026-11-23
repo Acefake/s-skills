@@ -1,12 +1,12 @@
 ---
 name: systematic-debugging
-description: "「修 bug」「报错了」「测试失败」「结果不对」「按钮没反应」。先查根因再改。bug-fix 和 fix bug 也走这里。Use when you hit any bug, test failure, or unexpected behavior before proposing a fix, including 修 bug, 报错, bug-fix, and fix bug."
+description: "「修 bug」「报错了」「测试失败」「结果不对」「按钮没反应」「这个数字靠谱吗」。先查根因再改。bug-fix 和 fix bug 也走这里。Use when you hit any bug, test failure, unexpected behavior, or a suspicious measured number before proposing a fix, including 修 bug, 报错, bug-fix, and fix bug."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
 # 系统化调试
 
-**铁律：没有完成根因调查，就不提出或实施修复。** 简单、紧急、已经尝试过多次修复，都不是跳过调查的理由。修在系统第一次出错的地方，不在症状处加防护或重试，见 [principle-fix-root-causes](../principle-fix-root-causes/SKILL.md)。
+**铁律：没有完成根因调查，就不提出或实施修复。** 简单、紧急、已经尝试过多次修复，都不是跳过调查的理由。修在系统第一次出错的地方，不在症状处加防护或重试，见 [fix-root-causes](references/principles/fix-root-causes.md)。
 
 适用于 bug、测试失败、意外行为、性能、构建和集成问题。按下面四个阶段推进，当前阶段完成后再进入下一阶段。
 
@@ -37,7 +37,7 @@ description: "「修 bug」「报错了」「测试失败」「结果不对」�
 2. **只修已确认的根因。** 一次一处，不捆绑无关改进或重构。
 3. **验证。** 运行回归检查，确认用户可观察的问题消失；其他检查按[wukong-router验证分档](../wukong-router/SKILL.md)，所在模块先验，全量留到需要时。
 4. **失败后返回调查。** 记录尝试次数。少于三次，回到阶段 1；三次或更多时停止，不做第四次猜测性修复。
-5. **连续失败时质疑架构。** 检查是否每次修复都暴露新的共享状态或耦合、需要大范围重构、或在别处产生症状。和用户讨论根本假设及是否需要架构调整，再继续修复。同一前提下的修复失败两次，就先写下这个前提并直接验证，见 [principle-attack-the-premise](../principle-attack-the-premise/SKILL.md)。
+5. **连续失败时质疑架构。** 检查是否每次修复都暴露新的共享状态或耦合、需要大范围重构、或在别处产生症状。和用户讨论根本假设及是否需要架构调整，再继续修复。同一前提下的修复失败两次，就先写下这个前提并直接验证，见 [attack-the-premise](references/principles/attack-the-premise.md)。
 
 ## 何时退回调查
 
@@ -54,4 +54,10 @@ description: "「修 bug」「报错了」「测试失败」「结果不对」�
 - [root-cause-tracing.md](root-cause-tracing.md)：从症状反向追踪来源。
 - [defense-in-depth.md](defense-in-depth.md)：找到根因后在合适层次校验。
 - [condition-based-waiting.md](condition-based-waiting.md)：用条件等待替代任意超时。
-- [principle-prove-it-works](../principle-prove-it-works/SKILL.md)：用真实结果证明修复。
+- [prove-it-works](../code-style/references/principles/prove-it-works.md)：用真实结果证明修复。
+
+## 原则
+
+- [fix-root-causes](references/principles/fix-root-causes.md)：调试时把症状追到系统第一次出错的地方。
+- [attack-the-premise](references/principles/attack-the-premise.md)：共享同一前提的两次修复都失败时，先写下前提并直接验证。
+- [explain-the-number](references/principles/explain-the-number.md)：相信、报告或按测量数字行动前，先找出限制因素；基准测试按其中的清单做。
