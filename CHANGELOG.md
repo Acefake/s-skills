@@ -1,5 +1,12 @@
 # 变更记录
 
+## 1.0.27
+
+### 新增
+
+- 5 个自动选用的 Orca bot 技能：`orca-bot-pr-review`、`orca-bot-bug-hunt`、`orca-bot-ci-triage`、`orca-bot-deps`、`orca-bot-release`。它们只调用 Orca 自带的命令行：选 Orca 内置模板（`pr-review`、`bug-investigation`、`ci-failures`、`dependency-updates`、`release`），把名字和用途换成中文设定，再提议创建。在 bot 聊天里用 `orca bot create --offer` 弹卡片；已有别的 bot 时发邮件请它弹卡片；一个 bot 都没有时给出在 Orca 界面里创建的步骤。建好后把 `assets/bot-skill.md` 放进 bot home 的 `skills/<名>/SKILL.md`，目标已存在且内容不同时先问用户。共用流程在 `plugins/wukong/ORCA-BOTS.md`。
+- 技能总数 45 → 50，其中自动选用 27、点名 23。
+
 ## 1.0.26
 
 ### 修改

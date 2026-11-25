@@ -55,5 +55,10 @@
   {"prompt": "这个类型设计让非法状态根本写不出来", "expect": ["code-style"]},
   {"prompt": "今天周几？", "expect": ["none"]},
   {"prompt": "Python 里 list 和 tuple 有什么区别，简单说一下", "expect": ["none"]},
-  {"prompt": "帮我想三个周末出去玩的地方", "expect": ["none"]}
+  {"prompt": "帮我想三个周末出去玩的地方", "expect": ["none"]},
+  {"prompt": "在 Orca 里建个帮我审 PR 的 bot", "expect": ["orca-bot-pr-review"]},
+  {"prompt": "给我加一个 Orca bot，专门复现和排查 bug", "expect": ["orca-bot-bug-hunt"]},
+  {"prompt": "想要一个 Orca bot 盯着 CI，挂了告诉我是不是偶发失败", "expect": ["orca-bot-ci-triage"]},
+  {"prompt": "建个 Orca bot 每周看看哪些依赖过期或有漏洞", "expect": ["orca-bot-deps"]},
+  {"prompt": "Orca 里弄个 bot，每天早上告诉我发版还被什么挡着", "expect": ["orca-bot-release"]}
 ]
