@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.28，共 <strong>46</strong> 个技能：23 个按描述自动选用，23 个需点名调用。</p>
+<p align="center">当前版本 1.0.29，共 <strong>45</strong> 个技能：22 个按描述自动选用，23 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -204,12 +204,6 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `author-skill` | 点名 | 按规范写或大改 SKILL.md |
 | `automate-me` | 点名 | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |
 | `reflect` | 点名 | 把这次对话的教训改进技能；`--me` 把本机使用日志归纳成个人规则，`--show`/`--undo`/`--forget`/`--off`/`--on` 查看、撤销、删除、关闭、打开 |
-
-### Orca bot（1）
-
-| 技能 | 调用 | 用途 |
-|---|---|---|
-| `orca-bots` | 自动 | 一次提议多个开发 bot：PR 审查、Bug 排查、CI 分诊、依赖升级、发版检查。只调用 Orca 自带命令行和内置模板，设定换成中文，建好后给每个 bot 放一份 wukong 风格的技能 |
 
 `docx` 技能需要 Python 3.12、Node.js（在技能目录里 `npm install` 一次）、LibreOffice、poppler；读 docx 要 pandoc，中文渲染检查要 Noto CJK。`archify` 需要 Node 18+。
 
