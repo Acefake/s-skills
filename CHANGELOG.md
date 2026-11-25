@@ -1,5 +1,12 @@
 # 变更记录
 
+## 1.0.28
+
+### 修改
+
+- 把 `orca-bot-pr-review`、`orca-bot-bug-hunt`、`orca-bot-ci-triage`、`orca-bot-deps`、`orca-bot-release` 合并成一个自动选用的 `orca-bots`：一次对话就能提议多个开发 bot。用户点了名的只建那几个，说“一套”或没指定就建全部 5 个，已有的跳过。在 bot 聊天里依次弹卡片；已有 bot 时一封邮件把全部提议命令交给它；一个 bot 都没有时，先在界面里建第一个，再由它提议其余的。五个 bot 的设定收进 `references/catalog.md`，配套 bot 技能放在 `assets/`，原 `ORCA-BOTS.md` 并入技能正文。旧的五个名字记入 `RETIRED_SKILLS`。
+- 技能总数 50 → 46，其中自动选用 23、点名 23。
+
 ## 1.0.27
 
 ### 新增

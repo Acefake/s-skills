@@ -30,7 +30,7 @@ DOC_VERSION_REFS = {
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "wukong": 50,
+    "wukong": 46,
 }
 
 # Skills removed from the repo over past releases. Active skills must not name them.
@@ -60,6 +60,11 @@ RETIRED_SKILLS = frozenset({
     "maintain-verification-skill",
     "make-bot-ui",
     "native-mobile-feel",
+    "orca-bot-bug-hunt",
+    "orca-bot-ci-triage",
+    "orca-bot-deps",
+    "orca-bot-pr-review",
+    "orca-bot-release",
     "patent-application",
     "patent-disclosure",
     "pdf",

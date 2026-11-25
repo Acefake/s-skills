@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.27，共 <strong>50</strong> 个技能：27 个按描述自动选用，23 个需点名调用。</p>
+<p align="center">当前版本 1.0.28，共 <strong>46</strong> 个技能：23 个按描述自动选用，23 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -205,17 +205,11 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `automate-me` | 点名 | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |
 | `reflect` | 点名 | 把这次对话的教训改进技能；`--me` 把本机使用日志归纳成个人规则，`--show`/`--undo`/`--forget`/`--off`/`--on` 查看、撤销、删除、关闭、打开 |
 
-### Orca bot（5）
-
-这几个技能只调用 Orca 自带的命令行，提议用 Orca 内置模板建开发 bot，设定换成中文，再给 bot 放一份 wukong 风格的技能。共用流程见 [ORCA-BOTS.md](plugins/wukong/ORCA-BOTS.md)。
+### Orca bot（1）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
-| `orca-bot-pr-review` | 自动 | PR 审查 bot：等你审的 PR 按风险列问题，附文件和行号 |
-| `orca-bot-bug-hunt` | 自动 | Bug 排查 bot：先复现再找根因，同意后才修 |
-| `orca-bot-ci-triage` | 自动 | CI 分诊 bot：分清偶发和真失败，维护偶发清单 |
-| `orca-bot-deps` | 自动 | 依赖升级 bot：每周列过期和漏洞依赖，同意后分组开 PR |
-| `orca-bot-release` | 自动 | 发版检查 bot：工作日早上列出挡住发版的检查、PR 和阻塞项 |
+| `orca-bots` | 自动 | 一次提议多个开发 bot：PR 审查、Bug 排查、CI 分诊、依赖升级、发版检查。只调用 Orca 自带命令行和内置模板，设定换成中文，建好后给每个 bot 放一份 wukong 风格的技能 |
 
 `docx` 技能需要 Python 3.12、Node.js（在技能目录里 `npm install` 一次）、LibreOffice、poppler；读 docx 要 pandoc，中文渲染检查要 Noto CJK。`archify` 需要 Node 18+。
 
