@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "lookup": {
+      "providerInstanceId": "claudeAgent",
+      "model": "claude-haiku-5-5",
+      "options": {
+        "effort": "medium"
+      }
+    },
+    "design": {
+      "providerInstanceId": "claudeAgent",
+      "model": "claude-sonnet-5-5",
+      "options": {
+        "effort": "medium"
+      }
+    },
+    "implementation": {
+      "providerInstanceId": "claudeAgent",
+      "model": "claude-sonnet-5-5",
+      "options": {
+        "effort": "medium"
+      }
+    },
+    "hard": {
+      "providerInstanceId": "claudeAgent",
+      "model": "claude-opus-5-5",
+      "options": {
+        "effort": "medium"
+      }
+    },
+    "test": {
+      "providerInstanceId": "codex",
+      "model": "gpt-6.1-sol",
+      "options": {
+        "reasoningEffort": "medium",
+        "serviceTier": "default"
+      }
+    },
+    "review": {
+      "providerInstanceId": "acpRegistry_codebuddy_code",
+      "model": "deepseek-v4.1-flash",
+      "options": {}
+    }
+  }
+}
