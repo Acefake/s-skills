@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
 
-<p align="center">当前版本 1.0.24，共 <strong>54</strong> 个技能：24 个按描述自动选用，30 个需点名调用。</p>
+<p align="center">当前版本 1.0.25，共 <strong>45</strong> 个技能：22 个按描述自动选用，23 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -87,7 +87,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 点名技能，并说清目标和完成条件：
 
 ```text
-用 wukong-mode 修复这个问题，复现后定位原因，修完运行实际流程验证。
+用 systematic-debugging 修复这个问题，复现后定位原因，修完运行实际流程验证。
 用 how 解释这个模块的入口、数据流和关键文件。
 用 impeccable 检查这个设置页，并给出具体改进。
 ```
@@ -100,12 +100,12 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 |---|---|
 | 修 bug、报错、结果不对 | `systematic-debugging` |
 | 做新功能、改行为 | `brainstorming`，再 `writing-plans` |
-| 按写好的计划做 | `executing-plans` 或 `subagent-driven-development` |
+| 按写好的计划做 | `executing-plans` |
 | 提交、开 PR | `commit-pr` |
 | 审 PR、分支或本地改动 | `wukong-review` |
 | 写 README、文档、RFC | `technical-writing` |
 | 做页面、改界面 | `impeccable` |
-| Word、幻灯片、表格、PDF | `docx`、`pptx`、`xlsx`、`pdf` |
+| Word 文档 | `docx` |
 | 发版 | `release` |
 | 拿不准 | `wukong-router` |
 
@@ -136,9 +136,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 
 ## 技能一览
 
-[![wukong 技能全景：任务路由与 54 个技能卡片](docs/s-skills-route.png)](docs/s-skills-route.png)
-
-[全景图源（HTML）](docs/architecture/wukong-panorama.html) · [架构说明](docs/architecture.md) · [组件关系图](docs/architecture/wukong.html)
+[全景图（单独维护，可能滞后）](docs/architecture/wukong-panorama.html) · [架构说明](docs/architecture.md) · [组件关系图](docs/architecture/wukong.html)
 
 「点名」的技能在 frontmatter 里带 `disable-model-invocation: true`，由你点名或已授权的工作流派发。
 
@@ -151,19 +149,15 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `wukong-init` | 点名 | 显式一键初始化：先同步全局技能提示词，再配置模型，每步写入前确认 |
 | `setup-s-models` | 自动 | 给各角色配模型和预算 |
 
-### 工作模式（7）
+### 工作模式（3）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
-| `wukong-mode` | 点名 | 点名才走的加强工作流 |
-| `wukong-agent` | 点名 | `wukong-mode` 派出去写代码的子智能体 |
 | `architect` | 点名 | 动手前定类型和模块边界 |
-| `figure-it-out` | 点名 | 没有现成 playbook 时现做一套 |
 | `swarm` | 点名 | 并行覆盖、比赛、分片验证 |
-| `timed-loop` | 点名 | 按通过/失败条件反复醒来 |
 | `show-me-your-work` | 点名 | 长时间运行留下决定记录 |
 
-### 开发主流程（18）
+### 开发主流程（16）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
@@ -171,9 +165,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `project-memory` | 自动 | 在项目里建立并维护架构、规范、决策记录，改动后按 diff 只更新受影响的部分 |
 | `brainstorming` | 自动 | 做功能前先把方案磨清；含 4 条原则 |
 | `writing-plans` | 自动 | 把活写成可执行计划；含 2 条原则 |
-| `using-git-worktrees` | 自动 | 用 worktree 隔开工作 |
-| `executing-plans` | 自动 | 按写好的计划做 |
-| `subagent-driven-development` | 自动 | 用子智能体推进计划；含 3 条原则 |
+| `executing-plans` | 自动 | 按写好的计划做：主会话或子智能体逐任务执行、隔离工作区、循环检查、没有现成流程时先定可审计做法；含 3 条原则 |
 | `systematic-debugging` | 自动 | 按证据排错；含 3 条原则 |
 | `tdd` | 自动 | 修 bug 时有便宜的测试点就先写失败测试 |
 | `test-strategy` | 自动 | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java；含 1 条原则 |
@@ -186,7 +178,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `finishing-a-development-branch` | 自动 | 收尾开发分支 |
 | `release` | 点名 | 显式发版：确认版本，写只含新增、改动、修复的发版说明，打 tag 并创建 GitHub Release |
 
-### 专项技能（25）
+### 专项技能（22）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
@@ -206,9 +198,6 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `no-comments` | 点名 | 派 comment-sicko 子代理只读审查注释，由父任务核实后修改 |
 | `interrogate` | 点名 | 多模型对抗审查 |
 | `docx` | 点名 | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
-| `pptx` | 点名 | 用 HTML 或模板做幻灯片。中文指定 CJK 字体并留余量 |
-| `xlsx` | 点名 | 带公式的工作簿，保存后用 LibreOffice 重算 |
-| `pdf` | 点名 | 提取、填表、合并拆分、OCR 和新建 PDF |
 | `technical-writing` | 点名 | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
 | `wukong-proposal` | 自动 | 写中文方案：先问清目标，列提纲，再按固定结构起草打磨 |
 | `unslop` | 点名 | 去掉文字里的 AI 腔 |
@@ -216,7 +205,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/se
 | `automate-me` | 点名 | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |
 | `reflect` | 点名 | 把这次对话的教训改进技能；`--me` 把本机使用日志归纳成个人规则，`--show`/`--undo`/`--forget`/`--off`/`--on` 查看、撤销、删除、关闭、打开 |
 
-Office、PDF 类技能需要 Python 3.12、Node.js（在技能目录里 `npm install` 一次）、LibreOffice、poppler；读 docx 要 pandoc，中文渲染检查要 Noto CJK，扫描件 OCR 要 Tesseract。`archify` 需要 Node 18+。
+`docx` 技能需要 Python 3.12、Node.js（在技能目录里 `npm install` 一次）、LibreOffice、poppler；读 docx 要 pandoc，中文渲染检查要 Noto CJK。`archify` 需要 Node 18+。
 
 ## 维护
 

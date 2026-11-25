@@ -2,7 +2,7 @@
 
 当前宿主支持跨提供商编排时，配置预算默认使用本文件的省、中、高三档。先发现当前宿主的真实能力；不能把表中候选可用、推理参数受支持或两模型能力等价当成事实。这里只提供配置与派发约定，不实现底层服务自动故障转移。
 
-仅原生 Codex 或 Claude Code 工具时，不套用跨厂商表，改用[原生三档](native-budget-profiles.md)。备用操作原则通用；下面 AGENTS.md、wukong.t3.json 双文件持久化只属于 T3。其他宿主使用其真正读取的规则文件。并发调查遵从[并发只读检索](../../wukong-mode/references/subagents.md#并发只读检索)，顺序备用不增加代理数量。
+仅原生 Codex 或 Claude Code 工具时，不套用跨厂商表，改用[原生三档](native-budget-profiles.md)。备用操作原则通用；下面 AGENTS.md、wukong.t3.json 双文件持久化只属于 T3。其他宿主使用其真正读取的规则文件。并发调查遵从[并发只读检索](../../executing-plans/references/subagents.md#并发只读检索)，顺序备用不增加代理数量。
 
 ## 三档候选
 

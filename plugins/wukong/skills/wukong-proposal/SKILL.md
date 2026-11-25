@@ -1,6 +1,6 @@
 ---
 name: wukong-proposal
-description: "「写个方案」「技术方案」「活动策划」「工作计划」「解决方案」。先问清目标和读者，列提纲，再写成中文方案。Word 用 docx，幻灯片用 pptx。Use when the user asks to write a proposal, plan, or project/technical/event plan in Chinese."
+description: "「写个方案」「技术方案」「活动策划」「工作计划」「解决方案」。先问清目标和读者，列提纲，再写成中文方案。Word 用 docx。Use when the user asks to write a proposal, plan, or project/technical/event plan in Chinese."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。

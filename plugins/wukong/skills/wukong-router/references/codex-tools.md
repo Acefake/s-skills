@@ -19,21 +19,20 @@
 
 ## 通用工具对照
 
-以下为原 wukong-mode 工具表中当前宿主的一列；技能正文中的通用动作按此映射。
+以下为通用工具表中当前宿主的一列；技能正文中的通用动作按此映射。
 
 | 通用动作 | 当前宿主对应能力 |
 |---|---|
 | 派一个子智能体 | 用话派。当前版本默认开启。直接说 “spawn two agents”、“delegate this work in parallel” 或 “use one agent per point”，并写明等齐再汇总。CLI 用 `/subagents` 看线程。IDE 有后台面板时，面板在输入框上方。也听从 `AGENTS.md` 和 skill 里要求分派的句子。[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
-| 能写文件的通用类型 | 内置 `worker`（实现和修复）。提示词的第一句要求先完整读`skills/wukong-mode/SKILL.md`。要固定模型就写 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录）。必填 `name`、`description`、`developer_instructions`。同名盖过内置。自定义智能体继承父级的权限、provider 和 MCP，不能改沙箱 |
+| 能写文件的通用类型 | 内置 `worker`（实现和修复）。要固定模型就写 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录）。必填 `name`、`description`、`developer_instructions`。同名盖过内置。自定义智能体继承父级的权限、provider 和 MCP，不能改沙箱 |
 | 只读探索 | 内置 `explorer`。提示词里可以要求不改文件。文档写明这不会变成单独的只读沙箱，子智能体继承父级这一轮的沙箱和审批 |
 | 向用户提问的工具 | `request_user_input`（只有主对话能用，子智能体不能问） |
 | 后台运行和取结果 | 提示词里写 “Wait for all, then summarize”。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`），不写时由 Codex 自己选默认。没有文档化的单独取结果工具名 |
 | 指定模型 | 见下面「Codex 怎么指定模型」。不要把 Cursor 的模型名写进来 |
 | s 模型规则（`/setup-s-models`） | `~/.codex/AGENTS.md` 里标记的那一段；有 `AGENTS.override.md` 就改那个。单独模型再写 `~/.codex/agents/s-<角色>.toml` |
 | 子智能体在哪里跑 | 子智能体文档没有 `environment` 或 `cloud_base_branch`。本地 Codex 跟父级同一套沙箱，在本机跑。ChatGPT Work 是另一套托管环境，不要套过来。从别的分支开始：把 SHA 写进提示词 |
-| 让主对话定时醒来 | 使用 `timed-loop`。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
+| 让主对话定时醒来 | 使用 `executing-plans` 的「反复检查直到通过」。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
 | 写 SKILL.md | 跑 `/author-skill`。目录按本文件对应技能的章节 |
-
 
 ## author-skill
 
@@ -59,10 +58,6 @@
 
 提示词写成：Spawn three subagents. Judgment and divergent use `s-design`（或 model \<判断模型\>). Tooling uses `wukong-review`（或 model \<写代码模型\>). Wait for all three. Then spawn one synthesizer on the judgment model. 自定义智能体继承父级 MCP。提示词可以要求审查者不要改 skill 文件；这不会变成单独的只读沙箱。模型名用这次账号里真有的。
 
-## wukong-agent
-
-用话派一个子智能体，点名内置 `worker`，或一个自定义智能体。提示词的第一句要求先完整读 `wukong-mode` 的 `SKILL.md`。不要派它去运行 playbook 本身。
-
 ## setup-s-models：配置位置
 
 | 宿主 | 配置或工具 | 生效或限制 | 依据或说明 |
@@ -73,7 +68,7 @@
 
 只有原生 Codex 模型时，使用[Codex 原生三档](../../setup-s-models/references/native-budget-profiles.md#codex-原生)，不写 Claude 或 DP4.1 目标。明确角色档位优先于本参考的通用预算映射，不因预算较高就覆盖为 xhigh/max；备用须选择本会话实际发现的匹配角色，不临时改写同名 TOML。用户选择备用方案后仍须完整预览并最终确认写入。
 
-三档推荐与配置生成遵循 [setup-s-models](../../setup-s-models/SKILL.md)，派发遵循[公共派发规则](../../wukong-mode/references/subagents.md)。新增轻量角色“检索与探索”，英文键 `lookup and exploration`，需要单独模型时使用 `s-lookup-and-exploration.toml`，其 `name` 为 `s-lookup-and-exploration`。按当前会话实际支持的模型及推理档位配置，轻量角色无显式档位时最多取 `medium`。角色文件中的模型与档位必须和已确认的配置行一致；固定角色不能改模时选择匹配的已发现角色，不冒充已换模。旧配置缺少轻量行就使用原工作流角色。现有角色文件只在用户同意修改相应角色后同步，配置成功和新会话发现分别验收。
+三档推荐与配置生成遵循 [setup-s-models](../../setup-s-models/SKILL.md)，派发遵循[公共派发规则](../../executing-plans/references/subagents.md)。新增轻量角色“检索与探索”，英文键 `lookup and exploration`，需要单独模型时使用 `s-lookup-and-exploration.toml`，其 `name` 为 `s-lookup-and-exploration`。按当前会话实际支持的模型及推理档位配置，轻量角色无显式档位时最多取 `medium`。角色文件中的模型与档位必须和已确认的配置行一致；固定角色不能改模时选择匹配的已发现角色，不冒充已换模。旧配置缺少轻量行就使用原工作流角色。现有角色文件只在用户同意修改相应角色后同步，配置成功和新会话发现分别验收。
 
 三档分类选中的角色优先于本文件 how、why、swarm 章节里的默认角色。轻量模型固定在文件中时，使用已发现的 `s-lookup-and-exploration`；不能指定目标模型时报告未分流，不让固定的 `s-lookup-and-exploration` 等角色冒充轻量角色。
 
@@ -100,7 +95,7 @@ profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/con
 
 没有 `cloud_base_branch`。SHA 写在提示词里。未核实：有没有把子智能体放到另一台机器的参数。子智能体文档只写了跟父级同一套沙箱。并发很多时，看 `[agents].max_concurrent_threads_per_session`，不写则由 Codex 自己选默认。
 
-## timed-loop
+## executing-plans：反复检查
 
 先检查当前宿主是否提供持久调度或唤醒工具；有则按用户授权保存完成条件，没有时才使用下面的会话内检查。在提示词里写明完成条件和“做完这一轮就停，由父对话再决定要不要再派”。需要守着时，用一个子智能体反复跑检查，父对话等它返回再决定。CLI 的 `/subagents` 用来看线程，不是计时器。
 

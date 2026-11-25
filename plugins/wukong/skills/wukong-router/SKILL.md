@@ -50,7 +50,7 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 |---|---|
 | 新功能、改行为 | brainstorming，再领域实现技能；小改动按快路 |
 | bug、报错、结果不对、bug-fix、fix bug | systematic-debugging，再领域技能 |
-| Word、幻灯片、表格、PDF、README、技术文档、RFC | 显式技能：用户点名 docx、pptx、xlsx、pdf、technical-writing 时加载；未点名直接做 |
+| Word、README/RFC 文档、技术文档 | 显式技能：用户点名 docx、technical-writing 时加载；未点名直接做 |
 | 提交说明、提交、PR | commit-pr；集成方式未定用finishing-a-development-branch |
 | 审PR、分支、本地改动 | wukong-review，只读报告，含位置与P0/P1/P2 |
 | 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | 点名archify时加载（显式技能）；架构重构评审建议用户点名refactor-architecture（显式技能） |
@@ -73,7 +73,7 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 - 代码独立评审委派已由全局规则授权；这不改变实现者执行方式，不自动启用子代理开发。
 - 提交、推送、rebase、发布与清理按已有任务授权执行；写设计、计划或完成验证本身不授权这些操作。提交步骤统一按[commit-pr](../commit-pr/SKILL.md)。
 - 测试强度按验证分档；TDD 是否适用按[tdd](../tdd/SKILL.md)。只读方案不执行测试，不新增测试文件。
-- 主任务可在当前或接续会话用[executing-plans](../executing-plans/SKILL.md)执行。用户要求或已授权工作流明确采用子代理时，才用[subagent-driven-development](../subagent-driven-development/SKILL.md)，不因工具可用而自动切换。
+- 主任务可在当前或接续会话用[executing-plans](../executing-plans/SKILL.md)执行。用户要求或已授权工作流明确采用子代理时，才用其中「派子代理逐任务执行」一节，不因工具可用而自动切换。
 
 ## 平台参考与用户指示
 

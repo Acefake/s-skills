@@ -21,22 +21,21 @@
 
 ## 通用工具对照
 
-以下为原 wukong-mode 工具表中当前宿主的一列；技能正文中的通用动作按此映射。
+以下为通用工具表中当前宿主的一列；技能正文中的通用动作按此映射。
 
 | 通用动作 | 当前宿主对应能力 |
 |---|---|
 | 派一个子智能体 | `Agent` 工具（旧版叫 `Task`，现在 `Task` 仍可当别名用） |
-| 能写文件的通用类型 | `subagent_type: "general-purpose"`。提示词的第一句要求先完整读`skills/wukong-mode/SKILL.md`。这个软件没有 `wukong-agent` 这个类型名 |
+| 能写文件的通用类型 | `subagent_type: "general-purpose"` |
 | 只读探索 | 派 `Explore`（只读探索）或 `Plan`（只读规划） |
 | 向用户提问的工具 | `AskUserQuestion` |
 | 后台运行和取结果 | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 |
 | 指定模型 | `model` 只能写这次 `Agent` 定义里列出的取值（本会话验证过：`sonnet`、`opus`、`haiku`、`fable`；带括号如 `sonnet（medium）` 会被 `InputValidationError` 拒绝）。完整模型 ID 是否可用以工具定义为准，定义里没有就不要写；不写就继承父级 |
-| 指定推理档位 | `effort` 字段（`low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的 `Agent` 定义里有才传。取角色行值括号里的档位，没有括号取 `# 预算` 括号里的，再按 `wukong-mode` 的子智能体规则调整。**每次派发都要传，不要依赖父会话的档位** |
+| 指定推理档位 | `effort` 字段（`low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的 `Agent` 定义里有才传。取角色行值括号里的档位，没有括号取 `# 预算` 括号里的，再按[公共派发规则](../../executing-plans/references/subagents.md)调整。**每次派发都要传，不要依赖父会话的档位** |
 | s 模型规则（`/setup-s-models`） | `~/.claude/rules/s-models.md` |
 | 子智能体在哪里跑 | 不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里 |
-| 让主对话定时醒来 | 使用 `timed-loop`。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
+| 让主对话定时醒来 | 使用 `executing-plans` 的「反复检查直到通过」。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
 | 写 SKILL.md | 跑 `/author-skill`。个人 skill 可以放在 `~/.claude/skills/<名字>/SKILL.md` |
-
 
 ## author-skill
 
@@ -58,10 +57,6 @@ Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目
 
 `Agent`，`subagent_type: "general-purpose"`。判断、发散和综合的 `model` 用 `opus`，工具视角用 `sonnet`（完整 ID 仅当 `Agent` 定义允许）。需要 MCP 时不要改用 `Explore`。
 
-## wukong-agent
-
-`Agent`，`subagent_type: "general-purpose"`。提示词的第一句要求先完整读 `wukong-mode` 的 `SKILL.md`。
-
 ## setup-s-models：配置位置
 
 | 宿主 | 配置或工具 | 生效或限制 | 依据或说明 |
@@ -72,7 +67,7 @@ Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目
 
 只有原生 Claude 模型时，使用[Claude Code 原生三档](../../setup-s-models/references/native-budget-profiles.md#claude-code-原生)，不写 Sol、Astra 或 DP4.1 目标。明确角色档位优先于通用预算映射。备用模型与 effort 必须分别被当前 Agent 定义支持；没有 effort 字段时不能宣称已指定推理档位。用户级策略可放在上表确认的规则文件中，项目级按当前实际读取的 CLAUDE.md 建立入口。
 
-三档模型按 [setup-s-models](../../setup-s-models/SKILL.md)推荐，按[公共派发规则](../../wukong-mode/references/subagents.md)选角色。新增“检索与探索”，只使用当前 `Agent` 定义真正接受的模型别名，轻量角色无显式档位时最多取 `medium`。旧配置缺少轻量行就沿用原角色；不能指定模型时继承，不虚构第三个型号。重新配置默认保留已有行，只有明确重新分配才使用 `--replace-roles`。模型和档位被拒绝时报告错误，不自动换型。
+三档模型按 [setup-s-models](../../setup-s-models/SKILL.md)推荐，按[公共派发规则](../../executing-plans/references/subagents.md)选角色。新增“检索与探索”，只使用当前 `Agent` 定义真正接受的模型别名，轻量角色无显式档位时最多取 `medium`。旧配置缺少轻量行就沿用原角色；不能指定模型时继承，不虚构第三个型号。重新配置默认保留已有行，只有明确重新分配才使用 `--replace-roles`。模型和档位被拒绝时报告错误，不自动换型。
 
 Claude Code 只写角色行，不另做智能体文件。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，角色键用中文。旧标记 `# s model configuration` 到 `# end s model configuration` 和旧英文键仍然可读；重写时换成中文。中文键优先。
 
@@ -93,7 +88,7 @@ Claude Code 拉差异时，判断类用 `opus`，写代码类用 `sonnet`（完�
 
 `Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `sonnet`（完整 ID 仅当 `Agent` 定义允许），不写就跟父级。不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里。
 
-## timed-loop
+## executing-plans：反复检查
 
 未核实当前 Claude Code 是否提供持久调度命令；先检查当前会话能力。用一个后台盯梢的子智能体，或自己过一会儿再跑同一条检查，并写明用了哪一种。
 

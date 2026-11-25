@@ -5,8 +5,7 @@ user has open, of other runs in parallel, and of the user's own settings and
 macros, none of which it reads or writes. The cost is about two seconds of
 first-start initialisation per run.
 
-Identical copies live in docx/ooxml/scripts, pptx/ooxml/scripts and
-xlsx/scripts so that each skill folder stays self-contained.
+This copy lives in docx/ooxml/scripts so the skill folder stays self-contained.
 """
 
 import os

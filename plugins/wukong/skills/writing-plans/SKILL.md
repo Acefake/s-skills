@@ -12,7 +12,7 @@ description: "「写个实现计划」「先拆步骤」「动手改代码之前
 
 把已确认的规格写成工程师无需了解对话历史也能执行的计划。提供实际文件、接口、操作、测试命令与预期结果，避免重复、无用设计和含糊指令。遵循 DRY、YAGNI；TDD 是否适用按[tdd](../tdd/SKILL.md)。提交只在已获授权时安排，按[commit-pr](../commit-pr/SKILL.md)执行。
 
-开始时说明正在使用 writing-plans。计划保存到 `docs/wukong/plans/YYYY-MM-DD-<feature-name>.md`；用户指定路径优先。在隔离工作区执行时，执行前通过[using-git-worktrees](../using-git-worktrees/SKILL.md)准备。
+开始时说明正在使用 writing-plans。计划保存到 `docs/wukong/plans/YYYY-MM-DD-<feature-name>.md`；用户指定路径优先。在隔离工作区执行时，执行前按[executing-plans](../executing-plans/SKILL.md)「先隔离工作区」准备。
 
 ## 先确定范围和文件结构
 
@@ -48,8 +48,8 @@ description: "「写个实现计划」「先拆步骤」「动手改代码之前
 
 给出保存路径，沿用用户已确定的执行方式；尚未确定时再让用户选择：
 
-1. **子代理驱动。** 使用[subagent-driven-development](../subagent-driven-development/SKILL.md)，每任务新实现者，按两阶段评审推进。
-2. **主任务执行。** 当前会话或接续会话使用[executing-plans](../executing-plans/SKILL.md)，分批执行并设检查点。
+1. **子代理驱动。** 使用[executing-plans](../executing-plans/SKILL.md)「派子代理逐任务执行」，每任务新实现者，按两阶段评审推进。
+2. **主任务执行。** 当前会话或接续会话使用[executing-plans](../executing-plans/SKILL.md)「主会话按计划执行」，分批执行并设检查点。
 
 已有实现授权和执行方式时继续，不重复询问。仅要求写计划时交付计划，不自行开始实现。
 

@@ -186,3 +186,5 @@
 1.0.17 删除 `translate`、`frontend-design`、`patent-disclosure`、`patent-application`；`ketchup` 并入 `wukong-mode` 的 `references/catch-up.md`，`benchmark-checklist` 并入 `principle-explain-the-number` 的 `references/benchmark-checklist.md`，`comment-sicko` 技能正文并入 `no-comments` 的 `references/comment-sicko.md`（同名子代理保留）。`apple-glass` 去掉影盒专属内容，改为通用的 Apple TV 风格界面语言，类名前缀 `yb-` 改为 `ag-`。
 
 1.0.23 把 24 个 principle-* 并入所属技能的 references/principles/，名字留在 RETIRED_SKILLS。
+
+1.0.25 把 `wukong-mode`、`wukong-agent`、`figure-it-out`、`timed-loop`、`using-git-worktrees`、`subagent-driven-development` 并入 `executing-plans`，删除 `pptx`、`pdf`、`xlsx`，名字留在 RETIRED_SKILLS。

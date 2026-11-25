@@ -41,7 +41,7 @@ disable-model-invocation: true
 
 软件拒绝了某个配置的条目，就让那个审查者用它所在系列里、这次实际可用的最接近的名字，并说明一下。系列按名字前缀分。找不到同一系列，就用 Reviewer A 那一档。别名条目不是模型名，不要对它做回退。不要因为模型名卡住审查。
 
-读 `references/reviewer-prompt.md`，为每个审查者填写同一个模板：写明的意图、diff 或文件内容、`references/rubric.md` 里的评审标准，以及 `references/code-quality-review.md` 里的代码质量视角。按 **wukong-mode** skill 里 “Subagents” 一节的规定，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
+读 `references/reviewer-prompt.md`，为每个审查者填写同一个模板：写明的意图、diff 或文件内容、`references/rubric.md` 里的评审标准，以及 `references/code-quality-review.md` 里的代码质量视角。按[公共派发规则](../executing-plans/references/subagents.md)，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
 
 ## 第 4 步：综合
 

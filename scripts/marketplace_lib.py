@@ -30,10 +30,10 @@ DOC_VERSION_REFS = {
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "wukong": 54,
+    "wukong": 45,
 }
 
-# Skills removed from the repo in 1.3.0. Active skills must not name them.
+# Skills removed from the repo over past releases. Active skills must not name them.
 RETIRED_SKILLS = frozenset({
     "animate",
     "animation-glossary",
@@ -50,6 +50,7 @@ RETIRED_SKILLS = frozenset({
     "dispatching-parallel-agents",
     "emil-design",
     "expo-animate",
+    "figure-it-out",
     "find-animation-opportunities",
     "frontend-design",
     "improve-animations",
@@ -61,8 +62,10 @@ RETIRED_SKILLS = frozenset({
     "native-mobile-feel",
     "patent-application",
     "patent-disclosure",
+    "pdf",
     "pick-frontend-lib",
     "plain-language",
+    "pptx",
     "premium-visual",
     "principle-attack-the-premise",
     "principle-boundary-discipline",
@@ -95,16 +98,22 @@ RETIRED_SKILLS = frozenset({
     "self-improvement",
     "shadcn",
     "sharpen",
+    "subagent-driven-development",
     "taste-skill",
     "teach",
     "test-driven-development",
+    "timed-loop",
     "translate",
     "typescript-best-practices",
     "ui-ux-pro-max",
+    "using-git-worktrees",
     "verification-before-completion",
     "visual-suite",
     "web-design-guidelines",
     "writing-skills",
+    "wukong-agent",
+    "wukong-mode",
+    "xlsx",
 })
 
 MANIFEST_REL_PATHS = (

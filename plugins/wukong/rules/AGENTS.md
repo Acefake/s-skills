@@ -9,7 +9,7 @@
 0. 只改文案、注释、文档措辞、样式数值、配置值，或用户说不用测：不跑测试，看一眼 diff 就交付。对口的技能照常加载，没有对口的就直接改。
 
 1. 下表或技能描述能直接对上，就直接加载那个技能；对不上、拿不准或要跨模块，才加载 `wukong-router`。
-2. 对照可用技能列表，加载对口的技能：任务落在它描述写的场景里。只是沾边的不加载。表中技能名指 wukong 的技能；宿主另有同名技能（如 docx、pdf）时用 wukong 的。
+2. 对照可用技能列表，加载对口的技能：任务落在它描述写的场景里。只是沾边的不加载。表中技能名指 wukong 的技能；宿主另有同名技能（如 docx）时用 wukong 的。
 3. 读完代码自己就能答，不是跳过技能的理由。技能管的是做法和质量底线，不只是答案。
 4. 一件事可能对应几个技能，按下表加载：
 
@@ -17,7 +17,7 @@
 | --- | --- |
 | 新功能、加接口、改行为 | `brainstorming`，定下设计后 `writing-plans` |
 | bug、报错、按钮没反应、结果不对、修 bug、bug-fix、fix bug | `systematic-debugging` |
-| Word、幻灯片、表格、PDF、README/RFC 文档、架构图 | 点名 `docx`、`pptx`、`xlsx`、`pdf`、`technical-writing`、`archify` 时加载；未点名时直接做 |
+| Word、README/RFC 文档、架构图 | 点名 `docx`、`technical-writing`、`archify` 时加载；未点名时直接做 |
 | 提交、开 PR | `commit-pr`（还没决定怎么集成用 `finishing-a-development-branch`） |
 | 审 PR、审分支、审本地改动、代码审查 | `wukong-review` |
 | 教我、这块代码怎么工作 | 点名 `how` 时加载；未点名时直接讲解，保持显式调用政策 |
@@ -26,7 +26,7 @@
 | 补测试、测什么 | `test-strategy`；写实现时 `tdd` |
 | 端到端测试、Playwright、偶发失败 | `e2e-testing` |
 | 写或改代码、整理目录 | `code-style` |
-| 跨模块、大迁移、要并行 | 建议用户点名 `wukong-mode` |
+| 有书面计划要执行、跨模块、大迁移、要并行 | `executing-plans` |
 
 小改动（意图明确、只动一两个文件、不改对外接口、数据结构或依赖，含这种范围的修 bug；拿不准就不算）不走 brainstorming 和计划，直接做；提交前过一遍 `deslop`。测试按改动分档（细则见 `wukong-router`「验证分档」）：小改动跑一次 lint 或类型检查加已有测试，修 bug 和加功能跑所在模块，跨模块或提交前才跑全量；跑过且没改的不重跑。
 

@@ -1,6 +1,6 @@
 # Hermes 宿主参考
 
-三档配置沿用 [setup-s-models](../../setup-s-models/SKILL.md)，新增“检索与探索”。按[公共派发规则](../../wukong-mode/references/subagents.md)区分任务，不假设有按次选模能力。当前工具未确认支持独立选模时，6 行均使用 `inherit-parent`，明确没有模型分流。旧配置缺少轻量行则沿用原角色；普通配置更新保留已有角色，明确重新分配才使用 `--replace-roles`。不改共用的委派默认模型来冒充按角色选模。
+三档配置沿用 [setup-s-models](../../setup-s-models/SKILL.md)，新增“检索与探索”。按[公共派发规则](../../executing-plans/references/subagents.md)区分任务，不假设有按次选模能力。当前工具未确认支持独立选模时，6 行均使用 `inherit-parent`，明确没有模型分流。旧配置缺少轻量行则沿用原角色；普通配置更新保留已有角色，明确重新分配才使用 `--replace-roles`。不改共用的委派默认模型来冒充按角色选模。
 
 仅在当前会话是 Nous Research 的 Hermes agent（命令 `hermes`）时阅读。这里只记录模型配置、技能目录和子代理模型能力。不改 Codex、Claude Code、Cursor、WorkBuddy 的写法。本文件不提供安装脚本，也不把 `wukong` 注册进 Hermes 的技能市场。真实客户端未在本仓库运行，文件校验通过不等于会话发现或派发已经验收。
 

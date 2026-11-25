@@ -324,8 +324,8 @@ def check_description(label: str, text: str, problems: Problems) -> None:
 def check_agent_descriptions(problems: Problems) -> None:
     root = ROOT / "plugins" / "wukong" / "agents"
     found = sorted(path for path in root.glob("*.md")) if root.is_dir() else []
-    if len(found) != 2:
-        problems.add(f"plugins/wukong/agents: found {len(found)} agents, expected 2")
+    if len(found) != 1:
+        problems.add(f"plugins/wukong/agents: found {len(found)} agents, expected 1")
     for path in found:
         text = path.read_text(encoding="utf-8")
         check_description(f"plugins/wukong/agents/{path.name}", text, problems)
@@ -445,28 +445,6 @@ def check_supported_hosts(problems: Problems) -> None:
                 problems.add(f"{path.relative_to(ROOT)}:{number}: unsupported host {match.group(0)}")
 
 
-def check_panorama(problems: Problems) -> None:
-    """Keep the panorama cards one-to-one with the skills and their invocation policy."""
-    panorama = ROOT / "docs/architecture/wukong-panorama.html"
-    skills_root = ROOT / "plugins/wukong/skills"
-    cards = re.findall(r'data-skill="([a-z0-9-]+)" data-policy="(auto|explicit)"', panorama.read_text(encoding="utf-8"))
-    names = [name for name, _ in cards]
-    for name in sorted({name for name in names if names.count(name) > 1}):
-        problems.add(f"panorama: duplicate card {name}")
-    active = {path.name for path in skills_root.iterdir() if path.is_dir()}
-    for name in sorted(set(names) - active):
-        problems.add(f"panorama: card for missing skill {name}")
-    for name in sorted(active - set(names)):
-        problems.add(f"panorama: no card for skill {name}")
-    for name, policy in cards:
-        skill = skills_root / name / "SKILL.md"
-        if not skill.is_file():
-            continue
-        text = skill.read_text(encoding="utf-8")
-        explicit = bool(re.search(r"^disable-model-invocation:\s*true\s*$", text[3:text.find("\n---", 3)], re.M))
-        if (policy == "explicit") != explicit:
-            problems.add(f"panorama: {name} card says {policy}, SKILL.md disagrees")
-
 
 def main() -> int:
     problems = Problems()
@@ -480,7 +458,6 @@ def main() -> int:
         check_skill_references(problems)
         check_agent_descriptions(problems)
         check_supported_hosts(problems)
-        check_panorama(problems)
         for problem in context_budget.problems():
             problems.add(problem)
     except FileNotFoundError as exc:

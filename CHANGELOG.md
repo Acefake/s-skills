@@ -1,5 +1,14 @@
 # 变更记录
 
+## 1.0.25
+
+### 修改
+
+- 把 `wukong-mode`、`wukong-agent`、`figure-it-out`、`timed-loop`、`using-git-worktrees`、`subagent-driven-development` 并入自动调用的 `executing-plans`：一个技能覆盖主会话按计划执行、派子代理逐任务执行、隔离工作区、循环检查、没有现成流程时先定可审计做法，以及严格模式要点。原 `subagent-driven-development` 的提示词模板、`references/`、`scripts/` 整体搬入；`subagents.md`、`host-fallback.md`、`execution-boundaries.md` 搬入 `references/`，`non-negotiable-rules.md` 的必要内容并入「严格模式要点」。`wukong-mode` 的 `playbooks/`、`bugbot-triage`、`catch-up`、`playbook-routing`、`writing-the-reply`、`orch`、`watch-pr`、`worktree-audit.sh`、`check-plan.mjs` 等不再保留，`agents/wukong-agent.md` 一并删除。全库对这些技能和路径的引用改指 `executing-plans`。
+- 删除 `pptx`、`pdf`、`xlsx`；`docx` 自带 OOXML 脚本，不受影响。
+- 技能总数 54 → 45，其中自动选用 22、点名 23；旧版全局规则冻结为 `full-instructions-v10.txt`，无标记旧配置仍可原位迁移。
+- 全景图改为单独维护：`check_marketplace.py` 不再校验全景卡片，README 和架构说明不再内嵌全景 PNG。
+
 ## 1.0.23
 
 ### 改动

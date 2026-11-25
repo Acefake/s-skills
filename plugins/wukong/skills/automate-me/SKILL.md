@@ -33,7 +33,7 @@ disable-model-invocation: true
 
 对话记录是私人内容。读之前先说明要读哪个范围，用户同意再读。只读当前项目对应的记录目录：Claude Code 是 `~/.claude/projects/<当前项目>/`，Cursor 以系统提示里写明的 `agent-transcripts/` 为准。不对 `~/.claude/projects/*/` 这类上级目录做通配符搜索，那会越过项目边界，读到无关项目里的私人聊天。
 
-在这个范围内，把最近的对话切成几片（例如最近 2–4 周分成 3 片，每片材料足够），按 [wukong-mode](../wukong-mode/SKILL.md)「子智能体」一节和 [subagents.md](../wukong-mode/references/subagents.md) 选每个子代理的模型、推理等级和速度，派只读子代理分头挖掘；没有授权或没有子代理能力时，主任务自己逐片读。每片返回一份简短的结构化清单，列出看到的模式和证据出处。默认值得寻找的信号：
+在这个范围内，把最近的对话切成几片（例如最近 2–4 周分成 3 片，每片材料足够），按 [subagents.md](../executing-plans/references/subagents.md) 选每个子代理的模型、推理等级和速度，派只读子代理分头挖掘；没有授权或没有子代理能力时，主任务自己逐片读。每片返回一份简短的结构化清单，列出看到的模式和证据出处。默认值得寻找的信号：
 
 - 回复偏好（长度、语气、格式、“说简单点”之类的纠正）
 - 分派习惯（子智能体、模型、专门的工作流程、并行）
@@ -63,7 +63,7 @@ disable-model-invocation: true
 - **流程**：git worktree、提交、PR、审查/合并工具。
 - **技能**：写技能的习惯、先修技能、提议新技能。
 
-读 [wukong-mode](../wukong-mode/SKILL.md) 来把握粒度，不要照抄它的内容。用户的规则和 wukong-mode 的不一样。
+读 [executing-plans](../executing-plans/SKILL.md)「严格模式要点」来把握粒度，不要照抄它的内容。用户的规则和它的不一样。
 
 ### 4. 起草技能
 
@@ -103,4 +103,4 @@ disable-model-invocation: true
 
 ## 在不同软件里怎么用
 
-提问工具和并行子代理的派法，按当前宿主的工具文件（见[宿主适配](../../HOSTS.md)）和 wukong-mode「子智能体」一节。找不到工具、类型或模型时，先读 [host-fallback.md](../wukong-mode/references/host-fallback.md)，用宿主实际支持的替代并说明。
+提问工具和并行子代理的派法，按当前宿主的工具文件（见[宿主适配](../../HOSTS.md)）和[公共派发规则](../executing-plans/references/subagents.md)。找不到工具、类型或模型时，先读 [host-fallback.md](../executing-plans/references/host-fallback.md)，用宿主实际支持的替代并说明。

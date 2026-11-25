@@ -6,7 +6,7 @@
 
 ## 技能目录
 
-模型配置使用 [setup-s-models](../../setup-s-models/SKILL.md) 的三档推荐，新增“检索与探索”角色。派发按[公共派发规则](../../wukong-mode/references/subagents.md)，旧配置缺少轻量行时沿用原角色；新配置 6 行，不能按次选模时也包括轻量行的继承值。轻量角色无显式档位时最多取 `medium`，只传当前工具真正支持的参数。重新配置默认保留已有行，用户明确重新分配才使用 `--replace-roles`。模型或参数拒绝时报告错误并交回主线程，不另选型号。
+模型配置使用 [setup-s-models](../../setup-s-models/SKILL.md) 的三档推荐，新增“检索与探索”角色。派发按[公共派发规则](../../executing-plans/references/subagents.md)，旧配置缺少轻量行时沿用原角色；新配置 6 行，不能按次选模时也包括轻量行的继承值。轻量角色无显式档位时最多取 `medium`，只传当前工具真正支持的参数。重新配置默认保留已有行，用户明确重新分配才使用 `--replace-roles`。模型或参数拒绝时报告错误并交回主线程，不另选型号。
 
 本地发现顺序以[技能子系统](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/skills.md)为准：
 

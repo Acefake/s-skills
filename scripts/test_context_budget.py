@@ -16,7 +16,7 @@ class ContextBudgetTest(unittest.TestCase):
         labels = {label for label, _ in context_budget.measure()}
         self.assertIn('skill tdd', labels)
         self.assertNotIn('skill docx', labels)
-        self.assertNotIn('skill wukong-mode', labels)
+        self.assertNotIn('skill architect', labels)
         for part in ('global rules (AGENTS.md)', 'SessionStart hook line', 'prompt-sharpen note (per message)'):
             self.assertIn(part, labels)
 

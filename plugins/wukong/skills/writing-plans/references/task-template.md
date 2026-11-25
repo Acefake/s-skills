@@ -9,7 +9,7 @@
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **执行方式：** 按已确认方式使用 executing-plans；已授权子代理执行时使用 subagent-driven-development。仅要求写计划不授权实现。步骤使用复选框。
+> **执行方式：** 按已确认方式使用 executing-plans；已授权子代理执行时用其「派子代理逐任务执行」一节。仅要求写计划不授权实现。步骤使用复选框。
 
 **Goal:** [One sentence describing what this builds]
 

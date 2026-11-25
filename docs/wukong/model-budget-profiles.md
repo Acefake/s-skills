@@ -25,7 +25,7 @@ Luna 的 max 保留用户此前的显式选择，不是官方默认或推荐起�
 
 ## 每个角色的首选与次选
 
-多方向调查可按[并发只读检索](../../plugins/wukong/skills/wukong-mode/references/subagents.md#并发只读检索)分模块、功能或证据并发拆任务。该规则在委派已授权时适用，不增加评审名额或把备用一起启动；没有串行对照不宣称固定加速倍数。
+多方向调查可按[并发只读检索](../../plugins/wukong/skills/executing-plans/references/subagents.md#并发只读检索)分模块、功能或证据并发拆任务。该规则在委派已授权时适用，不增加评审名额或把备用一起启动；没有串行对照不宣称固定加速倍数。
 
 上表列出首选。完整的三档首选/次选表及切换规则已接入技能，见[混合三档与顺序备用](../../plugins/wukong/skills/setup-s-models/references/mixed-budget-profiles.md)。每个角色名额都有独立备用，一次只启动首选或次选之一。
 

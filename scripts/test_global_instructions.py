@@ -109,6 +109,16 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.module.sync_global('codex', home=self.home, apply=True)
         self.assertEqual(path.read_text(encoding='utf-8'), '前缀\n' + self.module.managed_block() + '\n后缀\n')
 
+    def test_recent_frozen_unmarked_rules_migrate_in_place(self):
+        path = self.home / '.codex/AGENTS.md'
+        path.parent.mkdir()
+        for version in ('v9', 'v10'):
+            old = (SCRIPT.parent.parent / f'references/full-instructions-{version}.txt').read_text(encoding='utf-8').strip()
+            path.write_text('前缀\n' + old + '\n后缀\n', encoding='utf-8')
+            self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated', version)
+            self.module.sync_global('codex', home=self.home, apply=True)
+            self.assertEqual(path.read_text(encoding='utf-8'), '前缀\n' + self.module.managed_block() + '\n后缀\n', version)
+
     def test_rule_change_with_same_version_is_detected(self):
         self.module.sync_global('claude-code', home=self.home, apply=True)
         with patch.object(self.module, 'load_template', return_value='New canonical rules'):
@@ -256,7 +266,7 @@ class GlobalInstructionsTest(unittest.TestCase):
         incomplete = [
             '先用 wukong-router，按需加载技能，测试按验证分档。',
             complete.replace('2. 对照可用技能列表，加载对口的技能：任务落在它描述写的场景里。只是沾边的不加载。', ''),
-            complete.replace('| 写或改代码、整理目录 | code-style |', '| 写或改代码、整理目录 | pptx |'),
+            complete.replace('| 写或改代码、整理目录 | code-style |', '| 写或改代码、整理目录 | docx |'),
             complete[:complete.index('小改动（意图明确')],
         ]
         path = self.home / '.codex/AGENTS.md'

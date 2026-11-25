@@ -15,7 +15,7 @@ description: "「提交」「帮我 commit」「开个 PR」「写提交说明�
 
 实现做完、测试过了，但还没选定本地合并、开 PR、留着还是丢掉时，用 `finishing-a-development-branch`。不要在这里替它做那个选择，也不要重复它的四项菜单。用户已经点名要提交或开 PR，才从下面开始。
 
-句子按 `technical-writing` 写。这里不重写那套写作规则。处于 `wukong-mode` 时，PR 正文的分节以那份 opening-a-pr playbook 为准，本技能不另写一套分节。
+句子按 `technical-writing` 写。这里不重写那套写作规则。PR 正文的分节按仓库已有的 PR 模板；没有模板时写清改了什么、为什么改、怎么验证。
 
 ## 1. 看状态和 diff
 

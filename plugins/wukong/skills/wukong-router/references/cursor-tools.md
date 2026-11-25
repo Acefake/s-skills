@@ -19,21 +19,20 @@
 
 ## 通用工具对照
 
-以下为原 wukong-mode 工具表中当前宿主的一列；技能正文中的通用动作按此映射。
+以下为通用工具表中当前宿主的一列；技能正文中的通用动作按此映射。
 
 | 通用动作 | 当前宿主对应能力 |
 |---|---|
 | 派一个子智能体 | `Task` 工具 |
-| 能写文件的通用类型 | `subagent_type: "wukong-agent"`，定义在 `agents/wukong-agent.md`。提示词要求先完整读`skills/wukong-mode/SKILL.md`。软件不认这个类型时，退回 `generalPurpose`，提示词写上同样的阅读要求 |
+| 能写文件的通用类型 | `subagent_type: "generalPurpose"` |
 | 只读探索 | 同一个 `Task` 加 `readonly: true`（会去掉 MCP 工具） |
 | 向用户提问的工具 | `AskQuestion` |
 | 后台运行和取结果 | `run_in_background: true`；做完结果回到主对话 |
 | 指定模型 | `model` 写具体模型名。写代码和「验证测试」（旧键 `swarm workers`）在这些名字确实可用时用 `grok-4.7-xhigh-fast`，文字、判断和最难的改动用 `claude-opus-5-5-xhigh`。不写 `model` 就继承父级。这两个名字不要拿到别的软件里用 |
 | s 模型规则（`/setup-s-models`） | `~/.cursor/rules/s-models.mdc`，`alwaysApply: true`。frontmatter 的 description 是 `s per-role model choices (overrides skill defaults)` |
 | 子智能体在哪里跑 | `environment: "cloud"` 放到云端；从非默认的已推送分支开始用 `cloud_base_branch`。需要用户电脑上的文件、界面或登录态时用 `environment: "local"`。云端状态在 Cursor 的后台面板看 |
-| 让主对话定时醒来 | 跑 `/timed-loop`。菜单里有 `/loop` 时交给它：`/loop 1h`、`/loop until <检查>`，或不写间隔的动态模式。本技能不另做计时器 |
+| 让主对话定时醒来 | 用 `executing-plans` 的「反复检查直到通过」。菜单里有 `/loop` 时交给它：`/loop 1h`、`/loop until <检查>`，或不写间隔的动态模式。本技能不另做计时器 |
 | 写 SKILL.md | 跑 `/author-skill`。菜单里有内置 `/create-skill` 时用它起草 |
-
 
 ## author-skill
 
@@ -74,10 +73,6 @@
 
 `auto` 或 `inherit-parent` 省略 `model`。`Task` 拒绝了某个名字，就改用该行的默认并说一句。连默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
 
-## wukong-agent
-
-本插件在 `agents/wukong-agent.md` 注册了这个子智能体，`is_background: true`。父对话用 `Task`，`subagent_type: "wukong-agent"`。软件不认这个类型时，用 `generalPurpose`，提示词的第一句要求先完整读 `wukong-mode` 的 `SKILL.md`。不要派 wukong-agent 去运行 playbook 本身。
-
 ## setup-s-models：配置位置
 
 | 宿主 | 配置或工具 | 生效或限制 | 依据或说明 |
@@ -86,7 +81,7 @@
 
 ## setup-s-models
 
-按 [setup-s-models](../../setup-s-models/SKILL.md)推荐轻量、常规、复杂三档，按[公共派发规则](../../wukong-mode/references/subagents.md)派发。新增“检索与探索”，只选择当前 `Task` 真正支持的模型名，无显式档位时起始目标最多为 `medium`。没有第三个合适型号可共用常规模型，不能独立选模时继承。旧配置缺少轻量行就沿用原角色。重新配置默认保留已有角色，明确重新分配才加 `--replace-roles`。how、why、swarm 的三档派发若被拒绝，报告错误并交回主线程，不按其他章节的系列回退说明替换型号。
+按 [setup-s-models](../../setup-s-models/SKILL.md)推荐轻量、常规、复杂三档，按[公共派发规则](../../executing-plans/references/subagents.md)派发。新增“检索与探索”，只选择当前 `Task` 真正支持的模型名，无显式档位时起始目标最多为 `medium`。没有第三个合适型号可共用常规模型，不能独立选模时继承。旧配置缺少轻量行就沿用原角色。重新配置默认保留已有角色，明确重新分配才加 `--replace-roles`。how、why、swarm 的三档派发若被拒绝，报告错误并交回主线程，不按其他章节的系列回退说明替换型号。
 
 这次对话在 Cursor 里时，按下面做。模型名通过 `Task` 的 `model` 参数传给子智能体。`inherit-parent` 和 `auto` 省略 `model`。
 
@@ -127,7 +122,7 @@ alwaysApply: true
 
 `Task` 拒绝了配置的名字，就改用 `grok-4.7-xhigh-fast` 并说一句。连这个默认也被拒绝，就从报错里选同一系列里最接近的有效名字。
 
-## timed-loop
+## executing-plans：反复检查
 
 用 Cursor 内置的 `/loop`。它的原文没有公开。公开文档写的是：`/loop` 按给定间隔反复运行一条提示词或一个 skill；不写固定间隔时，由智能体决定何时醒来；想停就停。可以和 `/goal` 一起用。来源：[Agent Skills](https://cursor.com/docs/skills)、[Agent 概览](https://cursor.com/docs/agent/overview)。
 
