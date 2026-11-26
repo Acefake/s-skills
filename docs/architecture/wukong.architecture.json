@@ -8,7 +8,7 @@
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/Acefake/s-skills.git",
-      "revision": "3b6ab76414b478269885457bea1de16b1239d075"
+      "revision": "a2c04b868b670aab74bf2f29b00f23a00895c0a2"
     },
     "legend": {
       "entries": {
@@ -32,7 +32,7 @@
       "id": "setup",
       "type": "backend",
       "label": "wukong-init",
-      "sublabel": "显式初始化与版本同步",
+      "sublabel": "显式同步规则与模型块",
       "pos": [
         40,
         40
@@ -44,8 +44,13 @@
       "sources": [
         {
           "path": "plugins/wukong/skills/wukong-init/scripts/global_instructions.py",
-          "line": 204,
-          "end_line": 220
+          "line": 212,
+          "end_line": 228
+        },
+        {
+          "path": "plugins/wukong/skills/wukong-init/scripts/models.py",
+          "line": 110,
+          "end_line": 136
         }
       ]
     },
@@ -65,8 +70,8 @@
       "sources": [
         {
           "path": "plugins/wukong/skills/wukong-init/scripts/global_instructions.py",
-          "line": 31,
-          "end_line": 43
+          "line": 34,
+          "end_line": 40
         },
         {
           "path": "plugins/wukong/AGENTS.md",
