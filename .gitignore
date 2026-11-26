@@ -15,3 +15,5 @@ plugins/*/evals/results/
 artifacts/
 .plugins-cache.json
 
+# archify finalize 生成的交付记录
+docs/architecture/*.delivery.json
