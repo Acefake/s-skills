@@ -8,7 +8,7 @@
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/Acefake/s-skills.git",
-      "revision": "da1b29a0c9f2226cb7c5ac0625ecb0e3c8ce54c0"
+      "revision": "3b6ab76414b478269885457bea1de16b1239d075"
     },
     "legend": {
       "entries": {
@@ -31,7 +31,7 @@
     {
       "id": "setup",
       "type": "backend",
-      "label": "setup-s-instructions",
+      "label": "wukong-init",
       "sublabel": "显式初始化与版本同步",
       "pos": [
         40,
@@ -43,7 +43,7 @@
       ],
       "sources": [
         {
-          "path": "plugins/wukong/skills/setup-s-instructions/scripts/global_instructions.py",
+          "path": "plugins/wukong/skills/wukong-init/scripts/global_instructions.py",
           "line": 204,
           "end_line": 220
         }
@@ -64,7 +64,7 @@
       ],
       "sources": [
         {
-          "path": "plugins/wukong/skills/setup-s-instructions/scripts/global_instructions.py",
+          "path": "plugins/wukong/skills/wukong-init/scripts/global_instructions.py",
           "line": 31,
           "end_line": 43
         },
@@ -118,12 +118,12 @@
         {
           "path": "plugins/wukong/HOSTS.md",
           "line": 3,
-          "end_line": 28
+          "end_line": 22
         },
         {
           "path": "plugins/wukong/HOSTS.md",
-          "line": 56,
-          "end_line": 67
+          "line": 39,
+          "end_line": 47
         }
       ]
     },
@@ -254,15 +254,15 @@
       "title": "技能按需加载",
       "items": [
         "已有明确匹配就直接加载；wukong-router 只在不明确时兜底。",
-        "57 个自动选用技能；22 个显式技能仍需点名或工作流授权。"
+        "21 个自动选用技能；22 个显式技能仍需点名或工作流授权。"
       ]
     },
     {
       "dot": "emerald",
-      "title": "配置入口各管一件事",
+      "title": "初始化只管全局规则",
       "items": [
-        "setup-s-instructions 同步全局规则，setup-s-models 配置模型。",
-        "wukong-init 按顺序串起两者，每次写入前都要用户明确确认。"
+        "wukong-init 同步全局规则，每次写入前都要用户明确确认。",
+        "不配置模型：子代理默认继承父会话模型，点名的模型优先。"
       ]
     },
     {

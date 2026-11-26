@@ -19,7 +19,7 @@ wukong 是一套由代理读取的技能与本地工具，不是独立运行的 
 
 全景图包含 45 张技能卡片。浅色实底为自动技能，白底虚线为显式技能。卡片标题链接到对应的技能源码。HTML 是 4500 像素宽的可编辑图源。
 
-组件关系图作为补充保留，表示逻辑职责，不表示分别部署的服务。其 [JSON 图源](architecture/wukong.architecture.json) 的节点证据固定在 [cfd0823](https://github.com/Acefake/s-skills/commit/cfd0823ff5483f272bcd41f9bae7e3a377655220)，可追溯到具体文件和行号。
+组件关系图作为补充保留，表示逻辑职责，不表示分别部署的服务。其 [JSON 图源](architecture/wukong.architecture.json) 的节点证据固定在 [3b6ab76](https://github.com/Acefake/s-skills/commit/3b6ab76414b478269885457bea1de16b1239d075)，可追溯到具体文件和行号。
 
 ## 一、宿主、指令和技能各管一层
 
