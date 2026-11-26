@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: "「按这份计划做」「执行实现计划」「派子智能体逐个做计划里的任务」「先开个 worktree 再做」「反复跑这个检查直到通过」「多个子代理会写同一个文件」。手上已有书面计划要执行完，或要隔离工作区、让并行子代理别共用文件、循环检查到通过时用。只是写脚本、加 lint、迁移调用方、拆步骤或让我少问几句，不用本技能。Use when executing an already written implementation plan (in this or a follow-up session, or task by task with subagents), isolating work in a git worktree, keeping parallel subagents off shared files, or looping a check until it passes. Not for one-off scripts, lint rules, API migrations, planning, or general autonomy requests."
+description: "「按这份计划做」「执行实现计划」「派子智能体逐个做计划里的任务」「先开个 worktree 再做」「反复跑这个检查直到通过」「多个子代理会写同一个文件」「/swarm 并行跑一遍」。手上已有书面计划要执行完，或要隔离工作区、让并行子代理别共用文件、循环检查到通过时用。只是写脚本、加 lint、迁移调用方、拆步骤或让我少问几句，不用本技能。Use when executing an already written implementation plan, running an explicitly requested parallel swarm, (in this or a follow-up session, or task by task with subagents), isolating work in a git worktree, keeping parallel subagents off shared files, or looping a check until it passes. Not for one-off scripts, lint rules, API migrations, planning, or general autonomy requests."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
@@ -22,7 +22,7 @@ T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md
 
 1. **审阅计划。** 读完计划，找出疑问。有担心先向用户提；没有就为条目建待办。
 2. **逐任务执行。** 标 in_progress，严格按步骤做，只跑这一步涉及的验证，全量留到最后。按 code-style「交付前自审」审完整差异和关键调用方；按「交付前独立评审」判断是否需要只读子代理评审，发现先核实再改。标 completed。
-3. **收尾。** 全部完成并验证后，审完整任务差异与集成关系，再用 `finishing-a-development-branch` 验证、给选项、执行所选项。
+3. **收尾。** 全部完成并验证后，审完整任务差异与集成关系，再按 `commit-pr` 的分支收尾验证、给选项、执行所选项。
 
 出现下面情况立刻停下来问，不要猜：缺依赖、测试反复失败、计划有关键缺口、看不懂某条说明。协作者改了计划或根本做法要重来时，回到第 1 步。没有用户明确同意，不在 main/master 上开始实现。计划提到某个技能就去用它。
 
@@ -35,7 +35,7 @@ T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md
 1. 读计划，记下上下文和全局约束，建待办与[进度台账](references/progress-ledger.md)。派任务 1 前先做[计划预检](references/preflight-plan-review.md)。
 2. 每项任务：按 [implementer-prompt.md](implementer-prompt.md) 派实现者；它提问就答，再重新派。实现者回报后按[状态处理](references/implementer-status.md)。
 3. 写差异文件，按 [task-reviewer-prompt.md](task-reviewer-prompt.md) 派评审。有 Critical 或 Important 发现就派修复者，修完重新评审，直到规格符合且质量通过。通过后在待办和台账里标完成。
-4. 全部任务完成后，用 `requesting-code-review` 的 [code-reviewer.md](../requesting-code-review/code-reviewer.md) 做终审，再用 `finishing-a-development-branch`。
+4. 全部任务完成后，用 `requesting-code-review` 的 [code-reviewer.md](../requesting-code-review/code-reviewer.md) 做终审，再按 `commit-pr` 的分支收尾。
 
 要点：
 
@@ -56,6 +56,10 @@ T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md
 4. **环境与基线，然后报告路径和结果。** 先复用已有依赖，确需安装才用仓库锁文件对应的包管理器。按 wukong-router 验证分档核验基线，第 0 档不跑测试；基线失败就报告并问是否继续，不通过清理来制造「干净」。
 
 收尾清理 worktree 时：宿主创建的用宿主工具管，手工建的才用 git；归属不明、仍在使用或有未处理文件的保留并报告，不用 `reset --hard`、`git clean` 或强制删除。
+
+## 并行群体作战
+
+用户点名 `swarm`、要「并行跑一遍」「让一群智能体做」，或要同时比较几种做法时，按[并行群体作战](references/swarm.md)定框架、一次派齐 N 个工作者、汇总、报告。只读或验证类分片也适用；写文件的工作者各自独占输出位置。
 
 ## 反复检查直到通过
 
@@ -81,10 +85,10 @@ T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md
 
 - **做完必须验证。** 宣布完成前对照真实产物验证，不拿替代指标或「能编译」当证明；没验证的明说。
 - **数据形状先行。** 写任何代码前先说出数据形状，按 [model-the-domain](../code-style/references/principles/model-the-domain.md) 选结构。代码从简，倾向删除和最小改动。
-- **文字去 AI 腔。** 给用户的回复、文档和提交信息按 `unslop` 与 `technical-writing`；代码里的 AI 味提交前用 `deslop` 清。
+- **文字去 AI 腔。** 给用户的回复、文档和提交信息按 `technical-writing`（含去 AI 腔清单）；代码里的 AI 味提交前用 `deslop` 清。
 - **提问前先分类。** 答案是运行一下就能观察到的事实（行为、耗时、布局、输出），就做个草图让结果来决定，不问人。只有实验定不下来的产品或偏好决定才提问。完全自主时，授权范围内的决定直接做并汇报，操作者点名的审批关卡仍要遵守。
 - **可以说「不」。** 被邀请扩大范围时按真实判断回答，必要时拒绝，不为附和而同意。
 - **性能数字。** 报告测出来的加速或退化前，先按 [explain-the-number](../systematic-debugging/references/principles/explain-the-number.md) 走一遍。
 - **上线界面或命令行。** 先在同一个界面上复现：界面用 `control-ui`，命令行用 `control-cli`，并写明实际跑了什么。
-- **PR 与分支。** 提交、开 PR 用 `commit-pr`，集成方式未定用 `finishing-a-development-branch`。任务中途发现某个技能本身坏了，报告问题和影响，已授权才修，已授权开 PR 才开。
+- **PR 与分支。** 提交、开 PR 和集成方式未定的分支收尾都用 `commit-pr`。任务中途发现某个技能本身坏了，报告问题和影响，已授权才修，已授权开 PR 才开。
 - **长时间或无人值守。** 用 `show-me-your-work` 留决定记录；需要可审计记录且已授权提交时才提交，否则留在本地。

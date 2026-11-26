@@ -17,7 +17,7 @@
 
 ## 只针对这次会话实际用到的 skill 和工具
 
-只把发现落实到这份对话记录用过的 skill、工具或 MCP 上。一个 skill 算“用过”，是指对话记录里显示：对它的 `SKILL.md`（在 `.cursor/skills/`、`~/.cursor/skills/` 或 `~/.cursor/plugins/` 下）做过 `Read`，有一个 `Task` 提示词点名了它的路径，或者有一个工具调用（Shell、Grep、MCP 等）和它写明的命令相符。落实到父智能体从没打开过的 skill 上的推测，不算数。
+只把发现落实到这份对话记录用过的 skill、工具或 MCP 上。一个 skill 算“用过”，是指对话记录里显示：对它的 `SKILL.md`（在 `.agents/skills/`、`.claude/skills/`、`~/.claude/skills/`、`~/.gemini/config/skills/` 或插件目录下）做过 `Read`，有一个子智能体提示词点名了它的路径，或者有一个工具调用（Shell、Grep、MCP 等）和它写明的命令相符。落实到父智能体从没打开过的 skill 上的推测，不算数。
 
 有两种形式的发现是有效的：
 - 父智能体调用了这个 skill，你在它的正文里发现了一个真实的缺口。落实到这个 skill 的相关小节。

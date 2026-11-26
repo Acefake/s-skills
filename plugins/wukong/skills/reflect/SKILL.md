@@ -9,7 +9,6 @@ disable-model-invocation: true
 
 涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
-
 # 反思
 
 从当前对话里挖出持久有用的经验，然后把它们落实成对 skill 的修改。
@@ -22,7 +21,7 @@ disable-model-invocation: true
 
 ## 1. 找到当前的对话记录
 
-在分派之前，到系统提示词里写明的 `agent-transcripts/` 目录里，找到这次对话的记录。不要对 `~/.cursor/projects/*/` 用通配符。那样会越过工作区的边界，读到无关项目里的私密对话。
+在分派之前，到系统提示词里写明的 `agent-transcripts/` 或当前会话记录目录里，找到这次对话的记录。只读当前工作区的记录，不要用通配符跨工作区扫描其他项目里的私密对话。
 
 ```bash
 ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcripts>/*/subagents/*.jsonl 2>/dev/null | head -10
@@ -34,12 +33,12 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 一条消息，三个子智能体，用能访问 MCP 的类型。会去掉 MCP 的只读模式不要用。审查者要去查对话记录里提到的工单、聊天线程和可观测性追踪记录。
 
-软件能指定模型时，判断和发散用更强的模型，工具视角用较快的写代码模型；软件不能指定模型就不设，继承父会话。用户本次指定的模型优先。软件拒绝了某个名字，就换同一系列里它接受的最接近的名字，并说一句。派发细则见[公共派发规则](../executing-plans/references/subagents.md)。
+模型按[公共派发规则](../executing-plans/references/subagents.md#模型)：判断、发散和综合是「规划」角色，工具视角是「审查」角色。没有模型块时，判断和发散用更强的模型，工具视角用较快的写代码模型；软件不能指定模型就不设，继承父会话。软件拒绝了技能默认名，就换同一系列里它接受的最接近的名字并说一句；拒绝了模型块角色名或用户点名时按[公共派发规则](../executing-plans/references/subagents.md#模型)处理。
 
-| 视角 | 软件能指定模型时 | 提示词模板 |
+| 视角 | 没有模型块、而且软件能指定模型时 | 提示词模板 |
 |---|---|---|
-| 判断（Judgment） | 判断力最强的模型。Cursor 上、并且 `claude-opus-5-5-xhigh` 可用时可以用这个名字 | `references/judgment-reviewer.md` |
-| 工具（Tooling） | 较快的写代码模型。Cursor 上、并且 `grok-4.7-xhigh-fast` 可用时可以用这个名字 | `references/tooling-reviewer.md` |
+| 判断（Judgment） | 判断力最强的模型 | `references/judgment-reviewer.md` |
+| 工具（Tooling） | 较快的写代码模型 | `references/tooling-reviewer.md` |
 | 发散（Divergent） | 同判断 | `references/divergent-reviewer.md` |
 
 把每个模板原样传过去，在标明的地方替换成对话记录的路径或摘要。审查者在子智能体的回复正文里返回发现。派不出三个子智能体时，在主对话里按三个视角各写一遍，并说一句没有换模型。
@@ -61,9 +60,9 @@ Backlog 默认输出为待办草稿。只有用户已授权写入指定跟踪系
 严格按照每一条已批准条目的 Routing（去向）来做：
 
 - 对已有 skill 的小修改（一条一行的要点、收紧一句话、改正一个过时的事实）：父智能体直接做。
-- 对已有 skill 的实质性修改（一个新的小节、一张新的模式表、超过大约 10 行）：跑 `/author-skill` 做起草、测试、迭代。保留原有的 YAML `name` 和 `description`，改完用 **unslop** 过一遍文字。
+- 对已有 skill 的实质性修改（一个新的小节、一张新的模式表、超过大约 10 行）：跑 `/author-skill` 做起草、测试、迭代。保留原有的 YAML `name` 和 `description`，改完按[去 AI 腔清单](../technical-writing/references/unslop.md)过一遍文字。
 - `tune description: <skill path>`（这个 skill 存在，但在该触发时没有触发）：用 `/author-skill` 做描述优化。只改 `description`，让它覆盖用户实际会说的那句话，改完读一遍确认没有把正文的触发条件写丢。
-- `new skill: <kebab-name>`：交给 `/author-skill`。YAML 里写 `name` 和 `description`，正文照已有 skill 的形状写，再用 **unslop**。
+- `new skill: <kebab-name>`：交给 `/author-skill`。YAML 里写 `name` 和 `description`，正文照已有 skill 的形状写，再按[去 AI 腔清单](../technical-writing/references/unslop.md)过一遍。
 
 如果你的环境带有 SKILL.md 校验工具，在宣布完成之前，对每个改动过的 skill 都运行一遍。
 
@@ -78,9 +77,9 @@ Backlog 默认输出为待办草稿。只有用户已授权写入指定跟踪系
 
 ## 宿主适配
 
-三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Cursor 按那份 skill 文末的目录说明放置。
+三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Antigravity 按那份 skill 文末的目录说明放置。
 
-Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Antigravity 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出三个子智能体
 

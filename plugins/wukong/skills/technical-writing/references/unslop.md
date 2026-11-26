@@ -1,17 +1,8 @@
----
-name: unslop
-description: "「/unslop」「去掉 AI 腔」「这段话太像机器」。改写文字，让它像人写的。Use when prose sounds like AI and should be rewritten in a plain voice."
-disable-model-invocation: true
----
+# 去 AI 腔清单
 
-本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
-# 去掉 AI 腔
-
-修改文字，去掉 AI 的写作套路。先按下面的套路扫一遍，然后重写。保留原意，符合想要的语气。
+写完或改完文字后逐条过一遍，去掉 AI 的写作套路；保留原意，符合想要的语气。规则编号是固定 id，其他 skill 会引用它们，删掉的规则留空号。
 
 ## 要找出并修掉的套路
-
-规则编号是固定的 id，其他 skill 会引用它们。删掉的规则会留下一个空号。
 
 ### 内容
 

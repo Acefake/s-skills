@@ -65,11 +65,11 @@ gh release create v<版本> --title "<插件> <版本>" --notes-file <说明文�
 
 - 不决定版本号怎么升，不改代码来让检查变绿。
 - 不删除已有的 Release 或 tag。需要删时，用户要点名对象。
-- 推送分支、开 PR、合并不在这里，那是 `commit-pr` 和 `finishing-a-development-branch`。
+- 推送分支、开 PR、合并不在这里，那是 `commit-pr`。
 - 不把某个聊天软件的按钮或菜单写进步骤。
 
 ## 宿主适配
 
-步骤在 Codex、Claude Code、Cursor、WorkBuddy 里相同，都用本机的 git 和 `gh`。某个软件没有终端或没有 `gh` 时，说明缺了哪一步，把说明和命令写出来交给用户。
+步骤在 Codex、Claude Code、Antigravity 里相同，都用本机的 git 和 `gh`。某个软件没有终端或没有 `gh` 时，说明缺了哪一步，把说明和命令写出来交给用户。
 
-Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Antigravity 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

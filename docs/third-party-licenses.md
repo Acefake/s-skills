@@ -10,4 +10,4 @@ wukong 按 [LICENSE](../plugins/wukong/LICENSE) 发布。个别技能附带的�
 - [`docx`](../plugins/wukong/LICENSE-document-skills)
 - [`impeccable`：许可证](../plugins/wukong/LICENSE-impeccable) · [声明](../plugins/wukong/NOTICE-impeccable.md)
 - [`archify`：许可证与声明](../plugins/wukong/skills/archify/)
-- [`mcp-builder`](../plugins/wukong/skills/mcp-builder/LICENSE.txt) 和 [`theme-factory`](../plugins/wukong/skills/theme-factory/LICENSE.txt) 改编自 [Anthropic Agent Skills](https://github.com/anthropics/skills)，采用 Apache 2.0，Copyright 2026 Anthropic, PBC。
+- [`mcp-builder`](../plugins/wukong/skills/mcp-builder/LICENSE.txt) 改编自 [Anthropic Agent Skills](https://github.com/anthropics/skills)，采用 Apache 2.0，Copyright 2026 Anthropic, PBC。

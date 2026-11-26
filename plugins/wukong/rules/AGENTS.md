@@ -1,6 +1,6 @@
 # wukong 技能：动手前先查技能
 
-仅支持 Codex、Claude Code、Cursor、WorkBuddy。全局指令位置：Codex 是 `~/.codex/AGENTS.md`，Claude Code 是 `~/.claude/CLAUDE.md`，Cursor 使用全局 User Rules（项目 Always 规则只对项目生效）；WorkBuddy 使用兼容目录 `~/.codebuddy/CODEBUDDY.md`。也可以放进项目约定文件。
+仅支持 Codex、Claude Code、Antigravity。全局指令位置：Codex 是 `~/.codex/AGENTS.md`，Claude Code 是 `~/.claude/CLAUDE.md`；Antigravity 随插件加载 `rules/AGENTS.md`，模型块与个人块在 `~/.gemini/config/AGENTS.md`。也可以放进项目约定文件。
 
 在 T3 Code 中使用上述底层宿主时，子代理和工作区操作加读 HOSTS.md 的 T3 编排适配，不新增市场安装入口。
 
@@ -18,7 +18,7 @@
 | 新功能、加接口、改行为 | `brainstorming`，定下设计后 `writing-plans` |
 | bug、报错、按钮没反应、结果不对、修 bug、bug-fix、fix bug | `systematic-debugging` |
 | Word、README/RFC 文档、架构图 | 点名 `docx`、`technical-writing`、`archify` 时加载；未点名时直接做 |
-| 提交、开 PR | `commit-pr`（还没决定怎么集成用 `finishing-a-development-branch`） |
+| 提交、开 PR、分支收尾 | `commit-pr` |
 | 审 PR、审分支、审本地改动、代码审查 | `wukong-review` |
 | 教我、这块代码怎么工作 | 点名 `how` 时加载；未点名时直接讲解，保持显式调用政策 |
 | 界面卡顿、掉帧、滚动慢、INP 高 | `impeccable`（optimize） |

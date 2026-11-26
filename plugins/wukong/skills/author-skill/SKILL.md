@@ -1,6 +1,6 @@
 ---
 name: author-skill
-description: "「/author-skill」「新建一个 skill」「大改 SKILL.md」。按目录、name、description 和步骤写技能说明。文字写完用 /unslop。Use when creating or substantially editing a SKILL.md."
+description: "「/author-skill」「新建一个 skill」「大改 SKILL.md」。按目录、name、description 和步骤写技能说明。文字写完用 technical-writing 的去 AI 腔清单。Use when creating or substantially editing a SKILL.md."
 disable-model-invocation: true
 ---
 
@@ -9,10 +9,9 @@ disable-model-invocation: true
 
 涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
-
 # 编写 skill
 
-写出或改好一份技能说明书。Cursor 内置的 `/create-skill` 原文没有公开。下面的步骤按 [Cursor 的 Agent Skills 文档](https://cursor.com/docs/skills) 写。文档里有、原文里没有的细节，以文档为准。
+写出或改好一份技能说明书，统一按下面的目录结构、frontmatter 和写作规范执行。
 
 ## 步骤
 
@@ -22,7 +21,7 @@ disable-model-invocation: true
 4. 正文写步骤、边界，以及需要时的例子。长参考放进 `references/`，可执行的东西放进 `scripts/`，模板放进 `assets/`。正文里用相对路径点它们。
 5. 只有明确要求“只有点名才加载”时，才加 `disable-model-invocation: true`。
 6. 只在某类文件上才该出现时，加 `paths`（glob）。文档里的旧字段 `globs` 还能用，新文件写 `paths`。
-7. 写完用 `/unslop` 过文字。然后自己读一遍：`name` 是否等于目录名，`description` 是否还在。
+7. 写完按[去 AI 腔清单](../technical-writing/references/unslop.md)过文字。然后自己读一遍：`name` 是否等于目录名，`description` 是否还在。
 
 目录形状：
 
@@ -45,5 +44,4 @@ description: "「用户会说的这句话」。做什么。Use when <the English
 
 ## 宿主适配
 
-
-Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Antigravity 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

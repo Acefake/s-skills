@@ -1,5 +1,33 @@
 # 变更记录
 
+## 1.0.31
+
+### 删除
+
+- 删除 `interrogate`（多模型对抗审查）。高风险改动的严审改为按 `requesting-code-review` 再派一个只读子代理复审，`architect` 草图的对抗审查同样走它。
+- 删除 `apple-glass`、`theme-factory`、`html-mockup`、`automate-me`：界面风格、配色和静态设计稿由 `impeccable`（截图用 `control-ui`）承担，个人规则归纳由 `reflect --me` 承担。
+- 合并 `no-comments` 进 `deslop`：只清注释时由 `deslop` 派 comment-sicko 只读审查，规则移到 `deslop/references/comment-sicko.md`，子代理定义同步改名。
+- 合并 `unslop` 进 `technical-writing`：去 AI 腔清单移到 `technical-writing/references/unslop.md`，编号不变，各技能改为引用它。
+- 合并 `finishing-a-development-branch` 进 `commit-pr`：集成方式未定时按 `commit-pr/references/finishing-branch.md` 核验、给出合并/PR/保留/丢弃选项并执行。全局规则路由表同步。
+- 合并 `swarm` 进 `executing-plans`：并行群体作战移到 `executing-plans/references/swarm.md`，点名 swarm 时触发。
+- 以上 9 个名字记入 `RETIRED_SKILLS`。技能总数 43 → 34，其中自动选用 20、点名 14。
+- 移除 Cursor、WorkBuddy、CodeBuddy 宿主兼容：删除 `.cursor-plugin/` 清单、Cursor JSON Schema、`cursor-tools.md`、`workbuddy-tools.md`、WorkBuddy 本地链接与全局配置分支，并在 `check_supported_hosts` 中拦截退休宿主名与清单；分发宿主聚焦 Codex、Claude Code、Antigravity。
+- 清理未使用的旧版文件与死代码：删除已改就地自检的 `brainstorming/spec-document-reviewer-prompt.md` 与 `writing-plans/plan-document-reviewer-prompt.md`，移除死函数 `improve_hook.build_context`、未使用导入/常量及过期检查分支。
+
+### 新增
+
+- `wukong-init` 新增第 4 步：按当前宿主能证实可派发的模型，为检索、规划、审查、测试四个子代理角色匹配模型（如 Claude Code 上检索 `haiku`、规划和审查 `opus`、测试 `sonnet`；不能按次选模或单模型宿主写 `继承`），整表确认后由新脚本 `scripts/models.py` 写入全局指令库块之后的 `<!-- wukong:models:start -->` 标记块。库块升级不碰它，`--show` 回读。
+- 公共派发规则按「用户点名 → 模型块角色行 → 技能自带默认 → 继承」取模型；`how`、`why`、`reflect`、`executing-plans`（并行群体作战）、`requesting-code-review`、任务评审、只读检索与读项目的子代理各自标明角色。写代码的子代理仍继承父会话模型。角色模型被宿主拒绝时去掉模型重派一次。
+- 四个角色带默认推理档位：检索 medium、规划 high、审查 high、测试 medium，派发时单独传给宿主的档位参数（Claude Code `effort`、Codex `model_reasoning_effort`、DeepSeek Harness `reasoning_effort`）；模型块某行写成 `opus（xhigh）` 可覆盖，`继承（high）` 只改档位。Antigravity、Hermes 不能按次传，不宣称已生效。`models.py --show` 输出每个角色实际的模型和档位。
+- `global_instructions.py` 抽出通用受管块合并，个人块与模型块共用。
+- `prompt-sharpen` 钩子触发可见性：只在提示词看起来笼统（短、只有泛化动作、没有文件、代码、数字等具体锚点）时，Claude Code 通过顶层 `systemMessage`、Antigravity 通过 `metadata.user_markdown` 在界面显示一行轻提示（不占模型上下文，`WUKONG_HOOK_NOTICE=0` 关闭）；同时将最近 50 条触发结果（含跳过原因，不存原文）记入 `~/.wukong/prompt-hook-log.jsonl`（`WUKONG_HOOK_LOG=0` 关闭），支持 `improve_hook.py --status` 与 `agy_hook.py --status` 随时排查。
+- 正式支持 Google Antigravity 插件宿主：放行 `check_marketplace.py` 的 Antigravity 宿主校验，新增 [antigravity-tools.md](plugins/wukong/skills/wukong-router/references/antigravity-tools.md)，并在 `HOSTS.md`、`README.md`、`wukong-init`、`global_instructions.py`、`models.py`、`profile.py` 中接入 `--host antigravity`（插件自带 `rules/AGENTS.md` 不重复写库块，模型块与个人块写入 `~/.gemini/config/AGENTS.md`）。
+
+### 修复
+
+- 后台运行提醒的误报：判断长命令前先去掉引号里的字符串和 heredoc 正文，`echo '… npm run dev …'` 或 `grep "tail -f"` 不再触发提醒；`bash -c '…'` 这类真正执行的引号脚本照常检查。
+- 同步 `docs/architecture.md` 卡片数量说明（45 → 34）与 `wukong-panorama.html` 标题版本号。
+
 ## 1.0.30
 
 ### 新增

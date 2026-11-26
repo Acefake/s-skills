@@ -1,21 +1,12 @@
----
-name: finishing-a-development-branch
-description: "「做完了怎么合」「开 PR 还是合并」「收尾这个分支」。完成适用验证、还没定集成方式时，给出合并、PR 或清理的选项。Use when implementation and applicable verification are complete, and you need to decide how to integrate the work."
----
+# 分支收尾：还没定怎么集成
 
-本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
-
-# 收尾开发分支
-
-核验适用检查，记录来源，再按已有授权执行集成或保留工作。提交和 PR 步骤统一按[commit-pr](../commit-pr/SKILL.md)，工作区归属遵守[HOSTS](../../HOSTS.md)。
-
-开始时说明正在使用 finishing-a-development-branch。
+实现和适用验证都完成、但还没选本地合并、开 PR、保留还是丢弃时，按本文执行。核验适用检查，记录来源，再按已有授权执行集成或保留工作。提交和 PR 步骤统一按[commit-pr](../../commit-pr/SKILL.md)，工作区归属遵守[HOSTS](../../../HOSTS.md)。
 
 ## 1. 核验适用检查
 
 确认已按 code-style 完成代码交付前自审，覆盖完整任务差异与关键调用方，并记录发现和未解决风险。按 code-style「交付前独立评审」核对该派的独立评审已完成，没派的写明档位；该派而缺少委派能力时明确报告缺口。测试通过和清理完成不能代替自审。
 
-按[wukong-router 验证分档](../wukong-router/SKILL.md)判断，不把“收尾”当作自动升级理由。第0档只检查 diff，不运行测试；其他档位核对所需结果。相同代码已有结果时直接引用，不重跑。未运行的检查明确标注，不宣称通过。
+按[wukong-router 验证分档](../../wukong-router/SKILL.md)判断，不把“收尾”当作自动升级理由。第0档只检查 diff，不运行测试；其他档位核对所需结果。相同代码已有结果时直接引用，不重跑。未运行的检查明确标注，不宣称通过。
 
 适用检查失败或证据不足时，不合并或发布。报告失败、影响和下一步；仍可按用户要求保留当前工作，不强迫修复无关问题后才允许保留。
 
@@ -59,7 +50,7 @@ description: "「做完了怎么合」「开 PR 还是合并」「收尾这个�
 
 分离 HEAD 时先记录原 SHA，再按用户、仓库与当前宿主的命名约定创建具名分支。创建后核实分支指向原 SHA；保留所有已有文件修改。
 
-按 commit-pr 执行已授权的提交、推送和 PR 创建。取得实际 PR URL 后才报告创建完成；仅推送成功或 PR 创建失败时，分别报告实际状态。保留工作区，便于后续迭代。
+回到 [SKILL.md](../SKILL.md) 第 3 节执行已授权的提交、推送和 PR 创建。取得实际 PR URL 后才报告创建完成；仅推送成功或 PR 创建失败时，分别报告实际状态。保留工作区，便于后续迭代。
 
 ### 保留
 

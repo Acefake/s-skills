@@ -30,7 +30,7 @@ DOC_VERSION_REFS = {
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "wukong": 43,
+    "wukong": 34,
 }
 
 # Skills removed from the repo over past releases. Active skills must not name them.
@@ -39,8 +39,10 @@ RETIRED_SKILLS = frozenset({
     "animation-glossary",
     "animation-performance",
     "apple-design",
+    "apple-glass",
     "arena",
     "ask-sonner",
+    "automate-me",
     "benchmark-checklist",
     "blast-radius",
     "break-ui",
@@ -52,14 +54,18 @@ RETIRED_SKILLS = frozenset({
     "expo-animate",
     "figure-it-out",
     "find-animation-opportunities",
+    "finishing-a-development-branch",
     "frontend-design",
+    "html-mockup",
     "improve-animations",
     "in-your-own-words",
+    "interrogate",
     "ketchup",
     "learn",
     "maintain-verification-skill",
     "make-bot-ui",
     "native-mobile-feel",
+    "no-comments",
     "orca-bot-bug-hunt",
     "orca-bot-ci-triage",
     "orca-bot-deps",
@@ -107,13 +113,16 @@ RETIRED_SKILLS = frozenset({
     "shadcn",
     "sharpen",
     "subagent-driven-development",
+    "swarm",
     "taste-skill",
     "teach",
     "test-driven-development",
+    "theme-factory",
     "timed-loop",
     "translate",
     "typescript-best-practices",
     "ui-ux-pro-max",
+    "unslop",
     "using-git-worktrees",
     "verification-before-completion",
     "visual-suite",
@@ -126,7 +135,6 @@ RETIRED_SKILLS = frozenset({
 
 MANIFEST_REL_PATHS = (
     "plugin.json",
-    ".cursor-plugin/plugin.json",
     ".claude-plugin/plugin.json",
 )
 
@@ -135,23 +143,18 @@ KEBAB_RE = re.compile(r"^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$")
 CLAUDE_NAME_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$")
 AGENT_NAME_RE = re.compile(r"^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
 
-REPO_URL = "https://github.com/Acefake/s-skills"
 MARKETPLACE_NAME = "s-skills"
-
 
 def plugin_dir(name: str) -> Path:
     return PLUGINS_DIR / name
 
-
 def read_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
-
 
 def write_json(path: Path, data: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="\n") as handle:
         handle.write(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
-
 
 def plugin_files(root: Path) -> list[Path]:
     """Files git would commit under root: tracked plus untracked, minus ignored.
@@ -168,7 +171,6 @@ def plugin_files(root: Path) -> list[Path]:
         print(f"warning: git ls-files failed ({error}); hashing every file under {root}", file=sys.stderr)
         return list(root.rglob("*"))
     return [root / item.decode("utf-8") for item in set(listed.split(b"\0")) if item]
-
 
 def content_hash(name: str) -> str:
     """Hash everything in the plugin except its registered manifest files.
@@ -199,10 +201,8 @@ def content_hash(name: str) -> str:
         digest.update(data)
     return digest.hexdigest()
 
-
 def manifest_paths(name: str) -> list[Path]:
     return [plugin_dir(name) / rel for rel in MANIFEST_REL_PATHS]
-
 
 def manifest_version(path: Path) -> str:
     data = read_json(path)
@@ -210,14 +210,12 @@ def manifest_version(path: Path) -> str:
         raise ValueError(f"{path} is missing a string version")
     return data["version"]
 
-
 def set_manifest_version(path: Path, version: str) -> None:
     data = read_json(path)
     if not isinstance(data, dict):
         raise ValueError(f"{path} is not a JSON object")
     data["version"] = version
     write_json(path, data)
-
 
 def doc_versions(name: str) -> list[tuple[str, str | None]]:
     """Return (relative path, version printed in that doc or None)."""
@@ -227,7 +225,6 @@ def doc_versions(name: str) -> list[tuple[str, str | None]]:
         match = pattern.search(path.read_text(encoding="utf-8")) if path.is_file() else None
         found.append((rel, match.group(1) if match else None))
     return found
-
 
 def set_doc_versions(name: str, version: str) -> None:
     for rel, pattern in DOC_VERSION_REFS.get(name, ()):
@@ -240,13 +237,11 @@ def set_doc_versions(name: str, version: str) -> None:
         with path.open("w", encoding="utf-8", newline="\n") as handle:
             handle.write(text[:start] + version + text[end:])
 
-
 def load_lock() -> dict:
     data = read_json(LOCK_PATH)
     if not isinstance(data, dict) or not isinstance(data.get("plugins"), dict):
         raise ValueError("plugin-versions.lock.json is missing a plugins object")
     return data
-
 
 def bump_patch(version: str) -> str:
     match = SEMVER_RE.fullmatch(version)
@@ -254,7 +249,6 @@ def bump_patch(version: str) -> str:
         raise ValueError(f"version {version!r} is not X.Y.Z")
     major, minor, patch = (int(part) for part in match.groups())
     return f"{major}.{minor}.{patch + 1}"
-
 
 def frontmatter_name(text: str) -> str | None:
     if not text.startswith("---"):
@@ -270,7 +264,6 @@ def frontmatter_name(text: str) -> str | None:
     if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
         value = value[1:-1]
     return value
-
 
 def skill_dirs(name: str) -> list[Path]:
     skills_root = plugin_dir(name) / "skills"

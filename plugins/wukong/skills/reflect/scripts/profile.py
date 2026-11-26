@@ -60,7 +60,7 @@ EVIDENCE_EVENTS = ("correction", "explicit")
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,39}$")
 CJK = re.compile(r"[\u3000-\u303f\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff00-\uffef]")
 MARKERS = (gi.START, gi.END, gi.PREVIOUS_START, gi.PREVIOUS_END, gi.LEGACY_START, gi.LEGACY_END,
-           gi.PERSONAL_START, gi.PERSONAL_END)
+           gi.PERSONAL_START, gi.PERSONAL_END, gi.MODELS_START, gi.MODELS_END)
 
 # 下面三组只在规范化（NFKC、去零宽、转小写）之后的文字上匹配。
 # 放宽权限、跳过确认、发布部署、碰密钥和权限的规则不能从对话里学，只能用户用 add 亲口加。
@@ -575,7 +575,7 @@ def on(host, directory=None, **paths):
 
 # ---------------------------------------------------------------- cli
 
-HOSTS = ("codex", "claude-code", "cursor", "workbuddy")
+HOSTS = ("codex", "claude-code", "antigravity")
 
 
 def main(argv=None):

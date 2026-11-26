@@ -6,9 +6,9 @@
 
 <p align="center"><strong>把日常写代码的方式，写成技能。</strong></p>
 
-<p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Cursor、CodeBuddy、WorkBuddy。</p>
+<p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Antigravity。</p>
 
-<p align="center">当前版本 1.0.30，共 <strong>43</strong> 个技能：21 个按描述自动选用，22 个需点名调用。</p>
+<p align="center">当前版本 1.0.31，共 <strong>34</strong> 个技能：20 个按描述自动选用，14 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -37,25 +37,24 @@ codex plugin marketplace add Acefake/s-skills
 
 再到应用的插件管理入口安装 `wukong`。
 
-**Cursor**：从插件市场导入 `https://github.com/Acefake/s-skills`，选择 `wukong`。
+**Antigravity（`agy` CLI / App / IDE）**：插件目录原生兼容，支持直接安装或开发零复制挂载：
 
-**CodeBuddy（CLI 与 IDE）**：和 Claude Code 用同一套命令。CodeBuddy 会读取仓库里 `.claude-plugin` 下的清单，所以不需要另外一份。
-
-```text
-/plugin marketplace add Acefake/s-skills
-/plugin install wukong@s-skills
+```sh
+agy plugin install https://github.com/Acefake/s-skills/tree/main/plugins/wukong   # 远程直装
+agy plugin install ./plugins/wukong                                               # 本地克隆后安装
 ```
 
-**Codex 本项目、WorkBuddy 客户端**：克隆仓库后在 Windows PowerShell 运行。
+启用后自动加载 `rules/AGENTS.md` 与插件根 `hooks.json`（含 `prompt-sharpen` 与 `SessionStart` 钩子）。本机开发想零复制挂载，可运行 `powershell -NoProfile -File scripts/bootstrap.ps1` 自动写入 `~/.gemini/config/plugins.json`；用 `agy plugin validate plugins/wukong` 和 `agy plugin list` 核对状态。
+
+**Codex 本项目**：克隆仓库后在 Windows PowerShell 运行。
 
 ```powershell
 git clone https://github.com/Acefake/s-skills.git
 cd s-skills
 powershell -NoProfile -File scripts/install_local_skills.ps1                     # Codex，只对本项目生效
-powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy # WorkBuddy，只支持 Windows 本机项目
 ```
 
-脚本把技能链接到 `.agents/skills/`（Codex）或 `.codebuddy/skills/`（WorkBuddy），重复执行不覆盖已有文件。WorkBuddy 客户端没有上架市场，也不同步云端个人技能库。CodeBuddy 和 WorkBuddy 共用 `~/.codebuddy`，全局规则在两边是同一份，宿主 id 都用 `workbuddy`。各宿主的入口以实际界面为准，安装或更新后开新会话。宿主差异见 [宿主适配](plugins/wukong/HOSTS.md)。
+脚本把技能链接到 `.agents/skills/`（Codex），重复执行不覆盖已有文件。各宿主的入口以实际界面为准，安装或更新后开新会话。宿主差异见 [宿主适配](plugins/wukong/HOSTS.md)。
 
 ### 从 s-atlas 或 s-wukong 升级
 
@@ -68,7 +67,7 @@ powershell -NoProfile -File scripts/install_local_skills.ps1 -HostName workbuddy
 /plugin install wukong@s-skills
 ```
 
-没装过的那一行跳过即可。CodeBuddy 的命令同上（`/plugin uninstall s-atlas@s-skills`，再 `/plugin install wukong@s-skills`）。Codex、Cursor 在插件管理入口卸载 `s-atlas` 或 `s-wukong` 后装 `wukong`；本地安装的 Codex、WorkBuddy 删掉 `.agents/skills/` 或 `.codebuddy/skills/` 里的 `s-agent`、`s-init`、`s-mode`、`s-proposal`、`s-review`、`s-router` 后重跑安装脚本。
+没装过的那一行跳过即可。Codex 在插件管理入口卸载 `s-atlas` 或 `s-wukong` 后装 `wukong`；本地安装的 Codex 删掉 `.agents/skills/` 里的 `s-agent`、`s-init`、`s-mode`、`s-proposal`、`s-review`、`s-router` 后重跑安装脚本。
 
 装好后开新会话，点名一次 `wukong-init`：它会把全局规则里的旧标记块原位换成 `wukong` 标记块，旧技能名一并更新。标记块外你自己写的提到 `s-atlas` 的句子不会被改，需要手动换成 `wukong`。旧版模型配置文件（如 `s-atlas.t3.json`、`s-wukong.t3.json`、`wukong.t3.json`）已不再读取，可手动删除。
 
@@ -76,11 +75,11 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/wu
 
 ## 初始化
 
-装好后点名一次 `wukong-init`（`/wukong:wukong-init`）：它检查并同步全局技能规则，写入前会问你。
+装好后点名一次 `wukong-init`（`/wukong:wukong-init`）：它检查并同步全局技能规则，再按当前宿主能派发的模型给检索、规划、审查、测试四个子代理角色配模型，整张表确认后才写入。
 
-- 全局规则写入：Codex 的 `AGENTS.md`，Claude Code 的 `~/.claude/CLAUDE.md`，CodeBuddy 和 WorkBuddy 的 `~/.codebuddy/CODEBUDDY.md`；Cursor 用全局 User Rules。规则正文见 [AGENTS.md](plugins/wukong/AGENTS.md)。
+- 全局规则写入：Codex 的 `AGENTS.md`，Claude Code 的 `~/.claude/CLAUDE.md`；Antigravity 随插件自动加载 `rules/AGENTS.md`（不重复写库块，模型块与个人块写在 `~/.gemini/config/AGENTS.md`）。规则正文见 [AGENTS.md](plugins/wukong/AGENTS.md)。
 - 只在你点名时写入。平时每个会话只读检查一次，过期会提醒。新会话才生效。
-- 不配置模型：技能派出的子代理默认继承当前会话的模型，你点名的模型优先。
+- 子代理模型：检索、规划、审查、测试四个角色按宿主动态匹配（如 Claude Code 上检索 haiku、规划和审查 opus、测试 sonnet），每个角色带默认推理档位（检索、测试 medium，规划、审查 high），写在全局规则后的独立标记块里；写代码的子代理和其他子代理继承当前会话模型，你点名的模型优先。
 
 ## 使用
 
@@ -101,9 +100,9 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/wu
 | 修 bug、报错、结果不对 | `systematic-debugging` |
 | 做新功能、改行为 | `brainstorming`，再 `writing-plans` |
 | 按写好的计划做 | `executing-plans` |
-| 提交、开 PR | `commit-pr` |
+| 提交、开 PR、分支收尾 | `commit-pr` |
 | 审 PR、分支或本地改动 | `wukong-review` |
-| 写 README、文档、RFC | `technical-writing` |
+| 写 README、文档、RFC、去 AI 腔 | `technical-writing` |
 | 做页面、改界面 | `impeccable` |
 | Word 文档 | `docx` |
 | 发版 | `release` |
@@ -122,13 +121,13 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/wu
 
 提交、推送、改写历史、外部消息和清理工作区，都只按你已有的授权执行。细则见 [wukong-router](plugins/wukong/skills/wukong-router/SKILL.md)。
 
-## 钩子（仅 Claude Code）
+## 钩子（Claude Code 与 Antigravity 自动启用）
 
 装上插件后自动注册，只加提醒或请求确认，不改写你的输入：
 
 - 会话开始：记下插件版本，检查全局技能提示词是否过期。
-- 每条提示词附一段评估说明，含糊时才加载 `prompt-sharpen`；以 `*`、`#`、`/` 开头的、「可以」「继续」这类确认和 4 个字以内的消息不介入。
-- 长时间运行的命令：提醒放到后台。
+- 每条提示词附一段评估说明，含糊时才加载 `prompt-sharpen`；提示词看起来笼统时，界面上会显示一行「需求可能不够具体，已提醒先澄清」；以 `*`、`#`、`/` 开头的、「可以」「继续」这类确认和 4 个字以内的消息不介入。
+- 长时间运行的命令：提醒放到后台（引号和 heredoc 里出现的命令不算）。
 - 强制推送、`--no-verify`、`reset --hard`、`git clean`：先请你确认。
 - 本地使用日志：记下加载了哪些技能、你的纠正和任务摘要，存在本机 `~/.wukong/journal.db`（SQLite），不上传、不进对话。供以后的个人学习使用，`WUKONG_JOURNAL=0` 关闭。
 
@@ -145,17 +144,16 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/wu
 | 技能 | 调用 | 用途 |
 |---|---|---|
 | `wukong-router` | 自动 | 日常先查该用哪个技能 |
-| `wukong-init` | 点名 | 显式初始化、检查或修复当前宿主的全局技能提示词，写入前确认 |
+| `wukong-init` | 点名 | 显式初始化全局技能提示词，并按宿主匹配四个子代理角色的模型，写入前确认 |
 
-### 工作模式（3）
+### 工作模式（2）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
 | `architect` | 点名 | 动手前定类型和模块边界 |
-| `swarm` | 点名 | 并行覆盖、比赛、分片验证 |
 | `show-me-your-work` | 点名 | 长时间运行留下决定记录 |
 
-### 开发主流程（16）
+### 开发主流程（15）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
@@ -164,19 +162,18 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/wu
 | `brainstorming` | 自动 | 做功能前先把方案磨清；含 4 条原则 |
 | `writing-plans` | 自动 | 把活写成可执行计划；含 2 条原则 |
 | `executing-plans` | 自动 | 按写好的计划做：主会话或子智能体逐任务执行、隔离工作区、循环检查、没有现成流程时先定可审计做法；含 3 条原则 |
-| `systematic-debugging` | 自动 | 按证据排错；含 3 条原则 |
+| `systematic-debugging` | 自动 | 按证据排错；含 4 条原则 |
 | `tdd` | 自动 | 修 bug 时有便宜的测试点就先写失败测试 |
 | `test-strategy` | 自动 | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java；含 1 条原则 |
 | `code-style` | 自动 | 按模块就近放文件、写文档注释、质量底线；覆盖 TS/React、Vue、Go、Java；含 11 条设计原则 |
-| `deslop` | 自动 | 提交前清掉代码里的 AI 味 |
+| `deslop` | 自动 | 提交前清掉代码里的 AI 味；只清注释时派 comment-sicko 只读审查 |
 | `requesting-code-review` | 自动 | 发起代码审查 |
 | `receiving-code-review` | 自动 | 处理审查意见 |
 | `wukong-review` | 自动 | 中文代码审查：审 PR、分支或本地改动，带出处和严重程度，给合并结论 |
-| `commit-pr` | 自动 | 看 diff，写提交说明，推送并开 PR。集成方式还没定用 `finishing-a-development-branch` |
-| `finishing-a-development-branch` | 自动 | 收尾开发分支 |
+| `commit-pr` | 自动 | 看 diff，写提交说明，推送并开 PR；集成方式还没定时先收尾分支，给出合并、PR、保留或丢弃的选项 |
 | `release` | 点名 | 显式发版：确认版本，写只含新增、改动、修复的发版说明，打 tag 并创建 GitHub Release |
 
-### 专项技能（22）
+### 专项技能（15）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
@@ -185,22 +182,15 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/wu
 | `refactor-architecture` | 点名 | 找浅模块和耦合，出 HTML 报告，再逐个追问定案 |
 | `archify` | 点名 | 画架构图、流程图、时序图、ER 图等，出可交互单文件 HTML，需要 Node 18+ |
 | `impeccable` | 自动 | 做页面、改界面、做设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
-| `apple-glass` | 点名 | Apple TV 风格界面语言：深色优先、实色卡片、玻璃只给浮动控件、令牌化，附令牌、材质和样式检查脚本 |
-| `html-mockup` | 点名 | 手写 HTML/CSS 出静态设计稿，Playwright 截图交付；真实界面截图用 `control-ui` |
 | `mcp-builder` | 点名 | 设计工具契约，实现 MCP 服务并联调 |
 | `remotion-create` | 点名 | 用 React 编排视频镜头、字幕和音轨，渲染并抽查成片 |
-| `theme-factory` | 点名 | 为 PPT、文档、报告和网页统一配色与字体，附十套预设 |
 | `control-ui` | 自动 | 在真浏览器里操作界面取证 |
 | `control-cli` | 自动 | 在本地操作命令行或 TUI |
 | `e2e-testing` | 自动 | 用 Playwright 写稳定的端到端测试，修不稳定的测试 |
-| `no-comments` | 点名 | 派 comment-sicko 子代理只读审查注释，由父任务核实后修改 |
-| `interrogate` | 点名 | 多模型对抗审查 |
 | `docx` | 点名 | 创建、修订、批注和阅读 Word。中文设置 `w:eastAsia` |
-| `technical-writing` | 点名 | 写 README、写文档、RFC、PR 说明的句子。Word 用 `docx` |
+| `technical-writing` | 点名 | 写 README、文档、RFC、PR 说明的句子，附去 AI 腔清单。Word 用 `docx` |
 | `wukong-proposal` | 自动 | 写中文方案：先问清目标，列提纲，再按固定结构起草打磨 |
-| `unslop` | 点名 | 去掉文字里的 AI 腔 |
 | `author-skill` | 点名 | 按规范写或大改 SKILL.md |
-| `automate-me` | 点名 | 从你的习惯和最近对话里提炼，起草或更新个人专属的 `-mode` 技能 |
 | `reflect` | 点名 | 把这次对话的教训改进技能；`--me` 把本机使用日志归纳成个人规则，`--show`/`--undo`/`--forget`/`--off`/`--on` 查看、撤销、删除、关闭、打开 |
 
 `docx` 技能需要 Python 3.12、Node.js（在技能目录里 `npm install` 一次）、LibreOffice、poppler；读 docx 要 pandoc，中文渲染检查要 Noto CJK。`archify` 需要 Node 18+。

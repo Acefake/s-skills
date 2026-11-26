@@ -5,7 +5,7 @@ Writes one row per event to the SQLite database ``~/.wukong/journal.db`` (or
 ``$WUKONG_HOME/journal.db``). Every write is a transaction, so a crash cannot
 leave a half-written record, and concurrent sessions are serialized by SQLite's
 own locking. The hook never prints, so it adds nothing to the model context,
-and any error (including a lock it cannot get within two seconds) is swallowed
+and any error (including a lock it cannot get within three seconds) is swallowed
 so a session never breaks.
 
 Events: ``session`` (SessionStart), ``skill`` (PreToolUse on Skill, or a slash

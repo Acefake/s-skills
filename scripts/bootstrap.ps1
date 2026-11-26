@@ -1,5 +1,4 @@
 ﻿param(
-    [switch]$IncludeWorkBuddy,
     [switch]$SkipAntigravity
 )
 
@@ -19,16 +18,7 @@ Write-Host "仓库路径: $repoRoot"
 # 1. Codex 本项目技能链接
 & powershell -NoProfile -File (Join-Path $PSScriptRoot 'install_local_skills.ps1') -HostName codex
 
-# 2. 可选 WorkBuddy 技能链接
-if ($IncludeWorkBuddy -or (Test-Path (Join-Path $env:USERPROFILE '.codebuddy'))) {
-    try {
-        & powershell -NoProfile -File (Join-Path $PSScriptRoot 'install_local_skills.ps1') -HostName workbuddy
-    } catch {
-        Write-Warning "WorkBuddy 链接跳过: $_"
-    }
-}
-
-# 3. Antigravity 零复制挂载（~/.gemini/config/plugins.json）
+# 2. Antigravity 零复制挂载（~/.gemini/config/plugins.json）
 $geminiConfig = Join-Path $env:USERPROFILE '.gemini\config'
 if (-not $SkipAntigravity -and (Test-Path $geminiConfig)) {
     $pluginsJson = Join-Path $geminiConfig 'plugins.json'
@@ -55,11 +45,11 @@ if (-not $SkipAntigravity -and (Test-Path $geminiConfig)) {
     }
 }
 
-# 4. 只读检测已安装宿主的全局规则状态
+# 3. 只读检测已安装宿主的全局规则状态
 $hosts = @(
     @{ Name = 'claude-code'; Dir = (Join-Path $env:USERPROFILE '.claude') },
     @{ Name = 'codex';       Dir = (Join-Path $env:USERPROFILE '.codex') },
-    @{ Name = 'workbuddy';   Dir = (Join-Path $env:USERPROFILE '.codebuddy') }
+    @{ Name = 'antigravity'; Dir = (Join-Path $env:USERPROFILE '.gemini\config') }
 )
 Write-Host "`n=== 全局规则只读体检 ==="
 foreach ($h in $hosts) {

@@ -358,11 +358,6 @@ class WriteTest(ProfileCase):
                 self.apply([draft_rule(text='第 %d 版规则。' % i, refs=[self.event(session='a%d' % i), self.event(session='b%d' % i)])])
         self.assertEqual(len(list((self.data / 'history').glob('profile-*.json'))), 3)
 
-    def test_cursor_gets_a_block_to_paste(self):
-        result = self.p.apply({'rules': [draft_rule(refs=self.two_sessions())]}, 'cursor')
-        self.assertEqual(result['write']['status'], 'user_rules_verification_required')
-        self.assertIn('wukong:personal:start', result['write']['block'])
-
     def test_codex_override_takes_over_and_the_old_block_is_cleared(self):
         codex = self.user / '.codex'
         codex.mkdir()

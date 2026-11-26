@@ -233,7 +233,8 @@ class AgyPluginCompatTest(unittest.TestCase):
 
     def test_agy_hook_pre_invocation_injects_once_per_turn_and_skips_short(self):
         with tempfile.TemporaryDirectory() as tmp:
-            env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_AUTO_UPDATE='0', WUKONG_JOURNAL='0')
+            env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_AUTO_UPDATE='0', WUKONG_JOURNAL='0', WUKONG_HOOK_LOG='1')
+            env.pop('WUKONG_HOOK_NOTICE', None)
 
             def run_pre(payload):
                 proc = subprocess.run(
@@ -244,7 +245,7 @@ class AgyPluginCompatTest(unittest.TestCase):
                 self.assertEqual(proc.returncode, 0, proc.stderr.decode('utf-8', 'replace'))
                 return json.loads(proc.stdout.decode('utf-8'))
 
-            # First invocation of a vague turn injects systemMessage.
+            # First invocation of a vague turn injects systemMessage + user_markdown notice.
             turn1 = {
                 'hookEventName': 'PreInvocation',
                 'conversationId': 'conv-1',
@@ -255,6 +256,7 @@ class AgyPluginCompatTest(unittest.TestCase):
             steps = out1.get('injectSteps') or []
             self.assertEqual(len(steps), 1)
             self.assertIn('wukong:prompt-sharpen', steps[0]['systemMessage']['systemMessage'])
+            self.assertIn('prompt-sharpen', steps[0]['systemMessage'].get('metadata', {}).get('user_markdown', ''))
 
             # Subsequent invocation in the same turn (or wakeup) stays silent.
             turn1_step2 = dict(turn1, invocationNum=2)
@@ -269,15 +271,35 @@ class AgyPluginCompatTest(unittest.TestCase):
             }
             self.assertEqual(run_pre(turn2), {})
 
-            # New substantive turn injects again.
+            # New substantive turn injects again; WUKONG_HOOK_NOTICE=0 hides user_markdown.
             turn3 = {
                 'hookEventName': 'PreInvocation',
                 'conversationId': 'conv-1',
                 'invocationNum': 0,
                 'lastUserInput': '帮我优化一下首页加载速度',
             }
-            out3 = run_pre(turn3)
+            quiet_env = dict(env, WUKONG_HOOK_NOTICE='0')
+            proc3 = subprocess.run(
+                [sys.executable, '-I', str(HOOKS / 'agy_hook.py')],
+                input=json.dumps(turn3).encode('utf-8'),
+                capture_output=True, timeout=20, env=quiet_env,
+            )
+            self.assertEqual(proc3.returncode, 0)
+            out3 = json.loads(proc3.stdout.decode('utf-8'))
             self.assertIn('wukong:prompt-sharpen', out3['injectSteps'][0]['systemMessage']['systemMessage'])
+            self.assertNotIn('metadata', out3['injectSteps'][0]['systemMessage'])
+
+            # Status log records once per turn (not repeated for deduped step 2) and --status prints it.
+            log_file = Path(tmp) / 'prompt-hook-log.jsonl'
+            rows = [json.loads(line) for line in log_file.read_text(encoding='utf-8').splitlines() if line.strip()]
+            self.assertEqual([r['outcome'] for r in rows], ['injected', 'skipped:confirmation', 'injected'])
+            self.assertTrue(all(r['via'] == 'agy_hook' for r in rows))
+            status = subprocess.run(
+                [sys.executable, '-I', str(HOOKS / 'agy_hook.py'), '--status'],
+                capture_output=True, timeout=20, env=env,
+            )
+            self.assertEqual(status.returncode, 0)
+            self.assertIn('agy_hook/PreInvocation', status.stdout.decode('utf-8'))
 
     def test_agy_hook_pre_invocation_records_journal_once_per_turn(self):
         import sqlite3

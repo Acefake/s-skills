@@ -17,6 +17,9 @@ PREVIOUS_END = '<!-- s-wukong:instructions:end -->'
 # 个人学习层写的块。和上面的库块分开：库升级不碰它，写它也不碰库块。
 PERSONAL_START = '<!-- wukong:personal:start -->'
 PERSONAL_END = '<!-- wukong:personal:end -->'
+# wukong-init 写的子代理模型块。和库块分开：库升级不碰它，放在库块之后。
+MODELS_START = '<!-- wukong:models:start -->'
+MODELS_END = '<!-- wukong:models:end -->'
 
 
 class ConfigurationError(Exception):
@@ -43,8 +46,8 @@ def managed_block():
 
 
 def instruction_path(host, home, codex_home=None, claude_config_dir=None):
-    if host == 'workbuddy':
-        return home / '.codebuddy' / 'CODEBUDDY.md'
+    if host == 'antigravity':
+        return home / '.gemini' / 'config' / 'AGENTS.md'
     if host == 'claude-code':
         directory = Path(claude_config_dir).expanduser() if claude_config_dir is not None else home / '.claude'
         return directory / 'CLAUDE.md'
@@ -113,13 +116,8 @@ def merge_instructions(text):
     markers = owned_markers(text)
     if markers:
         start, end = markers
-        start_at, end_at = text.index(start), text.index(end)
-        if (end_at < start_at or (start_at and text[start_at - 1] != '\n')
-                or text[start_at + len(start):].split('\n', 1)[0].strip()
-                or (end_at and text[end_at - 1] != '\n')
-                or text[end_at + len(end):].split('\n', 1)[0].strip()):
-            raise ConfigurationError('Invalid instruction marker boundaries')
-        return text[:start_at] + block + text[end_at + len(end):]
+        start_at, end_after = _marker_span(text, start, end, 'instruction')
+        return text[:start_at] + block + text[end_after:]
     span = known_instruction_span(text)
     if span:
         start, end = span
@@ -129,25 +127,35 @@ def merge_instructions(text):
     return text + separator + block + newline
 
 
-def _marker_span(text, start, end):
+def _marker_span(text, start, end, label='personal'):
     """Return (start_at, end_after) of one well-formed marker pair, or None."""
     if start not in text and end not in text:
         return None
     if text.count(start) != 1 or text.count(end) != 1:
-        raise ConfigurationError('Incomplete or duplicate personal markers; repair them before applying')
+        raise ConfigurationError(f'Incomplete or duplicate {label} markers; repair them before applying')
     start_at, end_at = text.index(start), text.index(end)
     if (end_at < start_at or (start_at and text[start_at - 1] != '\n')
             or text[start_at + len(start):].split('\n', 1)[0].strip()
             or (end_at and text[end_at - 1] != '\n')
             or text[end_at + len(end):].split('\n', 1)[0].strip()):
-        raise ConfigurationError('Invalid personal marker boundaries')
+        raise ConfigurationError(f'Invalid {label} marker boundaries')
     return start_at, end_at + len(end)
 
 
 def merge_personal(text, body):
     """Replace, insert or (for an empty body) remove the personal block only."""
+    return merge_owned(text, body, PERSONAL_START, PERSONAL_END, 'personal')
+
+
+def merge_models(text, body):
+    """Replace, insert or (for an empty body) remove the subagent model block only."""
+    return merge_owned(text, body, MODELS_START, MODELS_END, 'models')
+
+
+def merge_owned(text, body, start, end, label):
+    """Replace one owned block, insert it after the library block, or remove it for an empty body."""
     newline = '\r\n' if '\r\n' in text else '\n'
-    span = _marker_span(text, PERSONAL_START, PERSONAL_END)
+    span = _marker_span(text, start, end, label)
     body = body.strip()
     if not body:
         if not span:
@@ -160,13 +168,13 @@ def merge_personal(text, body):
         if head.endswith(newline * 2):
             head = head[:-len(newline)]
         return head + tail
-    block = f'{PERSONAL_START}\n{body}\n{PERSONAL_END}'.replace('\n', newline)
+    block = f'{start}\n{body}\n{end}'.replace('\n', newline)
     if span:
         start_at, end_after = span
         return text[:start_at] + block + text[end_after:]
     markers = owned_markers(text)
     if markers:
-        at = text.index(markers[1]) + len(markers[1])
+        _, at = _marker_span(text, markers[0], markers[1], 'instruction')
         return text[:at] + newline * 2 + block + text[at:]
     separator = (newline if text.endswith(newline) else newline * 2) if text else ''
     return text + separator + block + newline
@@ -202,8 +210,8 @@ def write_preserving(path, original, updated):
 
 
 def sync_global(host, *, home, codex_home=None, claude_config_dir=None, apply=False):
-    if host == 'cursor':
-        return dict(status='user_rules_verification_required', changed=False, target='Cursor User Rules', version=plugin_version(), block=managed_block())
+    if host == 'antigravity':
+        return dict(status='configured', changed=False, target='plugin rules/AGENTS.md', version=plugin_version(), bundled_by_plugin=True)
     path = instruction_path(host, Path(home), codex_home, claude_config_dir)
     if path.is_symlink():
         raise ConfigurationError('Global instruction file is a symlink; inspect its destination before updating')
@@ -220,23 +228,7 @@ def sync_global(host, *, home, codex_home=None, claude_config_dir=None, apply=Fa
     return dict(status=status, changed=bool(apply and changed), target=str(path), version=plugin_version())
 
 
-def sync_personal(host, body, *, home, codex_home=None, claude_config_dir=None, apply=False):
-    """Write the personal block; an empty body removes it. Cursor gets the block to paste."""
-    if host == 'cursor':
-        block = f'{PERSONAL_START}\n{body.strip()}\n{PERSONAL_END}' if body.strip() else ''
-        return dict(status='user_rules_verification_required', changed=False, target='Cursor User Rules', block=block)
-    path = instruction_path(host, Path(home), codex_home, claude_config_dir)
-    changed = _sync_personal_file(path, body, apply)
-    if host == 'codex':
-        # Codex 只读 AGENTS.override.md（存在且非空时）或 AGENTS.md；另一份里留下的个人块一并清掉。
-        directory = Path(codex_home).expanduser() if codex_home is not None else Path(home) / '.codex'
-        for other in (directory / 'AGENTS.md', directory / 'AGENTS.override.md'):
-            if other != path and other.exists() and PERSONAL_START in other.read_text(encoding='utf-8-sig'):
-                changed = _sync_personal_file(other, '', apply) or changed
-    return dict(status='configured' if apply or not changed else 'outdated', changed=bool(apply and changed), target=str(path))
-
-
-def _sync_personal_file(path, body, apply):
+def _prepare_personal_file(path, body):
     if path.is_symlink():
         raise ConfigurationError('Global instruction file is a symlink; inspect its destination before updating')
     original = path.read_bytes() if path.exists() else None
@@ -245,14 +237,35 @@ def _sync_personal_file(path, body, apply):
     if original is not None and original.startswith(b'\xef\xbb\xbf'):
         updated = b'\xef\xbb\xbf' + updated
     changed = updated != (original or b'')
-    if apply and changed:
-        write_preserving(path, original, updated)
-    return changed
+    return path, original, updated, changed
+
+
+def sync_personal(host, body, *, home, codex_home=None, claude_config_dir=None, apply=False):
+    """Write the personal block; an empty body removes it."""
+    path = instruction_path(host, Path(home), codex_home, claude_config_dir)
+    # 先校验并算好全部目标文件，全部通过后再写入，避免 Codex 切换时写一半。
+    pending = [_prepare_personal_file(path, body)]
+    if host == 'codex':
+        # Codex 只读 AGENTS.override.md（存在且非空时）或 AGENTS.md；另一份里留下的个人块一并清掉。
+        directory = Path(codex_home).expanduser() if codex_home is not None else Path(home) / '.codex'
+        for other in (directory / 'AGENTS.md', directory / 'AGENTS.override.md'):
+            if other != path and other.exists():
+                if other.is_symlink():
+                    raise ConfigurationError('Global instruction file is a symlink; inspect its destination before updating')
+                other_text = other.read_bytes().decode('utf-8-sig')
+                if PERSONAL_START in other_text or PERSONAL_END in other_text:
+                    pending.append(_prepare_personal_file(other, ''))
+    changed = any(item_changed for _, _, _, item_changed in pending)
+    if apply:
+        for target_path, original, updated, item_changed in pending:
+            if item_changed:
+                write_preserving(target_path, original, updated)
+    return dict(status='configured' if apply or not changed else 'outdated', changed=bool(apply and changed), target=str(path))
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--host', required=True, choices=('codex', 'claude-code', 'cursor', 'workbuddy'))
+    parser.add_argument('--host', required=True, choices=('codex', 'claude-code', 'antigravity'))
     parser.add_argument('--apply', action='store_true', help='Explicitly initialize or update the owned block')
     parser.add_argument('--home', type=Path, default=Path.home())
     parser.add_argument('--codex-home', type=Path, default=os.environ.get('CODEX_HOME') or None)
@@ -271,7 +284,7 @@ def main():
         except (HookError, OSError, UnicodeError, ValueError) as error:
             result['hooks'] = dict(status='error', changed=False, error=str(error))
     print(json.dumps(result))
-    return 0 if result['status'] == 'configured' else (3 if args.host == 'cursor' else 2)
+    return 0 if result['status'] == 'configured' else 2
 
 
 if __name__ == '__main__':

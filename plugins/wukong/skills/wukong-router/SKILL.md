@@ -51,7 +51,7 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 | 新功能、改行为 | brainstorming，再领域实现技能；小改动按快路 |
 | bug、报错、结果不对、bug-fix、fix bug | systematic-debugging，再领域技能 |
 | Word、README/RFC 文档、技术文档 | 显式技能：用户点名 docx、technical-writing 时加载；未点名直接做 |
-| 提交说明、提交、PR | commit-pr；集成方式未定用finishing-a-development-branch |
+| 提交说明、提交、PR、分支收尾 | commit-pr |
 | 审PR、分支、本地改动 | wukong-review，只读报告，含位置与P0/P1/P2 |
 | 架构图、流程图、时序图、数据流图、ER图、类图、讲解页 | 点名archify时加载（显式技能）；架构重构评审建议用户点名refactor-architecture（显式技能） |
 | 教我、解释代码怎么工作 | 点名how时加载；未点名时直接讲解，不自动加载显式技能 |
@@ -61,7 +61,7 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 ## 只读检索派发
 
 - 主代理直接查：单文件、一次 `rg`、约十个文件以内，或查完马上要改这些文件、问题还模糊、要判断业务语义和架构动机的情况。
-- 已授权派发：预计要读大量文件或日志（约十个文件以上）、只要结论不要原文、且问题明确、范围清楚。拆成互不重叠的独立问题，默认并发 2 个只读子代理，只有 3 条真正独立的边界才派 3 个；有依赖时分轮派，只派一轮，不够由主代理补查。子代理继承父会话模型。
+- 已授权派发：预计要读大量文件或日志（约十个文件以上）、只要结论不要原文、且问题明确、范围清楚。拆成互不重叠的独立问题，默认并发 2 个只读子代理，只有 3 条真正独立的边界才派 3 个；有依赖时分轮派，只派一轮，不够由主代理补查。模型取[公共派发规则](../executing-plans/references/subagents.md#模型)的「检索」角色。
 - 每个任务写明问题、文件范围、只读限制，要求返回约 30 行内的结论、文件行号和未确认项；不传父会话历史。结论是线索不是证据，「没找到」要由主代理补查关键路径后再采信。
 - 只授权只读检索，不授权子代理改文件、测试、提交或其他外部操作；实现类子代理仍需用户要求或已授权的工作流。用户禁止委派或宿主不可用时，主代理顺序自查并说明。
 
@@ -79,6 +79,6 @@ description: "「先查技能」「该用哪个」「拿不准」。没有加载
 
 在 T3 Code 编排环境中，涉及模型、委派或工作区时加读 [T3 Code 编排参考](references/t3-code-tools.md)，再读取底层宿主参考。显式 T3 目标失败不自动降级。
 
-派子代理、建工作树或收尾分支时，只读当前平台参考：[Codex](references/codex-tools.md)、[Claude Code](references/claude-code-tools.md)、[Cursor](references/cursor-tools.md)、[WorkBuddy](references/workbuddy-tools.md)、[DeepSeek Harness](references/dsh-tools.md)、[Hermes](references/hermes-tools.md)。
+派子代理、建工作树或收尾分支时，只读当前平台参考：[Codex](references/codex-tools.md)、[Claude Code](references/claude-code-tools.md)、[Antigravity](references/antigravity-tools.md)、[DeepSeek Harness](references/dsh-tools.md)、[Hermes](references/hermes-tools.md)。
 
 用户的指令文件和直接要求优先于技能，技能优先于默认行为。只有用户明确要求时才跳过技能工作流或说明。

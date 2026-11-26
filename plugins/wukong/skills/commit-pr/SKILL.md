@@ -1,6 +1,6 @@
 ---
 name: commit-pr
-description: "「提交」「帮我 commit」「开个 PR」「写提交说明」。看 diff，写 conventional commit，需要时推送并开 PR。分支怎么集成还没定，用 finishing-a-development-branch。Use when writing a commit message, making a commit, or opening a pull request."
+description: "「提交」「帮我 commit」「开个 PR」「写提交说明」「做完了怎么合」「开 PR 还是合并」「收尾这个分支」。看 diff，写 conventional commit，需要时推送并开 PR；还没定集成方式时，先核验再给出合并、PR、保留或丢弃的选项。Use when writing a commit message, making a commit, opening a pull request, or deciding how to integrate a finished branch."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
@@ -8,12 +8,11 @@ description: "「提交」「帮我 commit」「开个 PR」「写提交说明�
 
 涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
-
 # 提交并开 PR
 
 这个技能做两件事：写提交说明，以及在用户要开 PR 时写标题和正文并推上去。
 
-实现做完、测试过了，但还没选定本地合并、开 PR、留着还是丢掉时，用 `finishing-a-development-branch`。不要在这里替它做那个选择，也不要重复它的四项菜单。用户已经点名要提交或开 PR，才从下面开始。
+实现做完、测试过了，但还没选定本地合并、开 PR、留着还是丢掉时，先按[分支收尾](references/finishing-branch.md)核验、给出选项并执行所选动作；选了「创建 PR」再回到下面第 3 节。用户已经点名要提交或开 PR，直接从下面开始。
 
 句子按 `technical-writing` 写。这里不重写那套写作规则。PR 正文的分节按仓库已有的 PR 模板；没有模板时写清改了什么、为什么改、怎么验证。
 
@@ -91,12 +90,12 @@ EOF
 
 ## 边界
 
-- 不决定合并、保留还是丢弃。那是 `finishing-a-development-branch`。
+- 合并、保留还是丢弃由[分支收尾](references/finishing-branch.md)决定，不在提交步骤里顺手做。
 - 不改产品代码来让检查变绿。
 - 不把某个聊天软件的按钮或菜单写进步骤。
 
 ## 宿主适配
 
-步骤在 Codex、Claude Code、Cursor、WorkBuddy 里相同。都用本机的 git。某个软件没有终端或没有 `gh` 时，说明缺了哪一步，把标题和正文写出来交给用户，不要换成那个软件自己的一套说法。
+步骤在 Codex、Claude Code、Antigravity 里相同。都用本机的 git。某个软件没有终端或没有 `gh` 时，说明缺了哪一步，把标题和正文写出来交给用户，不要换成那个软件自己的一套说法。
 
-Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Antigravity 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。

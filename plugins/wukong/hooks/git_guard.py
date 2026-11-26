@@ -6,7 +6,6 @@ It answers "ask", never "deny", so the user can still approve a command they
 asked for. Anything it cannot parse exits silently without a decision.
 """
 import json
-import os
 import re
 import shlex
 import sys

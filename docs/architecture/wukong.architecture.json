@@ -105,7 +105,7 @@
       "id": "session",
       "type": "frontend",
       "label": "当前代理会话",
-      "sublabel": "Codex · Claude Code · Cursor · WorkBuddy",
+      "sublabel": "Codex · Claude Code · Antigravity",
       "pos": [
         40,
         230
@@ -254,15 +254,15 @@
       "title": "技能按需加载",
       "items": [
         "已有明确匹配就直接加载；wukong-router 只在不明确时兜底。",
-        "21 个自动选用技能；22 个显式技能仍需点名或工作流授权。"
+        "20 个自动选用技能；14 个显式技能仍需点名或工作流授权。"
       ]
     },
     {
       "dot": "emerald",
-      "title": "初始化只管全局规则",
+      "title": "初始化同步全局规则与模型块",
       "items": [
         "wukong-init 同步全局规则，每次写入前都要用户明确确认。",
-        "不配置模型：子代理默认继承父会话模型，点名的模型优先。"
+        "四角色模型块按宿主匹配检索、规划、审查、测试模型；其余子代理继承父会话。"
       ]
     },
     {

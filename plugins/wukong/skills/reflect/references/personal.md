@@ -2,7 +2,7 @@
 
 把本机的使用日志归纳成你自己的个人规则，写进全局规则里单独的个人块。数据只在本机：日志在 `~/.wukong/journal.db`，规则在 `~/.wukong/profile.json`（设了 `WUKONG_HOME` 时在那个目录）。设计见仓库里的个人学习层方案。
 
-所有命令都用本技能的 `scripts/profile.py`，输出一个 JSON 对象。`<宿主>` 取当前宿主：`claude-code`、`codex`、`cursor`、`workbuddy`。不派子代理。
+所有命令都用本技能的 `scripts/profile.py`，输出一个 JSON 对象。`<宿主>` 取当前宿主：`claude-code`、`codex`、`antigravity`。不派子代理。
 
 ## `--me`：更新个人规则
 
@@ -18,7 +18,7 @@
    - `text` 是一行普通的话：不换行，不以 `#`、`>` 开头，不含 `<!--`、`-->`。
 3. 把完整的新规则列表写成临时 JSON 文件 `{"rules": [...]}`，运行 `python3 scripts/profile.py validate <文件>`。有 `errors` 就按原因改一轮再校验；仍不通过的规则删掉并在交付时说明。脚本会自动去掉 8 周没有新证据的 `learned` 规则，超出 500 token 时去掉最弱的，结果在 `dropped` 里。
 4. 在对话里列出 `diff`：新增、改写、删除各几条，每条一行，新增和改写的规则下面附 `evidence` 里它引用的原话；再列 `dropped` 和原因。然后用提问工具弹窗「写入 / 先不写」。工具不可用时用文字问。
-5. 用户选写入后运行 `python3 scripts/profile.py apply <文件> --host <宿主>`。Cursor 返回的 `block` 交给用户粘贴到 User Rules，并说明「尚未配置」。
+5. 用户选写入后运行 `python3 scripts/profile.py apply <文件> --host <宿主>`。
 
 ## 不能学的
 

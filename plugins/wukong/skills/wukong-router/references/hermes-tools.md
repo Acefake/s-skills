@@ -1,6 +1,6 @@
 # Hermes 宿主参考
 
-仅在当前会话是 Nous Research 的 Hermes agent（命令 `hermes`）时阅读。这里只记录技能目录和子代理模型能力，不改 Codex、Claude Code、Cursor、WorkBuddy 的写法。
+仅在当前会话是 Nous Research 的 Hermes agent（命令 `hermes`）时阅读。这里只记录技能目录和子代理模型能力，不改 Codex、Claude Code、Antigravity 的写法。
 
 家目录是 `$HERMES_HOME`。没设置时是 `~/.hermes`。下文用这家目录表示当前选中的 profile，不写死某台机器的路径。
 

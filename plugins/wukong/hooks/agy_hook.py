@@ -236,22 +236,44 @@ def _claim_user_turn(conversation_id, raw_input, path=None):
 
 
 def handle_pre_invocation(data, state_file=None):
-    """Return (output_dict, should_record_journal) for an Antigravity PreInvocation event."""
+    """Return (output_dict, should_record_journal, outcome) for an Antigravity PreInvocation event."""
     raw_input = data.get("lastUserInput", "")
     if not isinstance(raw_input, str) or not raw_input.strip():
-        return {}, False
+        return {}, False, None
     conv_id = str(data.get("conversationId") or "")
     if not _claim_user_turn(conv_id, raw_input, path=state_file):
-        return {}, False
-    text = improve_hook.evaluate_prompt({"prompt": raw_input}) if improve_hook else ""
+        return {}, False, None
+    if improve_hook:
+        text, outcome = improve_hook.classify_evaluation({"prompt": raw_input})
+    else:
+        text, outcome = "", "skipped:missing_hook"
     if text:
-        out = {"injectSteps": [{"systemMessage": {"systemMessage": text}}]}
+        step = {"systemMessage": text}
+        if (improve_hook and improve_hook.notice_enabled()
+                and improve_hook.looks_vague(improve_hook.extract_user_prompt(raw_input))):
+            step["metadata"] = {"user_markdown": f"`{improve_hook.USER_NOTICE}`"}
+        out = {"injectSteps": [{"systemMessage": step}]}
     else:
         out = {}
-    return out, True
+    return out, True, outcome
 
 
-def main():
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["--status"]:
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8")
+        limit = 10
+        if argv[1:2] == ["--limit"] and len(argv) > 2:
+            try:
+                limit = int(argv[2])
+            except ValueError:
+                limit = 10
+        if improve_hook:
+            print(improve_hook.format_hook_status(limit=limit))
+        else:
+            print("improve_hook 不可用。")
+        return
     try:
         raw = sys.stdin.buffer.read()
         data = json.loads(raw.decode("utf-8")) if raw.strip() else {}
@@ -260,10 +282,21 @@ def main():
     event = data.get("hookEventName", "") if isinstance(data, dict) else ""
     if event == "PreInvocation":
         try:
-            out, should_record = handle_pre_invocation(data)
+            out, should_record, outcome = handle_pre_invocation(data)
         except Exception:
-            out, should_record = {}, False
+            out, should_record, outcome = {}, False, None
         print(json.dumps(out), flush=True)
+        try:
+            if should_record and improve_hook and outcome:
+                improve_hook.record_hook_status(
+                    "PreInvocation",
+                    outcome,
+                    via="agy_hook",
+                    session_id=str(data.get("conversationId") or ""),
+                    cwd=str(data.get("cwd") or ""),
+                )
+        except Exception:
+            pass
         try:
             if should_record and journal:
                 journal.record({

@@ -163,22 +163,6 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.assertFalse(result['changed'])
         self.assertEqual(list(self.home.iterdir()), [])
 
-    def test_workbuddy_global_compatibility_file_is_readonly_until_apply(self):
-        code, result = self.run_cli('workbuddy')
-        self.assertEqual((code, result['status']), (2, 'missing'))
-        self.assertEqual(Path(result['target']), self.home/'.codebuddy/CODEBUDDY.md')
-        self.assertEqual(list(self.home.iterdir()), [])
-        path = self.home/'.codebuddy/CODEBUDDY.md'
-        path.parent.mkdir()
-        original = '用户的 WorkBuddy 规则\r\n'.encode('utf-8')
-        path.write_bytes(original)
-        for expected in (True, False):
-            code, result = self.run_cli('workbuddy', apply=True)
-            self.assertEqual((code, result['status'], result['changed']), (0, 'configured', expected))
-            self.assertTrue(path.read_bytes().startswith(original))
-        self.assertEqual(path.with_name(path.name+'.wukong.bak').read_bytes(), original)
-        self.assertFalse((self.home/'.workbuddy').exists())
-
     def test_create_global_codex_and_repeat_without_changes(self):
         result = self.module.sync_global('codex', home=self.home, apply=True)
         path = self.home / '.codex/AGENTS.md'
@@ -359,7 +343,7 @@ class GlobalInstructionsTest(unittest.TestCase):
             self.assertEqual(path.read_bytes(), original.encode('utf-8'))
         self.assertFalse(path.with_name(path.name + '.wukong.bak').exists())
 
-    def test_cli_reports_missing_apply_configured_and_cursor_without_writing_globals(self):
+    def test_cli_reports_missing_apply_configured_without_writing_globals(self):
         environment = dict(os.environ)
         environment.pop('CODEX_HOME', None)
         command = [sys.executable, '-X', 'utf8', str(SCRIPT), '--home', str(self.home)]
@@ -375,22 +359,31 @@ class GlobalInstructionsTest(unittest.TestCase):
         self.assertEqual((code, result['changed']), (0, False))
         code, result = run('--host', 'codex')
         self.assertEqual((code, result['status']), (0, 'configured'))
-        code, result = run('--host', 'cursor', '--apply')
-        self.assertEqual((code, result['changed']), (3, False))
-        self.assertFalse((self.home / '.cursor').exists())
-
-    def test_cursor_does_not_write_guessed_global_files(self):
-        for apply in (False, True):
-            result = self.module.sync_global('cursor', home=self.home, apply=apply)
-            self.assertEqual(result['status'], 'user_rules_verification_required')
-            self.assertFalse(result['changed'])
-            self.assertIn(self.module.START, result['block'])
-        self.assertEqual(list(self.home.iterdir()), [])
 
     def test_unsupported_host_cannot_write(self):
-        with self.assertRaises(ValueError):
-            self.module.sync_global('other', home=self.home, apply=True)
+        for host in ('other', 'cursor', 'workbuddy'):
+            with self.subTest(host=host), self.assertRaises(ValueError):
+                self.module.sync_global(host, home=self.home, apply=True)
         self.assertEqual(list(self.home.iterdir()), [])
+
+    def test_antigravity_uses_plugin_rules_without_duplicating_and_syncs_personal(self):
+        code, result = self.run_cli('antigravity')
+        self.assertEqual(code, 0)
+        self.assertEqual(result['status'], 'configured')
+        self.assertTrue(result['bundled_by_plugin'])
+        self.assertFalse(result['changed'])
+        self.assertEqual(list(self.home.iterdir()), [])
+
+        code_apply, result_apply = self.run_cli('antigravity', apply=True)
+        self.assertEqual(code_apply, 0)
+        self.assertFalse(result_apply['changed'])
+        self.assertEqual(list(self.home.iterdir()), [])
+
+        personal = self.module.sync_personal('antigravity', '## 我的偏好\n- 简洁回答', home=self.home, apply=True)
+        self.assertTrue(personal['changed'])
+        target = self.home / '.gemini/config/AGENTS.md'
+        self.assertTrue(target.is_file())
+        self.assertIn(self.module.PERSONAL_START, target.read_text(encoding='utf-8'))
 
     def test_daily_links_resolve_and_new_skill_is_explicit(self):
         skills = ROOT / 'plugins/wukong/skills'
@@ -511,10 +504,26 @@ class GlobalInstructionsTest(unittest.TestCase):
         result = subprocess.run(command, capture_output=True, encoding='utf-8', env=environment)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(Path(json.loads(result.stdout)['target']), home / '.codex/AGENTS.md')
-        cursor = subprocess.run([sys.executable, str(SCRIPT), '--host', 'cursor', '--home', str(home)],
-                                capture_output=True, encoding='utf-8', env=environment)
-        self.assertEqual(cursor.returncode, 3, cursor.stderr)
-        self.assertEqual(json.loads(cursor.stdout)['block'], self.module.managed_block())
+
+    def test_merge_owned_rejects_corrupted_library_marker_boundaries(self):
+        broken = f'{self.module.START}\nrules\n{self.module.END} trailing\n'
+        with self.assertRaises(self.module.ConfigurationError):
+            self.module.merge_personal(broken, '## 我的偏好\n- 简短')
+        reversed_markers = f'{self.module.END}\nrules\n{self.module.START}\n'
+        with self.assertRaises(self.module.ConfigurationError):
+            self.module.merge_models(reversed_markers, '## wukong 子代理模型\n检索: haiku')
+
+    def test_sync_personal_codex_inactive_broken_marker_aborts_before_writing_active(self):
+        codex_dir = self.home / '.codex'
+        codex_dir.mkdir()
+        agents = codex_dir / 'AGENTS.md'
+        override = codex_dir / 'AGENTS.override.md'
+        agents.write_text(f'base\n{self.module.PERSONAL_START}\nunclosed\n', encoding='utf-8')
+        original_override = 'custom override\n'
+        override.write_text(original_override, encoding='utf-8')
+        with self.assertRaises(self.module.ConfigurationError):
+            self.module.sync_personal('codex', '## 我的偏好\n- 简短', home=self.home, apply=True)
+        self.assertEqual(override.read_text(encoding='utf-8'), original_override)
 
 
 if __name__ == '__main__':

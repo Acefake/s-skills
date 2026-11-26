@@ -3,8 +3,6 @@
 
 Schemas copied into scripts/schemas/:
 
-- cursor marketplace and plugin: https://github.com/cursor/plugins/tree/main/schemas
-  (fetched 2026-10-18 from raw.githubusercontent.com/cursor/plugins/main/schemas/)
 - portable plugin: https://agent-plugins.org/schemas/1.0.0/plugin.schema.json
 
 Claude Code checks follow the field rules in its official documentation.
@@ -129,28 +127,6 @@ def check_versions(problems: Problems) -> None:
                 problems.add(f"{rel} says version {found}, lock says {version}")
 
 
-def check_cursor_marketplace(problems: Problems) -> None:
-    path = ROOT / ".cursor-plugin" / "marketplace.json"
-    data = read_json(path)
-    validate_schema(problems, "cursor marketplace", "cursor-marketplace.schema.json", data)
-    if not isinstance(data, dict):
-        return
-    if data.get("name") != MARKETPLACE_NAME:
-        problems.add("cursor marketplace name is not s-skills")
-    plugins = data.get("plugins")
-    if not isinstance(plugins, list):
-        return
-    names = [item.get("name") for item in plugins if isinstance(item, dict)]
-    if names != list(PLUGIN_ORDER):
-        problems.add(f"cursor marketplace plugin list is {names}")
-    for item in plugins:
-        if not isinstance(item, dict):
-            continue
-        source = item.get("source")
-        if source != f"plugins/{item.get('name')}":
-            problems.add(f"cursor source for {item.get('name')} is {source!r}")
-
-
 def check_host_marketplace(problems: Problems, relative: str, label: str) -> None:
     path = ROOT / relative
     data = read_json(path)
@@ -237,19 +213,14 @@ def check_codex_marketplace(problems: Problems) -> None:
 
 
 def check_plugin_manifests(problems: Problems) -> None:
-    cursor_schema = "cursor-plugin.schema.json"
     agent_schema = "agent-plugin.schema.json"
     for name in PLUGIN_ORDER:
-        cursor_path = plugin_dir(name) / ".cursor-plugin" / "plugin.json"
         claude_path = plugin_dir(name) / ".claude-plugin" / "plugin.json"
         portable_path = plugin_dir(name) / "plugin.json"
-        cursor = read_json(cursor_path)
-        validate_schema(problems, f"{name} cursor plugin", cursor_schema, cursor)
         portable = read_json(portable_path)
         validate_schema(problems, f"{name} portable plugin", agent_schema, portable)
         for label, path in (
             ("claude", claude_path),
-            ("cursor", cursor_path),
             ("portable", portable_path),
         ):
             data = read_json(path)
@@ -358,13 +329,6 @@ def check_skills(problems: Problems) -> None:
             if previous:
                 problems.add(f"duplicate skill name {skill_name!r} in {previous} and {name}/{skill.name}")
             seen_names[skill_name] = f"{name}/{skill.name}"
-            for match in __import__("re").finditer(r"上一级文件夹的 `([^`]+)`", text):
-                license_name = match.group(1)
-                if not (skills_root / license_name).is_file():
-                    problems.add(
-                        f"{name}/{skill.name} points at {license_name}, "
-                        "which is not in the skill parent folder"
-                    )
 
 
 def check_skill_resources(skill: Path, text: str, problems: Problems) -> None:
@@ -394,10 +358,12 @@ def check_local_links(directory: Path, text: str, problems: Problems, label: str
 
 
 # A skill is named in backticks, in bold, or as a /wukong: command.
+# Backticks and bold require a hyphen so single-word subcommands/modes
+# (e.g. `animate`, `teach`, `swarm`, `unslop`) do not false-positive.
 SKILL_NAME_RES = (
     re.compile(r"`([a-z0-9]+(?:-[a-z0-9]+)+)`"),
     re.compile(r"\*\*([a-z0-9]+(?:-[a-z0-9]+)+)\*\*"),
-    re.compile(r"/wukong:([a-z0-9]+(?:-[a-z0-9]+)+)"),
+    re.compile(r"/wukong:([a-z0-9]+(?:-[a-z0-9]+)*)"),
 )
 
 
@@ -424,14 +390,24 @@ def check_skill_references(problems: Problems) -> None:
 
 def check_supported_hosts(problems: Problems) -> None:
     """Reject retired adapters in maintained entry points and platform guides."""
-    # Nous Research 的 Hermes agent 是支持的宿主。退役名录不再包含 Hermes。
-    retired = re.compile(r"\b(?:OpenCode|Antigravity|Pi)\b", re.I)
-    # CodeBuddy 与 WorkBuddy 同源，会读取 .claude-plugin 下的清单；再放一份只会多出要同步版本的文件。
-    for relative in (".codebuddy-plugin/marketplace.json", "plugins/wukong/.codebuddy-plugin/plugin.json"):
+    # Nous Research 的 Hermes agent 与 Google Antigravity 均为支持的宿主。
+    retired = re.compile(r"\b(?:OpenCode|Pi|Cursor|WorkBuddy|CodeBuddy)\b", re.I)
+    for relative in (
+        ".cursor-plugin/marketplace.json",
+        "plugins/wukong/.cursor-plugin/plugin.json",
+        ".codebuddy-plugin/marketplace.json",
+        "plugins/wukong/.codebuddy-plugin/plugin.json",
+    ):
         if (ROOT / relative).exists():
-            problems.add(f"duplicate manifest, CodeBuddy reads .claude-plugin: {relative}")
+            problems.add(f"retired host manifest: {relative}")
     plugin = ROOT / "plugins/wukong"
-    paths = [ROOT / "README.md", plugin / "HOSTS.md", plugin / "AGENTS.md", plugin / "AGENTS-snippet.md"]
+    paths = [
+        ROOT / "README.md",
+        plugin / "HOSTS.md",
+        plugin / "AGENTS.md",
+        plugin / "rules/AGENTS.md",
+        plugin / "AGENTS-snippet.md",
+    ]
     paths.extend((plugin / "skills").glob("*/SKILL.md"))
     paths.extend((plugin / "skills/wukong-router/references").glob("*.md"))
     for path in paths:
@@ -450,7 +426,6 @@ def main() -> int:
     problems = Problems()
     try:
         check_versions(problems)
-        check_cursor_marketplace(problems)
         check_host_marketplace(problems, ".claude-plugin/marketplace.json", "claude")
         check_codex_marketplace(problems)
         check_plugin_manifests(problems)

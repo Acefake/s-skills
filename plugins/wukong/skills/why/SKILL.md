@@ -14,9 +14,9 @@ disable-model-invocation: true
 
 调查代码背后的动机和意图。与它配套的 `how` skill 回答代码做了什么、是怎么工作的。`why` 回答是哪些力量让它变成了现在这个形状。
 
-软件能指定模型时，调查用较快的写代码模型，综合用判断力最强的模型；不能指定就省略，继承父会话。用户本次指定的模型优先。软件拒绝模型或参数时，报告错误并交回主线程，不替换型号。派发细则见[公共派发规则](../executing-plans/references/subagents.md)。
+模型按[公共派发规则](../executing-plans/references/subagents.md#模型)：调查者是「检索」角色，综合者是「规划」角色。没有模型块时，调查用较快的写代码模型，综合用判断力最强的模型；软件不能指定就省略，继承父会话。
 
-每次派出的都是能写文件的通用类型，不要用会去掉 MCP 的只读模式。调查者和综合者要靠 MCP 核对引用。调查者仍然不应该写任何东西。Cursor 的 `grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只在 Cursor 上、并且这次确实可用时才当作默认。
+每次派出的都是能写文件的通用类型，不要用会去掉 MCP 的只读模式。调查者和综合者要靠 MCP 核对引用。调查者仍然不应该写任何东西。
 
 ## 工作姿态
 
@@ -39,7 +39,7 @@ disable-model-invocation: true
 
 ### 发现可用来源
 
-在派出调查者之前，从 Cursor 环境里列出可用的 MCP。如果有可用工具的映射表，就用它。否则就查看 Cursor 提供的 `mcps/` 目录，看看启用了哪些 MCP 服务器。
+在派出调查者之前，从当前会话环境里列出可用的 MCP。如果有可用工具的映射表，就用它；否则查看当前宿主启用的 MCP 服务器列表。
 
 把每个可用的 MCP 对应到一类证据：
 
@@ -108,7 +108,7 @@ disable-model-invocation: true
 
 调查者要能用 MCP，提示词里仍然禁止它写文件。
 
-Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Antigravity 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ### 派不出子智能体
 

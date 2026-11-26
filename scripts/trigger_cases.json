@@ -17,7 +17,7 @@
   {"prompt": "提交前把这次 diff 里的 AI 味清一下，多余的 any 去掉", "expect": ["deslop"]},
   {"prompt": "帮我写个提交说明然后 commit", "expect": ["commit-pr"]},
   {"prompt": "推上去开个 PR", "expect": ["commit-pr"]},
-  {"prompt": "功能做完测试也过了，这个分支是合并还是开 PR？", "expect": ["finishing-a-development-branch"]},
+  {"prompt": "功能做完测试也过了，这个分支是合并还是开 PR？", "expect": ["commit-pr"]},
   {"prompt": "动手前开个 worktree，和当前工作区隔开", "expect": ["executing-plans"]},
   {"prompt": "帮我审一下 #42 这个 PR", "expect": ["wukong-review"]},
   {"prompt": "审一下我本地还没提交的改动", "expect": ["wukong-review"]},

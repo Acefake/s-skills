@@ -46,12 +46,12 @@
 | 代码怎么工作 | how | 活跃 |
 | 代码为什么这样 | why | 活跃 |
 | 先画架构草图 | architect | 活跃 |
-| 并行群体作战 | swarm | 活跃 |
+| 并行群体作战 | swarm | 1.0.31 并入 executing-plans |
 | 多方案竞技场 | arena | 已移除 |
-| 多模型对抗审查 | interrogate | 活跃 |
-| 清理AI腔 | unslop | 活跃 |
+| 多模型对抗审查 | interrogate | 1.0.31 已删，严审走 requesting-code-review |
+| 清理AI腔 | unslop | 1.0.31 并入 technical-writing |
 | 清理代码腔 | deslop | 活跃 |
-| 清理代码注释 | no-comments | 活跃 |
+| 清理代码注释 | no-comments | 1.0.31 并入 deslop |
 | 技术写作 | technical-writing | 活跃 |
 | 编写skill | author-skill | 活跃 |
 | 操作界面 | control-ui | 活跃 |
@@ -190,3 +190,5 @@
 1.0.25 把 `wukong-mode`、`wukong-agent`、`figure-it-out`、`timed-loop`、`using-git-worktrees`、`subagent-driven-development` 并入 `executing-plans`，删除 `pptx`、`pdf`、`xlsx`，名字留在 RETIRED_SKILLS。
 
 1.0.30 删除 `setup-s-models` 和六角色模型配置；`setup-s-instructions` 并入 `wukong-init`，名字留在 RETIRED_SKILLS。
+
+1.0.31 删除 `interrogate`、`apple-glass`、`theme-factory`、`html-mockup`、`automate-me`；`no-comments` 并入 `deslop`，`unslop` 并入 `technical-writing`，`finishing-a-development-branch` 并入 `commit-pr`，`swarm` 并入 `executing-plans`。名字留在 RETIRED_SKILLS。

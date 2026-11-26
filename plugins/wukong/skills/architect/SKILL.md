@@ -48,7 +48,7 @@ disable-model-invocation: true
 
 当调用者明确要求时，才加一个检查点：“/architect with checkpoint”（带检查点）、“stop and show me before implementing”（实现之前先停下来给我看），或者类似的话。那时就把定稿的设计展示出来，暂停等待批准。
 
-不管哪种情况，草图都可以作为单独的一个提交，这就是 [foundational-thinking](../brainstorming/references/principles/foundational-thinking.md) 原则 里“先搭脚手架”的方式。按照 [outcome-oriented-execution](../writing-plans/references/principles/outcome-oriented-execution.md) 原则，在填充过程中出现计划好的、范围明确的破坏是可以的。如果想在实现之前对设计施加对抗性的压力，就对定稿的草图运行 **interrogate** skill。
+不管哪种情况，草图都可以作为单独的一个提交，这就是 [foundational-thinking](../brainstorming/references/principles/foundational-thinking.md) 原则 里“先搭脚手架”的方式。按照 [outcome-oriented-execution](../writing-plans/references/principles/outcome-oriented-execution.md) 原则，在填充过程中出现计划好的、范围明确的破坏是可以的。如果想在实现之前对设计施加对抗性的压力，就按 `requesting-code-review` 派一个只读子代理审定稿的草图。
 
 如果人对形状提出异议（在检查点上或者事后），就把它当作阶段 A 的证据。在写更多代码之前，重新摸底，重跑阶段 B。
 

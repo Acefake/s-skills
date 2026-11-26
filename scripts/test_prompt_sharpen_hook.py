@@ -9,20 +9,26 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIR = ROOT / 'plugins/wukong/skills/prompt-sharpen'
 HOOK = SKILL_DIR / 'scripts/improve_hook.py'
-# 钩子会写本地使用日志；测试里关掉，不碰真实的 ~/.wukong。
-os.environ['WUKONG_JOURNAL'] = '0'
+# 钩子会写本地使用日志和状态日志；测试里默认关掉，不碰真实的 ~/.wukong。
+DEFAULT_TEST_ENV = dict(os.environ, WUKONG_JOURNAL='0', WUKONG_HOOK_LOG='0')
 
 
-def run_hook(payload):
+def run_hook_raw(payload, env=None):
     result = subprocess.run(
         [sys.executable, '-I', str(HOOK)],
         input=json.dumps(payload).encode('utf-8'),
         capture_output=True,
         timeout=20,
+        env=DEFAULT_TEST_ENV if env is None else env,
     )
     assert result.returncode == 0, result.stderr.decode('utf-8', 'replace')
     out = result.stdout.decode('utf-8').strip()
-    return json.loads(out)['hookSpecificOutput'] if out else None
+    return json.loads(out) if out else None
+
+
+def run_hook(payload):
+    raw = run_hook_raw(payload)
+    return raw['hookSpecificOutput'] if raw else None
 
 
 def prompt_event(prompt):
@@ -96,6 +102,37 @@ class PromptSharpenHookTest(unittest.TestCase):
             self.assertEqual(out['hookEventName'], 'PreToolUse', command)
             self.assertIn('run_in_background', out['additionalContext'], command)
 
+    def test_quoted_or_heredoc_mentions_do_not_trigger_background_reminder(self):
+        for command in (
+            "echo '{\"command\":\"npm run dev\"}' | python hook.py",
+            'grep -n "tail -f" README.md',
+            "cat <<'EOF' > notes.md\nrun npm run dev later\nEOF",
+        ):
+            self.assertIsNone(run_hook(bash_event(command)), command)
+        for command in ('cd web && npm run dev', 'bash -c "npm run dev"', "sh -lc 'tail -f app.log'"):
+            out = run_hook(bash_event(command))
+            self.assertIn('run_in_background', out['additionalContext'], command)
+
+    def test_only_vague_prompts_show_user_notice(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_JOURNAL='0', WUKONG_HOOK_LOG='0')
+            env.pop('WUKONG_HOOK_NOTICE', None)
+            for prompt in ('帮我把性能优化一下', '把登录页改一下', 'make it better please'):
+                out = run_hook_raw(prompt_event(prompt), env=env)
+                self.assertIn('需求可能不够具体', out.get('systemMessage', ''), prompt)
+            for prompt in (
+                '把 README 里的版本号从 1.0.30 改成 1.0.31',
+                '优化 `parseDate` 的报错信息',
+                '按推荐的改，误报也一起修',
+                '给 src/login.tsx 加个记住密码的选项',
+                '优化提示词的钩子都能正确触发了吗',
+                '这个能优化一下吗？',
+            ):
+                out = run_hook_raw(prompt_event(prompt), env=env)
+                self.assertNotIn('systemMessage', out, prompt)
+                self.assertIn('wukong:prompt-sharpen', out['hookSpecificOutput']['additionalContext'], prompt)
+
     def test_short_commands_and_other_tools_stay_silent(self):
         self.assertIsNone(run_hook(bash_event('ls -la')))
         self.assertIsNone(run_hook({'hook_event_name': 'PreToolUse', 'tool_name': 'Read', 'tool_input': {'command': 'npm run dev'}}))
@@ -123,6 +160,106 @@ class PromptSharpenHookTest(unittest.TestCase):
         self.assertIn('commandWindows', doc)
         self.assertIn('../../../LICENSE-prompt-improver', doc)
         self.assertTrue((ROOT / 'plugins/wukong/LICENSE-prompt-improver').is_file())
+
+    def test_user_notice_toggle_and_status_log_cli(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_JOURNAL='0', WUKONG_HOOK_LOG='1')
+            env.pop('WUKONG_HOOK_NOTICE', None)
+
+            # Default: UserPromptSubmit includes top-level systemMessage for the user.
+            out = run_hook_raw(prompt_event('把登录页改一下'), env=env)
+            self.assertIn('prompt-sharpen', out.get('systemMessage', ''))
+
+            # PreToolUse never attaches the prompt-sharpen user notice.
+            bash_out = run_hook_raw(bash_event('npm run dev'), env=env)
+            self.assertNotIn('systemMessage', bash_out)
+
+            # WUKONG_HOOK_NOTICE=0 suppresses systemMessage while keeping additionalContext.
+            quiet_env = dict(env, WUKONG_HOOK_NOTICE='0')
+            quiet_out = run_hook_raw(prompt_event('把登录页改一下'), env=quiet_env)
+            self.assertNotIn('systemMessage', quiet_out)
+            self.assertIn('wukong:prompt-sharpen', quiet_out['hookSpecificOutput']['additionalContext'])
+
+            # Skipped prompts still record reason without storing prompt text.
+            self.assertIsNone(run_hook_raw(prompt_event('继续'), env=env))
+            self.assertIsNone(run_hook_raw(prompt_event('提交'), env=env))
+            self.assertIsNone(run_hook_raw(prompt_event('*直接做'), env=env))
+
+            log_file = Path(tmp) / 'prompt-hook-log.jsonl'
+            rows = [json.loads(line) for line in log_file.read_text(encoding='utf-8').splitlines() if line.strip()]
+            self.assertEqual([r['outcome'] for r in rows], [
+                'injected', 'injected', 'skipped:confirmation', 'skipped:short', 'skipped:prefix',
+            ])
+            for row in rows:
+                self.assertNotIn('把登录页改一下', json.dumps(row, ensure_ascii=False))
+
+            # --status prints readable summary.
+            status = subprocess.run(
+                [sys.executable, '-I', str(HOOK), '--status', '--limit', '5'],
+                capture_output=True, timeout=20, env=env,
+            )
+            self.assertEqual(status.returncode, 0, status.stderr.decode('utf-8', 'replace'))
+            text = status.stdout.decode('utf-8')
+            self.assertIn('prompt-sharpen 钩子状态', text)
+            self.assertIn('状态日志：开启', text)
+            self.assertIn('injected', text)
+            self.assertIn('skipped:prefix', text)
+
+    def test_status_log_disabled_trimming_and_corrupt_lines(self):
+        import importlib.util
+        import tempfile
+        spec = importlib.util.spec_from_file_location('wukong_improve_hook', HOOK)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            # WUKONG_HOOK_LOG=0 writes no status log and shows disabled in --status.
+            disabled_env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_JOURNAL='0', WUKONG_HOOK_LOG='0')
+            self.assertIsNotNone(run_hook_raw(prompt_event('把登录页改一下'), env=disabled_env))
+            log_file = Path(tmp) / 'prompt-hook-log.jsonl'
+            self.assertFalse(log_file.exists())
+            status_disabled = subprocess.run(
+                [sys.executable, '-I', str(HOOK), '--status'],
+                capture_output=True, timeout=20, env=disabled_env,
+            )
+            self.assertEqual(status_disabled.returncode, 0)
+            self.assertIn('状态日志：关闭（WUKONG_HOOK_LOG=0）', status_disabled.stdout.decode('utf-8'))
+
+            # skipped:empty and skipped:machine are recorded when logging is enabled.
+            enabled_env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_JOURNAL='0', WUKONG_HOOK_LOG='1')
+            self.assertIsNone(run_hook_raw(prompt_event('   '), env=enabled_env))
+            self.assertIsNone(run_hook_raw(prompt_event('<system-reminder>x</system-reminder>'), env=enabled_env))
+            rows = [json.loads(line) for line in log_file.read_text(encoding='utf-8').splitlines() if line.strip()]
+            self.assertEqual([r['outcome'] for r in rows], ['skipped:empty', 'skipped:machine'])
+
+            # Exceeding LOG_TRIM_THRESHOLD trims back to MAX_LOG_ENTRIES (2 rows already exist).
+            prev_log = os.environ.get('WUKONG_HOOK_LOG')
+            os.environ['WUKONG_HOOK_LOG'] = '1'
+            try:
+                remaining = mod.LOG_TRIM_THRESHOLD - len(rows) + 1
+                for i in range(remaining):
+                    mod.record_hook_status('UserPromptSubmit', f'injected:{i}', path=log_file)
+            finally:
+                if prev_log is None:
+                    os.environ.pop('WUKONG_HOOK_LOG', None)
+                else:
+                    os.environ['WUKONG_HOOK_LOG'] = prev_log
+            trimmed = [line for line in log_file.read_text(encoding='utf-8').splitlines() if line.strip()]
+            self.assertEqual(len(trimmed), mod.MAX_LOG_ENTRIES)
+            self.assertEqual(json.loads(trimmed[-1])['outcome'], f'injected:{remaining - 1}')
+
+            # Corrupt, non-dict, and non-string session entries do not crash --status.
+            with log_file.open('a', encoding='utf-8') as handle:
+                handle.write('not-json\n[1, 2, 3]\n"plain-string"\n')
+                handle.write(json.dumps({'ts': '2026-01-01', 'via': 'test', 'event': 'UserPromptSubmit',
+                                         'outcome': 'injected', 'session': 123456789, 'project': 42}) + '\n')
+            status_corrupt = subprocess.run(
+                [sys.executable, '-I', str(HOOK), '--status', '--limit', '10'],
+                capture_output=True, timeout=20, env=enabled_env,
+            )
+            self.assertEqual(status_corrupt.returncode, 0, status_corrupt.stderr.decode('utf-8', 'replace'))
+            self.assertIn('session=12345678', status_corrupt.stdout.decode('utf-8'))
 
 
 if __name__ == '__main__':

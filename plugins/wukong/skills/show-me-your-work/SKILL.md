@@ -9,7 +9,6 @@ disable-model-invocation: true
 
 涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
-
 # 把你的过程摆出来
 
 只保留一份权威的日志。
@@ -41,7 +40,7 @@ ts	phase	decision	why	evidence	result
 
 ## 记一行
 
-每一条都写成你告诉队友自己做了什么的样子。平常的话，具体的动作，不要 AI 腔或抽象的行话（**unslop** skill 也适用于日志文字）。
+每一条都写成你告诉队友自己做了什么的样子。平常的话，具体的动作，不要 AI 腔或抽象的行话（见[去 AI 腔清单](../technical-writing/references/unslop.md)）。
 
 用辅助脚本 `scripts/log.sh <logfile> <phase> <decision> <why> <evidence> <result>`。它是 bash，Windows 上用 Git Bash 或 WSL 跑，PowerShell 跑不了。它会盖上 `ts` 时间戳，第一次使用时写入表头，去掉多余的制表符/换行，并在任何以 `=`、`+`、`-` 或 `@` 开头的单元格前面加一个单引号（防止表格软件把它当公式）。直接用 `printf` 追加一行也可以，但如果单元格内容来自生成的或用户提供的文字，要注意同样这些字符。没有 bash 时，就按同样的列和清洗规则自己追加一行。
 
@@ -62,7 +61,7 @@ ts	phase	decision	why	evidence	result
 
 ## 对照对话记录审查日志
 
-在运行结束、交回之前，检查日志说的是不是实话。读当前工作区 `agent-transcripts/` 目录下本次运行的对话记录（系统提示词里写着路径）。不要对 `~/.cursor/projects/*/` 用通配符。那样会读到无关的私密对话。把本次运行写的各行和实际发生的事逐一对照。这些行分成若干段，每段从本次运行的一个 `start` 行开始（如果日志是本次运行创建的，就从第一行开始），到另一次运行的下一个 `start` 行结束：
+在运行结束、交回之前，检查日志说的是不是实话。读当前工作区 `agent-transcripts/` 或当前会话记录目录下本次运行的对话记录（系统提示词里写着路径）；只读当前工作区，不要用通配符跨工作区扫描其他项目的私密对话。把本次运行写的各行和实际发生的事逐一对照。这些行分成若干段，每段从本次运行的一个 `start` 行开始（如果日志是本次运行创建的，就从第一行开始），到另一次运行的下一个 `start` 行结束：
 
 - 检查每一行都对应一个真实的决定或动作。
 - 检查每一行的证据都能找到，并且显示了这一行所声称的内容。
@@ -85,8 +84,7 @@ ts	phase	decision	why	evidence	result
 
 这个审查者要和做这份工作的模型不同系列。具体派法见[宿主适配](../../HOSTS.md)。
 
-
-Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
+Codex、Claude Code、Antigravity 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 
 ## 审阅这条记录
 

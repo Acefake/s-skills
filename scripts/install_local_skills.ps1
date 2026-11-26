@@ -1,5 +1,5 @@
 ﻿param(
-    [ValidateSet('codex', 'workbuddy')]
+    [ValidateSet('codex')]
     [string]$HostName = 'codex'
 )
 
@@ -52,41 +52,13 @@ $legacySourceRoots = @(
     (Join-Path $repoRoot 'plugins\s-atlas\skills'),
     (Join-Path $repoRoot 'plugins\s-wukong\skills')
 )
-$adapterDirectory = if ($HostName -eq 'workbuddy') { '.codebuddy' } else { '.agents' }
+$adapterDirectory = '.agents'
 $adapterRoot = Join-Path $repoRoot $adapterDirectory
 $destinationRoot = Join-Path $adapterRoot 'skills'
 $commonFiles = @((Get-Item -LiteralPath (Join-Path $repoRoot 'plugins/wukong/HOSTS.md')))
 $commonFiles += @(Get-ChildItem -LiteralPath (Join-Path $repoRoot 'plugins/wukong') -File | Where-Object {
     $_.Name -like 'LICENSE*' -or $_.Name -like 'NOTICE*'
 })
-if ($HostName -eq 'workbuddy') {
-    $ownershipPath = Join-Path $adapterRoot '.wukong-common-files.json'
-    $legacyOwnershipPath = Join-Path $adapterRoot '.s-atlas-common-files.json'
-    $previousOwnershipPath = Join-Path $adapterRoot '.s-wukong-common-files.json'
-    $ownership = $null
-    $recordPath = $ownershipPath
-    if (-not (Test-Path -LiteralPath $ownershipPath) -and (Test-Path -LiteralPath $previousOwnershipPath)) {
-        $recordPath = $previousOwnershipPath
-    } elseif (-not (Test-Path -LiteralPath $ownershipPath) -and (Test-Path -LiteralPath $legacyOwnershipPath)) {
-        $recordPath = $legacyOwnershipPath
-    }
-    if (Test-Path -LiteralPath $recordPath) {
-        $ownership = Get-Content -LiteralPath $recordPath -Raw | ConvertFrom-Json
-        if ($ownership.schema -ne 1 -or -not $ownership.files) {
-            throw "Invalid installation record: $recordPath"
-        }
-    }
-    foreach ($sourceFile in $commonFiles) {
-        $existingFile = Join-Path $adapterRoot $sourceFile.Name
-        if (Test-Path -LiteralPath $existingFile) {
-            $actualHash = (Get-FileHash -LiteralPath $existingFile).Hash
-            $recordedHash = if ($ownership) { $ownership.files.PSObject.Properties[$sourceFile.Name].Value } else { $null }
-            if ($actualHash -ne (Get-FileHash -LiteralPath $sourceFile.FullName).Hash -and $actualHash -ne $recordedHash) {
-                throw "Existing file differs; reconcile it before installing: $existingFile"
-            }
-        }
-    }
-}
 New-Item -ItemType Directory -Path $destinationRoot -Force | Out-Null
 $skills = Get-ChildItem -LiteralPath $sourceRoot -Directory | Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') }
 # Validate every destination before creating or migrating any links.
@@ -114,19 +86,5 @@ foreach ($skill in $skills) {
 }
 foreach ($sourceFile in $commonFiles) {
     Copy-Item -LiteralPath $sourceFile.FullName -Destination (Join-Path $adapterRoot $sourceFile.Name)
-}
-if ($HostName -eq 'workbuddy') {
-    $hashes = [ordered]@{}
-    foreach ($sourceFile in $commonFiles) {
-        $hashes[$sourceFile.Name] = (Get-FileHash -LiteralPath $sourceFile.FullName).Hash
-    }
-    $record = @{ schema = 1; files = $hashes } | ConvertTo-Json -Depth 4
-    $temporaryPath = "$ownershipPath.$([guid]::NewGuid().ToString('N')).tmp"
-    try {
-        [System.IO.File]::WriteAllText($temporaryPath, $record, (New-Object System.Text.UTF8Encoding($false)))
-        Move-Item -LiteralPath $temporaryPath -Destination $ownershipPath -Force
-    } finally {
-        if (Test-Path -LiteralPath $temporaryPath) { Remove-Item -LiteralPath $temporaryPath }
-    }
 }
 Write-Output "Linked $($skills.Count) skills for $HostName from $sourceRoot to $destinationRoot. Open a new project session to discover them."

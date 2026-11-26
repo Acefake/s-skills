@@ -28,8 +28,8 @@
 | 只读探索 | 内置 `explorer`。提示词里可以要求不改文件。文档写明这不会变成单独的只读沙箱，子智能体继承父级这一轮的沙箱和审批 |
 | 向用户提问的工具 | `request_user_input`（只有主对话能用，子智能体不能问） |
 | 后台运行和取结果 | 提示词里写 “Wait for all, then summarize”。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`），不写时由 Codex 自己选默认。没有文档化的单独取结果工具名 |
-| 指定模型 | 见下面「Codex 怎么指定模型」。不要把 Cursor 的模型名写进来 |
-| 子智能体在哪里跑 | 子智能体文档没有 `environment` 或 `cloud_base_branch`。本地 Codex 跟父级同一套沙箱，在本机跑。ChatGPT Work 是另一套托管环境，不要套过来。从别的分支开始：把 SHA 写进提示词 |
+| 指定模型 | 见下面「Codex 怎么指定模型」。不要把其他宿主的模型名写进来 |
+| 子智能体在哪里跑 | 子智能体文档没有云端运行或基础分支参数。本地 Codex 跟父级同一套沙箱，在本机跑。ChatGPT Work 是另一套托管环境，不要套过来。从别的分支开始：把 SHA 写进提示词 |
 | 让主对话定时醒来 | 使用 `executing-plans` 的「反复检查直到通过」。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
 | 写 SKILL.md | 跑 `/author-skill`。目录按本文件对应技能的章节 |
 
@@ -45,33 +45,25 @@
 
 探索用内置 `explorer`。讲解用通用智能体，需要换模型时在提示词里点名这次账号里真有的模型。复杂情况写成：Spawn one explorer subagent per angle. Wait for all, then spawn one explainer. 点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
 
-## interrogate
-
-用话派，不要找 `Task` 的 `model` 参数。提示词写成：Spawn one subagent per reviewer. Reviewer A is `<name-a>`（或 “uses model \<A\> with model_reasoning_effort \<档位\>”）. Reviewer B is `<name-b>`. Wait for both. Do not edit files. Return each reviewer's findings.
-
-`<name-a>` 可以是用户自己写的自定义智能体的 `name`；文件里的 `model` 和 `model_reasoning_effort` 优先于口头点名。没有这些文件时，在提示词里点名两个这次账号里真有的模型。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。`[agents].default_subagent_model` 是全体一个默认，拉不开两个审查者。profile 是整次进程的覆盖，不是每个审查者一个。未核实：给单个子智能体选 profile。
-
-提示词里的「不要改文件」不会变成单独的只读沙箱。
-
 ## reflect
 
 提示词写成：Spawn three subagents. Judgment and divergent use model \<判断模型\>. Tooling uses model \<写代码模型\>. Wait for all three. Then spawn one synthesizer on the judgment model. 自定义智能体继承父级 MCP。提示词可以要求审查者不要改 skill 文件；这不会变成单独的只读沙箱。模型名用这次账号里真有的。
 
 ## Codex 怎么指定模型
 
-这里说的是本地 Codex（CLI、IDE、桌面应用）。ChatGPT Work 是另一套托管环境，不要把它的界面套过来。官方文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)。没有 Cursor 那种带 `model` 参数的 `Task` 工具。
+这里说的是本地 Codex（CLI、IDE、桌面应用）。ChatGPT Work 是另一套托管环境，不要把它的界面套过来。官方文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)。没有带 `model` 参数的独立 `Task` 工具。
 
-默认不点名模型，子智能体继承父级。用户本次指定模型时，在提示词里点名（“uses model \<模型\> with model_reasoning_effort \<档位\>”），模型名必须是这次账号里真有的。
+默认不点名模型，子智能体继承父级。检索、规划、审查、测试四个角色按[公共派发规则](../../executing-plans/references/subagents.md#模型)取模型和档位，在提示词里点名（“uses model \<模型\> with model_reasoning_effort \<档位\>”）；模型是 `继承` 时只点名档位。用户本次指定模型时以用户为准。模型名必须是这次账号里真有的，档位只写该模型支持的。
 
 用户自己写的自定义智能体放 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录），必填 `name`、`description`、`developer_instructions`，可写 `model` 和 `model_reasoning_effort`；文件里的值优先于口头点名。自定义智能体继承父级的权限、provider 和 MCP，文件里不能改这些。内置 `worker` 做实现，`explorer` 做读得多的探索，`default` 是通用兜底。
 
 `[agents].default_subagent_model` 是全体一个默认值，拉不开多个审查者。profile 是整次进程的覆盖，不是某个子智能体的模型开关。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`）。
 
-## swarm
+## executing-plans：并行群体作战
 
 提示词写成：Spawn N subagents in parallel. Wait for all of them, then summarize. 需要换模型时写 “each uses model \<模型\> with model_reasoning_effort \<档位\>”，点名这次账号里真有的较快模型。文档举例 `gpt-6-luna` 只在账号有它时才用。
 
-没有 `cloud_base_branch`。SHA 写在提示词里。未核实：有没有把子智能体放到另一台机器的参数。子智能体文档只写了跟父级同一套沙箱。并发很多时，看 `[agents].max_concurrent_threads_per_session`，不写则由 Codex 自己选默认。
+从非默认分支开始时，把 SHA 写在提示词里。未核实：有没有把子智能体放到另一台机器的参数。子智能体文档只写了跟父级同一套沙箱。并发很多时，看 `[agents].max_concurrent_threads_per_session`，不写则由 Codex 自己选默认。
 
 ## executing-plans：反复检查
 
@@ -85,6 +77,6 @@
 
 提示词里点名另一个这次账号里真有的模型，或点名一个已经写好、模型不同的自定义智能体。`default_subagent_model` 拉不开系列。
 
-## no-comments
+## deslop：注释审查子代理
 
-用话派一个子智能体，点名内置 `explorer`。提示词只写：先读 `skills/no-comments/references/comment-sicko.md`，再审这个范围。文档写明这不会变成单独的只读沙箱。
+用话派一个子智能体，点名内置 `explorer`。提示词只写：先读 `skills/deslop/references/comment-sicko.md`，再审这个范围。文档写明这不会变成单独的只读沙箱。

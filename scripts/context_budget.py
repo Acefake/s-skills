@@ -66,7 +66,7 @@ def measure() -> list[tuple[str, int]]:
     session = _load(PLUGIN / "hooks/session_check.py", "wukong_session_check")
     parts.append(("SessionStart hook line", estimate(session.build_message({"status": "configured", "version": "0.0.0"}))))
     improve = _load(SKILLS / "prompt-sharpen/scripts/improve_hook.py", "wukong_improve_hook")
-    parts.append(("prompt-sharpen note (per message)", estimate(improve.EVALUATION.format(prompt=""))))
+    parts.append(("prompt-sharpen note (per message)", estimate(improve.EVALUATION)))
     return parts
 
 

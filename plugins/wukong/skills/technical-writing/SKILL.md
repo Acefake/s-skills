@@ -1,6 +1,6 @@
 ---
 name: technical-writing
-description: "「写 README」「写文档」「写 RFC」「改 PR 说明」。Markdown 和技术说明的分层标准。Word 用 docx。Use when writing or reviewing a README, technical documentation, an RFC, a PR description, or a commit message."
+description: "「写 README」「写文档」「写 RFC」「改 PR 说明」「去掉 AI 腔」「这段话太 AI 了」。Markdown 和技术说明的分层标准，附去 AI 腔清单。Word 用 docx。Use when writing or reviewing a README, technical documentation, an RFC, a PR description, or a commit message, or removing AI-sounding prose from any text."
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,6 @@ disable-model-invocation: true
 ## 运行环境适配
 
 涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
-
 
 # 技术写作
 
@@ -24,7 +23,7 @@ disable-model-invocation: true
 
 代码库就是词表。写真实的符号、文件、参数（flag）或命令名，而不是它的同义词或描述。
 
-不要自造行话。用开发者会说出口的词："move"、"delete"、"a budget that only decreases"（一个只会减少的额度），而不是 "evacuate"、"ratchet" 或 "endgame"。用一个有名字的模式没问题，只要文档第一次出现时说明它是什么意思。如果发现新的问题词和替代词，在你的回复里把它们作为对 `unslop` 的“抽象比喻”规则的补充提出来，并附上改动（diff）。不要直接编辑那个 skill。
+不要自造行话。用开发者会说出口的词："move"、"delete"、"a budget that only decreases"（一个只会减少的额度），而不是 "evacuate"、"ratchet" 或 "endgame"。用一个有名字的模式没问题，只要文档第一次出现时说明它是什么意思。如果发现新的问题词和替代词，在你的回复里把它们作为对 [去 AI 腔清单](references/unslop.md) 的“抽象比喻”规则的补充提出来，并附上改动（diff），不要直接修改清单文件。
 
 ## 让节奏有变化
 
@@ -98,7 +97,7 @@ disable-model-invocation: true
 
 ## 语气和仓库方面的具体规定
 
-- 这个 skill 处理的每一份文档，都要用 **unslop** skill 过一遍。那个 skill 负责“AI 腔”问题清单：AI 爱用的词、废话、含糊其辞、格式上的痕迹。
+- 这个 skill 处理的每一份文档，都要用 [去 AI 腔清单](references/unslop.md) 过一遍。该清单负责“AI 腔”问题：AI 爱用的词、废话、含糊其辞、格式上的痕迹。
 - PR 说明和提交信息也是写作。除了 Diátaxis，每一层都适用于它们。一份 PR 正文是一份审查者一分钟内能读完的简报。不要贴大批子智能体（swarm）的日志、SHA 列表或指标表格。给链接。
 - 产品界面上的文字不是文档。那些要用你们产品自己的文案规范。
 - 代码片段用 tab 缩进。写真实的路径。每一个关于数量或目录树的说法，在合入它的那次提交里都必须是真的，并附上重新生成它的命令。

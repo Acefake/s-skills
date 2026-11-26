@@ -7,7 +7,6 @@
 | Claude Code | 装上插件后由 [hooks.json](../../../hooks/hooks.json) 自动注册，默认开启。 |
 | Antigravity | 挂载插件后由插件根 [hooks.json](../../../hooks.json) 注册 `PreInvocation`（经 [agy_hook.py](../../../hooks/agy_hook.py) 复用同一套评估规则，按会话与用户输入去重，每轮用户消息只注入一次），默认开启。 |
 | Codex | 实测不读取插件自带的 `hooks/hooks.json`，要在 `~/.codex/hooks.json` 里手动加，并在 `/hooks` 里批准一次，见下文。 |
-| Cursor、WorkBuddy | 未验证有对应的钩子机制，仍靠点名或技能描述触发。 |
 
 ## 它做什么
 
@@ -20,10 +19,18 @@
 
 每条未跳过的提示词（确认和极短消息除外）都会额外携带约 180 token 的精简评估说明，保留缺口判断标准，不再重复引用用户原话。后台提醒只在命中长命令时出现。需要本机有 `python3` 或 `python`，两者都没有时钩子报错但不影响对话。修改源码不证明已安装的插件缓存或现有会话已热更新；以新一轮实际注入的文本为准，不为刷新擅自重写钩子配置或信任信息。
 
-## 单条跳过与关闭
+## 单条跳过、可见性与关闭
 
 - 单条跳过：提示词以 `*` 开头。
-- 整体关闭：钩子不能单独停用，只能停用整个插件，或把 `~/.claude/settings.json` 的 `disableAllHooks` 设为 `true`（会同时关掉你所有的钩子）。
+- 界面可见提示：只在提示词看起来笼统时显示（不超过 30 个字、只有「优化」「改一下」「看看」这类泛化动作、没有文件名、路径、代码、数字或引号里的具体对象，且不是问句），Claude Code 通过顶层 `systemMessage`、Antigravity 通过 `metadata.user_markdown` 显示一行 `[wukong] prompt-sharpen：需求可能不够具体，已提醒先澄清`（仅展示给用户，不占模型上下文）。这只是粗判，给模型的评估说明不变，是否真加载 `prompt-sharpen` 仍由模型结合对话决定。设环境变量 `WUKONG_HOOK_NOTICE=0` 可关闭界面提示。Codex 对顶层 `systemMessage` 的兼容尚未实测；若在 Codex 侧未展示或有兼容性提示，可设 `WUKONG_HOOK_NOTICE=0` 并改用下方本地状态日志核对。
+- 本地状态排查（全宿主通用，含 Codex）：钩子会把最近 50 条触发结果（时间、入口、结果如 `injected` / `skipped:short` / `skipped:confirmation` / `skipped:prefix`，不存提示词正文）记到 `~/.wukong/prompt-hook-log.jsonl`（`WUKONG_HOOK_LOG=0` 关闭）。随时运行下面任一命令核对最近是否触发：
+
+```sh
+python <插件目录>/skills/prompt-sharpen/scripts/improve_hook.py --status
+python <插件目录>/hooks/agy_hook.py --status --limit 20
+```
+
+- 整体关闭：Claude Code 不能单独停用单个钩子，需停用整个插件或把 `~/.claude/settings.json` 的 `disableAllHooks` 设为 `true`（会同时关掉所有钩子）；Antigravity 可在插件根 `hooks.json` 中把 `wukong-prompt-sharpen` 设为 `"enabled": false`。
 
 ## Codex 手动配置
 
