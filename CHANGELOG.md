@@ -2,6 +2,10 @@
 
 每个版本只列对使用者有影响的变化。细节见对应的 [GitHub Release](https://github.com/Acefake/s-skills/releases) 和提交历史。
 
+## 1.0.34
+
+- 文档只描述当前版本：重写 README、架构说明和全景图，精简 CHANGELOG 与 RENAMES，删除 `docs/wukong/` 下的历史计划和规格。
+
 ## 1.0.33
 
 - `executing-plans` 的并行群体作战改为 Antigravity 原生群体协调者说明的中文译本；其他宿主改用可用的子代理派发。

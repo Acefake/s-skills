@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Antigravity。</p>
 
-<p align="center">当前版本 1.0.33，共 <strong>34</strong> 个技能：20 个按描述自动选用，14 个需点名调用。</p>
+<p align="center">当前版本 1.0.34，共 <strong>34</strong> 个技能：20 个按描述自动选用，14 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
