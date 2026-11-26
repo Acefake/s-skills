@@ -161,7 +161,7 @@ Codex 还要检查以前手动注册的钩子：`python <当前插件>/skills/wu
 | `project-memory` | 自动 | 在项目里建立并维护架构、规范、决策记录，改动后按 diff 只更新受影响的部分 |
 | `brainstorming` | 自动 | 做功能前先把方案磨清；含 4 条原则 |
 | `writing-plans` | 自动 | 把活写成可执行计划；含 2 条原则 |
-| `executing-plans` | 自动 | 按写好的计划做：主会话或子智能体逐任务执行、隔离工作区、循环检查、没有现成流程时先定可审计做法；含 3 条原则 |
+| `executing-plans` | 自动 | 按写好的计划做：主会话或子智能体逐任务执行、隔离工作区、循环检查、没有现成流程时先定可审计做法；点名 swarm 时按 Antigravity 原生群体协调者并行派工；含 3 条原则 |
 | `systematic-debugging` | 自动 | 按证据排错；含 4 条原则 |
 | `tdd` | 自动 | 修 bug 时有便宜的测试点就先写失败测试 |
 | `test-strategy` | 自动 | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java；含 1 条原则 |
