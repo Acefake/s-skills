@@ -3,10 +3,10 @@ name: project-memory
 description: "「更新项目文档」「同步项目记录」「建项目档案」「架构文档过期了」「/project-memory」。在项目里建立并维护架构、规范、决策记录；代码有改动后按 diff 只更新受影响的部分。Use when creating or syncing a project's architecture, conventions, and decision records after code changes."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # 项目记录
 
@@ -94,7 +94,7 @@ description: "「更新项目文档」「同步项目记录」「建项目档案
 
 ## init
 
-1. **读项目。** 入口文件、配置、目录结构、README、近期提交、测试和构建命令。小项目自己读；大项目按[公共派发规则](../executing-plans/references/subagents.md)派只读检索子智能体，各读一块再汇总，角色读 s 模型配置里的「检索与探索」。派不出子智能体就自己读，并说一句没有换模型。
+1. **读项目。** 入口文件、配置、目录结构、README、近期提交、测试和构建命令。小项目自己读；大项目按[公共派发规则](../executing-plans/references/subagents.md)派只读检索子智能体，各读一块再汇总。派不出子智能体就自己读，并说一句没有换模型。
 2. **先给目录和要点。** 列出要建的文件，以及每份的要点，让用户确认。已有记录位置的话，沿用它。
 3. **确认后再写。** 先写 `architecture.md`、`conventions.md`、索引；有明确的历史取舍时再补 `decisions/`。
 4. **补指针。** 在 `CLAUDE.md`、`AGENTS.md` 里加一行指针；改之前先给出 diff。

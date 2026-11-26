@@ -4,10 +4,10 @@ description: "「/refactor-architecture」「重构架构」「找重构点」�
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 架构重构

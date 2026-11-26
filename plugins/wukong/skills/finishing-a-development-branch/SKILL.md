@@ -3,7 +3,7 @@ name: finishing-a-development-branch
 description: "「做完了怎么合」「开 PR 还是合并」「收尾这个分支」。完成适用验证、还没定集成方式时，给出合并、PR 或清理的选项。Use when implementation and applicable verification are complete, and you need to decide how to integrate the work."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 
 # 收尾开发分支
 

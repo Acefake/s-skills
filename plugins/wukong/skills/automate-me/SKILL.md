@@ -4,10 +4,10 @@ description: "「/automate-me」「把我自动化」「刷新我的 mode 技能
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # 把我自动化
 
@@ -33,7 +33,7 @@ disable-model-invocation: true
 
 对话记录是私人内容。读之前先说明要读哪个范围，用户同意再读。只读当前项目对应的记录目录：Claude Code 是 `~/.claude/projects/<当前项目>/`，Cursor 以系统提示里写明的 `agent-transcripts/` 为准。不对 `~/.claude/projects/*/` 这类上级目录做通配符搜索，那会越过项目边界，读到无关项目里的私人聊天。
 
-在这个范围内，把最近的对话切成几片（例如最近 2–4 周分成 3 片，每片材料足够），按 [subagents.md](../executing-plans/references/subagents.md) 选每个子代理的模型、推理等级和速度，派只读子代理分头挖掘；没有授权或没有子代理能力时，主任务自己逐片读。每片返回一份简短的结构化清单，列出看到的模式和证据出处。默认值得寻找的信号：
+在这个范围内，把最近的对话切成几片（例如最近 2–4 周分成 3 片，每片材料足够），按 [subagents.md](../executing-plans/references/subagents.md) 派只读子代理分头挖掘；没有授权或没有子代理能力时，主任务自己逐片读。每片返回一份简短的结构化清单，列出看到的模式和证据出处。默认值得寻找的信号：
 
 - 回复偏好（长度、语气、格式、“说简单点”之类的纠正）
 - 分派习惯（子智能体、模型、专门的工作流程、并行）

@@ -1,14 +1,14 @@
 ---
 name: executing-plans
-description: "「按这份计划做」「执行实现计划」「派子智能体逐个做」「开个 worktree」「反复检查直到通过」「没有现成流程你自己想办法」「多个子代理会写同一文件」「按更严的方式做」。把已写好的计划执行完，或为长任务定一套可审计做法。含主会话执行、子代理逐任务执行、隔离工作区、循环检查。Use when executing a written plan in this or a follow-up session, dispatching subagents task by task, isolating work in a worktree, looping a check until it passes, inventing an auditable procedure when none exists, keeping parallel agents off shared files, or working in a stricter mode."
+description: "「按这份计划做」「执行实现计划」「派子智能体逐个做计划里的任务」「先开个 worktree 再做」「反复跑这个检查直到通过」「多个子代理会写同一个文件」。手上已有书面计划要执行完，或要隔离工作区、让并行子代理别共用文件、循环检查到通过时用。只是写脚本、加 lint、迁移调用方、拆步骤或让我少问几句，不用本技能。Use when executing an already written implementation plan (in this or a follow-up session, or task by task with subagents), isolating work in a git worktree, keeping parallel subagents off shared files, or looping a check until it passes. Not for one-off scripts, lint rules, API migrations, planning, or general autonomy requests."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md)，按角色解析与路由派发。独立检出由 T3 创建绑定；任务说明带齐上下文，不假定父历史或未提交文件可见。等待遵循返回的 `next`。
+T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md)。独立检出由 T3 创建绑定；任务说明带齐上下文，不假定父历史或未提交文件可见。等待遵循返回的 `next`。
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。找不到工具、类型或模型时读 [host-fallback.md](references/host-fallback.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。找不到工具、类型或模型时读 [host-fallback.md](references/host-fallback.md)。
 
 # 执行计划
 
@@ -42,7 +42,7 @@ T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md
 - 持续执行：任务之间不停下来问「要继续吗」。只在无法解决的 BLOCKED、真正阻碍进展的歧义、或全部完成时停。可撤销的工作先做完再给人看（[never-block-on-the-human](references/principles/never-block-on-the-human.md)）。
 - 多个子代理可能写同一文件、分支或键时，先分开再谈串行（[separate-before-serializing-shared-state](references/principles/separate-before-serializing-shared-state.md)）。
 - 未授权提交时，报告未提交状态和改动文件，不为生成评审包而提交。`scripts/review-package BASE HEAD` 只含提交差异，必须另附暂存、未暂存和相关新文件内容；基线时已有的无关修改单独标明并保留。
-- 派发规则（类型、模型、推理档位、并发只读检索、新子代理还是恢复）读 [subagents.md](references/subagents.md)；角色选模型读 [model-selection.md](references/model-selection.md)。
+- 派发规则（类型、模型、并发只读检索、新子代理还是恢复）读 [subagents.md](references/subagents.md)。
 
 细则进入对应步骤前读：[reviewer-warnings](references/reviewer-warnings.md)（评审者标了无法从 diff 核实的条目）、[reviewer-prompts](references/reviewer-prompts.md)（评审与终审提示词）、[file-handoff](references/file-handoff.md)（文件交接）、[red-flags](references/red-flags.md)（开工前读；提问、评审失败、任务失败怎么处理）、[integration](references/integration.md)（要一起用的技能）、[example-workflow](references/example-workflow.md)（完整例子）。
 

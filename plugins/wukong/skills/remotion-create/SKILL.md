@@ -4,7 +4,7 @@ description: "「用 Remotion 做视频」「做可重复渲染的产品演示�
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 
 # 用 Remotion 制作视频
 

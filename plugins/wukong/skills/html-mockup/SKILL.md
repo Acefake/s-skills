@@ -4,7 +4,7 @@ description: "「先出图」「做个设计图」「效果图」「mockup」「
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 # HTML 设计图（mockup）
 
 用一页静态 HTML/CSS 画设计稿，无头 Chromium 截图成 PNG/JPG 给用户看。比生成图片可控：像素级对齐、真文字、真图片、能改一处重截。

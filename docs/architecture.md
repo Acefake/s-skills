@@ -2,7 +2,7 @@
 
 wukong 是一套由代理读取的技能与本地工具，不是独立运行的 Agent 服务。Codex、Claude Code、Cursor、WorkBuddy 提供会话和执行能力；本仓库提供技能描述、任务流程、宿主适配和确定性的配置工具。
 
-当前版本 **1.0.29**，共 **45** 个技能：**22** 个可按描述自动选用，**23** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
+当前版本 **1.0.30**，共 **43** 个技能：**21** 个可按描述自动选用，**22** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
 
 [全景卡片图（单独维护，可能滞后）](architecture/wukong-panorama.html) · [组件关系补充图](architecture/wukong.html) · [安装与使用](../README.md)
 
@@ -10,7 +10,7 @@ wukong 是一套由代理读取的技能与本地工具，不是独立运行的 
 
 | 分区 | 卡片数 | 内容 |
 |---|---|---|
-| 入口与配置 | 4 | 路由、全局提示词、模型配置、一键初始化 |
+| 入口与配置 | 2 | 路由、一键初始化（全局提示词） |
 | 工作模式 | 3 | 架构决策、协作与长任务记录 |
 | 开发主流程 | 16 | 需求到执行、调试测试、质量、审查与收尾 |
 | 专项技能 | 22 | 理解架构、界面操作、MCP 与视频、专项审查、Word 文档和表达 |
@@ -30,7 +30,7 @@ wukong 是一套由代理读取的技能与本地工具，不是独立运行的 
 | 技能发现与路由 | 优先直接匹配；不明确时才由 wukong-router 判断；不覆盖显式调用政策 | [wukong-router](../plugins/wukong/skills/wukong-router/SKILL.md) 与各技能 frontmatter |
 | 执行流程与能力 | 按任务使用方案、计划、调试、文档、界面、测试等技能 | [skills/](../plugins/wukong/skills/) |
 | 宿主适配 | 把通用动作映射到当前宿主已有工具，不编造能力 | [HOSTS.md](../plugins/wukong/HOSTS.md) |
-| 本地持久化 | 幂等同步受管全局规则和模型配置，写入前确认 | [setup-s-instructions](../plugins/wukong/skills/setup-s-instructions/SKILL.md)、[setup-s-models](../plugins/wukong/skills/setup-s-models/SKILL.md)、[wukong-init](../plugins/wukong/skills/wukong-init/SKILL.md) |
+| 本地持久化 | 幂等同步受管全局规则，写入前确认 | [wukong-init](../plugins/wukong/skills/wukong-init/SKILL.md) |
 
 三个市场入口共用 `plugins/wukong` 中的技能源文件，通过各自插件清单分发。它们不共享一个后台进程，也不自动共享其他机器上的配置。
 
@@ -68,9 +68,7 @@ flowchart TD
 | 动作 | 结果 | 不代表什么 |
 |---|---|---|
 | 安装或更新插件 | 宿主发现对应版本的技能 | 不自动改全局提示词，不保证当前会话立即重载 |
-| 显式执行 `setup-s-instructions` | 将当前版本完整规则同步到受管标记块，保留其他内容 | 不清空用户配置 |
-| 显式执行 `setup-s-models` | 一步一问选预算和六角色模型，确认后写入模型标记段 | 不切换主会话模型，只影响技能派出的子代理 |
-| 显式执行 `wukong-init` | 按顺序做上面两步，每步写入前确认，最后汇总 | 不替用户预选预算或模型 |
+| 显式执行 `wukong-init` | 将当前版本完整规则同步到受管标记块，保留其他内容；写入前确认 | 不清空用户配置，不配置模型 |
 | 日常全局自检 | 每个主会话只读检查一次，缺失或过期时提醒 | 不自动初始化，不阻塞任务 |
 
 Codex 使用实际 `CODEX_HOME` 下生效的 `AGENTS.override.md` 或 `AGENTS.md`；Claude Code 使用实际 `CLAUDE_CONFIG_DIR` 下的 `CLAUDE.md`。WorkBuddy 使用兼容文件 `~/.codebuddy/CODEBUDDY.md`，项目技能安装到 `.codebuddy/skills/`；本机与云端分开。Cursor 使用全局 User Rules，有真实设置编辑能力时才自动操作；否则提供待粘贴内容并标明尚未配置，项目 Always 规则不能冒充全局规则。

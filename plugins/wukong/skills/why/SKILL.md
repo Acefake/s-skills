@@ -4,23 +4,22 @@ description: "「为什么是这样」「我们为什么选了这个」「这个
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 为什么（Why）
 
 调查代码背后的动机和意图。与它配套的 `how` skill 回答代码做了什么、是怎么工作的。`why` 回答是哪些力量让它变成了现在这个形状。
 
-下面每一次派出，都对应 s 模型配置里的一个角色行。路径见文末。把模型设成那一行的值。没有这一行，调查用较快的写代码模型，综合用判断力最强的模型。值是 `auto` 或 `inherit-parent`，或者软件不能指定模型，就不设。软件拒绝模型或参数时，报告错误并交回主线程，不替换型号。按[公共派发规则](../executing-plans/references/subagents.md)，为每个子智能体的任务选择推理等级，以及快速还是标准速度。行值带括号时（如 `sonnet（medium）`），按[行值格式](../setup-s-models/references/role-keys.md)拆开：括号前是模型，括号里的档位当起始推理等级传给宿主，不要把括号连模型名一起传。
+软件能指定模型时，调查用较快的写代码模型，综合用判断力最强的模型；不能指定就省略，继承父会话。用户本次指定的模型优先。软件拒绝模型或参数时，报告错误并交回主线程，不替换型号。派发细则见[公共派发规则](../executing-plans/references/subagents.md)。
 
 每次派出的都是能写文件的通用类型，不要用会去掉 MCP 的只读模式。调查者和综合者要靠 MCP 核对引用。调查者仍然不应该写任何东西。Cursor 的 `grok-4.7-xhigh-fast` 和 `claude-opus-5-5-xhigh` 只在 Cursor 上、并且这次确实可用时才当作默认。
 
 ## 工作姿态
 
-派发按[公共派发规则](../executing-plans/references/subagents.md)：历史动机解释与证据综合保持原角色，原有调查分工中仅明确的资料提取可以使用“检索与探索”。缺少该行沿用“检索与探索”，保留 MCP 与只读限制，不增设阶段或人数。用户指定模型优先；模型拒绝时报告实际错误并交回主线程，不替换型号。
 
 以一个**细心、谨慎、精确的调查者**的姿态工作。对你知道的和你推断的，要诚实地区分。完整的可信度框架和措辞指南见 `references/epistemics.md`。综合者必须遵守它。
 
@@ -54,7 +53,7 @@ disable-model-invocation: true
 
 版本控制总是可以通过 git 和 `gh` 使用。对其他六类，根据 MCP 的名字、服务器说明、工具名和资源描述来分类。如果一个 MCP 可能属于不止一类，就选和它的主要证据相符的那一类。把有歧义的情况记录在覆盖地图里。
 
-每个有对应 MCP 的类别派一个调查者，全部放在一条消息里，让它们并发运行，每个调查者只负责一个工具或 MCP。不要让一个智能体负责多个 MCP。模型用「检索与探索」那一行，没有再读旧键 `why investigators`。没有这一行，或软件不能指定模型，就按开头的规则省略或换一个更快的写代码模型。
+每个有对应 MCP 的类别派一个调查者，全部放在一条消息里，让它们并发运行，每个调查者只负责一个工具或 MCP。不要让一个智能体负责多个 MCP。模型按开头的规则。
 
 每个调查者的提示词，是填好的 `references/investigator-prompt.md`，再加上：
 - 所选 MCP 对应类别的操作手册 `references/sources/<source>.md`，根据 `references/source-playbook.md` 里的例子改写
@@ -84,7 +83,7 @@ disable-model-invocation: true
 
 ## 第 4 步：综合
 
-派出一个综合者。模型用「方案设计」那一行，没有再读旧键 `why synthesizer`。没有这一行，或软件不能指定模型，就按开头的规则省略或换一个更强的模型。它会拿到：
+派出一个综合者。模型按开头的规则。它会拿到：
 1. 调查者的发现，包括所有没找到结果的情况，以及所有附了理由而跳过的类别
 2. 代码锚点
 3. 用户原来的问题
@@ -107,7 +106,7 @@ disable-model-invocation: true
 
 ## 宿主适配
 
-调查读「检索与探索」（旧键 `why investigators`），综合读「方案设计」（旧键 `why synthesizer`）。中文键优先。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。调查者要能用 MCP，提示词里仍然禁止它写文件。
+调查者要能用 MCP，提示词里仍然禁止它写文件。
 
 Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 

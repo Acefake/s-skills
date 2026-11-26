@@ -1,7 +1,7 @@
 ---
 type: tool_used
 tool: Skill
-input_match: '"skill"\s*:\s*"(?:wukong:)?setup-s-models"'
+input_match: '"skill"\s*:\s*"(?:wukong:)?wukong-init"'
 min: 0
 max: 0
 arm: both

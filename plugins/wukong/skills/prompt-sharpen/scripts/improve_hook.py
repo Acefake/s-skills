@@ -31,7 +31,16 @@ MACHINE_PREFIXES = (
     "<local-command-stderr>",
     "<local-command-caveat>",
     "<system-reminder>",
+    "[T3 Code:",
+    "Delegated task ",
 )
+
+WRAPPER_TAGS = re.compile(
+    r"<(t3_code_instructions|runtime_info|ADDITIONAL_METADATA|USER_SETTINGS_CHANGE|SYSTEM_MESSAGE)>.*?</\1>",
+    re.IGNORECASE | re.DOTALL,
+)
+OUTER_USER_REQUEST_BLOCK = re.compile(r"^\s*<USER_REQUEST>\s*(.*?)\s*</USER_REQUEST>\s*$", re.DOTALL)
+USER_REQUEST_BLOCK = re.compile(r"^\s*<user_request>\s*(.*?)\s*</user_request>\s*$", re.DOTALL)
 
 LONG_RUNNING = re.compile(
     r"\b(npm|pnpm|yarn|bun)\s+(run\s+)?(dev|start|serve|watch)\b"
@@ -65,16 +74,31 @@ BACKGROUND = (
 )
 
 
+def extract_user_prompt(prompt):
+    if journal is not None and hasattr(journal, "extract_user_prompt"):
+        return journal.extract_user_prompt(prompt)
+    if not isinstance(prompt, str):
+        return ""
+    cleaned = WRAPPER_TAGS.sub("", prompt).strip()
+    outer = OUTER_USER_REQUEST_BLOCK.match(cleaned)
+    if outer:
+        cleaned = outer.group(1).strip()
+    inner = USER_REQUEST_BLOCK.match(cleaned)
+    if inner:
+        cleaned = inner.group(1).strip()
+    return cleaned
+
+
 def evaluate_prompt(data):
-    prompt = data.get("prompt", "")
-    if not isinstance(prompt, str) or not prompt.strip():
+    prompt = extract_user_prompt(data.get("prompt", ""))
+    if not prompt:
         return ""
     if prompt[0] in "*#/":
         return ""
-    if prompt.lstrip().startswith(MACHINE_PREFIXES):
+    if prompt.startswith(MACHINE_PREFIXES):
         return ""
     compact = "".join(prompt.split())
-    if len(compact) <= SHORT_LIMIT or CONFIRMATION.match(prompt.strip()):
+    if len(compact) <= SHORT_LIMIT or CONFIRMATION.match(prompt):
         return ""
     return EVALUATION
 

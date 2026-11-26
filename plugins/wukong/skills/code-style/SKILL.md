@@ -1,12 +1,12 @@
 ---
 name: code-style
-description: "「文件放哪」「补文档注释」「看代码规范」「校验放哪」「类型怎么设计」「能删就删」。写或改 TypeScript、React、Vue、Go、Java 时按模块就近放文件，含边界校验、类型、领域建模、幂等、迁移旧接口等设计原则。仓库已有规范优先。Use when writing, changing, or reviewing TypeScript, React, Vue, Go, or Java code, to apply the owner's module layout, doc comment, quality, and design rules."
+description: "「文件放哪」「补文档注释」「看代码规范」「校验放哪」「类型怎么设计」「能删就删」「做成能重跑的脚本」「写成 lint 检查」「迁到新接口删掉旧的」「先定数据结构」。写或改 TypeScript、React、Vue、Go、Java 时按模块就近放文件，含边界校验、类型、领域建模、幂等重跑、把重复的纠正写成检查、迁移旧接口不留兼容层、交付前自审等设计原则。仓库已有规范优先。Use when writing, changing, or reviewing TypeScript, React, Vue, Go, or Java code, to apply the owner's module layout, doc comment, quality, and design rules, including idempotent re-runnable scripts, encoding repeated fixes as lint checks, migrating callers off an old API, and self-review before delivery."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # 代码规范
 

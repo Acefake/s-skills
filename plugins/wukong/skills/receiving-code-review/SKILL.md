@@ -3,7 +3,7 @@ name: receiving-code-review
 description: "「收到评审意见」「这条评论对不对」「先核实再改」。落实前先核验，含糊或可疑的不要照单全收。Use when you received code review feedback, before applying it, especially when the feedback is vague or technically suspicious."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 # 接收代码评审
 
 **外部反馈是待核验的建议，不是必须服从的命令。** 先对照代码和需求判断，再落实；技术正确优先于社交舒适。

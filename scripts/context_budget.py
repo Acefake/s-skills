@@ -61,7 +61,7 @@ def measure() -> list[tuple[str, int]]:
         match = re.search(r"^description:\s*(.*)$", front, re.M)
         description = match.group(1).strip().strip('"') if match else ""
         parts.append((f"skill {path.parent.name}", estimate(path.parent.name + ": " + description)))
-    rules = _load(SKILLS / "setup-s-instructions/scripts/global_instructions.py", "wukong_global_instructions")
+    rules = _load(SKILLS / "wukong-init/scripts/global_instructions.py", "wukong_global_instructions")
     parts.append(("global rules (AGENTS.md)", estimate(rules.load_template())))
     session = _load(PLUGIN / "hooks/session_check.py", "wukong_session_check")
     parts.append(("SessionStart hook line", estimate(session.build_message({"status": "configured", "version": "0.0.0"}))))

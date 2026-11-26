@@ -4,7 +4,7 @@ description: "「给 PPT 换套主题」「统一网页和报告的配色字体�
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 
 # 统一配色和字体
 

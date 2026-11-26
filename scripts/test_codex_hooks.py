@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / 'plugins/wukong'
-SCRIPT = PLUGIN / 'skills/setup-s-instructions/scripts/codex_hooks.py'
+SCRIPT = PLUGIN / 'skills/wukong-init/scripts/codex_hooks.py'
 RELATIVE = 'skills/prompt-sharpen/scripts/improve_hook.py'
 
 

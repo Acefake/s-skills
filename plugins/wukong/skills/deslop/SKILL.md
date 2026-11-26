@@ -3,10 +3,10 @@ name: deslop
 description: "「/deslop」「提交前清一下 AI 味」「去掉多余的 any」。清这次 diff 里的代码腔：多余注释、不该有的防御、过深嵌套。文字腔用 /unslop，只清注释用 /no-comments。Use when a diff needs AI-flavored code removed before commit: extra comments, needless guards, any-casts, or deep nesting."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 去掉代码腔

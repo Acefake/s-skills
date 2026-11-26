@@ -1,5 +1,25 @@
 # 变更记录
 
+## 1.0.30
+
+### 新增
+
+- Antigravity 接入 `prompt-sharpen` 钩子：插件根 `hooks.json` 新增 `wukong-prompt-sharpen`（`PreInvocation`），由 `hooks/agy_hook.py` 复用 `improve_hook.py` 评估 `lastUserInput`，按 `(conversationId, lastUserInput)` 去重避免多步工具循环和后台唤醒重复注入，并同进程写入本地使用日志。
+
+### 删除
+
+- 删除 `setup-s-models` 和六角色模型配置：技能不再读取 `# s 模型配置` 标记段、`t3:` 角色别名或 `wukong.t3.json`，子代理默认继承父会话模型，用户本次点名的模型优先。`how`、`why`、`interrogate`、`reflect`、`swarm` 保留各自内置的模型默认（判断用强模型、调查和写代码用快模型）。同时删除 `s_models.py`、`t3_targets.py`、`t3_catalog.py`、`t3_hosts.py` 及其测试，三个依赖角色行的评测用例，项目级 `AGENTS.md`、`wukong.t3.json`、`docs/project/s-model-fallbacks.md` 和 `docs/wukong/model-budget-profiles.md`。DeepSeek Harness 与 Hermes 参考只保留技能目录和子代理能力。
+- 初始化统一为 `wukong-init`：`setup-s-instructions` 的脚本和参考并入 `wukong-init/`，原技能删除；两个旧名记入 `RETIRED_SKILLS`。会话开始钩子、日常自检和 Codex 钩子检查改指向 `wukong-init`。技能总数 45 → 43，其中自动选用 21、点名 22。
+
+### 修改
+
+- 收窄 `executing-plans` 描述，只在已有书面计划、隔离工作区、并行子代理共用文件、循环检查时触发；扩充 `code-style`（可重跑脚本、写成 lint、迁移旧接口、先定数据结构）、`brainstorming`（取舍范围、从头设计）、`e2e-testing`（Playwright 超时）、`writing-plans`（拆成可验证小步）、`requesting-code-review`（跑一遍证明）的触发语。sonnet 触发评测由 47/57 提升到 55/56。
+- 新增评测 `no-init-on-unrelated`：无关请求不触发 `wukong-init`。
+
+### 修复
+
+- `improve_hook.py` 与 `journal.py` 解包 T3 Code 包装标签（`<t3_code_instructions>`、`<user_request>`、`<runtime_info>` 等）并跳过 `[T3 Code:` 与 `Delegated task ` 系统/代理消息，避免短回复误触发和日志误记。
+
 ## 1.0.29
 
 ### 删除

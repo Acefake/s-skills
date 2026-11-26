@@ -5,7 +5,7 @@ The model does the judgment (grouping corrections into rules and citing the
 journal events behind each one); this script does everything that must be
 exact. It decides each rule's source and evidence from the cited events, so a
 draft cannot claim them; it enforces admission, expiry, safety and size; it
-keeps backups; and it writes the personal block through setup-s-instructions.
+keeps backups; and it writes the personal block through wukong-init.
 
     profile.py collect [--since YYYY-MM-DD]
     profile.py validate DRAFT.json
@@ -41,7 +41,7 @@ except ImportError:  # Windows
 
 PLUGIN = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PLUGIN / "hooks"))
-sys.path.insert(0, str(PLUGIN / "skills/setup-s-instructions/scripts"))
+sys.path.insert(0, str(PLUGIN / "skills/wukong-init/scripts"))
 import journal  # noqa: E402
 import global_instructions as gi  # noqa: E402
 

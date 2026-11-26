@@ -4,10 +4,10 @@ description: "「做页面」「改界面」「设计一下」「卡顿」「掉
 license: Apache 2.0
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 这个 skill 给你工具，也给你许可，去做出配得上“跳出常规的手艺”（out-of-distribution craft，意思是不落俗套、不像 AI 批量生成的作品）这个名字的设计。像一位得过奖的设计总监那样工作：能上线的正式代码、清楚的观点、深刻理解客户和它的用户需要什么，以及出色的手艺。

@@ -131,7 +131,7 @@ class SessionCheckTest(unittest.TestCase):
             self.check.CHECK = load('session_check').CHECK
 
     def test_in_process_check_respects_claude_config_dir(self):
-        gi_path = ROOT / 'plugins/wukong/skills/setup-s-instructions/scripts/global_instructions.py'
+        gi_path = ROOT / 'plugins/wukong/skills/wukong-init/scripts/global_instructions.py'
         spec = importlib.util.spec_from_file_location('gi_test', gi_path)
         gi = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(gi)
@@ -165,7 +165,7 @@ class RegistrationTest(unittest.TestCase):
             self.assertTrue((ROOT / 'plugins/wukong' / script).is_file(), script)
 
     def test_daily_check_points_at_the_session_hook(self):
-        text = (ROOT / 'plugins/wukong/skills/setup-s-instructions/references/daily-check.md').read_text(encoding='utf-8')
+        text = (ROOT / 'plugins/wukong/skills/wukong-init/references/daily-check.md').read_text(encoding='utf-8')
         self.assertIn('会话开始钩子', text)
 
 
@@ -228,6 +228,123 @@ class AgyPluginCompatTest(unittest.TestCase):
         data = json.loads((ROOT / 'plugins/wukong/hooks.json').read_text(encoding='utf-8'))
         handlers = data['wukong-session']['SessionStart']
         self.assertTrue(any('hooks/agy_hook.py' in h['command'] for h in handlers))
+        pre_handlers = data['wukong-prompt-sharpen']['PreInvocation']
+        self.assertTrue(any('hooks/agy_hook.py' in h['command'] for h in pre_handlers))
+
+    def test_agy_hook_pre_invocation_injects_once_per_turn_and_skips_short(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_AUTO_UPDATE='0', WUKONG_JOURNAL='0')
+
+            def run_pre(payload):
+                proc = subprocess.run(
+                    [sys.executable, '-I', str(HOOKS / 'agy_hook.py')],
+                    input=json.dumps(payload).encode('utf-8'),
+                    capture_output=True, timeout=20, env=env,
+                )
+                self.assertEqual(proc.returncode, 0, proc.stderr.decode('utf-8', 'replace'))
+                return json.loads(proc.stdout.decode('utf-8'))
+
+            # First invocation of a vague turn injects systemMessage.
+            turn1 = {
+                'hookEventName': 'PreInvocation',
+                'conversationId': 'conv-1',
+                'invocationNum': 0,
+                'lastUserInput': '<t3_code_instructions>x</t3_code_instructions><user_request>把登录页改一下</user_request><runtime_info>y</runtime_info>',
+            }
+            out1 = run_pre(turn1)
+            steps = out1.get('injectSteps') or []
+            self.assertEqual(len(steps), 1)
+            self.assertIn('wukong:prompt-sharpen', steps[0]['systemMessage']['systemMessage'])
+
+            # Subsequent invocation in the same turn (or wakeup) stays silent.
+            turn1_step2 = dict(turn1, invocationNum=2)
+            self.assertEqual(run_pre(turn1_step2), {})
+
+            # Short/confirmation turn stays silent.
+            turn2 = {
+                'hookEventName': 'PreInvocation',
+                'conversationId': 'conv-1',
+                'invocationNum': 0,
+                'lastUserInput': '继续<runtime_info>y</runtime_info>',
+            }
+            self.assertEqual(run_pre(turn2), {})
+
+            # New substantive turn injects again.
+            turn3 = {
+                'hookEventName': 'PreInvocation',
+                'conversationId': 'conv-1',
+                'invocationNum': 0,
+                'lastUserInput': '帮我优化一下首页加载速度',
+            }
+            out3 = run_pre(turn3)
+            self.assertIn('wukong:prompt-sharpen', out3['injectSteps'][0]['systemMessage']['systemMessage'])
+
+    def test_agy_hook_pre_invocation_records_journal_once_per_turn(self):
+        import sqlite3
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_AUTO_UPDATE='0', WUKONG_JOURNAL='1')
+
+            def run_pre(payload):
+                proc = subprocess.run(
+                    [sys.executable, '-I', str(HOOKS / 'agy_hook.py')],
+                    input=json.dumps(payload).encode('utf-8'),
+                    capture_output=True, timeout=20, env=env,
+                )
+                self.assertEqual(proc.returncode, 0, proc.stderr.decode('utf-8', 'replace'))
+                return json.loads(proc.stdout.decode('utf-8'))
+
+            turn1 = {
+                'hookEventName': 'PreInvocation',
+                'conversationId': 'conv-j',
+                'cwd': str(ROOT),
+                'invocationNum': 0,
+                'lastUserInput': '<user_request>给订单列表加导出接口</user_request><runtime_info>m</runtime_info>',
+            }
+            run_pre(turn1)
+            run_pre(dict(turn1, invocationNum=1))
+            run_pre(dict(turn1, invocationNum=0, lastUserInput='继续'))
+
+            db = Path(tmp) / 'journal.db'
+            self.assertTrue(db.exists())
+            conn = sqlite3.connect(str(db))
+            try:
+                rows = conn.execute('SELECT event, session, text FROM events ORDER BY id').fetchall()
+            finally:
+                conn.close()
+            self.assertEqual(rows, [('task', 'conv-j', '给订单列表加导出接口')])
+
+    def test_agy_hook_malformed_input_does_not_trigger_session_start(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, WUKONG_HOME=tmp, WUKONG_AUTO_UPDATE='0', WUKONG_JOURNAL='1')
+            for raw in (b'', b'not json', b'{}'):
+                proc = subprocess.run(
+                    [sys.executable, '-I', str(HOOKS / 'agy_hook.py')],
+                    input=raw, capture_output=True, timeout=20, env=env,
+                )
+                self.assertEqual(proc.returncode, 0)
+                self.assertEqual(json.loads(proc.stdout.decode('utf-8')), {})
+            self.assertFalse((Path(tmp) / 'journal.db').exists())
+
+    def test_agy_hook_claim_user_turn_cleans_tmp_on_replace_failure_and_serializes(self):
+        from concurrent.futures import ThreadPoolExecutor
+        from unittest import mock
+        hook = load('agy_hook')
+        with tempfile.TemporaryDirectory() as tmp:
+            state = Path(tmp) / 'agy-prompt-state.json'
+            with mock.patch.object(hook.os, 'replace', side_effect=PermissionError('busy')):
+                self.assertTrue(hook._claim_user_turn('conv-err', '把登录页改一下', path=state))
+            self.assertEqual(list(Path(tmp).glob('*.tmp')), [])
+
+            def claim(i):
+                return hook._claim_user_turn(f'conv-{i}', f'帮我处理任务编号 {i}', path=state)
+
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                results = list(pool.map(claim, range(12)))
+            self.assertTrue(all(results))
+            saved = json.loads(state.read_text(encoding='utf-8'))
+            self.assertEqual(len(saved), 12)
+            self.assertEqual(list(Path(tmp).glob('*.tmp')), [])
+            self.assertEqual(list(Path(tmp).glob('*.lock')), [])
 
     def test_agy_hook_outputs_empty_json_and_respects_throttle_and_clean_check(self):
         from unittest import mock

@@ -29,7 +29,6 @@
 | 向用户提问的工具 | `request_user_input`（只有主对话能用，子智能体不能问） |
 | 后台运行和取结果 | 提示词里写 “Wait for all, then summarize”。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`），不写时由 Codex 自己选默认。没有文档化的单独取结果工具名 |
 | 指定模型 | 见下面「Codex 怎么指定模型」。不要把 Cursor 的模型名写进来 |
-| s 模型规则（`/setup-s-models`） | `~/.codex/AGENTS.md` 里标记的那一段；有 `AGENTS.override.md` 就改那个。单独模型再写 `~/.codex/agents/s-<角色>.toml` |
 | 子智能体在哪里跑 | 子智能体文档没有 `environment` 或 `cloud_base_branch`。本地 Codex 跟父级同一套沙箱，在本机跑。ChatGPT Work 是另一套托管环境，不要套过来。从别的分支开始：把 SHA 写进提示词 |
 | 让主对话定时醒来 | 使用 `executing-plans` 的「反复检查直到通过」。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
 | 写 SKILL.md | 跑 `/author-skill`。目录按本文件对应技能的章节 |
@@ -44,54 +43,33 @@
 
 ## how
 
-探索用内置 `explorer`，或 `s-lookup-and-exploration`。讲解用 `s-design`，或在提示词里点名模型。复杂情况写成：Spawn one explorer subagent per angle. Each uses model \<检索与探索，或旧键 how explorer\> with model_reasoning_effort \<档位\>. Wait for all, then spawn one explainer on model \<方案设计，或旧键 how explainer\>. 中文键优先。没有 toml、也点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
+探索用内置 `explorer`。讲解用通用智能体，需要换模型时在提示词里点名这次账号里真有的模型。复杂情况写成：Spawn one explorer subagent per angle. Wait for all, then spawn one explainer. 点不出两个不同模型时，说一句这次没有换模型。提示词里的「不要改文件」不会变成单独的只读沙箱。
 
 ## interrogate
 
 用话派，不要找 `Task` 的 `model` 参数。提示词写成：Spawn one subagent per reviewer. Reviewer A is `<name-a>`（或 “uses model \<A\> with model_reasoning_effort \<档位\>”）. Reviewer B is `<name-b>`. Wait for both. Do not edit files. Return each reviewer's findings.
 
-`<name-a>` 是 `~/.codex/agents/s-review-1.toml` 的 `name`。文件里的 `model` 和 `model_reasoning_effort` 优先于口头点名。没有这些文件时，在提示词里点名两个这次账号里真有的模型。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。`[agents].default_subagent_model` 是全体一个默认，拉不开两个审查者。profile 是整次进程的覆盖，不是每个审查者一个。未核实：给单个子智能体选 profile。
+`<name-a>` 可以是用户自己写的自定义智能体的 `name`；文件里的 `model` 和 `model_reasoning_effort` 优先于口头点名。没有这些文件时，在提示词里点名两个这次账号里真有的模型。文档举例 `gpt-6.1-sol` 和 `gpt-6-luna` 只在账号有它们时才用。`[agents].default_subagent_model` 是全体一个默认，拉不开两个审查者。profile 是整次进程的覆盖，不是每个审查者一个。未核实：给单个子智能体选 profile。
 
 提示词里的「不要改文件」不会变成单独的只读沙箱。
 
 ## reflect
 
-提示词写成：Spawn three subagents. Judgment and divergent use `s-design`（或 model \<判断模型\>). Tooling uses `wukong-review`（或 model \<写代码模型\>). Wait for all three. Then spawn one synthesizer on the judgment model. 自定义智能体继承父级 MCP。提示词可以要求审查者不要改 skill 文件；这不会变成单独的只读沙箱。模型名用这次账号里真有的。
+提示词写成：Spawn three subagents. Judgment and divergent use model \<判断模型\>. Tooling uses model \<写代码模型\>. Wait for all three. Then spawn one synthesizer on the judgment model. 自定义智能体继承父级 MCP。提示词可以要求审查者不要改 skill 文件；这不会变成单独的只读沙箱。模型名用这次账号里真有的。
 
-## setup-s-models：配置位置
+## Codex 怎么指定模型
 
-| 宿主 | 配置或工具 | 生效或限制 | 依据或说明 |
-|---|---|---|---|
-| Codex | 在 `~/.codex/AGENTS.md` 里维护 `# s 模型配置` 到 `# s 模型配置结束` 这一段。旧标记 `# s model configuration` 到 `# end s model configuration` 是同一段，读取仍然有效，重写时换成中文标记和中文键。设过 `CODEX_HOME` 就用那个目录。同目录已有 `AGENTS.override.md` 时，Codex 读的是 override 而不是 `AGENTS.md`，就改 override 里的同一段。需要单独模型的角色，再写 `~/.codex/agents/s-<角色>.toml`，见下面 Codex 一节 | 会读 `AGENTS.md` 这一段，也会读 `agents/` 里的自定义智能体。只替换标记之间的内容，只覆盖 `s-` 开头的智能体文件 | [AGENTS.md](https://developers.openai.com/codex/guides/agents-md)，[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
+这里说的是本地 Codex（CLI、IDE、桌面应用）。ChatGPT Work 是另一套托管环境，不要把它的界面套过来。官方文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)。没有 Cursor 那种带 `model` 参数的 `Task` 工具。
 
-## setup-s-models：模型配置
+默认不点名模型，子智能体继承父级。用户本次指定模型时，在提示词里点名（“uses model \<模型\> with model_reasoning_effort \<档位\>”），模型名必须是这次账号里真有的。
 
-只有原生 Codex 模型时，使用[Codex 原生三档](../../setup-s-models/references/native-budget-profiles.md#codex-原生)，不写 Claude 或 DP4.1 目标。明确角色档位优先于本参考的通用预算映射，不因预算较高就覆盖为 xhigh/max；备用须选择本会话实际发现的匹配角色，不临时改写同名 TOML。用户选择备用方案后仍须完整预览并最终确认写入。
+用户自己写的自定义智能体放 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录），必填 `name`、`description`、`developer_instructions`，可写 `model` 和 `model_reasoning_effort`；文件里的值优先于口头点名。自定义智能体继承父级的权限、provider 和 MCP，文件里不能改这些。内置 `worker` 做实现，`explorer` 做读得多的探索，`default` 是通用兜底。
 
-三档推荐与配置生成遵循 [setup-s-models](../../setup-s-models/SKILL.md)，派发遵循[公共派发规则](../../executing-plans/references/subagents.md)。新增轻量角色“检索与探索”，英文键 `lookup and exploration`，需要单独模型时使用 `s-lookup-and-exploration.toml`，其 `name` 为 `s-lookup-and-exploration`。按当前会话实际支持的模型及推理档位配置，轻量角色无显式档位时最多取 `medium`。角色文件中的模型与档位必须和已确认的配置行一致；固定角色不能改模时选择匹配的已发现角色，不冒充已换模。旧配置缺少轻量行就使用原工作流角色。现有角色文件只在用户同意修改相应角色后同步，配置成功和新会话发现分别验收。
-
-三档分类选中的角色优先于本文件 how、why、swarm 章节里的默认角色。轻量模型固定在文件中时，使用已发现的 `s-lookup-and-exploration`；不能指定目标模型时报告未分流，不让固定的 `s-lookup-and-exploration` 等角色冒充轻量角色。
-
-这里说的是本地 Codex（CLI、IDE、桌面应用）。ChatGPT Work 是另一套托管环境，不要把它的界面套过来。
-
-官方文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)、[AGENTS.md](https://developers.openai.com/codex/guides/agents-md)。当前版本默认能派子智能体。没有 Cursor 那种带 `model` 参数的 `Task` 工具。
-
-角色行仍写在 `~/.codex/AGENTS.md`（或 `AGENTS.override.md`）的标记段里。需要单独模型的角色，再写自定义智能体：
-
-- 路径：`~/.codex/agents/s-<角色>.toml`。设过 `CODEX_HOME` 就用那个目录下的 `agents/`。项目里可以用 `.codex/agents/`。只覆盖 `s-` 开头的文件。`<角色>` 按六角色英文键生成，不用中文键：空格和逗号替换成连字符，连续连字符合并：`lookup and exploration` 是 `s-lookup-and-exploration.toml`，列表角色再加 `-1`、`-2`。配置块里的键用中文，没有中文键再读旧英文键。`name` 字段等于不带扩展名的文件名。
-- `inherit-parent` 和 `auto` 不写文件。
-- 必填 `name`、`description`、`developer_instructions`。`name` 是派出时用的名字，和文件名保持一致最省事，以 `name` 为准。
-- 同时写 `model` 和 `model_reasoning_effort`。模型名必须是这次账号里真有的。文档举例是 `gpt-6.1-sol`（重活）和 `gpt-6-luna`（快、窄），账号没有这两个名字就不要写。推理档位用 `# 预算`（旧行 `# budget`）的目标：不限对 `max`，大对 `xhigh`，中对 `high`，省对 `medium`。旧档名 `unlimited`、`large`、`medium`、`small` 相同。文档列出的档位还有 `ultra` 和 `low`。只有该模型支持这个档位才写入；不支持就写它支持的、不超过目标的最高档，并告诉用户。文档建议 GPT-6 Luna 从 `high` 起，GPT-6 Astra 从 `low` 起。
-- 只读角色把「不要改文件」写进 `developer_instructions`。文档写明：这句话不会变成单独的只读沙箱。子智能体继承父级这一轮的沙箱和审批。自定义智能体继承父级的权限、provider 和 MCP，文件里不能改这些。
-- 内置 `worker` 做实现，`explorer` 做读得多的探索，`default` 是通用兜底。同名自定义智能体会盖过内置。
-
-多样性不要只靠 `[agents].default_subagent_model`。那是全体一个默认值。文档里的解析顺序是：自定义文件里写了 `model` 或 `model_reasoning_effort` 时，文件优先；文件应用前，每个字段先按「这次派出时点名的值 → `[agents]` 的对应默认 → 父级」解析。文件只写了 `model`、没写推理档位时，会保留刚才解析到的档位。`default_subagent_model` 和 `default_subagent_reasoning_effort` 可以不写。并发上限是 `max_concurrent_threads_per_session`（旧名 `max_threads`），不写时由 Codex 自己选默认。这些键在 `~/.codex/config.toml` 的 `[agents]` 里。示例配置里还有一段注释掉的 `[agents.<role>]`，用 `description` 和 `config_file` 指向 toml。Subagents 页说放进 `agents/` 目录、用 `name` 识别即可。
-
-profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/config.toml`，再盖上 `~/.codex/<name>.config.toml` 的顶层键。Codex 0.134.0 起不再读 `config.toml` 里的 `[profiles.<name>]`，也不再支持顶层 `profile = "..."`。不要把 profile 当成某个子智能体的模型开关。未核实：能不能给一个被派的子智能体单独选 profile。文档没有这么写。
+`[agents].default_subagent_model` 是全体一个默认值，拉不开多个审查者。profile 是整次进程的覆盖，不是某个子智能体的模型开关。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`）。
 
 ## swarm
 
-提示词写成：Spawn N subagents in parallel. Each uses the configured role for its assigned responsibility（或 “each uses model \<模型\> with model_reasoning_effort \<档位\>”）. Wait for all of them, then summarize. 开发工作者选择已发现的 `s-implementation`，验证工作者选择已发现的 `s-verification`，其他职责选择对应六角色；配置位于 `~/.codex/agents/`。没有文件时点名这次账号里真有的较快模型。文档举例 `gpt-6-luna` 只在账号有它时才用。
+提示词写成：Spawn N subagents in parallel. Wait for all of them, then summarize. 需要换模型时写 “each uses model \<模型\> with model_reasoning_effort \<档位\>”，点名这次账号里真有的较快模型。文档举例 `gpt-6-luna` 只在账号有它时才用。
 
 没有 `cloud_base_branch`。SHA 写在提示词里。未核实：有没有把子智能体放到另一台机器的参数。子智能体文档只写了跟父级同一套沙箱。并发很多时，看 `[agents].max_concurrent_threads_per_session`，不写则由 Codex 自己选默认。
 
@@ -101,7 +79,7 @@ profile 是整次进程的覆盖：`codex --profile <name>` 先读 `~/.codex/con
 
 ## why
 
-自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`，或 `s-lookup-and-exploration`。综合点名 `s-design`。提示词写成：Spawn one subagent per evidence source. Each uses model \<检索与探索，或旧键 why investigators\>. Wait for all, then spawn one synthesizer on model \<方案设计，或旧键 why synthesizer\>. 中文键优先。Do not edit files. 模型名用这次账号里真有的。提示词禁止改文件，不会变成单独的只读沙箱。
+自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`。提示词写成：Spawn one subagent per evidence source. Wait for all, then spawn one synthesizer. Do not edit files. 需要换模型时点名这次账号里真有的模型。提示词禁止改文件，不会变成单独的只读沙箱。
 
 ## show-me-your-work
 

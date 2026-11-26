@@ -4,10 +4,10 @@ description: "「/reflect」「把这次教训写进技能」「/reflect --me」
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 反思
@@ -34,19 +34,19 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 一条消息，三个子智能体，用能访问 MCP 的类型。会去掉 MCP 的只读模式不要用。审查者要去查对话记录里提到的工单、聊天线程和可观测性追踪记录。
 
-每个审查者和综合者都对应 s 模型配置里的一个角色行。路径见文末。把模型设成那一行的值。没有这一行，判断和发散用更强的模型，工具视角用较快的写代码模型。值是 `auto` 或 `inherit-parent`，或者软件不能指定模型，就不设。软件拒绝了某个名字，就换同一系列里它接受的最接近的名字，并说一句。按[公共派发规则](../executing-plans/references/subagents.md)，为每个子智能体的任务选择推理等级，以及快速还是标准速度。行值带括号时（如 `sonnet（medium）`），按[行值格式](../setup-s-models/references/role-keys.md)拆开：括号前是模型，括号里的档位当起始推理等级传给宿主，不要把括号连模型名一起传。
+软件能指定模型时，判断和发散用更强的模型，工具视角用较快的写代码模型；软件不能指定模型就不设，继承父会话。用户本次指定的模型优先。软件拒绝了某个名字，就换同一系列里它接受的最接近的名字，并说一句。派发细则见[公共派发规则](../executing-plans/references/subagents.md)。
 
-| 视角 | 角色行 | 没有配置、而且软件能指定模型时 | 提示词模板 |
-|---|---|---|---|
-| 判断（Judgment） | `方案设计`（旧键 `reflect judgment, divergent, synthesizer`） | 判断力最强的模型。Cursor 上、并且 `claude-opus-5-5-xhigh` 可用时可以用这个名字 | `references/judgment-reviewer.md` |
-| 工具（Tooling） | `独立评审`（旧键 `reflect tooling`） | 较快的写代码模型。Cursor 上、并且 `grok-4.7-xhigh-fast` 可用时可以用这个名字 | `references/tooling-reviewer.md` |
-| 发散（Divergent） | `方案设计`（旧键 `reflect judgment, divergent, synthesizer`） | 同判断 | `references/divergent-reviewer.md` |
+| 视角 | 软件能指定模型时 | 提示词模板 |
+|---|---|---|
+| 判断（Judgment） | 判断力最强的模型。Cursor 上、并且 `claude-opus-5-5-xhigh` 可用时可以用这个名字 | `references/judgment-reviewer.md` |
+| 工具（Tooling） | 较快的写代码模型。Cursor 上、并且 `grok-4.7-xhigh-fast` 可用时可以用这个名字 | `references/tooling-reviewer.md` |
+| 发散（Divergent） | 同判断 | `references/divergent-reviewer.md` |
 
 把每个模板原样传过去，在标明的地方替换成对话记录的路径或摘要。审查者在子智能体的回复正文里返回发现。派不出三个子智能体时，在主对话里按三个视角各写一遍，并说一句没有换模型。
 
 ## 3. 综合
 
-再派一个子智能体，类型同样要能访问 MCP。模型取自「方案设计」那一行，没有再读旧键 `reflect judgment, divergent, synthesizer`。没有这一行，或软件不能指定模型，就按上一节的规则。把 `references/synthesizer.md` 原样传过去，在标明的地方内联每个审查者的完整输出。它返回一份 Accepted / Rejected / Backlog 列表。
+再派一个子智能体，类型同样要能访问 MCP。模型同判断视角。把 `references/synthesizer.md` 原样传过去，在标明的地方内联每个审查者的完整输出。它返回一份 Accepted / Rejected / Backlog 列表。
 
 ## 4. 结构化强制检查
 
@@ -78,7 +78,7 @@ Backlog 默认输出为待办草稿。只有用户已授权写入指定跟踪系
 
 ## 宿主适配
 
-判断、发散和综合读「方案设计」（旧键 `reflect judgment, divergent, synthesizer`），工具视角读「独立评审」（旧键 `reflect tooling`）。中文键优先。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Cursor 按那份 skill 文末的目录说明放置。
+三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Cursor 按那份 skill 文末的目录说明放置。
 
 Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 

@@ -42,7 +42,7 @@
 |---|---|---|
 | s助手 | wukong-agent | 活跃 |
 | 专挑注释 | comment-sicko | 1.0.17 并入 no-comments，保留为子代理 |
-| 设置s模型 | setup-s-models | 活跃 |
+| 设置s模型 | setup-s-models | 1.0.30 已移除，子代理继承父会话模型 |
 | 代码怎么工作 | how | 活跃 |
 | 代码为什么这样 | why | 活跃 |
 | 先画架构草图 | architect | 活跃 |
@@ -188,3 +188,5 @@
 1.0.23 把 24 个 principle-* 并入所属技能的 references/principles/，名字留在 RETIRED_SKILLS。
 
 1.0.25 把 `wukong-mode`、`wukong-agent`、`figure-it-out`、`timed-loop`、`using-git-worktrees`、`subagent-driven-development` 并入 `executing-plans`，删除 `pptx`、`pdf`、`xlsx`，名字留在 RETIRED_SKILLS。
+
+1.0.30 删除 `setup-s-models` 和六角色模型配置；`setup-s-instructions` 并入 `wukong-init`，名字留在 RETIRED_SKILLS。

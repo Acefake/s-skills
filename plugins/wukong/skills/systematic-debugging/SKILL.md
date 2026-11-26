@@ -3,7 +3,7 @@ name: systematic-debugging
 description: "「修 bug」「报错了」「测试失败」「结果不对」「按钮没反应」「这个数字靠谱吗」。先查根因再改。bug-fix 和 fix bug 也走这里。Use when you hit any bug, test failure, unexpected behavior, or a suspicious measured number before proposing a fix, including 修 bug, 报错, bug-fix, and fix bug."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 # 系统化调试
 
 **铁律：没有完成根因调查，就不提出或实施修复。** 简单、紧急、已经尝试过多次修复，都不是跳过调查的理由。修在系统第一次出错的地方，不在症状处加防护或重试，见 [fix-root-causes](references/principles/fix-root-causes.md)。

@@ -3,10 +3,10 @@ name: control-ui
 description: "「打开浏览器点一遍」「截个图」「复现这个界面 bug」。用本地浏览器或 CDP 驱动网页、IDE 或 Electron。Use when you need to drive a real browser or desktop UI to collect evidence."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 操作界面

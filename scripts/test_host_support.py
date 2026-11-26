@@ -113,7 +113,7 @@ class HostSupportTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             plugin = root / 'plugins/wukong'
-            skill = plugin / 'skills/setup-s-models'
+            skill = plugin / 'skills/wukong-init'
             skill.mkdir(parents=True)
             (root / 'README.md').write_text('模型配置识别 Hermes agent。\n', encoding='utf-8')
             (plugin / 'HOSTS.md').write_text(

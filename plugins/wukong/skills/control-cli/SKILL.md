@@ -3,10 +3,10 @@ name: control-cli
 description: "「驱动这个命令行」「看看这个 TUI」「终端卡住了」。搭本地驾驭装置，不依赖外部服务，也可录一段终端演示。Use when you need to drive a local CLI or TUI and inspect what it does."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 操作命令行

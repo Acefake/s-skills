@@ -7,9 +7,8 @@
 ```
 Subagent (general-purpose):
   description: "Review Task N (spec + quality)"
-  # Omit model for auto/inherit-parent or when the host cannot select it.
-  # Role line: Chinese key first, else the old English key in setup-s-models.
-  model: [optional available model chosen from the role configuration]
+  # Omit model to inherit the parent session; set it only when the user named one for this task.
+  model: [optional, user-specified model]
   prompt: |
     You are reviewing one task's implementation: first whether it matches its
     requirements, then whether it is well-built. This is a task-scoped gate,
@@ -170,7 +169,7 @@ Subagent (general-purpose):
 ```
 
 **占位符：**
-- `[MODEL]` — 必需：按 references/model-selection.md 挑选评审者模型
+- `[MODEL]` — 可选：用户本次指定了模型才填，否则省略、继承父会话
 - `[BRIEF_FILE]` — 必需：任务简报文件（`scripts/task-brief PLAN N` 会打印路径；与实现者所依据的是同一文件）
 - `[GLOBAL_CONSTRAINTS]` — 从计划的 Global Constraints 一节或规格中逐字复制的有约束力的要求：精确的值、格式，以及组件之间写明的关系（不是流程规则——那些已经在本模板里）
 - `[REPORT_FILE]` — 必需：实现者写入详细报告的文件

@@ -30,7 +30,7 @@ DOC_VERSION_REFS = {
 }
 
 EXPECTED_SKILL_COUNTS = {
-    "wukong": 45,
+    "wukong": 43,
 }
 
 # Skills removed from the repo over past releases. Active skills must not name them.
@@ -64,8 +64,8 @@ RETIRED_SKILLS = frozenset({
     "orca-bot-ci-triage",
     "orca-bot-deps",
     "orca-bot-pr-review",
-    "orca-bots",
     "orca-bot-release",
+    "orca-bots",
     "patent-application",
     "patent-disclosure",
     "pdf",
@@ -102,6 +102,8 @@ RETIRED_SKILLS = frozenset({
     "review-animations",
     "s-help",
     "self-improvement",
+    "setup-s-instructions",
+    "setup-s-models",
     "shadcn",
     "sharpen",
     "subagent-driven-development",

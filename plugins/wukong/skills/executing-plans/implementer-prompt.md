@@ -5,9 +5,8 @@
 ```
 Subagent (general-purpose):
   description: "Implement Task N: [task name]"
-  # Omit model for auto/inherit-parent or when the host cannot select it.
-  # Role line: Chinese key first, else the old English key in setup-s-models.
-  model: [optional available model chosen from the role configuration]
+  # Omit model to inherit the parent session; set it only when the user named one for this task.
+  model: [optional, user-specified model]
   prompt: |
     You are implementing Task N: [task name]
 

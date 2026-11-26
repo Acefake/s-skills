@@ -3,10 +3,10 @@ name: prompt-sharpen
 description: "「优化提示词」「这句话说清楚再做」「需求太模糊」「/prompt-sharpen」。目标、范围、约束或验收有影响结果的关键缺口，且对话无法补足时加载；先研究项目，能确定的自行补齐，必要时才提问并改写请求。Use when explicitly asked to improve a prompt, or when unresolved interpretations or missing requirements materially change the outcome; research before deciding whether to ask."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # 提示词优化
 
@@ -42,7 +42,7 @@ description: "「优化提示词」「这句话说清楚再做」「需求太模
 规则：
 
 - 问题必须来自研究，不能来自猜测或常识。
-- 简单缺口自己读。要读很多文件、跨多个目录时，按[公共派发规则](../executing-plans/references/subagents.md)派只读检索子智能体，角色读 s 模型配置里的「检索与探索」。
+- 简单缺口自己读。要读很多文件、跨多个目录时，按[公共派发规则](../executing-plans/references/subagents.md)派只读检索子智能体。
 - 派子智能体时，把对话里已有的文件路径、报错、已做的决定写进它的提示词；它看不到前面的对话。
 - 派不出子智能体时，主对话里自己读，并说一句没有换模型。
 

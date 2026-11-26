@@ -1,12 +1,12 @@
 ---
 name: brainstorming
-description: "「做个新功能」「加个接口」「改一下行为」「先把方案想清楚」。动手实现前先摸清意图、需求和设计。Use when doing any creative work before implementation - creating features, building components, adding functionality, or modifying behavior - and you need to explore user intent, requirements and design before implementation."
+description: "「做个新功能」「加个接口」「改一下行为」「先把方案想清楚」「先定核心数据结构再写逻辑」「别硬塞进旧结构，重新设计这层」「先做简单版还是全做」。动手实现前先摸清意图、需求和设计，包括取舍范围和从头设计。Use when doing any creative work before implementation - creating features, building components, adding functionality, modifying behavior, deciding scope, or redesigning a layer from first principles - and you need to explore user intent, requirements and design before implementation."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # 把想法变成设计
 

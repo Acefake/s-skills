@@ -7,5 +7,14 @@
         "timeout": 10
       }
     ]
+  },
+  "wukong-prompt-sharpen": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "python3 hooks/agy_hook.py || python hooks/agy_hook.py",
+        "timeout": 5
+      }
+    ]
   }
 }

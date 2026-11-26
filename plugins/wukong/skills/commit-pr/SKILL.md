@@ -3,10 +3,10 @@ name: commit-pr
 description: "「提交」「帮我 commit」「开个 PR」「写提交说明」。看 diff，写 conventional commit，需要时推送并开 PR。分支怎么集成还没定，用 finishing-a-development-branch。Use when writing a commit message, making a commit, or opening a pull request."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 提交并开 PR

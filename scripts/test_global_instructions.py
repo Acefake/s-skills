@@ -10,7 +10,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / 'plugins/wukong/skills/setup-s-instructions/scripts/global_instructions.py'
+SCRIPT = ROOT / 'plugins/wukong/skills/wukong-init/scripts/global_instructions.py'
 
 
 def full_rules(legacy=False):
@@ -394,14 +394,14 @@ class GlobalInstructionsTest(unittest.TestCase):
 
     def test_daily_links_resolve_and_new_skill_is_explicit(self):
         skills = ROOT / 'plugins/wukong/skills'
-        guide = skills / 'setup-s-instructions/references/daily-check.md'
+        guide = skills / 'wukong-init/references/daily-check.md'
         self.assertTrue(guide.is_file())
         for path in skills.glob('*/SKILL.md'):
-            if path.parent.name == 'setup-s-instructions':
+            if path.parent.name == 'wukong-init':
                 self.assertIn('disable-model-invocation: true', path.read_text(encoding='utf-8'))
                 self.assertIn('allow_implicit_invocation: false', (path.parent/'agents/openai.yaml').read_text(encoding='utf-8'))
             else:
-                self.assertIn('../setup-s-instructions/references/daily-check.md', path.read_text(encoding='utf-8'), str(path))
+                self.assertIn('../wukong-init/references/daily-check.md', path.read_text(encoding='utf-8'), str(path))
 
     def run_cli(self, host, *, environment=None, apply=False):
         variables = dict(os.environ)

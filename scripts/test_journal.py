@@ -68,8 +68,31 @@ class ClassifyTest(JournalCase):
 
     def test_skipped_prompts(self):
         for text in ('可以', '好的。', '继续', 'OK', '修一下', '', '   ', '*直接做', '#记住', '/',
-                     '<system-reminder>x</system-reminder>', None, 42):
+                     '<system-reminder>x</system-reminder>',
+                     '<runtime_info>model info</runtime_info>',
+                     '[T3 Code: the agent in T3 thread "x" sent this message, not the user.] Act',
+                     'Delegated task node:delegated-task:abc failed',
+                     '<t3_code_instructions>rules</t3_code_instructions><user_request>提交</user_request>',
+                     None, 42):
             self.assertIsNone(self.journal.classify_prompt(text), text)
+
+    def test_t3_wrapped_prompt_records_inner_request_only(self):
+        wrapped = (
+            '<USER_REQUEST>\n'
+            '<t3_code_instructions>secret </runtime_info> rules</t3_code_instructions>\n'
+            '<user_request>\n给订单服务加一个导出接口\n</user_request>'
+            '<runtime_info>gemini</runtime_info>\n'
+            '</USER_REQUEST>\n<ADDITIONAL_METADATA>now</ADDITIONAL_METADATA>'
+        )
+        kind, extra = self.journal.classify_prompt(wrapped)
+        self.assertEqual(kind, 'task')
+        self.assertEqual(extra['text'], '给订单服务加一个导出接口')
+
+    def test_inline_user_request_tag_in_plain_prompt_is_not_truncated(self):
+        prompt = '帮我把 <user_request>foo</user_request> 这段正则改成支持多行'
+        kind, extra = self.journal.classify_prompt(prompt)
+        self.assertEqual(kind, 'task')
+        self.assertEqual(extra['text'], prompt)
 
     def test_excerpt_is_short_and_redacted(self):
         text = '把 sk-abcdefghijklmnop1234 和 me@example.com 换掉，参考 https://x.io/a?token=1 ' + '长' * 200
@@ -91,7 +114,7 @@ class ClassifyTest(JournalCase):
     def test_skill_names_and_paths_survive_redaction_while_high_entropy_secrets_hide(self):
         keep = (
             '用 finishing-a-development-branch 处理 '
-            'plugins/wukong/skills/setup-s-models/SKILL.md '
+            'plugins/wukong/skills/wukong-init/SKILL.md '
             '和 docs/2026-11-13-personal-learning-design.md '
             '参考 https://github.com/Acefake/s-skills'
         )

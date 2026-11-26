@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
-"""Antigravity SessionStart hook: throttled background git pull and local journal entry.
+"""Antigravity plugin hooks: SessionStart auto-update/journal and PreInvocation prompt-sharpen.
 
-Runs once per Antigravity session. Prints ``{}`` and exits 0 on every path so
-a session is never blocked or broken.
+Prints a valid JSON object and exits 0 on every path so a session is never
+blocked or broken.
 
-Auto-update runs at most once per ``WUKONG_AUTO_UPDATE_INTERVAL`` seconds
-(default 86400 = 24h) and ONLY when the plugin lives inside a clean Git
-checkout on a named branch. Set ``WUKONG_AUTO_UPDATE=0`` to turn it off.
+- SessionStart: throttled background git pull (at most once per
+  ``WUKONG_AUTO_UPDATE_INTERVAL`` seconds, default 24h, only on a clean named
+  branch; ``WUKONG_AUTO_UPDATE=0`` disables) plus local journal entry.
+- PreInvocation: evaluates ``lastUserInput`` with ``improve_hook.evaluate_prompt``
+  once per distinct user turn per conversation (deduplicated so multi-step tool
+  loops and background wakeups do not repeat), injecting a ``systemMessage``
+  step when applicable, and records the prompt to the local journal.
 """
+import hashlib
 import json
 import os
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
+
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 
 try:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -21,9 +29,15 @@ try:
 except Exception:
     journal = None
 
-PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+try:
+    sys.path.insert(0, str(PLUGIN_ROOT / "skills" / "prompt-sharpen" / "scripts"))
+    import improve_hook
+except Exception:
+    improve_hook = None
+
 DEFAULT_INTERVAL = 24 * 3600
 STALE_LOCK_SECONDS = 120
+MAX_TRACKED_CONVERSATIONS = 64
 
 
 def auto_update_enabled():
@@ -63,14 +77,24 @@ def should_check(now=None, path=None):
         return True
 
 
+def _atomic_write_text(path, content):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
+    try:
+        tmp.write_text(content, encoding="utf-8")
+        os.replace(tmp, path)
+    finally:
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass
+
+
 def record_check(now=None, path=None):
     now = time.time() if now is None else now
     path = path or state_path()
     try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
-        tmp.write_text(json.dumps({"lastCheck": int(now)}), encoding="utf-8")
-        os.replace(tmp, path)
+        _atomic_write_text(path, json.dumps({"lastCheck": int(now)}))
     except Exception:
         pass
 
@@ -166,15 +190,95 @@ def maybe_auto_update(plugin_root=PLUGIN_ROOT, now=None, path=None):
         _release_lock(lock)
 
 
+def prompt_state_path():
+    return state_path().with_name("agy-prompt-state.json")
+
+
+def _acquire_state_lock(lock_path, timeout=0.3):
+    deadline = time.monotonic() + timeout
+    while True:
+        if _acquire_lock(lock_path, time.time()):
+            return True
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(0.01)
+
+
+def _claim_user_turn(conversation_id, raw_input, path=None):
+    """Return True if this (conversation_id, raw_input) has not been processed yet."""
+    if not conversation_id:
+        return True
+    digest = hashlib.sha256(raw_input.encode("utf-8", errors="replace")).hexdigest()[:16]
+    path = path or prompt_state_path()
+    lock = path.with_suffix(".lock")
+    locked = _acquire_state_lock(lock)
+    try:
+        try:
+            loaded = json.loads(path.read_text(encoding="utf-8"))
+            entries = loaded if isinstance(loaded, dict) else {}
+        except Exception:
+            entries = {}
+        if entries.get(conversation_id) == digest:
+            return False
+        # Refresh insertion order so the newest conversations stay within the cap.
+        entries.pop(conversation_id, None)
+        entries[conversation_id] = digest
+        while len(entries) > MAX_TRACKED_CONVERSATIONS:
+            entries.pop(next(iter(entries)))
+        try:
+            _atomic_write_text(path, json.dumps(entries))
+        except Exception:
+            pass
+        return True
+    finally:
+        if locked:
+            _release_lock(lock)
+
+
+def handle_pre_invocation(data, state_file=None):
+    """Return (output_dict, should_record_journal) for an Antigravity PreInvocation event."""
+    raw_input = data.get("lastUserInput", "")
+    if not isinstance(raw_input, str) or not raw_input.strip():
+        return {}, False
+    conv_id = str(data.get("conversationId") or "")
+    if not _claim_user_turn(conv_id, raw_input, path=state_file):
+        return {}, False
+    text = improve_hook.evaluate_prompt({"prompt": raw_input}) if improve_hook else ""
+    if text:
+        out = {"injectSteps": [{"systemMessage": {"systemMessage": text}}]}
+    else:
+        out = {}
+    return out, True
+
+
 def main():
     try:
         raw = sys.stdin.buffer.read()
         data = json.loads(raw.decode("utf-8")) if raw.strip() else {}
     except Exception:
         data = {}
+    event = data.get("hookEventName", "") if isinstance(data, dict) else ""
+    if event == "PreInvocation":
+        try:
+            out, should_record = handle_pre_invocation(data)
+        except Exception:
+            out, should_record = {}, False
+        print(json.dumps(out), flush=True)
+        try:
+            if should_record and journal:
+                journal.record({
+                    "hook_event_name": "UserPromptSubmit",
+                    "prompt": data.get("lastUserInput", ""),
+                    "session_id": str(data.get("conversationId") or ""),
+                    "cwd": str(data.get("cwd") or ""),
+                })
+        except Exception:
+            pass
+        return
+
     print("{}", flush=True)
     try:
-        if data.get("hookEventName", "SessionStart") == "SessionStart":
+        if event == "SessionStart":
             maybe_auto_update()
             if journal:
                 journal.record({

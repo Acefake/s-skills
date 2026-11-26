@@ -56,8 +56,33 @@ class PromptSharpenHookTest(unittest.TestCase):
     def test_bypass_prefixes_and_machine_events_stay_silent(self):
         for prompt in ('*直接做', '#记住这个', '/deslop', '', '   ',
                        '<task-notification>done</task-notification>',
-                       '  <system-reminder>x</system-reminder>'):
+                       '  <system-reminder>x</system-reminder>',
+                       '<runtime_info>In case you are asked</runtime_info>',
+                       '[T3 Code: the agent in T3 thread "demo" sent this message, not the user.] Act now',
+                       'Delegated task node:delegated-task:abc finished'):
             self.assertIsNone(run_hook(prompt_event(prompt)), prompt)
+
+    def test_t3_wrapped_user_request_is_unwrapped_before_evaluation(self):
+        short_wrapped = (
+            '<t3_code_instructions>long rules...</t3_code_instructions>\n\n'
+            '<user_request>\n提交\n</user_request><runtime_info>meta</runtime_info>'
+        )
+        self.assertIsNone(run_hook(prompt_event(short_wrapped)))
+        vague_wrapped = (
+            '<USER_REQUEST>\n'
+            '<t3_code_instructions>mention </runtime_info> literally</t3_code_instructions>\n\n'
+            '<user_request>\n把登录页改一下\n</user_request><runtime_info>meta</runtime_info>\n'
+            '</USER_REQUEST>\n<ADDITIONAL_METADATA>time</ADDITIONAL_METADATA>'
+        )
+        out = run_hook(prompt_event(vague_wrapped))
+        self.assertIsNotNone(out)
+        self.assertIn('wukong:prompt-sharpen', out['additionalContext'])
+        self.assertIsNone(run_hook(prompt_event('推送<runtime_info>model info</runtime_info>')))
+        # Ordinary prompts mentioning <user_request>...</user_request> inline must not be truncated.
+        inline_tag = '帮我把 <user_request>foo</user_request> 这段正则改成支持多行'
+        out_inline = run_hook(prompt_event(inline_tag))
+        self.assertIsNotNone(out_inline)
+        self.assertIn('wukong:prompt-sharpen', out_inline['additionalContext'])
 
     def test_confirmations_and_very_short_prompts_stay_silent(self):
         for prompt in ('可以', '好的。', '继续', '按你说的做', 'OK', 'lgtm', '修一下', ' 嗯 '):

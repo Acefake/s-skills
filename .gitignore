@@ -23,5 +23,3 @@ plugins/*/evals/results/
 artifacts/
 .plugins-cache.json
 
-# setup-s-models 生成的本机配置备份
-*.t3.json.s-models.bak

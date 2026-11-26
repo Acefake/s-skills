@@ -4,10 +4,10 @@ description: "「/no-comments」「审查前先删注释」。派 comment-sicko 
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 不要注释
@@ -22,7 +22,7 @@ disable-model-invocation: true
 
 ## 步骤
 
-1. 派 **comment-sicko**，把范围传给它。各宿主怎么派，见宿主适配参考。按[公共派发规则](../executing-plans/references/subagents.md)，为子智能体选择推理等级和速度。不要把另一套注释规则复述进提示词。父对话不自己先改注释。第 2 步再审它交回来的报告。
+1. 派 **comment-sicko**，把范围传给它。各宿主怎么派，见宿主适配参考，派发细则见[公共派发规则](../executing-plans/references/subagents.md)。不要把另一套注释规则复述进提示词。父对话不自己先改注释。第 2 步再审它交回来的报告。
 2. 检查报告中的文件、行号和理由。子代理不得修改文件。拒绝超出范围、违反保留例外、理由不实或误判有意保留代码的建议。核实范围内的 lint 和 TypeScript 抑制注释；涉及正确性或安全时，先确认根因和修复方式。删除理由或约束真实性仍有歧义时，保留原注释并报告未解决事项。需要进一步理解符号时，按已授权工作流调用 `/how` 或 `/why`。报告不合格时指出原因并重跑一次；仍不合格则报告未解决，不执行相关删除。
 3. 对简单的已采纳标记直接修：删掉一条死路径、去掉一个参数，或者改用真正的 API。如果有修复需要设计形状，就对已采纳的这一批和周围的代码运行一次 `/architect`。停在草图阶段。架构负责定形状，第 4 步负责实现。
 4. 在范围内实现最小的根本原因修复。去掉每一个被点名的绕过办法。如果根本原因超出范围，就在范围内落地最小的修复，把其余的报告为未解决。[fix-root-causes](../systematic-debugging/references/principles/fix-root-causes.md) 和 [redesign-from-first-principles](../brainstorming/references/principles/redesign-from-first-principles.md) 这两条原则 只指导意图。它们都不授权扩大范围，也不授权修范围外的实例。绝对不要硬加针对症状的防护。

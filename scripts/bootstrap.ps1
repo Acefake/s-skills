@@ -6,7 +6,7 @@
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $pluginRoot = Join-Path $repoRoot 'plugins\wukong'
-$globalScript = Join-Path $pluginRoot 'skills\setup-s-instructions\scripts\global_instructions.py'
+$globalScript = Join-Path $pluginRoot 'skills\wukong-init\scripts\global_instructions.py'
 $python = if (Test-Path (Join-Path $repoRoot '.venv\Scripts\python.exe')) {
     Join-Path $repoRoot '.venv\Scripts\python.exe'
 } else {
@@ -72,4 +72,4 @@ foreach ($h in $hosts) {
     }
 }
 
-Write-Host "`n下一步：打开新会话执行 /wukong-init（或直接运行 setup-s-models 的 plan 子命令按订阅额度生成推荐）。"
+Write-Host "`n下一步：打开新会话执行 /wukong-init。"

@@ -4,15 +4,15 @@ description: "「/interrogate」「对抗式审查」「找盲点」「把这段
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 
 # 审问
 
-每个配置好的模型派一个审查者，对代码改动做对抗式审查。对抗的信号来自模型的多样性，而不是分配给它们的角色。交付物是一份综合后的结论。**不要**自动应用任何改动。
+每个模型派一个审查者，对代码改动做对抗式审查。对抗的信号来自模型的多样性，而不是分配给它们的角色。交付物是一份综合后的结论。**不要**自动应用任何改动。
 
 ## 第 1 步：范围
 
@@ -30,18 +30,18 @@ disable-model-invocation: true
 
 ## 第 3 步：派出审查者
 
-在一条消息里启动所有审查者。读当前软件的 s 模型配置（路径见文末）里「独立评审」那一行，没有再读旧键 `interrogate reviewers`。有几个条目就派几个，标记为 Reviewer A、B 等等。没有这份配置或没有这一行，就派两个：一个用你判断力最强的模型，一个用你写代码较快的模型。软件不能给子智能体单独指定模型时，两个都省略模型，让它们跟父对话走，并说一句这次没有换模型。行值带括号时（如 `sonnet（medium）`），按[行值格式](../setup-s-models/references/role-keys.md)拆开：括号前是模型，括号里的档位当起始推理等级传给宿主，不要把括号连模型名一起传。
+在一条消息里启动所有审查者，标记为 Reviewer A、B 等等。默认派两个：一个用你判断力最强的模型，一个用你写代码较快的模型。用户本次点名了模型，就每个点名的模型派一个。软件不能给子智能体单独指定模型时，两个都省略模型，让它们跟父对话走，并说一句这次没有换模型。
 
-| 子智能体 | 没有配置、而且软件能指定模型时 |
+| 子智能体 | 软件能指定模型时 |
 |----------|---------------|
 | Reviewer A | 判断力最强的模型。Cursor 上、并且 `claude-opus-5-5-xhigh` 确实可用时，可以用这个名字 |
 | Reviewer B | 较快的写代码模型。Cursor 上、并且 `grok-4.7-xhigh-fast` 确实可用时，可以用这个名字 |
 
-每个审查者用能看代码的类型。只读可以，但不要用会丢掉你需要的工具的只读模式。`model` 设为配置里的条目。`auto` 或 `inherit-parent` 省略模型。工具名见文末。
+每个审查者用能看代码的类型。只读可以，但不要用会丢掉你需要的工具的只读模式。工具名见文末。
 
-软件拒绝了某个配置的条目，就让那个审查者用它所在系列里、这次实际可用的最接近的名字，并说明一下。系列按名字前缀分。找不到同一系列，就用 Reviewer A 那一档。别名条目不是模型名，不要对它做回退。不要因为模型名卡住审查。
+软件拒绝了某个模型名，就让那个审查者用它所在系列里、这次实际可用的最接近的名字，并说明一下。系列按名字前缀分。找不到同一系列，就用 Reviewer A 那一档。不要因为模型名卡住审查。
 
-读 `references/reviewer-prompt.md`，为每个审查者填写同一个模板：写明的意图、diff 或文件内容、`references/rubric.md` 里的评审标准，以及 `references/code-quality-review.md` 里的代码质量视角。按[公共派发规则](../executing-plans/references/subagents.md)，为每个子智能体的任务选择推理等级，以及快速还是标准速度。
+读 `references/reviewer-prompt.md`，为每个审查者填写同一个模板：写明的意图、diff 或文件内容、`references/rubric.md` 里的评审标准，以及 `references/code-quality-review.md` 里的代码质量视角。派发细则见[公共派发规则](../executing-plans/references/subagents.md)。
 
 ## 第 4 步：综合
 
@@ -81,7 +81,7 @@ disable-model-invocation: true
 
 ## 宿主适配
 
-角色行是「独立评审」（旧键 `interrogate reviewers`）。中文键优先。配置路径以 [setup-s-models](../setup-s-models/SKILL.md) 为准。工具名以[宿主适配](../../HOSTS.md)中的当前平台参考为准。一条消息里把审查者都派出去。
+工具名以[宿主适配](../../HOSTS.md)中的当前平台参考为准。一条消息里把审查者都派出去。
 
 Codex、Claude Code、Cursor、WorkBuddy 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 

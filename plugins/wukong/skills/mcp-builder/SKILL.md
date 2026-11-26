@@ -4,7 +4,7 @@ description: "「写个 MCP Server」「把这个 API 接成 MCP 工具」。设
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 
 # 构建 MCP 服务
 

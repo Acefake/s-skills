@@ -2,7 +2,7 @@
 
 仅支持 Codex、Claude Code、Cursor、WorkBuddy。全局指令位置：Codex 是 `~/.codex/AGENTS.md`，Claude Code 是 `~/.claude/CLAUDE.md`，Cursor 使用全局 User Rules（项目 Always 规则只对项目生效）；WorkBuddy 使用兼容目录 `~/.codebuddy/CODEBUDDY.md`。也可以放进项目约定文件。
 
-在 T3 Code 中使用上述底层宿主时，模型、子代理和工作区操作加读 HOSTS.md 的 T3 编排适配，不新增市场安装入口。
+在 T3 Code 中使用上述底层宿主时，子代理和工作区操作加读 HOSTS.md 的 T3 编排适配，不新增市场安装入口。
 
 收到任务后，在读文件、跑命令、提问或作答之前：
 

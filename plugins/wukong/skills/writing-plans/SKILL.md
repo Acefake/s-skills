@@ -1,12 +1,12 @@
 ---
 name: writing-plans
-description: "「写个实现计划」「先拆步骤」「动手改代码之前列计划」。已有规格、要做多步任务时，先写成可执行计划。Use when you have a spec or requirements for a multi-step task, before changing code."
+description: "「写个实现计划」「先拆步骤」「拆成小步，每一步都能验证」「动手改代码之前列计划」。已有规格、要做多步任务或迁移时，先写成可逐步验证的计划。Use when you have a spec or requirements for a multi-step task or migration and need to break it into small verifiable steps before changing code."
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 ## 运行环境适配
 
-涉及宿主工具、模型配置或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。
 
 # 编写实现计划
 

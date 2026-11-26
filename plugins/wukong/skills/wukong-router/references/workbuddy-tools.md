@@ -14,15 +14,11 @@ CodeBuddy（CLI 与 IDE）和 WorkBuddy 同源，用户级目录都是 `~/.codeb
 
 ## 全局提示词
 
-显式执行 setup-s-instructions 时选择 `--host workbuddy`，使用官方兼容的用户级 `~/.codebuddy/CODEBUDDY.md`。先只读检查，明确初始化或更新授权后才加 `--apply`；保留用户其他内容、首份备份和受管块边界，重复执行不重复添加。项目规则不是全局规则，不用项目文件冒充全局初始化。
+显式执行 wukong-init 时选择 `--host workbuddy`，使用官方兼容的用户级 `~/.codebuddy/CODEBUDDY.md`。先只读检查，明确初始化或更新授权后才加 `--apply`；保留用户其他内容、首份备份和受管块边界，重复执行不重复添加。项目规则不是全局规则，不用项目文件冒充全局初始化。
 
-日常按[全局自检](../../setup-s-instructions/references/daily-check.md)只读提醒。若当前 WorkBuddy 版本未加载兼容目录，不能因为文件写入成功就声称已在宿主生效；新会话回读核验，失败时报告文件层完成、宿主加载未验证，不写内部数据库或猜测其他全局路径。
-
-模型角色正文可在用户明确配置时放入 `~/.codebuddy/rules/s-models.md`。写出的标记段是 `# s 模型配置` 到 `# s 模型配置结束`，角色键用中文。旧标记 `# s model configuration` 到 `# end s model configuration` 和旧英文键仍然可读，重写时换成中文。使用普通 Markdown，保留其他内容。模型名仅来自当前会话实际支持的检测结果；不能为子代理独立选择时用 `inherit-parent`。不用 Cursor 模型名或其 `.mdc` frontmatter。
+日常按[全局自检](../../wukong-init/references/daily-check.md)只读提醒。若当前 WorkBuddy 版本未加载兼容目录，不能因为文件写入成功就声称已在宿主生效；新会话回读核验，失败时报告文件层完成、宿主加载未验证，不写内部数据库或猜测其他全局路径。
 
 ## 通用动作与能力回退
-
-模型配置采用 [setup-s-models](../../setup-s-models/SKILL.md) 的轻量、常规、复杂三档。新增“检索与探索”角色，按[公共派发规则](../../executing-plans/references/subagents.md)使用；可用模型与参数只取当前会话可验证的能力。没有独立选模能力时全部写 `inherit-parent`，并说明没有模型分流。旧配置缺少轻量行就沿用原角色，配置更新默认保留已有角色选择，明确重新分配才使用 `--replace-roles`。不能把写入文件当作已完成真实换模。
 
 | 动作 | WorkBuddy 中的做法 |
 |---|---|

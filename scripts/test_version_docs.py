@@ -11,7 +11,6 @@ import check_marketplace
 import marketplace_lib
 
 REPO = Path(__file__).resolve().parents[1]
-SETUP_MODELS = REPO / 'plugins/wukong/skills/setup-s-models/SKILL.md'
 
 
 class DocVersionTest(unittest.TestCase):
@@ -46,18 +45,6 @@ class DocVersionTest(unittest.TestCase):
 
     def test_bump_script_imports_doc_updater(self):
         self.assertIs(bump_plugin_version.set_doc_versions, marketplace_lib.set_doc_versions)
-
-
-class SuffixGroupTest(unittest.TestCase):
-    def test_claude_code_is_not_in_the_name_suffix_group(self):
-        text = SETUP_MODELS.read_text(encoding='utf-8')
-        match = re.search(r'^\s*(.+?)把推理目标写进模型名后缀：', text, re.M)
-        self.assertIsNotNone(match)
-        suffix_hosts = set(re.split(r'、', match.group(1).strip()))
-        self.assertEqual(suffix_hosts, {'Codex', 'Cursor', 'WorkBuddy'})
-        keep = re.search(r'^\s*(?:.*。)?(Claude Code[^。]*?)不改名字后缀', text, re.M)
-        self.assertIsNotNone(keep)
-        self.assertIn('Claude Code', keep.group(1))
 
 
 if __name__ == '__main__':

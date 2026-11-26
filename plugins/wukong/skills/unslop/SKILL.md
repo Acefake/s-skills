@@ -4,7 +4,7 @@ description: "「/unslop」「去掉 AI 腔」「这段话太像机器」。改�
 disable-model-invocation: true
 ---
 
-本会话首次使用本库技能时，按[全局提示词自检](../setup-s-instructions/references/daily-check.md)只读检查一次。
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
 # 去掉 AI 腔
 
 修改文字，去掉 AI 的写作套路。先按下面的套路扫一遍，然后重写。保留原意，符合想要的语气。

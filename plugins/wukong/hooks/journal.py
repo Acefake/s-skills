@@ -63,7 +63,16 @@ MACHINE_PREFIXES = (
     "<local-command-stderr>",
     "<local-command-caveat>",
     "<system-reminder>",
+    "[T3 Code:",
+    "Delegated task ",
 )
+
+WRAPPER_TAGS = re.compile(
+    r"<(t3_code_instructions|runtime_info|ADDITIONAL_METADATA|USER_SETTINGS_CHANGE|SYSTEM_MESSAGE)>.*?</\1>",
+    re.IGNORECASE | re.DOTALL,
+)
+OUTER_USER_REQUEST_BLOCK = re.compile(r"^\s*<USER_REQUEST>\s*(.*?)\s*</USER_REQUEST>\s*$", re.DOTALL)
+USER_REQUEST_BLOCK = re.compile(r"^\s*<user_request>\s*(.*?)\s*</user_request>\s*$", re.DOTALL)
 
 CONFIRMATION = re.compile(
     r"^(可以|好|好的|行|嗯|对|是|是的|没问题|同意|确认|继续|开始|做吧|就这样|按你说的(做|来)?|ok|okay|yes|y|go|lgtm)[。.!！~～\s]*$",
@@ -139,11 +148,24 @@ def excerpt(text, limit):
     return cut
 
 
+def extract_user_prompt(prompt):
+    if not isinstance(prompt, str):
+        return ""
+    cleaned = WRAPPER_TAGS.sub("", prompt).strip()
+    outer = OUTER_USER_REQUEST_BLOCK.match(cleaned)
+    if outer:
+        cleaned = outer.group(1).strip()
+    inner = USER_REQUEST_BLOCK.match(cleaned)
+    if inner:
+        cleaned = inner.group(1).strip()
+    return cleaned
+
+
 def classify_prompt(prompt):
     """Return (event, extra fields) for a user message, or None to skip it."""
     if not isinstance(prompt, str):
         return None
-    stripped = prompt.strip()
+    stripped = extract_user_prompt(prompt)
     if not stripped or stripped.startswith(MACHINE_PREFIXES):
         return None
     if stripped[0] == "/":

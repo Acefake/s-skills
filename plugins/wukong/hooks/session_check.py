@@ -3,7 +3,7 @@
 
 Prints one JSON object whose additionalContext tells the model which wukong
 build is loaded and whether the global skill instructions are current. It runs
-the read-only check in setup-s-instructions (no --apply), never writes
+the read-only check in wukong-init (no --apply), never writes
 configuration, and exits silently on any error so a session always starts.
 """
 import importlib.util
@@ -19,12 +19,12 @@ except Exception:
     journal = None
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
-CHECK = PLUGIN_ROOT / "skills/setup-s-instructions/scripts/global_instructions.py"
+CHECK = PLUGIN_ROOT / "skills/wukong-init/scripts/global_instructions.py"
 
 STATUS_TEXT = {
     "configured": "全局技能提示词已是最新，本会话不必再自检。",
-    "missing": "全局技能提示词缺失，可显式调用 setup-s-instructions 初始化；只提醒一次，不阻塞原任务。",
-    "outdated": "全局技能提示词需更新，可显式调用 setup-s-instructions 更新；只提醒一次，不阻塞原任务。",
+    "missing": "全局技能提示词缺失，可显式调用 wukong-init 初始化；只提醒一次，不阻塞原任务。",
+    "outdated": "全局技能提示词需更新，可显式调用 wukong-init 更新；只提醒一次，不阻塞原任务。",
 }
 UNKNOWN_TEXT = "暂时无法确认全局技能提示词。"
 
