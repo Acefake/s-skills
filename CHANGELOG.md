@@ -1,5 +1,11 @@
 # 变更记录
 
+## 1.0.32
+
+### 修复
+
+- 修复 Antigravity `PreInvocation` 钩子（`hooks/agy_hook.py`）在笼统提示词上附带 `systemMessage.metadata.user_markdown` 导致宿主静默丢弃整条 `injectSteps` 的问题：改为仅注入 `systemMessage`，并同步更新单元测试与钩子说明文档（可通过 `agy_hook.py --status` / `~/.wukong/prompt-hook-log.jsonl` 排查触发状态）。
+
 ## 1.0.31
 
 ### 删除

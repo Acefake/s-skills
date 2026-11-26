@@ -245,7 +245,8 @@ class AgyPluginCompatTest(unittest.TestCase):
                 self.assertEqual(proc.returncode, 0, proc.stderr.decode('utf-8', 'replace'))
                 return json.loads(proc.stdout.decode('utf-8'))
 
-            # First invocation of a vague turn injects systemMessage + user_markdown notice.
+            # First invocation of a vague turn injects systemMessage without metadata
+            # (Antigravity drops injectSteps when metadata.user_markdown is attached).
             turn1 = {
                 'hookEventName': 'PreInvocation',
                 'conversationId': 'conv-1',
@@ -256,7 +257,8 @@ class AgyPluginCompatTest(unittest.TestCase):
             steps = out1.get('injectSteps') or []
             self.assertEqual(len(steps), 1)
             self.assertIn('wukong:prompt-sharpen', steps[0]['systemMessage']['systemMessage'])
-            self.assertIn('prompt-sharpen', steps[0]['systemMessage'].get('metadata', {}).get('user_markdown', ''))
+            self.assertNotIn('metadata', steps[0])
+            self.assertNotIn('metadata', steps[0]['systemMessage'])
 
             # Subsequent invocation in the same turn (or wakeup) stays silent.
             turn1_step2 = dict(turn1, invocationNum=2)
@@ -271,7 +273,7 @@ class AgyPluginCompatTest(unittest.TestCase):
             }
             self.assertEqual(run_pre(turn2), {})
 
-            # New substantive turn injects again; WUKONG_HOOK_NOTICE=0 hides user_markdown.
+            # New substantive turn injects again without metadata regardless of WUKONG_HOOK_NOTICE.
             turn3 = {
                 'hookEventName': 'PreInvocation',
                 'conversationId': 'conv-1',
@@ -287,6 +289,7 @@ class AgyPluginCompatTest(unittest.TestCase):
             self.assertEqual(proc3.returncode, 0)
             out3 = json.loads(proc3.stdout.decode('utf-8'))
             self.assertIn('wukong:prompt-sharpen', out3['injectSteps'][0]['systemMessage']['systemMessage'])
+            self.assertNotIn('metadata', out3['injectSteps'][0])
             self.assertNotIn('metadata', out3['injectSteps'][0]['systemMessage'])
 
             # Status log records once per turn (not repeated for deduped step 2) and --status prints it.

@@ -33,7 +33,7 @@
 Antigravity 直接加载插件根 [hooks.json](../hooks.json)（[agy_hook.py](agy_hook.py)）：
 
 - `SessionStart`：24 小时节流后台 `git pull --ff-only`（仅干净具名分支，`WUKONG_AUTO_UPDATE=0` 关闭）并记一次 `session` 日志。
-- `PreInvocation`：复用 [improve_hook.py](../skills/prompt-sharpen/scripts/improve_hook.py) 评估 `lastUserInput`，按 `(conversationId, lastUserInput)` 去重，每轮新用户消息只在首次调用时通过 `injectSteps` 注入一次评估提醒并记本地使用日志（无时间戳包装的纯 Antigravity 中连续两轮发送完全相同的原文会跳过第二次）。真正注入时同时通过 `metadata.user_markdown` 在界面显示一行轻提示（不占模型上下文，`WUKONG_HOOK_NOTICE=0` 关闭），并写入 `~/.wukong/prompt-hook-log.jsonl`（可用 `python hooks/agy_hook.py --status` 查看，`WUKONG_HOOK_LOG=0` 关闭）；可在插件根 `hooks.json` 中将 `wukong-prompt-sharpen` 设为 `"enabled": false` 单独关闭。
+- `PreInvocation`：复用 [improve_hook.py](../skills/prompt-sharpen/scripts/improve_hook.py) 评估 `lastUserInput`，按 `(conversationId, lastUserInput)` 去重，每轮新用户消息只在首次调用时通过 `injectSteps` 注入一次评估提醒并记本地使用日志（无时间戳包装的纯 Antigravity 中连续两轮发送完全相同的原文会跳过第二次）。当前 Antigravity 仅注入 `systemMessage`，不附带 `metadata.user_markdown`（当前宿主遇到该字段会整条丢弃 `injectSteps`）；每次触发结果写入 `~/.wukong/prompt-hook-log.jsonl`（可用 `python hooks/agy_hook.py --status` 查看，`WUKONG_HOOK_LOG=0` 关闭）；可在插件根 `hooks.json` 中将 `wukong-prompt-sharpen` 设为 `"enabled": false` 单独关闭。
 
 ## Codex
 

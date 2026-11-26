@@ -248,11 +248,8 @@ def handle_pre_invocation(data, state_file=None):
     else:
         text, outcome = "", "skipped:missing_hook"
     if text:
-        step = {"systemMessage": text}
-        if (improve_hook and improve_hook.notice_enabled()
-                and improve_hook.looks_vague(improve_hook.extract_user_prompt(raw_input))):
-            step["metadata"] = {"user_markdown": f"`{improve_hook.USER_NOTICE}`"}
-        out = {"injectSteps": [{"systemMessage": step}]}
+        # Antigravity 当前宿主解析 systemMessage.metadata.user_markdown 会整条丢弃 injectSteps。
+        out = {"injectSteps": [{"systemMessage": {"systemMessage": text}}]}
     else:
         out = {}
     return out, True, outcome
