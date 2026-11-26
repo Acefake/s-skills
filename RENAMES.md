@@ -1,194 +1,49 @@
-# 技能改名
+# 退役技能对照
 
-当前插件名为 `wukong`，目录为 `plugins/wukong/`，市场和仓库仍为 `s-skills`。
-六个原有 `s-` 技能改为 `wukong-agent`、`wukong-init`、`wukong-mode`、`wukong-proposal`、`wukong-review`、`wukong-router`，其余技能名不变。同名 agent 同步改为 `wukong-agent`。以下版本记录保留历史名称。
+插件名是 `wukong`，目录是 `plugins/wukong/`，市场和仓库名是 `s-skills`。技能目录名等于 frontmatter 里的 `name`，全部为英文小写 kebab-case。
 
-版本号从 1.0.0 重新开始计。下文的 1.x 版本号是重置前的旧编号，对应 git 历史里的提交，不是 Release。1.0.10 起插件名是 `s-wukong`，目录是 `plugins/s-wukong/`；下面各条仍按当时的名字记录。
+退役的技能名都记在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS` 里，`check_marketplace.py` 会拦下对它们的引用。下表说明遇到旧名时现在该用什么。
 
-1.2.0 把技能目录和 `name` 改成英文小写 kebab-case，文件夹名等于 `name`。
-技能在 `plugins/s-wukong/skills/`，随插件分发。1.3.0 删掉了原来放在 `archive/s/` 的 39 个归档技能，名字留在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS`。
+## 并入现有技能
 
-活跃 61：原来的 50 个（含 frontend-design）加上 11 个开发流程技能。
-归档 38：原来的 35 个，加上 3 个和现有技能重叠、因此不进 `skills/` 的开发流程技能。
-
-`frontend-design`（原「有主见的界面」）曾保留为手点技能，1.0.17 删除。日常做界面用 `impeccable`。
-
-1.2.1 把 `description` 改成中文在前、英文 `Use when` 在后。1.2.2 起直接写中文句子：`……。Use when ... .`。英文 `Use when` 接在中文句号后面。技能和 agent 说明用同一写法。
-
-1.5.0 新增 `docx`、`pptx`、`xlsx`、`pdf`、`commit-pr`、`translate`。它们没有旧中文名。`teach` 仍然删除，讲解走 `how`（问动机再用 `why`）。`technical-writing` 从这一版起可以按描述自动选用，Word 文件不归它。
-
-1.5.1 新增 `s-proposal`。1.5.2 新增 `s-review`（中文代码审查，默认只出报告）。它们没有旧中文名。
-
-1.6.0 把插件名从 `s` 改为 `s-atlas`，目录从 `plugins/s/` 改为 `plugins/s-atlas/`。技能名仍用原来的 `s-` 前缀，例如 `s-review`、`s-proposal`。市场名仍是 `s-skills`，仓库名不变。安装命令是 `/plugin install s-atlas@s-skills`。当前插件版本 1.6.0，活跃技能 72 个。
-
-1.7.38 删除 `learn`（经验学习）及其脚本和测试，名字留在 `RETIRED_SKILLS`。全局规则不再包含经验建议一节；`reflect` 保留。恢复方法见下面的“回滚”，从 1.7.37 的提交取回 `plugins/s-atlas/skills/learn/`。
-
-1.7.41 恢复 `automate-me`：从 1.3.0 之前的提交取回后按当前规范改写，把对 `poteto-mode` 的引用改成现在的 `s-mode`，去掉 Cursor 专用模型名和已不支持的 OpenCode 示例，挖掘对话记录前先取得用户同意。
-
-1.8.0 汇总 1.7.37 到 1.7.43：新增 `s-init`（一键初始化），恢复 `automate-me`，删除 `learn`，`HOSTS.md` 集中列出各宿主的提问工具。技能总数 80，其中自动选用 57、显式调用 23。
-
-1.8.1 不改技能名，只修复：setup-s-models 首次写入 CRLF 文件不再破坏原有行尾，保留 BOM，原子写入；s-router 描述改为拿不准或没有全局规则时才用；独立评审和 subagent-driven-development 按 s 模型配置的角色行选模型；找回 `claude plugin eval` 评测套件；触发用例加入反例。
-
-1.8.3 新增 `prompt-sharpen` 和 `project-memory`，分别改编自 claude-code-prompt-improver 和 update-memory（均为 MIT），随附许可证文件。
-
-## 回滚
-
-要恢复一个已删除的技能，从 1.3.0 之前的提交里取回 `archive/s/<英文名>/`，放到 `plugins/wukong/skills/<英文名>/`，从 `RETIRED_SKILLS` 删掉它，把 `scripts/marketplace_lib.py` 里的 `EXPECTED_SKILL_COUNTS` 加一，然后更新版本锁。
-整次改名可以回退 1.2.0 的提交。旧中文名不再作为目录或 `name` 使用。
-
-## 旧名到新名
-
-| 旧名 | 新名 | 状态 |
+| 旧名 | 现在用 | 内容在哪 |
 |---|---|---|
-| s助手 | wukong-agent | 活跃 |
-| 专挑注释 | comment-sicko | 1.0.17 并入 no-comments，保留为子代理 |
-| 设置s模型 | setup-s-models | 1.0.30 已移除，子代理继承父会话模型 |
-| 代码怎么工作 | how | 活跃 |
-| 代码为什么这样 | why | 活跃 |
-| 先画架构草图 | architect | 活跃 |
-| 并行群体作战 | swarm | 1.0.31 并入 executing-plans |
-| 多方案竞技场 | arena | 已移除 |
-| 多模型对抗审查 | interrogate | 1.0.31 已删，严审走 requesting-code-review |
-| 清理AI腔 | unslop | 1.0.31 并入 technical-writing |
-| 清理代码腔 | deslop | 活跃 |
-| 清理代码注释 | no-comments | 1.0.31 并入 deslop |
-| 技术写作 | technical-writing | 活跃 |
-| 编写skill | author-skill | 活跃 |
-| 操作界面 | control-ui | 活跃 |
-| 操作命令行 | control-cli | 活跃 |
-| 基准测试清单 | benchmark-checklist | 1.0.17 并入 principle-explain-the-number |
-| 决定记录日志 | show-me-your-work | 活跃 |
-| 自定流程搞定 | figure-it-out | 活跃 |
-| 定时循环 | timed-loop | 活跃 |
-| 反思并改skill | reflect | 活跃 |
-| 测试驱动修bug | tdd | 活跃 |
-| 补上对话进度 | ketchup | 1.0.17 并入 wukong-mode（references/catch-up.md） |
-| 精致界面设计 | impeccable | 活跃 |
-| 有主见的界面 | frontend-design | 1.0.17 已删，用 impeccable |
-| 原则-偷懒守则 | principle-laziness-protocol | 活跃 |
-| 原则-基础优先 | principle-foundational-thinking | 活跃 |
-| 原则-从头重新设计 | principle-redesign-from-first-principles | 活跃 |
-| 原则-质疑前提 | principle-attack-the-premise | 活跃 |
-| 原则-先减后加 | principle-subtract-before-you-add | 活跃 |
-| 原则-减轻读者负担 | principle-minimize-reader-load | 活跃 |
-| 原则-结果导向 | principle-outcome-oriented-execution | 活跃 |
-| 原则-体验优先 | principle-experience-first | 活跃 |
-| 原则-穷尽设计空间 | principle-exhaust-the-design-space | 活跃 |
-| 原则-打造杠杆 | principle-build-the-lever | 活跃 |
-| 原则-为领域建模 | principle-model-the-domain | 活跃 |
-| 原则-守住边界 | principle-boundary-discipline | 活跃 |
-| 原则-类型系统纪律 | principle-type-system-discipline | 活跃 |
-| 原则-操作幂等 | principle-make-operations-idempotent | 活跃 |
-| 原则-迁完再删旧API | principle-migrate-callers-then-delete-legacy-apis | 活跃 |
-| 原则-先分开共享状态 | principle-separate-before-serializing-shared-state | 活跃 |
-| 原则-证明真能用 | principle-prove-it-works | 活跃 |
-| 原则-修根本原因 | principle-fix-root-causes | 活跃 |
-| 原则-可验证小单元 | principle-sequence-verifiable-units | 活跃 |
-| 原则-测行为不测实现 | principle-test-behavior-not-implementation | 活跃 |
-| 原则-解释数字 | principle-explain-the-number | 活跃 |
-| 原则-守住上下文 | principle-guard-the-context-window | 活跃 |
-| 原则-别卡着等人 | principle-never-block-on-the-human | 活跃 |
-| 原则-教训写进结构 | principle-encode-lessons-in-structure | 活跃 |
-| 前端设计品味 | taste-skill | 已删 |
-| 高端视觉设计 | premium-visual | 已删 |
-| 全套视觉设计 | visual-suite | 已删 |
-| 设计系统 | design-system | 已删 |
-| UIUX知识库 | ui-ux-pro-max | 已删 |
-| 网页设计规范 | web-design-guidelines | 已删 |
-| 苹果式设计 | apple-design | 已删 |
-| shadcn组件 | shadcn | 已删 |
-| 选前端库 | pick-frontend-lib | 已删 |
-| 界面压力测试 | break-ui | 已删 |
-| 多版本原型 | prototype | 已删 |
-| 手机原生手感 | native-mobile-feel | 已删 |
-| s做Bot界面 | make-bot-ui | 已删 |
-| 做动画 | animate | 已删 |
-| 找动画机会 | find-animation-opportunities | 已删 |
-| 动画审查 | review-animations | 已删 |
-| 动画性能 | animation-performance | 已删 |
-| 动画改进计划 | improve-animations | 已删 |
-| 动画术语表 | animation-glossary | 已删 |
-| Expo动画 | expo-animate | 已删 |
-| Emil设计理念 | emil-design | 已删 |
-| Sonner用法 | ask-sonner | 已删 |
-| 动手前磨清任务 | sharpen | 已删 |
-| 根除重复错误 | correct | 已删 |
-| 改动影响范围 | blast-radius | 已删 |
-| 回想最近工作 | recall | 已删 |
-| 复述用户目标 | in-your-own-words | 已删 |
-| 按我习惯定制 | automate-me | 已删 |
-| 创建验证skill | create-verification-skill | 已删 |
-| 维护验证skill | maintain-verification-skill | 已删 |
-| TypeScript最佳实践 | typescript-best-practices | 已删 |
-| 一步步教我 | teach | 已删 |
-| 说人话重讲 | plain-language | 已删 |
-| 自我改进 | self-improvement | 已删 |
-| s使用帮助 | s-help | 已删 |
-| （无旧中文名） | wukong-router | 活跃 |
-| （无旧中文名） | brainstorming | 活跃 |
-| （无旧中文名） | writing-plans | 活跃 |
-| （无旧中文名） | executing-plans | 活跃 |
-| （无旧中文名） | subagent-driven-development | 活跃 |
-| （无旧中文名） | systematic-debugging | 活跃 |
-| （无旧中文名，与 principle-prove-it-works 重叠） | verification-before-completion | 已删 |
-| （无旧中文名） | requesting-code-review | 活跃 |
-| （无旧中文名） | receiving-code-review | 活跃 |
-| （无旧中文名） | using-git-worktrees | 活跃 |
-| （无旧中文名） | finishing-a-development-branch | 活跃 |
-| （无旧中文名，与 tdd 重叠） | test-driven-development | 已删 |
-| （无旧中文名，与 swarm 重叠） | dispatching-parallel-agents | 已删 |
-| （无旧中文名，与 author-skill 重叠） | writing-skills | 已删 |
+| `wukong-mode`、`wukong-agent`、`figure-it-out`、`timed-loop`、`using-git-worktrees`、`subagent-driven-development`、`dispatching-parallel-agents` | `executing-plans` | `SKILL.md` 与 `references/` |
+| `swarm` | `executing-plans` | `references/swarm.md` |
+| `no-comments` | `deslop` | `references/comment-sicko.md`，子代理在 `plugins/wukong/agents/comment-sicko.md` |
+| `unslop` | `technical-writing` | `references/unslop.md` |
+| `finishing-a-development-branch` | `commit-pr` | `references/finishing-branch.md` |
+| `setup-s-instructions` | `wukong-init` | `scripts/global_instructions.py` |
+| `test-driven-development` | `tdd` | |
+| `writing-skills` | `author-skill` | |
+| `teach` | `how`，问动机用 `why` | |
+| `self-improvement`、`learn`、`automate-me` | `reflect`，个人规则用 `reflect --me` | |
+| `interrogate` | `requesting-code-review` | |
+| `sharpen` | `prompt-sharpen`、`brainstorming` | |
+| `frontend-design`、`taste-skill`、`ui-ux-pro-max`、`web-design-guidelines`、`design-system`、`apple-glass`、`html-mockup`、`theme-factory` | `impeccable` | |
+| `benchmark-checklist` | `systematic-debugging` | `references/principles/benchmark-checklist.md` |
 
-## 删除原因
+## 原则并入所属技能
 
-| 新名 | 原因 |
+24 个 `principle-<名>` 不再是独立技能。正文在所属技能的 `references/principles/<名>.md`：
+
+| 技能 | 原则 |
 |---|---|
-| taste-skill | 和 impeccable 重叠，偏落地页 |
-| premium-visual | 同一类视觉方向，且本来就只允许点名 |
-| visual-suite | 品牌、幻灯片、横幅，范围过宽 |
-| design-system | 和 impeccable 的令牌、设计系统重叠 |
-| ui-ux-pro-max | 查表用，和 impeccable 抢同一句「做个页面」 |
-| web-design-guidelines | 检查清单，impeccable 已覆盖审查 |
-| apple-design | 单一风格，wukong-mode 不读 |
-| shadcn | 只有项目用 shadcn 才需要 |
-| pick-frontend-lib | 偶尔选型 |
-| break-ui | 偶发 |
-| prototype | wukong-mode 读的是原则 principle-exhaust-the-design-space，不读这份 |
-| native-mobile-feel | 只做手机网页手感时才用 |
-| make-bot-ui | 只做 webhook 机器人界面 |
-| animate | 动画整批删掉；要恢复时先从 git 历史拿这一份 |
-| find-animation-opportunities | 动画整批 |
-| review-animations | 动画整批 |
-| animation-performance | 动画整批 |
-| improve-animations | 动画整批 |
-| animation-glossary | 查词，低频 |
-| expo-animate | 只做 Expo |
-| emil-design | 和动画审查重复 |
-| ask-sonner | 只服务一个 toast 库 |
-| sharpen | wukong-mode 不读；日常用 brainstorming |
-| correct | wukong-mode 不读 |
-| blast-radius | wukong-mode 不读 |
-| recall | wukong-mode 不读 |
-| in-your-own-words | wukong-mode 不读 |
-| automate-me | wukong-mode 不读 |
-| create-verification-skill | wukong-mode 不读 |
-| maintain-verification-skill | wukong-mode 不读 |
-| typescript-best-practices | wukong-mode 不读；写 TS 多时优先从 git 历史拿回 |
-| teach | wukong-mode 不读；how 和 why 已覆盖 |
-| plain-language | 普通对话可以代替 |
-| self-improvement | 和 reflect 重叠，wukong-mode 只读 reflect |
-| s-help | wukong-mode 不读；目录改由 README 表格承担 |
-| test-driven-development | 与 wukong-mode 点名的 tdd 重叠，只留 tdd |
-| dispatching-parallel-agents | 与 wukong-mode 点名的 swarm 重叠，只留 swarm |
-| writing-skills | 与 wukong-mode 点名的 author-skill 重叠，只留 author-skill |
-| verification-before-completion | 与 wukong-mode 点名的 principle-prove-it-works 重叠，只留 principle-prove-it-works |
+| `brainstorming` | exhaust-the-design-space、experience-first、foundational-thinking、redesign-from-first-principles |
+| `code-style` | boundary-discipline、build-the-lever、encode-lessons-in-structure、laziness-protocol、make-operations-idempotent、migrate-callers-then-delete-legacy-apis、minimize-reader-load、model-the-domain、prove-it-works、subtract-before-you-add、type-system-discipline |
+| `executing-plans` | guard-the-context-window、never-block-on-the-human、separate-before-serializing-shared-state |
+| `systematic-debugging` | attack-the-premise、explain-the-number、fix-root-causes |
+| `test-strategy` | test-behavior-not-implementation |
+| `writing-plans` | outcome-oriented-execution、sequence-verifiable-units |
 
-1.0.17 删除 `translate`、`frontend-design`、`patent-disclosure`、`patent-application`；`ketchup` 并入 `wukong-mode` 的 `references/catch-up.md`，`benchmark-checklist` 并入 `principle-explain-the-number` 的 `references/benchmark-checklist.md`，`comment-sicko` 技能正文并入 `no-comments` 的 `references/comment-sicko.md`（同名子代理保留）。`apple-glass` 去掉影盒专属内容，改为通用的 Apple TV 风格界面语言，类名前缀 `yb-` 改为 `ag-`。
+`verification-before-completion` 与 `prove-it-works` 重叠，用 `code-style` 的 `prove-it-works`。
 
-1.0.23 把 24 个 principle-* 并入所属技能的 references/principles/，名字留在 RETIRED_SKILLS。
+## 删除且没有替代
 
-1.0.25 把 `wukong-mode`、`wukong-agent`、`figure-it-out`、`timed-loop`、`using-git-worktrees`、`subagent-driven-development` 并入 `executing-plans`，删除 `pptx`、`pdf`、`xlsx`，名字留在 RETIRED_SKILLS。
+`animate`、`animation-glossary`、`animation-performance`、`apple-design`、`arena`、`ask-sonner`、`blast-radius`、`break-ui`、`correct`、`create-verification-skill`、`emil-design`、`expo-animate`、`find-animation-opportunities`、`improve-animations`、`in-your-own-words`、`ketchup`、`maintain-verification-skill`、`make-bot-ui`、`native-mobile-feel`、`orca-bot-bug-hunt`、`orca-bot-ci-triage`、`orca-bot-deps`、`orca-bot-pr-review`、`orca-bot-release`、`orca-bots`、`patent-application`、`patent-disclosure`、`pdf`、`pick-frontend-lib`、`plain-language`、`pptx`、`premium-visual`、`prototype`、`recall`、`review-animations`、`s-help`、`setup-s-models`、`shadcn`、`translate`、`typescript-best-practices`、`visual-suite`、`xlsx`。
 
-1.0.30 删除 `setup-s-models` 和六角色模型配置；`setup-s-instructions` 并入 `wukong-init`，名字留在 RETIRED_SKILLS。
+## 恢复一个退役技能
 
-1.0.31 删除 `interrogate`、`apple-glass`、`theme-factory`、`html-mockup`、`automate-me`；`no-comments` 并入 `deslop`，`unslop` 并入 `technical-writing`，`finishing-a-development-branch` 并入 `commit-pr`，`swarm` 并入 `executing-plans`。名字留在 RETIRED_SKILLS。
+1. 用 `git log --all -- 'plugins/*/skills/<名>/' 'archive/s/<名>/'` 找到它最后存在的提交，取回目录放到 `plugins/wukong/skills/<名>/`。
+2. 从 `RETIRED_SKILLS` 删掉这个名字，把 `EXPECTED_SKILL_COUNTS` 加一。
+3. 按当前规范改写 `SKILL.md`，运行 `python scripts/bump_plugin_version.py wukong` 和 `python scripts/check_marketplace.py`。
