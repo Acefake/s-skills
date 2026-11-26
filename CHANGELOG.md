@@ -1,5 +1,11 @@
 # 变更记录
 
+## 1.0.33
+
+### 修改
+
+- 将 `executing-plans/references/swarm.md` 替换为 Antigravity 原生群体协调者说明的完整中文译本（补充非 Antigravity 宿主降级说明），并同步更新 `executing-plans/SKILL.md` 中的引用描述。
+
 ## 1.0.32
 
 ### 修复
