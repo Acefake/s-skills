@@ -1,6 +1,6 @@
 ---
 name: prompt-sharpen
-description: "「优化提示词」「这句话说清楚再做」「需求太模糊」「/prompt-sharpen」。目标、范围、约束或验收有影响结果的关键缺口，且对话无法补足时加载；先研究项目，能确定的自行补齐，必要时才提问并改写请求。Use when explicitly asked to improve a prompt, or when unresolved interpretations or missing requirements materially change the outcome; research before deciding whether to ask."
+description: "「优化提示词」「这句话说清楚再做」「需求太模糊」「/prompt-sharpen」。仅在用户明确要求优化提示词，或开发需求存在影响实现的关键缺口时加载；闲聊、常识问答和已有明确目标的任务不加载。Use when explicitly asked to sharpen a prompt, or when an ambiguous software requirement is missing critical specs; never use for general Q&A, chat, or clear tasks."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。

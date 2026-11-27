@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: "「修 bug」「报错了」「测试失败」「结果不对」「按钮没反应」「这个数字靠谱吗」。先查根因再改。bug-fix 和 fix bug 也走这里。Use when you hit any bug, test failure, unexpected behavior, or a suspicious measured number before proposing a fix, including 修 bug, 报错, bug-fix, and fix bug."
+description: "「修 bug」「报错了」「测试失败」「结果不对」「按钮没反应」「这个数字靠谱吗」。先查根因再改，bug-fix 和 fix bug 也走这里。Use when diagnosing a bug, unexpected code behavior, or a suspicious measured number before proposing a fix."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。

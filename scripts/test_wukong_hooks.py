@@ -143,6 +143,30 @@ class GitGuardTest(unittest.TestCase):
             subprocess.run(['git', 'add', '.env.example'], cwd=repo, check=True, capture_output=True)
             self.assertIsNone(self.guard.find_staged_commit_risk('git commit -m "test"', cwd=str(repo)))
 
+    def test_antigravity_pretooluse_contract_returns_force_ask(self):
+        payload = {
+            'hookEventName': 'PreToolUse',
+            'toolCall': {'id': 't1', 'name': 'run_command', 'args': {'CommandLine': 'git push --force origin main'}},
+        }
+        result = subprocess.run(
+            [sys.executable, '-I', str(HOOKS / 'git_guard.py')],
+            input=json.dumps(payload).encode('utf-8'), capture_output=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 0)
+        parsed = json.loads(result.stdout.decode('utf-8'))
+        self.assertEqual(parsed['decision'], 'force_ask')
+        self.assertIn('强制推送', parsed['reason'])
+
+        safe = {
+            'hookEventName': 'PreToolUse',
+            'toolCall': {'id': 't2', 'name': 'run_command', 'args': {'CommandLine': 'git status'}},
+        }
+        safe_res = subprocess.run(
+            [sys.executable, '-I', str(HOOKS / 'git_guard.py')],
+            input=json.dumps(safe).encode('utf-8'), capture_output=True, timeout=30,
+        )
+        self.assertEqual((safe_res.returncode, safe_res.stdout), (0, b''))
+
 
 class SessionCheckTest(unittest.TestCase):
     @classmethod

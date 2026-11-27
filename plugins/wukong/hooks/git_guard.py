@@ -274,6 +274,19 @@ def find_staged_commit_risk(command, cwd=None):
 def main():
     try:
         data = json.loads(sys.stdin.buffer.read().decode("utf-8"))
+        # Antigravity PreToolUse (run_command)
+        tool_call = data.get("toolCall")
+        if isinstance(tool_call, dict):
+            if tool_call.get("name") != "run_command":
+                return
+            args = tool_call.get("args") or {}
+            command = str(args.get("CommandLine", ""))
+            found = find_risk(command)
+            reason = REASONS[found] if found else find_staged_commit_risk(command, cwd=data.get("cwd"))
+            if reason:
+                print(json.dumps({"decision": "force_ask", "reason": reason}))
+            return
+        # Claude Code / Codex PreToolUse (Bash)
         if data.get("tool_name") != "Bash":
             return
         command = str((data.get("tool_input") or {}).get("command", ""))

@@ -16,5 +16,19 @@
         "timeout": 5
       }
     ]
+  },
+  "wukong-git-guard": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/git_guard.py || python hooks/git_guard.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   }
 }

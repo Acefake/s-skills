@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Antigravity。</p>
 
-<p align="center">当前版本 1.0.36，共 <strong>35</strong> 个技能：20 个按描述自动选用，15 个需点名调用。</p>
+<p align="center">当前版本 1.0.37，共 <strong>36</strong> 个技能：20 个按描述自动选用，16 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -160,11 +160,11 @@ Antigravity 另把每次提示词评估的结果写进 `~/.wukong/prompt-hook-lo
 | `deslop` | 自动 | 提交前清掉 diff 里的代码腔；只清注释时派 comment-sicko 只读审查 |
 | `requesting-code-review` | 自动 | 完成后核对是否满足需求并拿出验证证据，按风险派独立评审 |
 | `receiving-code-review` | 自动 | 落实评审意见前先核验 |
-| `wukong-review` | 自动 | 中文代码审查：审 PR、分支或本地改动，带出处和严重程度，给合并结论 |
+| `wukong-review` | 自动 | 中文代码审查：审 PR、分支或本地改动（支持 `--security` 安全专项模式），带出处和严重程度，给合并结论 |
 | `commit-pr` | 自动 | 看 diff 写提交说明，推送并开 PR；集成方式没定时先核验，再给合并、PR、保留或丢弃的选项 |
 | `release` | 点名 | 按插件清单的版本打 tag，写只含新增、改动、修复的发版说明，创建 GitHub Release |
 
-### 专项技能（15）
+### 专项技能（16）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
@@ -172,6 +172,7 @@ Antigravity 另把每次提示词评估的结果写进 `~/.wukong/prompt-hook-lo
 | `why` | 点名 | 查设计理由和取舍，带引用 |
 | `refactor-architecture` | 点名 | 找浅模块和耦合，出 HTML 报告，再逐个追问定案 |
 | `archify` | 点名 | 画架构图、流程图、时序图、ER 图等，出校验过的单文件 HTML；需要 Node 18+ |
+| `db-migration` | 点名 | 数据库迁移与 DDL 守护：排查大表锁表、非空列与索引风险，按 expand-contract 零停机拆步并核对回滚 |
 | `impeccable` | 自动 | 做页面、改界面、设计审查；`optimize` 守交互性能预算（INP、长任务、帧率、包体积） |
 | `control-ui` | 自动 | 在真浏览器里操作界面取证 |
 | `control-cli` | 自动 | 在本地驱动命令行或 TUI |

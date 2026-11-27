@@ -21,6 +21,7 @@
   {"prompt": "动手前开个 worktree，和当前工作区隔开", "expect": ["executing-plans"]},
   {"prompt": "帮我审一下 #42 这个 PR", "expect": ["wukong-review"]},
   {"prompt": "审一下我本地还没提交的改动", "expect": ["wukong-review"]},
+  {"prompt": "用安全视角审一下这个鉴权 PR 有没有越权或注入风险", "expect": ["wukong-review"]},
   {"prompt": "功能写完了，合并前帮我核对一下是否满足需求", "expect": ["requesting-code-review"]},
   {"prompt": "评审说这里有竞态，你先核实一下对不对再改", "expect": ["receiving-code-review"]},
   {"prompt": "写一份年会活动策划方案", "expect": ["wukong-proposal"]},

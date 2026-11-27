@@ -1,6 +1,6 @@
 ---
 name: project-memory
-description: "「更新项目文档」「同步项目记录」「建项目档案」「架构文档过期了」「/project-memory」。在项目里建立并维护架构、规范、决策记录；代码有改动后按 diff 只更新受影响的部分。Use when creating or syncing a project's architecture, conventions, and decision records after code changes."
+description: "「更新项目文档」「同步项目记录」「同步术语表」「建项目档案」「架构文档过期了」「/project-memory」。在项目里建立并维护架构、规范、决策与术语表记录；代码有改动后按 diff 只更新受影响的部分。Use when creating or syncing a project's architecture, conventions, glossary, and decision records after code changes."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。

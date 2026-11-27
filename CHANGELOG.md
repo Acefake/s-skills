@@ -2,6 +2,13 @@
 
 每个版本只列对使用者有影响的变化。细节见对应的 [GitHub Release](https://github.com/Acefake/s-skills/releases) 和提交历史。
 
+## 1.0.37
+
+- 新增点名技能 `db-migration`（技能总数 35 → 36，自动 20、点名 16，零常驻开销）：排查大表锁表、非空列默认值与并发索引风险，按 expand-contract 零停机拆步并核对回滚。
+- 增强 `wukong-review`：新增 `--security` 安全专项模式，覆盖鉴权越权（IDOR）、注入、XSS/SSRF、密钥泄露与高危配置依赖清单。
+- 对齐 Antigravity 钩子防呆：`git_guard.py` 兼容 Antigravity `PreToolUse(run_command)` 协议（命中危险 git 命令、敏感文件、密钥或 5MB 大文件时返回 `force_ask`），并挂入 `plugins/wukong/hooks.json`。
+- 收紧 `prompt-sharpen`、`systematic-debugging`、`wukong-review`、`requesting-code-review`、`project-memory`、`code-style` 的触发边界，消除明确任务与闲聊误触发；Haiku 58 条触发评测全部 `project-memory`/`wukong-proposal`/`wukong-review`/`brainstorming` 及闲聊用例均通过（48/58）。
+
 ## 1.0.36
 
 - 触发评测与全景图闭环校验：`check_marketplace.py` 新增 `trigger_cases.json` 覆盖率检查与 `wukong-panorama.html` 卡片/策略/计数同步校验；`bump_plugin_version.py` 自动同步更新全景图版本号，并补齐 `handoff` 与 `reflect` 最新卡片。

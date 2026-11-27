@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>wukong 技能全景 · 1.0.36</title>
+<title>wukong 技能全景 · 1.0.37</title>
 <style>
 
 *{box-sizing:border-box}
@@ -71,8 +71,8 @@ a{color:inherit}
 </head>
 <body>
 <main class="sheet">
-<h1>wukong 技能全景：一句话怎么走到技能，35 个技能各干什么</h1>
-<p class="intro">支持 Codex / Claude Code / Antigravity · 版本 1.0.36 · 20 个自动选用 / 15 个点名调用 · 先按任务匹配，必要时展开流程。</p>
+<h1>wukong 技能全景：一句话怎么走到技能，36 个技能各干什么</h1>
+<p class="intro">支持 Codex / Claude Code / Antigravity · 版本 1.0.37 · 20 个自动选用 / 16 个点名调用 · 先按任务匹配，必要时展开流程。</p>
 
 <h2 class="section-title">一、从任务到技能</h2>
 <section class="route-grid">
@@ -133,12 +133,12 @@ a{color:inherit}
 <h3>审查与收尾</h3>
 <a class="skill-card flow auto" data-skill="requesting-code-review" data-policy="auto" href="../../plugins/wukong/skills/requesting-code-review/SKILL.md"><div class="card-title"><strong>requesting-code-review</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>做完了帮我审查 / 合并前核验一下</p><p class="purpose"><b>作用：</b>核对是否满足需求并拿出验证证据；第 3 档或高风险改动派只读子代理独立评审。</p></a>
 <a class="skill-card flow auto" data-skill="receiving-code-review" data-policy="auto" href="../../plugins/wukong/skills/receiving-code-review/SKILL.md"><div class="card-title"><strong>receiving-code-review</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>收到评审意见 / 这条评论对不对</p><p class="purpose"><b>作用：</b>落实前先核验，含糊或可疑的不要照单全收。</p></a>
-<a class="skill-card flow auto" data-skill="wukong-review" data-policy="auto" href="../../plugins/wukong/skills/wukong-review/SKILL.md"><div class="card-title"><strong>wukong-review</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>审这个 PR / 审一下分支</p><p class="purpose"><b>作用：</b>先写意图摘要，按风险列发现，给出能不能合并。默认只出报告。</p></a>
+<a class="skill-card flow auto" data-skill="wukong-review" data-policy="auto" href="../../plugins/wukong/skills/wukong-review/SKILL.md"><div class="card-title"><strong>wukong-review</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>审这个 PR / 审一下分支 / 安全审查</p><p class="purpose"><b>作用：</b>先写意图摘要，按风险列发现（支持 --security 安全专项模式），给出能不能合并。默认只出报告。</p></a>
 <a class="skill-card flow auto" data-skill="commit-pr" data-policy="auto" href="../../plugins/wukong/skills/commit-pr/SKILL.md"><div class="card-title"><strong>commit-pr</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>提交 / 开个 PR / 收尾这个分支</p><p class="purpose"><b>作用：</b>看 diff，写 conventional commit，需要时推送并开 PR；集成方式没定时先核验，再给合并、PR、保留或丢弃的选项。</p></a>
 <a class="skill-card flow explicit" data-skill="release" data-policy="explicit" href="../../plugins/wukong/skills/release/SKILL.md"><div class="card-title"><strong>release</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/release / 发版 / 打 tag</p><p class="purpose"><b>作用：</b>按插件清单里的版本打 tag，写只含新增、改动、修复的发版说明，创建 GitHub Release。</p></a>
 </section>
 <section class="panel">
-<header><h2>④ 🎨 专项技能<small>15 个</small></h2><p>按任务描述匹配；白底虚线保持显式调用。</p></header>
+<header><h2>④ 🎨 专项技能<small>16 个</small></h2><p>按任务描述匹配；白底虚线保持显式调用。</p></header>
 <div class="two-columns">
 <div>
 <h3>理解与架构</h3>
@@ -146,6 +146,7 @@ a{color:inherit}
 <a class="skill-card special explicit" data-skill="why" data-policy="explicit" href="../../plugins/wukong/skills/why/SKILL.md"><div class="card-title"><strong>why</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>为什么是这样 / 这个阈值哪来的</p><p class="purpose"><b>作用：</b>查设计理由和取舍，带引用。运行时怎么走用 how。</p></a>
 <a class="skill-card special explicit" data-skill="refactor-architecture" data-policy="explicit" href="../../plugins/wukong/skills/refactor-architecture/SKILL.md"><div class="card-title"><strong>refactor-architecture</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/refactor-architecture / 模块耦合太紧</p><p class="purpose"><b>作用：</b>扫浅模块和耦合，出 HTML 报告，再逐个追问定案。</p></a>
 <a class="skill-card special explicit" data-skill="archify" data-policy="explicit" href="../../plugins/wukong/skills/archify/SKILL.md"><div class="card-title"><strong>archify</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>画架构图 / 时序图 / ER 图</p><p class="purpose"><b>作用：</b>把系统、流程、调用链、表结构画成校验过的 HTML 图，或做结论先行的单页讲解。需要 Node 18+。</p></a>
+<a class="skill-card special explicit" data-skill="db-migration" data-policy="explicit" href="../../plugins/wukong/skills/db-migration/SKILL.md"><div class="card-title"><strong>db-migration</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/db-migration / 写数据库迁移 / 零停机迁移</p><p class="purpose"><b>作用：</b>排查大表锁表、非空列与索引风险，按 expand-contract 零停机拆步并核对回滚。</p></a>
 <h3>界面与真实操作</h3>
 <a class="skill-card special auto" data-skill="impeccable" data-policy="auto" href="../../plugins/wukong/skills/impeccable/SKILL.md"><div class="card-title"><strong>impeccable</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>做页面 / 改界面 / 卡顿掉帧</p><p class="purpose"><b>作用：</b>设计、打磨、加动画、审查样式和无障碍；optimize 守 INP、长任务、帧率和包体积。纯后端不用。</p></a>
 <a class="skill-card special auto" data-skill="control-ui" data-policy="auto" href="../../plugins/wukong/skills/control-ui/SKILL.md"><div class="card-title"><strong>control-ui</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>打开浏览器点一遍 / 截个图</p><p class="purpose"><b>作用：</b>用本地浏览器或 CDP 驱动网页、IDE 或 Electron 取证。</p></a>
@@ -167,7 +168,7 @@ a{color:inherit}
 </div>
 </section>
 </div>
-<p class="footnote">共 35 个技能 · 2 个入口与配置 + 3 个工作模式 + 15 个开发主流程 + 15 个专项技能。<br>这是技能索引与调用路径示意，不是每轮必跑的流水线。文案等第 0 档只看 diff；代码改动先自审，第 3 档或高风险改动再加只读独立评审。初始化、提交推送与清理分别遵循各自授权。</p>
+<p class="footnote">共 36 个技能 · 2 个入口与配置 + 3 个工作模式 + 15 个开发主流程 + 16 个专项技能。<br>这是技能索引与调用路径示意，不是每轮必跑的流水线。文案等第 0 档只看 diff；代码改动先自审，第 3 档或高风险改动再加只读独立评审。初始化、提交推送与清理分别遵循各自授权。</p>
 </main>
 </body>
 </html>

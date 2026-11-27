@@ -1,6 +1,6 @@
 ---
 name: wukong-review
-description: "「审这个 PR」「审一下分支」「审本地改动」「做代码审查」。先写意图摘要，按风险列发现，给出能不能合并。默认只出报告。Use when the user asks to review a PR, a branch, a diff, or local changes."
+description: "「审这个 PR」「审一下分支」「审本地改动」「做代码审查」「安全审查」。先写意图摘要，按风险列发现（支持 --security 安全专项模式），给出能不能合并，默认只出报告；自己写完合并前核对需求用 requesting-code-review。Use when the user asks to review a PR, a branch, a diff, or local changes (including --security audits), rather than pre-merge verification of just-finished work."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
@@ -60,6 +60,16 @@ description: "「审这个 PR」「审一下分支」「审本地改动」「做
 - 规范问题按 `code-style` 的规则判断；
 - 想核对"改动是否满足需求"，用 `requesting-code-review` 的检查清单；
 - 高风险改动（鉴权、支付、数据迁移、并发）或用户要求严审时，按 `requesting-code-review` 再派一个只读子代理独立复审；
+
+### 安全专项模式（`--security`）
+
+用户点名 `--security`、「安全审查」或改动集中在鉴权、支付、外部输入时，把安全作为主视角，逐项核查（只报有具体代码位置与触发路径的问题）：
+
+1. **鉴权与越权**：接口是否缺认证/鉴权中间件、对象级越权（IDOR，仅校验登录未校验归属）、角色提权、JWT/Session 校验绕过。
+2. **注入与执行**：SQL/NoSQL 拼接、Shell 命令注入、模板注入、不安全反序列化、正则回溯 DoS。
+3. **Web 与边界**：未转义输出（XSS）、缺失 CSRF 防护、开放重定向、SSRF（未校验内网/元数据地址）、路径穿越（`../`）。
+4. **密钥与敏感数据**：硬编码密钥/token、密码或凭据打进日志/异常栈/前端响应、弱哈希或明文存储。
+5. **配置与依赖**：过宽 CORS（`*` 配 credentials）、生产暴露调试端点、已知高危依赖版本。
 
 ## 第四步：核实每条发现
 

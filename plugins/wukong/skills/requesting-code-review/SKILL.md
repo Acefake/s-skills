@@ -1,6 +1,6 @@
 ---
 name: requesting-code-review
-description: "「做完了帮我审查」「合并前核验一下」「改完了，跑一遍证明真的好了」。完成任务或主要功能后，核对是否满足需求并拿出验证证据。Use when a task or major feature is done, or you are about to merge, and need to verify with evidence that the work meets the requirements."
+description: "「做完了帮我审查」「功能写完了合并前核对」「合并前核验一下」「改完了，跑一遍证明真的好了」。完成任务或主要功能后，核对是否满足需求并拿出验证证据。Use when a task or major feature is done, or you are about to merge your own work and need to verify against requirements with evidence."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
