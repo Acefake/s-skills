@@ -117,3 +117,5 @@ description: "「更新项目文档」「同步项目记录」「建项目档案
 - [archify](../archify/SKILL.md) 画图。`architecture.md` 可以引用图，但不由本技能生成。
 - [prompt-sharpen](../prompt-sharpen/SKILL.md) 会先读这些记录；记录越准，它越少需要现查。
 - [commit-pr](../commit-pr/SKILL.md)：项目有记录时，提交前可以先跑一次 `sync`。
+- [handoff](../handoff/SKILL.md)：跨会话交接直接引用这里的记录路径，不重复抄写项目现状。
+- [reflect](../reflect/SKILL.md)：项目级现状与术语进本技能，跨项目个人偏好与技能改进进 `reflect`。

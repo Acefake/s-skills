@@ -438,6 +438,68 @@ def check_supported_hosts(problems: Problems) -> None:
 
 
 
+def check_trigger_cases(problems: Problems) -> None:
+    cases_path = ROOT / "scripts/trigger_cases.json"
+    cases = read_json(cases_path)
+    if not isinstance(cases, list) or not cases:
+        problems.add("scripts/trigger_cases.json must be a non-empty list")
+        return
+    auto_skills: set[str] = set()
+    all_skills: set[str] = set()
+    for path in skill_dirs("wukong"):
+        all_skills.add(path.name)
+        text = (path / "SKILL.md").read_text(encoding="utf-8")
+        if not re.search(r"^disable-model-invocation:\s*true\s*$", frontmatter_block(text), re.M):
+            if path.name != "wukong-router":
+                auto_skills.add(path.name)
+    covered: set[str] = set()
+    for index, item in enumerate(cases, 1):
+        prompt = item.get("prompt") if isinstance(item, dict) else None
+        expect = item.get("expect") if isinstance(item, dict) else None
+        if not isinstance(prompt, str) or not prompt.strip():
+            problems.add(f"scripts/trigger_cases.json[{index}]: missing prompt")
+        if not isinstance(expect, list) or not expect:
+            problems.add(f"scripts/trigger_cases.json[{index}]: missing expect list")
+            continue
+        for target in expect:
+            if target == "none":
+                continue
+            if target in RETIRED_SKILLS or target not in all_skills:
+                problems.add(f"scripts/trigger_cases.json[{index}]: unknown skill {target!r}")
+            else:
+                covered.add(target)
+    missing = sorted(auto_skills - covered)
+    if missing:
+        problems.add(f"scripts/trigger_cases.json missing auto skills: {', '.join(missing)}")
+
+
+def check_panorama(problems: Problems) -> None:
+    panorama = ROOT / "docs/architecture/wukong-panorama.html"
+    if not panorama.is_file():
+        problems.add("missing docs/architecture/wukong-panorama.html")
+        return
+    text = panorama.read_text(encoding="utf-8")
+    cards = dict(re.findall(r'data-skill="([^"]+)"\s+data-policy="(auto|explicit)"', text))
+    expected_policies: dict[str, str] = {}
+    for path in skill_dirs("wukong"):
+        skill_text = (path / "SKILL.md").read_text(encoding="utf-8")
+        explicit = bool(re.search(r"^disable-model-invocation:\s*true\s*$", frontmatter_block(skill_text), re.M))
+        expected_policies[path.name] = "explicit" if explicit else "auto"
+    missing = sorted(set(expected_policies) - set(cards))
+    extra = sorted(set(cards) - set(expected_policies))
+    if missing:
+        problems.add(f"wukong-panorama.html missing skill cards: {', '.join(missing)}")
+    if extra:
+        problems.add(f"wukong-panorama.html has stale skill cards: {', '.join(extra)}")
+    for skill_name, expected in sorted(expected_policies.items()):
+        actual = cards.get(skill_name)
+        if actual and actual != expected:
+            problems.add(f"wukong-panorama.html {skill_name}: data-policy is {actual!r}, expected {expected!r}")
+    expected_total = EXPECTED_SKILL_COUNTS["wukong"]
+    if f"共 {expected_total} 个技能" not in text:
+        problems.add(f"wukong-panorama.html footnote does not report 共 {expected_total} 个技能")
+
+
 def main() -> int:
     problems = Problems()
     try:
@@ -449,6 +511,8 @@ def main() -> int:
         check_skill_references(problems)
         check_agent_descriptions(problems)
         check_supported_hosts(problems)
+        check_trigger_cases(problems)
+        check_panorama(problems)
         for problem in context_budget.problems():
             problems.add(problem)
     except FileNotFoundError as exc:

@@ -18,7 +18,7 @@ class DocVersionTest(unittest.TestCase):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         root = Path(tmp.name)
-        for rel in ('README.md', 'docs/architecture.md'):
+        for rel in {r for r, _ in marketplace_lib.DOC_VERSION_REFS['wukong']}:
             (root / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(REPO / rel, root / rel)
         return root

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>wukong 技能全景 · 1.0.34</title>
+<title>wukong 技能全景 · 1.0.36</title>
 <style>
 
 *{box-sizing:border-box}
@@ -71,8 +71,8 @@ a{color:inherit}
 </head>
 <body>
 <main class="sheet">
-<h1>wukong 技能全景：一句话怎么走到技能，34 个技能各干什么</h1>
-<p class="intro">支持 Codex / Claude Code / Antigravity · 版本 1.0.34 · 20 个自动选用 / 14 个点名调用 · 先按任务匹配，必要时展开流程。</p>
+<h1>wukong 技能全景：一句话怎么走到技能，35 个技能各干什么</h1>
+<p class="intro">支持 Codex / Claude Code / Antigravity · 版本 1.0.36 · 20 个自动选用 / 15 个点名调用 · 先按任务匹配，必要时展开流程。</p>
 
 <h2 class="section-title">一、从任务到技能</h2>
 <section class="route-grid">
@@ -97,7 +97,7 @@ a{color:inherit}
 </section>
 
 <aside class="hooks"><strong>钩子：Claude Code 与 Antigravity 自动启用，Codex 手动配置</strong><br>
-会话开始 → 只读检查全局规则是否缺失或过期 · 每条提示词 → 附评估说明，缺口明显才加载 prompt-sharpen · 执行 Bash 前 → 长命令提醒放后台，强制推送、--no-verify、reset --hard、git clean 先确认<br>
+会话开始 → 只读检查全局规则是否缺失或过期 · 每条提示词 → 附评估说明，缺口明显才加载 prompt-sharpen · 执行 Bash 前 → 长命令提醒放后台，强制推送、--no-verify、reset --hard、git clean 与敏感文件/密钥/大文件提交先确认<br>
 本地使用日志存在 ~/.wukong/journal.db，不上传、不进对话；WUKONG_JOURNAL=0 关闭。</aside>
 
 <h2 class="section-title">二、每个技能干什么</h2>
@@ -109,11 +109,12 @@ a{color:inherit}
 <a class="skill-card entry explicit" data-skill="wukong-init" data-policy="explicit" href="../../plugins/wukong/skills/wukong-init/SKILL.md"><div class="card-title"><strong>wukong-init</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/wukong-init / 新机器配置 / 配置子代理模型</p><p class="purpose"><b>作用：</b>同步当前宿主的全局技能规则，按可用模型给检索、规划、审查、测试四个角色配模型和推理档位；整表确认后写入，保留其他配置。</p></a>
 </section>
 <section class="panel">
-<header><h2>② 🤝 工作模式<small>2 个</small></h2><p>只在点名或已授权工作流派发时使用。</p></header>
+<header><h2>② 🤝 工作模式<small>3 个</small></h2><p>只在点名或已授权工作流派发时使用。</p></header>
 <h3>架构与策略</h3>
 <a class="skill-card mode explicit" data-skill="architect" data-policy="explicit" href="../../plugins/wukong/skills/architect/SKILL.md"><div class="card-title"><strong>architect</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/architect / 先定模块边界</p><p class="purpose"><b>作用：</b>写代码前勾勒类型、函数签名和模块结构，实现过程中一直参与。</p></a>
-<h3>长任务与记录</h3>
+<h3>长任务与交接</h3>
 <a class="skill-card mode explicit" data-skill="show-me-your-work" data-policy="explicit" href="../../plugins/wukong/skills/show-me-your-work/SKILL.md"><div class="card-title"><strong>show-me-your-work</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/show-me-your-work / 通宵跑完我回来看</p><p class="purpose"><b>作用：</b>长时间或无人值守的工作，每个决定记一行。</p></a>
+<a class="skill-card mode explicit" data-skill="handoff" data-policy="explicit" href="../../plugins/wukong/skills/handoff/SKILL.md"><div class="card-title"><strong>handoff</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/handoff / 写个交接文档 / 切新会话继续</p><p class="purpose"><b>作用：</b>把目标、分支与精确提交状态、已验证结论和踩坑压缩成紧凑交接文档与下一会话提示词。</p></a>
 </section>
 <section class="panel">
 <header><h2>③ 🛠️ 开发主流程<small>15 个</small></h2><p>按任务需要选用，不代表必须整列执行。</p></header>
@@ -161,12 +162,12 @@ a{color:inherit}
 <a class="skill-card special auto" data-skill="wukong-proposal" data-policy="auto" href="../../plugins/wukong/skills/wukong-proposal/SKILL.md"><div class="card-title"><strong>wukong-proposal</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>写个方案 / 技术方案</p><p class="purpose"><b>作用：</b>先问清目标和读者，列提纲，再写成中文方案。Word 用 docx。</p></a>
 <h3>技能维护</h3>
 <a class="skill-card special explicit" data-skill="author-skill" data-policy="explicit" href="../../plugins/wukong/skills/author-skill/SKILL.md"><div class="card-title"><strong>author-skill</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/author-skill / 新建一个 skill</p><p class="purpose"><b>作用：</b>按目录、name、description 和步骤写技能说明，写完过一遍去 AI 腔清单。</p></a>
-<a class="skill-card special explicit" data-skill="reflect" data-policy="explicit" href="../../plugins/wukong/skills/reflect/SKILL.md"><div class="card-title"><strong>reflect</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/reflect / 把这次教训写进技能</p><p class="purpose"><b>作用：</b>默认派三个审查者，把这次教训改成对现有技能的修改；--me 把本机使用日志归纳成个人规则。</p></a>
+<a class="skill-card special explicit" data-skill="reflect" data-policy="explicit" href="../../plugins/wukong/skills/reflect/SKILL.md"><div class="card-title"><strong>reflect</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/reflect / 把这次教训写进技能 / --add 记个人规则</p><p class="purpose"><b>作用：</b>单条小改走轻量快路，多处教训派三审查者深度复盘；--add 直接记个人规则，--me 从使用日志归纳。</p></a>
 </div>
 </div>
 </section>
 </div>
-<p class="footnote">共 34 个技能 · 2 个入口与配置 + 2 个工作模式 + 15 个开发主流程 + 15 个专项技能。<br>这是技能索引与调用路径示意，不是每轮必跑的流水线。文案等第 0 档只看 diff；代码改动先自审，第 3 档或高风险改动再加只读独立评审。初始化、提交推送与清理分别遵循各自授权。</p>
+<p class="footnote">共 35 个技能 · 2 个入口与配置 + 3 个工作模式 + 15 个开发主流程 + 15 个专项技能。<br>这是技能索引与调用路径示意，不是每轮必跑的流水线。文案等第 0 档只看 diff；代码改动先自审，第 3 档或高风险改动再加只读独立评审。初始化、提交推送与清理分别遵循各自授权。</p>
 </main>
 </body>
 </html>

@@ -39,3 +39,4 @@ disable-model-invocation: true
 - **不放敏感信息**：绝不写入密钥、token、密码、Cookie 或个人隐私内容。
 - **用指针代替粘贴**：代码和日志只写文件路径、行号或关键结论，不大段拷贝原文。
 - 如果任务已有正在维护的计划文档或项目记录，直接链接到对应路径，不重复抄写全文。
+- 职责分工：项目级长期现状与术语优先沉淀到 [project-memory](../project-memory/SKILL.md)，跨项目个人偏好与技能改进用 [reflect](../reflect/SKILL.md)，本技能只负责当前会话到下一会话的即时交接。

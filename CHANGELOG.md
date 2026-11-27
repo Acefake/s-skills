@@ -2,6 +2,12 @@
 
 每个版本只列对使用者有影响的变化。细节见对应的 [GitHub Release](https://github.com/Acefake/s-skills/releases) 和提交历史。
 
+## 1.0.36
+
+- 触发评测与全景图闭环校验：`check_marketplace.py` 新增 `trigger_cases.json` 覆盖率检查与 `wukong-panorama.html` 卡片/策略/计数同步校验；`bump_plugin_version.py` 自动同步更新全景图版本号，并补齐 `handoff` 与 `reflect` 最新卡片。
+- 记忆三件套轻闭环：在 `commit-pr`、`handoff`、`project-memory` 之间补上职责分工与收尾软提醒，零常驻上下文增量。
+- 增强 `git_guard.py` 确定性防呆：`git add` 拦截疑似敏感文件（放行 `.env.example` 等模板），`git commit` 扫描暂存区的敏感文件名、高置信度密钥模式（私钥/AWS/GitHub/API Key）与超过 5MB 的大文件并弹窗确认。
+
 ## 1.0.35
 
 - 新增点名技能 `handoff`（技能总数 34 → 35，自动 20、点名 15，常驻上下文预算不变）：把当前会话的目标、分支与精确提交状态、已验证证据、踩坑与下一步接续提示词压缩成紧凑交接文档。

@@ -93,6 +93,7 @@ EOF
 - 合并、保留还是丢弃由[分支收尾](references/finishing-branch.md)决定，不在提交步骤里顺手做。
 - 不改产品代码来让检查变绿。
 - 不把某个聊天软件的按钮或菜单写进步骤。
+- 软衔接（不强行打断提交）：如果本次改动影响了架构、目录、术语或规范且项目已有记录，收尾提一句可用 [project-memory](../project-memory/SKILL.md) `sync` 同步；如果本次刚解决过值得复用的踩坑，收尾提一句可用 [reflect](../reflect/SKILL.md) 沉淀。
 
 ## 宿主适配
 

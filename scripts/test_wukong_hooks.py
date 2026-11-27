@@ -98,6 +98,51 @@ class GitGuardTest(unittest.TestCase):
         bad = subprocess.run([sys.executable, '-I', str(HOOKS / 'git_guard.py')], input=b'not json', capture_output=True, timeout=30)
         self.assertEqual((bad.returncode, bad.stdout), (0, b''))
 
+    def test_sensitive_git_add_asks_and_example_env_passes(self):
+        for command in (
+            'git add .env',
+            'git add config/.env.production',
+            'git add certs/server.pem',
+            'git add id_rsa',
+        ):
+            self.assertEqual(self.guard.find_risk(command), 'sensitive-file', command)
+        for command in (
+            'git add .env.example',
+            'git add .env.sample',
+            'git add -n .env',
+            'git add README.md',
+        ):
+            self.assertIsNone(self.guard.find_risk(command), command)
+
+    def test_staged_commit_detects_secrets_sensitive_files_and_large_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(['git', 'init'], cwd=repo, check=True, capture_output=True)
+            (repo / 'app.py').write_text('TOKEN = "ghp_' + 'a' * 36 + '"\n', encoding='utf-8')
+            subprocess.run(['git', 'add', 'app.py'], cwd=repo, check=True, capture_output=True)
+            reason = self.guard.find_staged_commit_risk('git commit -m "test"', cwd=str(repo))
+            self.assertIsNotNone(reason)
+            self.assertIn('疑似密钥内容', reason)
+
+            subprocess.run(['git', 'rm', '--cached', 'app.py'], cwd=repo, check=True, capture_output=True)
+            (repo / '.env.local').write_text('FOO=bar\n', encoding='utf-8')
+            subprocess.run(['git', 'add', '-f', '.env.local'], cwd=repo, check=True, capture_output=True)
+            reason_env = self.guard.find_staged_commit_risk('git commit -m "test"', cwd=str(repo))
+            self.assertIsNotNone(reason_env)
+            self.assertIn('疑似敏感文件', reason_env)
+
+            subprocess.run(['git', 'rm', '--cached', '.env.local'], cwd=repo, check=True, capture_output=True)
+            (repo / 'big.bin').write_bytes(b'0' * (5 * 1024 * 1024 + 16))
+            subprocess.run(['git', 'add', 'big.bin'], cwd=repo, check=True, capture_output=True)
+            reason_big = self.guard.find_staged_commit_risk('git commit -m "test"', cwd=str(repo))
+            self.assertIsNotNone(reason_big)
+            self.assertIn('超过 5MB 的大文件', reason_big)
+
+            subprocess.run(['git', 'rm', '--cached', 'big.bin'], cwd=repo, check=True, capture_output=True)
+            (repo / '.env.example').write_text('API_KEY=your-key-here\n', encoding='utf-8')
+            subprocess.run(['git', 'add', '.env.example'], cwd=repo, check=True, capture_output=True)
+            self.assertIsNone(self.guard.find_staged_commit_risk('git commit -m "test"', cwd=str(repo)))
+
 
 class SessionCheckTest(unittest.TestCase):
     @classmethod

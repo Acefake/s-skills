@@ -29,6 +29,7 @@
   {"prompt": "修一下登录页点提交时的报错", "expect": ["systematic-debugging"]},
   {"prompt": "给订单列表加个导出接口", "expect": ["brainstorming"]},
   {"prompt": "这个项目没有架构和规范文档，帮我建项目档案，以后改了代码要同步", "expect": ["project-memory"]},
+  {"prompt": "刚加了几个核心业务术语，帮我同步到项目记录的术语表里", "expect": ["project-memory"]},
   {"prompt": "这个基准测试说快了 3 倍，这数字靠谱吗？", "expect": ["systematic-debugging"]},
   {"prompt": "同一个前提下修了两次还是不对", "expect": ["systematic-debugging"]},
   {"prompt": "这个手工改了好几次的活，做成可以再跑的脚本", "expect": ["code-style"]},

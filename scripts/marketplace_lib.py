@@ -26,6 +26,8 @@ DOC_VERSION_REFS = {
     "wukong": (
         ("README.md", re.compile(r"当前版本 (\d+\.\d+\.\d+)")),
         ("docs/architecture.md", re.compile(r"当前版本 \*\*(\d+\.\d+\.\d+)\*\*")),
+        ("docs/architecture/wukong-panorama.html", re.compile(r"<title>wukong 技能全景 · (\d+\.\d+\.\d+)</title>")),
+        ("docs/architecture/wukong-panorama.html", re.compile(r"版本 (\d+\.\d+\.\d+) ·")),
     ),
 }
 
