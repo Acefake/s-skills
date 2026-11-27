@@ -39,7 +39,7 @@ disable-model-invocation: true
 
 ### 1. 只读侦察 5 类高信号源
 
-不要盲读整个仓库，聚焦以下 5 类来源（大项目按[公共派发规则](../executing-plans/references/subagents.md)派只读检索子代理分块扫，模型取「检索」角色）：
+不要盲读整个仓库，聚焦以下 5 类来源（大项目按[公共派发规则](../run-plan/references/subagents.md)派只读检索子代理分块扫，模型取「检索」角色）：
 
 1. **重复新增套路**：同类功能每次新增要同步改哪些文件（如新接口/路由/权限/schema/i18n/前端模块）。
 2. **脚本、构建与发布链**：`package.json` scripts、`Makefile`、`scripts/`、`.github/workflows/`、部署与代码生成命令。
@@ -75,7 +75,7 @@ disable-model-invocation: true
 
 1. 按 [author-skill](../author-skill/SKILL.md) 的省、准、稳准则起草 `SKILL.md`（控制在 500 行内；长参考放 `references/`，可复用脚本放 `scripts/`，模板放 `assets/`）。
 2. 逐条核对正文引用的**每一个文件路径、脚本命令、环境变量与配置键**均真实存在于当前仓库，绝不凭记忆编造。
-3. 按[去 AI 腔清单](../technical-writing/references/unslop.md)过一遍文字。
+3. 按[去 AI 腔清单](../tech-doc/references/unslop.md)过一遍文字。
 
 ## `sync`：增量检查、更新与淘汰
 

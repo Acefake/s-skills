@@ -37,8 +37,8 @@ Antigravity 原生识别本仓库的 `plugins/wukong`（`plugin.json`、`rules/A
 
 ## 专项技能派发
 
-子代理模型按[公共派发规则](../../executing-plans/references/subagents.md#模型)取四角色模型块；没有模型块时默认映射：`检索` 用 `flash_lite` 或 `flash`，`规划` / `审查` 用 `pro`，`测试` 用 `flash`，写代码实现者保持 `inherit`。
+子代理模型按[公共派发规则](../../run-plan/references/subagents.md#模型)取四角色模型块；没有模型块时默认映射：`检索` 用 `flash_lite` 或 `flash`，`规划` / `审查` 用 `pro`，`测试` 用 `flash`，写代码实现者保持 `inherit`。
 
 - **deslop（注释审查子代理）**：`invoke_subagent`，`TypeName: "research"`，提示词写明先读 `skills/deslop/references/comment-sicko.md`，再审目标范围并只返回报告。
 - **how / why**：`how` 探索者用 `research`（`检索` 角色），`why` 调查者需要 MCP 时用 `self` 并在提示词里禁止写文件；讲解者与综合者用 `self`（`规划` 角色）。
-- **reflect / executing-plans（并行群体作战）**：在一条回复里并行发起多个 `invoke_subagent`，等全部唤醒结果回来再综合。需要多模型视角时可在 `pro` 与 `flash` 间区分，若实际同系列或只有单一档位则如实说明没有跨系列换模。`reflect` 的审查者需要访问 MCP 时用 `self` 而非 `research`。
+- **reflect / run-plan（并行群体作战）**：在一条回复里并行发起多个 `invoke_subagent`，等全部唤醒结果回来再综合。需要多模型视角时可在 `pro` 与 `flash` 间区分，若实际同系列或只有单一档位则如实说明没有跨系列换模。`reflect` 的审查者需要访问 MCP 时用 `self` 而非 `research`。

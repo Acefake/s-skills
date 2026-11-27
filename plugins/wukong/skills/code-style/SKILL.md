@@ -138,7 +138,7 @@ com.example.app.shared
 细则在下面「设计原则」列出的文件里，这里只列必须过的几条：
 
 - 类型严格、外部输入在边界解析：[type-system-discipline](references/principles/type-system-discipline.md)、[boundary-discipline](references/principles/boundary-discipline.md)。TS 开 `strict`，不用 `any` 和 `as` 绕类型。
-- 错误不吞，在第一次出错的地方修：[fix-root-causes](../systematic-debugging/references/principles/fix-root-causes.md)。Go 的 `err` 带上下文返回（`%w`），Java 不 catch 了只打日志。
+- 错误不吞，在第一次出错的地方修：[fix-root-causes](../debug/references/principles/fix-root-causes.md)。Go 的 `err` 带上下文返回（`%w`），Java 不 catch 了只打日志。
 - 不留死代码和多余抽象：[subtract-before-you-add](references/principles/subtract-before-you-add.md)、`deslop`。
 - 函数体不超过 50 行，嵌套不超过 3 层；超了就拆函数或提前返回。
 - 异步统一用 async/await。不留 `console.log`。try-catch 只放在真正要处理错误的调用侧，不层层包裹。
@@ -180,6 +180,6 @@ com.example.app.shared
 
 **何时派：** 第3档（跨模块、改接口或依赖、迁移），以及涉及权限、并发、共享状态、数据删除的改动，哪怕只有一行。第0～2档只做自审，用户要求时再派。配置实际改变权限、接口或运行行为时按风险升级。用户说不用测只免测试，不免该派的评审。档位见 [wukong-router 验证分档](../wukong-router/SKILL.md)。
 
-**怎么派：** 自审后按 requesting-code-review 派只读 subagent，读需求、完整差异、关键调用方和已有验证证据。它不改代码、不跑测试、不清理、不提交；测试缺口作为建议报告，由实现者按档位处理。一般改动审差异和直接调用方，高风险改动扩大到必要的调用链和失败路径。这是评审委派的授权，不授权子代理实现或外部写入。
+**怎么派：** 自审后按 ask-review 派只读 subagent，读需求、完整差异、关键调用方和已有验证证据。它不改代码、不跑测试、不清理、不提交；测试缺口作为建议报告，由实现者按档位处理。一般改动审差异和直接调用方，高风险改动扩大到必要的调用链和失败路径。这是评审委派的授权，不授权子代理实现或外部写入。
 
 **之后：** 实现者核实发现，修复后请评审者复查受影响部分；重要缺陷未解决不宣称完成。同一份最终代码已有有效评审就复用。明确只读的审查任务不递归派发。该派而无法委派时报告缺口，不用自审冒充。交付时分别报告自审与独立评审的结论和未解决风险；没派时说明档位或原因。

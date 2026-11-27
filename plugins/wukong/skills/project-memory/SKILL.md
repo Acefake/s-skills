@@ -10,7 +10,7 @@ description: "「更新项目文档」「同步项目记录」「同步术语表
 
 # 项目记录
 
-让项目里的架构、规范和决策记录跟着代码走。文字按 [technical-writing](../technical-writing/SKILL.md) 写。
+让项目里的架构、规范和决策记录跟着代码走。文字按 [tech-doc](../tech-doc/SKILL.md) 写。
 
 「按 diff 判断、最小改动、不写推测」这套规则改写自 [ondatra-ai/awesome-claude-mcp 的 update-memory](https://github.com/ondatra-ai/awesome-claude-mcp)（MIT，见 [LICENSE-update-memory](../../LICENSE-update-memory)）。
 
@@ -95,7 +95,7 @@ description: "「更新项目文档」「同步项目记录」「同步术语表
 
 ## init
 
-1. **读项目。** 入口文件、配置、目录结构、README、近期提交、测试和构建命令。小项目自己读；大项目按[公共派发规则](../executing-plans/references/subagents.md)派只读检索子智能体，各读一块再汇总，模型取「检索」角色。派不出子智能体就自己读，并说一句没有换模型。
+1. **读项目。** 入口文件、配置、目录结构、README、近期提交、测试和构建命令。小项目自己读；大项目按[公共派发规则](../run-plan/references/subagents.md)派只读检索子智能体，各读一块再汇总，模型取「检索」角色。派不出子智能体就自己读，并说一句没有换模型。
 2. **先给目录和要点。** 列出要建的文件，以及每份的要点，让用户确认。已有记录位置的话，沿用它。
 3. **确认后再写。** 先写 `architecture.md`、`conventions.md`、索引；有明确的历史取舍时再补 `decisions/`。
 4. **补指针。** 在 `CLAUDE.md`、`AGENTS.md` 里加一行指针；改之前先给出 diff。

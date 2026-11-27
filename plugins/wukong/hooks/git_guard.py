@@ -31,9 +31,9 @@ VALUE_LONG = {
 
 REASONS = {
     "no-verify": "commit-pr：不要用 --no-verify 跳过提交钩子，除非用户明确要求。",
-    "force-push": "executing-plans 执行边界：强制推送需要明确授权，覆盖具体分支和目标。",
-    "reset-hard": "executing-plans 执行边界：不以 reset --hard 作为同步或恢复手段，会丢掉未提交的改动。",
-    "clean": "executing-plans 执行边界：不以 git clean 作为清理手段，会删掉未跟踪文件。",
+    "force-push": "run-plan 执行边界：强制推送需要明确授权，覆盖具体分支和目标。",
+    "reset-hard": "run-plan 执行边界：不以 reset --hard 作为同步或恢复手段，会丢掉未提交的改动。",
+    "clean": "run-plan 执行边界：不以 git clean 作为清理手段，会删掉未跟踪文件。",
     "sensitive-file": "commit-pr：正在暂存疑似敏感文件（如 .env、密钥或凭据），请确认后再继续。",
 }
 

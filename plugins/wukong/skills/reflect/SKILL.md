@@ -34,7 +34,7 @@ disable-model-invocation: true
 
 一条消息，三个子智能体。只有当对话记录里实际提到外部工单、聊天线程或可观测性追踪时，才选用能访问 MCP 的类型；纯本地代码、配置或技能复盘直接使用只读子代理类型即可。
 
-模型按[公共派发规则](../executing-plans/references/subagents.md#模型)：判断、发散和综合是「规划」角色，工具视角是「审查」角色。没有模型块时，判断和发散用更强的模型，工具视角用较快的写代码模型；软件不能指定模型就不设，继承父会话。软件拒绝了技能默认名，就换同一系列里它接受的最接近的名字并说一句；拒绝了模型块角色名或用户点名时按[公共派发规则](../executing-plans/references/subagents.md#模型)处理。
+模型按[公共派发规则](../run-plan/references/subagents.md#模型)：判断、发散和综合是「规划」角色，工具视角是「审查」角色。没有模型块时，判断和发散用更强的模型，工具视角用较快的写代码模型；软件不能指定模型就不设，继承父会话。软件拒绝了技能默认名，就换同一系列里它接受的最接近的名字并说一句；拒绝了模型块角色名或用户点名时按[公共派发规则](../run-plan/references/subagents.md#模型)处理。
 
 | 视角 | 没有模型块、而且软件能指定模型时 | 提示词模板 |
 |---|---|---|
@@ -61,9 +61,9 @@ Backlog 默认输出为待办草稿。只有用户已授权写入指定跟踪系
 严格按照每一条已批准条目的 Routing（去向）来做：
 
 - 对已有 skill 的小修改（一条一行的要点、收紧一句话、改正一个过时的事实）：父智能体直接做。
-- 对已有 skill 的实质性修改（一个新的小节、一张新的模式表、超过大约 10 行）：跑 `/author-skill` 做起草、测试、迭代。保留原有的 YAML `name` 和 `description`，改完按[去 AI 腔清单](../technical-writing/references/unslop.md)过一遍文字。
+- 对已有 skill 的实质性修改（一个新的小节、一张新的模式表、超过大约 10 行）：跑 `/author-skill` 做起草、测试、迭代。保留原有的 YAML `name` 和 `description`，改完按[去 AI 腔清单](../tech-doc/references/unslop.md)过一遍文字。
 - `tune description: <skill path>`（这个 skill 存在，但在该触发时没有触发）：用 `/author-skill` 做描述优化。只改 `description`，让它覆盖用户实际会说的那句话，改完读一遍确认没有把正文的触发条件写丢。
-- `new skill: <kebab-name>`：交给 `/author-skill`。YAML 里写 `name` 和 `description`，正文照已有 skill 的形状写，再按[去 AI 腔清单](../technical-writing/references/unslop.md)过一遍。
+- `new skill: <kebab-name>`：交给 `/author-skill`。YAML 里写 `name` 和 `description`，正文照已有 skill 的形状写，再按[去 AI 腔清单](../tech-doc/references/unslop.md)过一遍。
 
 如果你的环境带有 SKILL.md 校验工具，在宣布完成之前，对每个改动过的 skill 都运行一遍。
 

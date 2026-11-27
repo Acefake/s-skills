@@ -113,7 +113,7 @@ class ClassifyTest(JournalCase):
 
     def test_skill_names_and_paths_survive_redaction_while_high_entropy_secrets_hide(self):
         keep = (
-            '用 requesting-code-review 处理 '
+            '用 ask-review 处理 '
             'plugins/wukong/skills/wukong-init/SKILL.md '
             '和 docs/2026-11-13-personal-learning-design.md '
             '参考 https://github.com/Acefake/s-skills'

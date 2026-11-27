@@ -31,9 +31,9 @@
 | 向用户提问的工具 | `AskUserQuestion` |
 | 后台运行和取结果 | `run_in_background: true`（新版默认就是后台）；做完会通知主对话。专门取结果的工具名不确定，按本软件实际工具来 |
 | 指定模型 | `model` 只能写这次 `Agent` 定义里列出的取值（本会话验证过：`sonnet`、`opus`、`haiku`、`fable`；带括号如 `sonnet（medium）` 会被 `InputValidationError` 拒绝）。完整模型 ID 是否可用以工具定义为准，定义里没有就不要写；不写就继承父级 |
-| 指定推理档位 | `effort` 字段（`low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的 `Agent` 定义里有这个字段才传。按[公共派发规则](../../executing-plans/references/subagents.md#模型)取角色档位，**每次派检索、规划、审查、测试都要传**，不传时子代理用工具默认档，不是父会话的档。实现者等其他子代理不传 |
+| 指定推理档位 | `effort` 字段（`low`、`medium`、`high`、`xhigh`、`max`），只有这次会话的 `Agent` 定义里有这个字段才传。按[公共派发规则](../../run-plan/references/subagents.md#模型)取角色档位，**每次派检索、规划、审查、测试都要传**，不传时子代理用工具默认档，不是父会话的档。实现者等其他子代理不传 |
 | 子智能体在哪里跑 | 不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里 |
-| 让主对话定时醒来 | 使用 `executing-plans` 的「反复检查直到通过」。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
+| 让主对话定时醒来 | 使用 `run-plan` 的「反复检查直到通过」。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
 | 写 SKILL.md | 跑 `/author-skill`。个人 skill 可以放在 `~/.claude/skills/<名字>/SKILL.md` |
 
 ## author-skill
@@ -56,11 +56,11 @@ Claude Code 的个人 skill 放 `~/.claude/skills/<技能名>/SKILL.md`，项目
 
 Claude Code 的模型名没有 `-medium` 这类档位后缀，别名只有 `sonnet`、`opus`、`haiku`，档位是另一个独立参数。派的时候不写模型或写 `inherit`，就跟父对话走。
 
-## executing-plans：并行群体作战
+## run-plan：并行群体作战
 
 `Agent`，`subagent_type: "general-purpose"`，`run_in_background: true`。模型用 `sonnet`（完整 ID 仅当 `Agent` 定义允许），不写就跟父级。不确定有没有云端参数。没有就在本机跑，SHA 写在任务说明里。
 
-## executing-plans：反复检查
+## run-plan：反复检查
 
 未核实当前 Claude Code 是否提供持久调度命令；先检查当前会话能力。用一个后台盯梢的子智能体，或自己过一会儿再跑同一条检查，并写明用了哪一种。
 
@@ -68,7 +68,7 @@ Claude Code 的模型名没有 `-medium` 这类档位后缀，别名只有 `sonn
 
 `Agent`，`subagent_type: "general-purpose"`。调查的 `model` 用 `sonnet`，综合用 `opus`（完整 ID 仅当 `Agent` 定义允许）。需要 MCP 时不要改用 `Explore`。
 
-## show-me-your-work
+## worklog
 
 父级是 `sonnet` 就用 `opus`。派不出子智能体时，在主对话里换一种角度再看一遍日志，并说一句没有换模型。
 

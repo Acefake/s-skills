@@ -23,7 +23,7 @@
 
 默认不传 `provider` 和 `model`，子代理继承父级路线。用户本次指定模型时，只有派出所用的工具 `modelSelection`（旧字段 `modelSelectionSettings`）为 `true`、且 `dsh --dump-config-schema` 声明了这个字段，才传 `provider` 和 `model`；否则报告不能按次指定。见[子代理工具说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/subagent/tool-subagent/README.md)。
 
-推理档位的工具参数是 `reasoning_effort`，工具真有这个字段才传，档位按[公共派发规则](../../executing-plans/references/subagents.md#模型)取。内置 DeepSeek 适配器的档位是 `off`、`low`、`high`、`max`：`medium` 改用 `low`，`xhigh` 改用 `high`，即不超过目标的最高档。
+推理档位的工具参数是 `reasoning_effort`，工具真有这个字段才传，档位按[公共派发规则](../../run-plan/references/subagents.md#模型)取。内置 DeepSeek 适配器的档位是 `off`、`low`、`high`、`max`：`medium` 改用 `low`，`xhigh` 改用 `high`，即不超过目标的最高档。
 
 ## 未确认
 

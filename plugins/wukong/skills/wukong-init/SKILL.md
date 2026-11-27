@@ -42,7 +42,7 @@ python scripts/global_instructions.py --host antigravity
 
 提示词正文每次从当前插件的 [AGENTS.md](../../AGENTS.md) 读取，版本取自同一插件的 `plugin.json`，不从远端或其他缓存版本拼接。标记块同时记录版本和当前完整规则；版本或正文不同即为 `outdated`。检查返回的 `version` 表示本次期望版本，只有 `configured` 才表示目标已同步。
 
-[短规则](../../AGENTS-snippet.md)、[冻结的旧短规则](references/short-instructions-v1.txt) 和已登记的旧版完整规则（[v1](references/full-instructions-v1.txt)、[v2](references/full-instructions-v2.txt)、[v3](references/full-instructions-v3.txt)、[v4](references/full-instructions-v4.txt)、[v5](references/full-instructions-v5.txt)、[v6](references/full-instructions-v6.txt)、[v7](references/full-instructions-v7.txt)、[v8](references/full-instructions-v8.txt)、[v9](references/full-instructions-v9.txt)、[v10](references/full-instructions-v10.txt)）用于识别迁移来源，包含省略两条专利路由的版本。历史快照保留当时的技能名，不随品牌改名更新。识别允许空白、换行和行内代码反引号差异，但要求完整规则独占对应行。检查时报告 `outdated`，显式 `--apply` 后原位替换；保留块外内容、BOM、换行风格和首份备份。出现多个无标记规则块时停止写入，避免猜测该改哪一份。
+[短规则](../../AGENTS-snippet.md)、[冻结的旧短规则](references/short-instructions-v1.txt) 和已登记的旧版完整规则（[v1](references/full-instructions-v1.txt)、[v2](references/full-instructions-v2.txt)、[v3](references/full-instructions-v3.txt)、[v4](references/full-instructions-v4.txt)、[v5](references/full-instructions-v5.txt)、[v6](references/full-instructions-v6.txt)、[v7](references/full-instructions-v7.txt)、[v8](references/full-instructions-v8.txt)、[v9](references/full-instructions-v9.txt)、[v10](references/full-instructions-v10.txt)、[v11](references/full-instructions-v11.txt)）用于识别迁移来源，包含省略两条专利路由的版本。历史快照保留当时的技能名，不随品牌改名更新。识别允许空白、换行和行内代码反引号差异，但要求完整规则独占对应行。检查时报告 `outdated`，显式 `--apply` 后原位替换；保留块外内容、BOM、换行风格和首份备份。出现多个无标记规则块时停止写入，避免猜测该改哪一份。
 
 上一代 `<!-- s-wukong:instructions:start -->` / `<!-- s-wukong:instructions:end -->` 标记也会原位迁移为 `wukong` 标记；已有的 `.s-wukong.bak` 和 `.s-atlas.bak` 均保留不动。
 
@@ -69,8 +69,8 @@ Codex 安装插件不会自动迁移用户级 `hooks.json`，已有全局规则�
 | 角色 | 谁派它 | 匹配原则 | 默认档位 |
 |---|---|---|---|
 | 检索 | 只读检索派发、`how` 探索、`why` 调查、`prompt-sharpen` 与 `project-memory` 读项目 | 快而便宜 | medium |
-| 规划 | `how` 讲解、`why` 综合、`reflect` 判断/发散/综合、`executing-plans` 并行群体作战的方案综合 | 判断力最强 | high |
-| 审查 | `requesting-code-review`、`executing-plans` 任务评审与终审、`reflect` 工具视角 | 强，且尽量与父会话不同系列 | high |
+| 规划 | `how` 讲解、`why` 综合、`reflect` 判断/发散/综合、`run-plan` 并行群体作战的方案综合 | 判断力最强 | high |
+| 审查 | `ask-review`、`run-plan` 任务评审与终审、`reflect` 工具视角 | 强，且尽量与父会话不同系列 | high |
 | 测试 | 并行群体作战的验证工作者、复现、回归与实测验证 | 快，输出留在子代理里 | medium |
 
 **先查现状。** 运行 `python scripts/models.py --host <宿主> --show`，已有模型块时默认保留，用户要求重配才继续。

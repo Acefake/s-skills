@@ -2,6 +2,11 @@
 
 每个版本只列对使用者有影响的变化。细节见对应的 [GitHub Release](https://github.com/Acefake/s-skills/releases) 和提交历史。
 
+## 1.0.41
+
+- 简化 11 个较长技能名称（总数仍为 38，5 个 `wukong-*` 与 `prompt-sharpen` 保持不变）：`brainstorming` → `spec`、`writing-plans` → `write-plan`、`executing-plans` → `run-plan`、`systematic-debugging` → `debug`、`e2e-testing` → `e2e`、`requesting-code-review` → `ask-review`、`receiving-code-review` → `fix-review`、`refactor-architecture` → `refactor`、`show-me-your-work` → `worklog`、`technical-writing` → `tech-doc`、`remotion-create` → `remotion`。旧名记入 `RETIRED_SKILLS` 与 `RENAMES.md`，并冻结上一版全局指令为 `full-instructions-v11.txt` 以支持旧配置平滑迁移。
+- 精简重写 `README.md`，并在顶部介绍区直接嵌入最新渲染的 `docs/architecture/wukong-panorama.png` 技能全景图。
+
 ## 1.0.40
 
 - 新增点名技能 `project-skills`（技能总数 37 → 38，自动 20、点名 18，零常驻开销）：支持 `init`（从当前代码库 5 类高信号源提炼项目专属高频工作流，经 3 条硬门槛过滤与候选表勾选后按 `author-skill` 规范落盘为项目级 `SKILL.md`）与 `sync`（核对过期路径/命令/流程，确认后最小改动更新或淘汰）。

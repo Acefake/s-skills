@@ -22,7 +22,7 @@ INHERIT = '继承'
 TITLE = '## wukong 子代理模型'
 LINE = re.compile(r'^(\S+?)\s*[:：]\s*(.+?)\s*$')
 EFFORTS = ('low', 'medium', 'high', 'xhigh', 'max')
-# 角色没写括号时，派发规则用这些默认档位；见 executing-plans/references/subagents.md。
+# 角色没写括号时，派发规则用这些默认档位；见 run-plan/references/subagents.md。
 DEFAULT_EFFORTS = {'检索': 'medium', '规划': 'high', '审查': 'high', '测试': 'medium'}
 VALUE = re.compile(r'^([^\s（）()<>]+)\s*(?:[（(]\s*([a-z]+)\s*[)）])?$')
 

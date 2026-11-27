@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 Word 的功能你已经会用。这个技能补上代码里看不到的部分：一套能正确做修订和批注的库、能抓住未跟踪修改的校验、按读者看到的样子查看页面的办法，以及 docx-js 和 OOXML 里会静默生成坏文件的行为。
 
-技术 Markdown、README、RFC 用 `technical-writing`。这里只处理 `.docx`。
+技术 Markdown、README、RFC 用 `tech-doc`。这里只处理 `.docx`。
 
 ## 运行脚本
 

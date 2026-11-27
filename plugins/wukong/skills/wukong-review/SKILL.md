@@ -1,6 +1,6 @@
 ---
 name: wukong-review
-description: "「审这个 PR」「审一下分支」「审本地改动」「做代码审查」「安全审查」。先写意图摘要，按风险列发现（支持 --security 安全专项模式），给出能不能合并，默认只出报告；自己写完合并前核对需求用 requesting-code-review。Use when the user asks to review a PR, a branch, a diff, or local changes (including --security audits), rather than pre-merge verification of just-finished work."
+description: "「审这个 PR」「审一下分支」「审本地改动」「做代码审查」「安全审查」。先写意图摘要，按风险列发现（支持 --security 安全专项模式），给出能不能合并，默认只出报告；自己写完合并前核对需求用 ask-review。Use when the user asks to review a PR, a branch, a diff, or local changes (including --security audits), rather than pre-merge verification of just-finished work."
 ---
 
 本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
@@ -58,8 +58,8 @@ description: "「审这个 PR」「审一下分支」「审本地改动」「做
 可以配合仓库已有的 skill：
 
 - 规范问题按 `code-style` 的规则判断；
-- 想核对"改动是否满足需求"，用 `requesting-code-review` 的检查清单；
-- 高风险改动（鉴权、支付、数据迁移、并发）或用户要求严审时，按 `requesting-code-review` 再派一个只读子代理独立复审；
+- 想核对"改动是否满足需求"，用 `ask-review` 的检查清单；
+- 高风险改动（鉴权、支付、数据迁移、并发）或用户要求严审时，按 `ask-review` 再派一个只读子代理独立复审；
 
 ### 安全专项模式（`--security`）
 

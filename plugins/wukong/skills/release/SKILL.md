@@ -11,7 +11,7 @@ disable-model-invocation: true
 
 # 发版
 
-只在用户点名发版时运行。点名发版就是授权推送 tag 和创建 Release，不授权改版本号以外的代码，也不授权改写历史。句子按 `technical-writing`。
+只在用户点名发版时运行。点名发版就是授权推送 tag 和创建 Release，不授权改版本号以外的代码，也不授权改写历史。句子按 `tech-doc`。
 
 ## 1. 确认可以发
 

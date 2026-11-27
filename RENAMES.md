@@ -4,24 +4,35 @@
 
 退役的技能名都记在 `scripts/marketplace_lib.py` 的 `RETIRED_SKILLS` 里，`check_marketplace.py` 会拦下对它们的引用。下表说明遇到旧名时现在该用什么。
 
-## 并入现有技能
+## 改名与并入现有技能
 
 | 旧名 | 现在用 | 内容在哪 |
 |---|---|---|
-| `wukong-mode`、`wukong-agent`、`figure-it-out`、`timed-loop`、`using-git-worktrees`、`subagent-driven-development`、`dispatching-parallel-agents` | `executing-plans` | `SKILL.md` 与 `references/` |
-| `swarm` | `executing-plans` | `references/swarm.md` |
+| `brainstorming` | `spec` | `plugins/wukong/skills/spec/` |
+| `writing-plans` | `write-plan` | `plugins/wukong/skills/write-plan/` |
+| `executing-plans` | `run-plan` | `plugins/wukong/skills/run-plan/` |
+| `systematic-debugging` | `debug` | `plugins/wukong/skills/debug/` |
+| `e2e-testing` | `e2e` | `plugins/wukong/skills/e2e/` |
+| `requesting-code-review` | `ask-review` | `plugins/wukong/skills/ask-review/` |
+| `receiving-code-review` | `fix-review` | `plugins/wukong/skills/fix-review/` |
+| `refactor-architecture` | `refactor` | `plugins/wukong/skills/refactor/` |
+| `show-me-your-work` | `worklog` | `plugins/wukong/skills/worklog/` |
+| `technical-writing` | `tech-doc` | `plugins/wukong/skills/tech-doc/` |
+| `remotion-create` | `remotion` | `plugins/wukong/skills/remotion/` |
+| `wukong-mode`、`wukong-agent`、`figure-it-out`、`timed-loop`、`using-git-worktrees`、`subagent-driven-development`、`dispatching-parallel-agents` | `run-plan` | `SKILL.md` 与 `references/` |
+| `swarm` | `wukong-swarm` | 独立点名技能，与 `run-plan` 联动 |
 | `no-comments` | `deslop` | `references/comment-sicko.md`，子代理在 `plugins/wukong/agents/comment-sicko.md` |
-| `unslop` | `technical-writing` | `references/unslop.md` |
+| `unslop` | `tech-doc` | `references/unslop.md` |
 | `finishing-a-development-branch` | `commit-pr` | `references/finishing-branch.md` |
 | `setup-s-instructions` | `wukong-init` | `scripts/global_instructions.py` |
 | `test-driven-development` | `tdd` | |
 | `writing-skills` | `author-skill` | |
 | `teach` | `how`，问动机用 `why` | |
 | `self-improvement`、`learn`、`automate-me` | `reflect`，个人规则用 `reflect --me` | |
-| `interrogate` | `requesting-code-review` | |
-| `sharpen` | `prompt-sharpen`、`brainstorming` | |
+| `interrogate` | `ask-review` | |
+| `sharpen` | `prompt-sharpen`、`spec` | |
 | `frontend-design`、`taste-skill`、`ui-ux-pro-max`、`web-design-guidelines`、`design-system`、`apple-glass`、`html-mockup`、`theme-factory` | `impeccable` | |
-| `benchmark-checklist` | `systematic-debugging` | `references/principles/benchmark-checklist.md` |
+| `benchmark-checklist` | `debug` | `references/principles/benchmark-checklist.md` |
 
 ## 原则并入所属技能
 
@@ -29,12 +40,12 @@
 
 | 技能 | 原则 |
 |---|---|
-| `brainstorming` | exhaust-the-design-space、experience-first、foundational-thinking、redesign-from-first-principles |
+| `spec` | exhaust-the-design-space、experience-first、foundational-thinking、redesign-from-first-principles |
 | `code-style` | boundary-discipline、build-the-lever、encode-lessons-in-structure、laziness-protocol、make-operations-idempotent、migrate-callers-then-delete-legacy-apis、minimize-reader-load、model-the-domain、prove-it-works、subtract-before-you-add、type-system-discipline |
-| `executing-plans` | guard-the-context-window、never-block-on-the-human、separate-before-serializing-shared-state |
-| `systematic-debugging` | attack-the-premise、explain-the-number、fix-root-causes |
+| `run-plan` | guard-the-context-window、never-block-on-the-human、separate-before-serializing-shared-state |
+| `debug` | attack-the-premise、explain-the-number、fix-root-causes |
 | `test-strategy` | test-behavior-not-implementation |
-| `writing-plans` | outcome-oriented-execution、sequence-verifiable-units |
+| `write-plan` | outcome-oriented-execution、sequence-verifiable-units |
 
 `verification-before-completion` 与 `prove-it-works` 重叠，用 `code-style` 的 `prove-it-works`。
 

@@ -17,7 +17,7 @@ Understand current performance and identify problems:
    - How bad is it? (Perceivable? Annoying? Blocking?)
    - Who's affected? (All users? Mobile only? Slow connections?)
 
-Measure before and after. Optimizing without a measurement spends effort on things that do not matter. Before reporting a speedup, name what limits it, per [explain-the-number](../../systematic-debugging/references/principles/explain-the-number.md).
+Measure before and after. Optimizing without a measurement spends effort on things that do not matter. Before reporting a speedup, name what limits it, per [explain-the-number](../../debug/references/principles/explain-the-number.md).
 
 ## Optimization Strategy
 
@@ -213,7 +213,7 @@ Hold every interactive surface to these budgets. A missed budget is a bug.
 | CLS | < 0.1 |
 | First-route JS | code-split per route, aim for < 170 KB gzip |
 
-Measure on a production build with 4× CPU throttling in DevTools. Dev-mode numbers do not count. Record the same interaction in the Performance panel before and after the change; if the number did not improve, revert and try another direction. Vet reported numbers with the benchmark checklist in [explain-the-number](../../systematic-debugging/references/principles/explain-the-number.md).
+Measure on a production build with 4× CPU throttling in DevTools. Dev-mode numbers do not count. Record the same interaction in the Performance panel before and after the change; if the number did not improve, revert and try another direction. Vet reported numbers with the benchmark checklist in [explain-the-number](../../debug/references/principles/explain-the-number.md).
 
 ## Core Web Vitals Optimization
 

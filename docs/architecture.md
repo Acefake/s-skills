@@ -2,7 +2,7 @@
 
 wukong 是一套由代理读取的技能和本地工具，不是独立运行的 Agent 服务。Codex、Claude Code、Antigravity 提供会话和执行能力；本仓库提供技能描述、任务流程、宿主适配和确定性的配置工具。
 
-当前版本 **1.0.40**，共 **38** 个技能：**20** 个可按描述自动选用，**18** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
+当前版本 **1.0.41**，共 **38** 个技能：**20** 个可按描述自动选用，**18** 个保持显式调用。自动选用描述的是调用政策，不保证每轮必然触发。
 
 [全景卡片图](architecture/wukong-panorama.html) · [组件关系图](architecture/wukong.html) · [安装与使用](../README.md)
 
@@ -17,7 +17,7 @@ wukong 是一套由代理读取的技能和本地工具，不是独立运行的 
 | 开发主流程 | 15 | 需求澄清、项目记录、方案、计划、执行（含 Antigravity 原生群体协调）、调试、测试、代码规范、审查、提交和发版 |
 | 专项技能 | 17 | 理解架构、画图、数据库迁移、界面设计与操作、MCP、视频、端到端测试、Word、写作、技能维护 |
 
-设计原则不单独成卡，正文放在所属技能的 `references/principles/` 下：`code-style` 11 条，`brainstorming` 和 `systematic-debugging` 各 4 条，`executing-plans` 3 条，`writing-plans` 2 条，`test-strategy` 1 条。
+设计原则不单独成卡，正文放在所属技能的 `references/principles/` 下：`code-style` 11 条，`spec` 和 `debug` 各 4 条，`run-plan` 3 条，`write-plan` 2 条，`test-strategy` 1 条。
 
 **组件关系图**画的是逻辑职责，不是分别部署的服务。它的 [JSON 图源](architecture/wukong.architecture.json) 把每个节点的证据钉在提交 [a2c04b8](https://github.com/Acefake/s-skills/commit/a2c04b87c2dde4e57fa2fcaf26ec01d3be1d5a20)，可以追到具体文件和行号。
 
@@ -46,7 +46,7 @@ flowchart TD
     Kind -->|小改动| Direct[保持范围直接处理]
     Kind -->|功能或改行为| Design[方案与实现计划]
     Kind -->|故障| Debug[复现并定位根因]
-    Kind -->|跨模块或要并行| Plans[executing-plans]
+    Kind -->|跨模块或要并行| Plans[run-plan]
     Kind -->|只读任务| Report[按证据交付报告]
     Design --> Run[按已确认方式执行]
     Debug --> Run
@@ -64,7 +64,7 @@ flowchart TD
 - 小改动跳过方案和计划，不跳过对口技能和相称的自审。纯文案、样式数值等第 0 档改动只检查 diff，不因提交而补跑测试。
 - 代码改动交付前由主任务自审：第 0、1 档只看 diff，第 2 档起加看关键调用方。第 3 档或涉及权限、并发、共享状态、数据删除的改动，再派只读子代理独立评审。无法委派时，明确说明缺少独立评审。
 - 独立评审的授权不等于子代理开发的授权。实现是否委派，取决于已有授权。
-- `wukong-swarm`（与 `executing-plans` 联动）负责并行群体作战：Antigravity 上主会话作为原生群体协调者通过留言板派工；其他宿主改用当前可用的子代理派发或顺序执行。
+- `wukong-swarm`（与 `run-plan` 联动）负责并行群体作战：Antigravity 上主会话作为原生群体协调者通过留言板派工；其他宿主改用当前可用的子代理派发或顺序执行。
 - `architect`、`reflect` 等显式技能不因为“工具可用”就自动启用。`how` 也要点名，普通代码讲解直接回答。
 
 ## 三、安装和初始化是两个动作

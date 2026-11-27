@@ -36,15 +36,15 @@ class TriggerCasesTest(unittest.TestCase):
         self.assertNotIn("wukong-router", self.candidates)
 
     def test_parse_choice_reads_bare_and_wrapped_answers(self):
-        names = {"tdd", "systematic-debugging"}
+        names = {"tdd", "debug"}
         self.assertEqual(eval_triggers.parse_choice("tdd\n", names), "tdd")
-        self.assertEqual(eval_triggers.parse_choice("`systematic-debugging`.", names), "systematic-debugging")
+        self.assertEqual(eval_triggers.parse_choice("`debug`.", names), "debug")
         self.assertEqual(eval_triggers.parse_choice("none", names), "none")
         self.assertEqual(
-            eval_triggers.parse_choice("The answer is systematic-debugging.\nIt fits bugs.", names),
-            "systematic-debugging",
+            eval_triggers.parse_choice("The answer is debug.\nIt fits bugs.", names),
+            "debug",
         )
-        self.assertEqual(eval_triggers.parse_choice("**tdd**\n\nReason: not systematic-debugging", names), "tdd")
+        self.assertEqual(eval_triggers.parse_choice("**tdd**\n\nReason: not debug", names), "tdd")
         self.assertEqual(eval_triggers.parse_choice("None", names), "none")
         self.assertEqual(eval_triggers.parse_choice("", names), "")
 

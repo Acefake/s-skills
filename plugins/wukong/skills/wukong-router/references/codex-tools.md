@@ -30,7 +30,7 @@
 | 后台运行和取结果 | 提示词里写 “Wait for all, then summarize”。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`），不写时由 Codex 自己选默认。没有文档化的单独取结果工具名 |
 | 指定模型 | 见下面「Codex 怎么指定模型」。不要把其他宿主的模型名写进来 |
 | 子智能体在哪里跑 | 子智能体文档没有云端运行或基础分支参数。本地 Codex 跟父级同一套沙箱，在本机跑。ChatGPT Work 是另一套托管环境，不要套过来。从别的分支开始：把 SHA 写进提示词 |
-| 让主对话定时醒来 | 使用 `executing-plans` 的「反复检查直到通过」。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
+| 让主对话定时醒来 | 使用 `run-plan` 的「反复检查直到通过」。先检查当前宿主的持久调度能力；没有时使用会话内检查并明确限制。 |
 | 写 SKILL.md | 跑 `/author-skill`。目录按本文件对应技能的章节 |
 
 ## author-skill
@@ -53,19 +53,19 @@
 
 这里说的是本地 Codex（CLI、IDE、桌面应用）。ChatGPT Work 是另一套托管环境，不要把它的界面套过来。官方文档：[Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)、[配置进阶](https://learn.chatgpt.com/docs/config-file/config-advanced)。没有带 `model` 参数的独立 `Task` 工具。
 
-默认不点名模型，子智能体继承父级。检索、规划、审查、测试四个角色按[公共派发规则](../../executing-plans/references/subagents.md#模型)取模型和档位，在提示词里点名（“uses model \<模型\> with model_reasoning_effort \<档位\>”）；模型是 `继承` 时只点名档位。用户本次指定模型时以用户为准。模型名必须是这次账号里真有的，档位只写该模型支持的。
+默认不点名模型，子智能体继承父级。检索、规划、审查、测试四个角色按[公共派发规则](../../run-plan/references/subagents.md#模型)取模型和档位，在提示词里点名（“uses model \<模型\> with model_reasoning_effort \<档位\>”）；模型是 `继承` 时只点名档位。用户本次指定模型时以用户为准。模型名必须是这次账号里真有的，档位只写该模型支持的。
 
 用户自己写的自定义智能体放 `~/.codex/agents/<name>.toml`（设过 `CODEX_HOME` 就用那个目录），必填 `name`、`description`、`developer_instructions`，可写 `model` 和 `model_reasoning_effort`；文件里的值优先于口头点名。自定义智能体继承父级的权限、provider 和 MCP，文件里不能改这些。内置 `worker` 做实现，`explorer` 做读得多的探索，`default` 是通用兜底。
 
 `[agents].default_subagent_model` 是全体一个默认值，拉不开多个审查者。profile 是整次进程的覆盖，不是某个子智能体的模型开关。并发上限是 `~/.codex/config.toml` 里 `[agents].max_concurrent_threads_per_session`（旧名 `max_threads`）。
 
-## executing-plans：并行群体作战
+## run-plan：并行群体作战
 
 提示词写成：Spawn N subagents in parallel. Wait for all of them, then summarize. 需要换模型时写 “each uses model \<模型\> with model_reasoning_effort \<档位\>”，点名这次账号里真有的较快模型。文档举例 `gpt-6-luna` 只在账号有它时才用。
 
 从非默认分支开始时，把 SHA 写在提示词里。未核实：有没有把子智能体放到另一台机器的参数。子智能体文档只写了跟父级同一套沙箱。并发很多时，看 `[agents].max_concurrent_threads_per_session`，不写则由 Codex 自己选默认。
 
-## executing-plans：反复检查
+## run-plan：反复检查
 
 先检查当前宿主是否提供持久调度或唤醒工具；有则按用户授权保存完成条件，没有时才使用下面的会话内检查。在提示词里写明完成条件和“做完这一轮就停，由父对话再决定要不要再派”。需要守着时，用一个子智能体反复跑检查，父对话等它返回再决定。CLI 的 `/subagents` 用来看线程，不是计时器。
 
@@ -73,7 +73,7 @@
 
 自定义智能体继承父级的 MCP，文件里不能改 MCP。调查可以点名内置 `explorer`。提示词写成：Spawn one subagent per evidence source. Wait for all, then spawn one synthesizer. Do not edit files. 需要换模型时点名这次账号里真有的模型。提示词禁止改文件，不会变成单独的只读沙箱。
 
-## show-me-your-work
+## worklog
 
 提示词里点名另一个这次账号里真有的模型，或点名一个已经写好、模型不同的自定义智能体。`default_subagent_model` 拉不开系列。
 

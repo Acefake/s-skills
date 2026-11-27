@@ -1,6 +1,6 @@
 ---
 name: author-skill
-description: "「/author-skill」「新建一个 skill」「大改 SKILL.md」。按目录、name、description 和步骤写技能说明。文字写完用 technical-writing 的去 AI 腔清单。Use when creating or substantially editing a SKILL.md."
+description: "「/author-skill」「新建一个 skill」「大改 SKILL.md」。按目录、name、description 和步骤写技能说明。文字写完用 tech-doc 的去 AI 腔清单。Use when creating or substantially editing a SKILL.md."
 disable-model-invocation: true
 ---
 
@@ -21,7 +21,7 @@ disable-model-invocation: true
 4. 正文写步骤、边界，以及需要时的例子。长参考放进 `references/`，可执行的东西放进 `scripts/`，模板放进 `assets/`。正文里用相对路径点它们。
 5. 只有明确要求“只有点名才加载”时，才加 `disable-model-invocation: true`。
 6. 只在某类文件上才该出现时，加 `paths`（glob）。文档里的旧字段 `globs` 还能用，新文件写 `paths`。
-7. 写完按[去 AI 腔清单](../technical-writing/references/unslop.md)过文字。然后自己读一遍：`name` 是否等于目录名，`description` 是否还在。
+7. 写完按[去 AI 腔清单](../tech-doc/references/unslop.md)过文字。然后自己读一遍：`name` 是否等于目录名，`description` 是否还在。
 
 ## 写作准则（省、准、稳）
 

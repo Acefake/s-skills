@@ -112,7 +112,7 @@ class GlobalInstructionsTest(unittest.TestCase):
     def test_recent_frozen_unmarked_rules_migrate_in_place(self):
         path = self.home / '.codex/AGENTS.md'
         path.parent.mkdir()
-        for version in ('v9', 'v10'):
+        for version in ('v9', 'v10', 'v11'):
             old = (SCRIPT.parent.parent / f'references/full-instructions-{version}.txt').read_text(encoding='utf-8').strip()
             path.write_text('前缀\n' + old + '\n后缀\n', encoding='utf-8')
             self.assertEqual(self.module.sync_global('codex', home=self.home)['status'], 'outdated', version)

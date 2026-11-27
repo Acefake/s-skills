@@ -18,7 +18,7 @@
 | DeepSeek Harness（`dsh`） | [DeepSeek Harness 工具和配置](skills/wukong-router/references/dsh-tools.md) |
 | Hermes agent | [Hermes 工具和配置](skills/wukong-router/references/hermes-tools.md) |
 
-技能正文负责任务步骤、输入输出和验收；平台参考负责工具参数、配置位置和能力差异。子代理模型与推理档位按[公共派发规则](skills/executing-plans/references/subagents.md#模型)选择。
+技能正文负责任务步骤、输入输出和验收；平台参考负责工具参数、配置位置和能力差异。子代理模型与推理档位按[公共派发规则](skills/run-plan/references/subagents.md#模型)选择。
 
 ## 向用户提问的工具
 
@@ -54,4 +54,4 @@ Codex 本项目开发可在仓库根运行 `powershell -NoProfile -File scripts/
 
 ## 全局技能提示词
 
-显式调用 [wukong-init](skills/wukong-init/SKILL.md) 初始化当前宿主的全局指令，并按宿主可用模型写入检索、规划、审查、测试四个子代理角色的模型块，保留其他配置并幂等更新。Antigravity 启用插件时自动加载 `rules/AGENTS.md`（不重复写库块），模型块与个人块写入 `~/.gemini/config/AGENTS.md`。派发时怎么读模型块见[公共派发规则](skills/executing-plans/references/subagents.md#模型)。普通技能只按[日常自检](skills/wukong-init/references/daily-check.md)提醒，每会话一次，不自动写入。
+显式调用 [wukong-init](skills/wukong-init/SKILL.md) 初始化当前宿主的全局指令，并按宿主可用模型写入检索、规划、审查、测试四个子代理角色的模型块，保留其他配置并幂等更新。Antigravity 启用插件时自动加载 `rules/AGENTS.md`（不重复写库块），模型块与个人块写入 `~/.gemini/config/AGENTS.md`。派发时怎么读模型块见[公共派发规则](skills/run-plan/references/subagents.md#模型)。普通技能只按[日常自检](skills/wukong-init/references/daily-check.md)提醒，每会话一次，不自动写入。

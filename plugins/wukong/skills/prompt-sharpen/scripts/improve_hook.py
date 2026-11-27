@@ -59,7 +59,7 @@ EVALUATION = (
     "需求短、没文件名不算缺口；只说了动作也不等于信息足够。"
     "有缺口或用户要求澄清、优化提示词时，加载 wukong:prompt-sharpen（因缺口加载先点明缺口，不虚构）。"
     "信息足够、事实问答或对既定方案的确认直接执行；"
-    "bug 走 systematic-debugging、新功能走 brainstorming，不重复澄清。"
+    "bug 走 debug、新功能走 spec，不重复澄清。"
 )
 USER_NOTICE = "[wukong] prompt-sharpen：需求可能不够具体，已提醒先澄清"
 
