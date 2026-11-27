@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>wukong 技能全景 · 1.0.39</title>
+<title>wukong 技能全景 · 1.0.40</title>
 <style>
 
 *{box-sizing:border-box}
@@ -71,8 +71,8 @@ a{color:inherit}
 </head>
 <body>
 <main class="sheet">
-<h1>wukong 技能全景：一句话怎么走到技能，37 个技能各干什么</h1>
-<p class="intro">支持 Codex / Claude Code / Antigravity · 版本 1.0.39 · 20 个自动选用 / 17 个点名调用 · 先按任务匹配，必要时展开流程。</p>
+<h1>wukong 技能全景：一句话怎么走到技能，38 个技能各干什么</h1>
+<p class="intro">支持 Codex / Claude Code / Antigravity · 版本 1.0.40 · 20 个自动选用 / 18 个点名调用 · 先按任务匹配，必要时展开流程。</p>
 
 <h2 class="section-title">一、从任务到技能</h2>
 <section class="route-grid">
@@ -139,7 +139,7 @@ a{color:inherit}
 <a class="skill-card flow explicit" data-skill="release" data-policy="explicit" href="../../plugins/wukong/skills/release/SKILL.md"><div class="card-title"><strong>release</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/release / 发版 / 打 tag</p><p class="purpose"><b>作用：</b>按插件清单里的版本打 tag，写只含新增、改动、修复的发版说明，创建 GitHub Release。</p></a>
 </section>
 <section class="panel">
-<header><h2>④ 🎨 专项技能<small>16 个</small></h2><p>按任务描述匹配；白底虚线保持显式调用。</p></header>
+<header><h2>④ 🎨 专项技能<small>17 个</small></h2><p>按任务描述匹配；白底虚线保持显式调用。</p></header>
 <div class="two-columns">
 <div>
 <h3>理解与架构</h3>
@@ -164,12 +164,13 @@ a{color:inherit}
 <a class="skill-card special auto" data-skill="wukong-proposal" data-policy="auto" href="../../plugins/wukong/skills/wukong-proposal/SKILL.md"><div class="card-title"><strong>wukong-proposal</strong><span class="policy">自动</span></div><p class="when"><b>何时：</b>写个方案 / 技术方案</p><p class="purpose"><b>作用：</b>先问清目标和读者，列提纲，再写成中文方案。Word 用 docx。</p></a>
 <h3>技能维护</h3>
 <a class="skill-card special explicit" data-skill="author-skill" data-policy="explicit" href="../../plugins/wukong/skills/author-skill/SKILL.md"><div class="card-title"><strong>author-skill</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/author-skill / 新建一个 skill</p><p class="purpose"><b>作用：</b>按目录、name、description 和步骤写技能说明，写完过一遍去 AI 腔清单。</p></a>
+<a class="skill-card special explicit" data-skill="project-skills" data-policy="explicit" href="../../plugins/wukong/skills/project-skills/SKILL.md"><div class="card-title"><strong>project-skills</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/project-skills / 提取项目技能 / 同步项目里的 skills</p><p class="purpose"><b>作用：</b>从代码库提炼高频专属工作流为本地 SKILL.md（init），并在代码演进后核对更新或淘汰过期项目技能（sync）。</p></a>
 <a class="skill-card special explicit" data-skill="reflect" data-policy="explicit" href="../../plugins/wukong/skills/reflect/SKILL.md"><div class="card-title"><strong>reflect</strong><span class="policy">点名 / 授权派发</span></div><p class="when"><b>何时：</b>/reflect / 把这次教训写进技能 / --add 记个人规则</p><p class="purpose"><b>作用：</b>单条小改走轻量快路，多处教训派三审查者深度复盘；--add 直接记个人规则，--me 从使用日志归纳。</p></a>
 </div>
 </div>
 </section>
 </div>
-<p class="footnote">共 37 个技能 · 2 个入口与配置 + 4 个工作模式 + 15 个开发主流程 + 16 个专项技能。<br>这是技能索引与调用路径示意，不是每轮必跑的流水线。文案等第 0 档只看 diff；代码改动先自审，第 3 档或高风险改动再加只读独立评审。初始化、提交推送与清理分别遵循各自授权。</p>
+<p class="footnote">共 38 个技能 · 2 个入口与配置 + 4 个工作模式 + 15 个开发主流程 + 17 个专项技能。<br>这是技能索引与调用路径示意，不是每轮必跑的流水线。文案等第 0 档只看 diff；代码改动先自审，第 3 档或高风险改动再加只读独立评审。初始化、提交推送与清理分别遵循各自授权。</p>
 </main>
 </body>
 </html>

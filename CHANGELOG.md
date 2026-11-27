@@ -2,6 +2,10 @@
 
 每个版本只列对使用者有影响的变化。细节见对应的 [GitHub Release](https://github.com/Acefake/s-skills/releases) 和提交历史。
 
+## 1.0.40
+
+- 新增点名技能 `project-skills`（技能总数 37 → 38，自动 20、点名 18，零常驻开销）：支持 `init`（从当前代码库 5 类高信号源提炼项目专属高频工作流，经 3 条硬门槛过滤与候选表勾选后按 `author-skill` 规范落盘为项目级 `SKILL.md`）与 `sync`（核对过期路径/命令/流程，确认后最小改动更新或淘汰）。
+
 ## 1.0.39
 
 - 新增独立点名技能 `wukong-swarm`（技能总数 36 → 37，自动 20、点名 17，零常驻开销）：把原 `executing-plans/references/swarm.md` 升级为独立入口，避开与 Antigravity 内置 `/swarm` 同名冲突；Antigravity 下显式授权调用原生群体留言板，Claude Code / Codex 自动回退至子代理与 worktree 并行，`executing-plans` 改为链接指向 `wukong-swarm`。

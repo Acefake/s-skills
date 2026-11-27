@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Antigravity。</p>
 
-<p align="center">当前版本 1.0.39，共 <strong>37</strong> 个技能：20 个按描述自动选用，17 个需点名调用。</p>
+<p align="center">当前版本 1.0.40，共 <strong>38</strong> 个技能：20 个按描述自动选用，18 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -165,7 +165,7 @@ Antigravity 另把每次提示词评估的结果写进 `~/.wukong/prompt-hook-lo
 | `commit-pr` | 自动 | 看 diff 写提交说明，推送并开 PR；集成方式没定时先核验，再给合并、PR、保留或丢弃的选项 |
 | `release` | 点名 | 按插件清单的版本打 tag，写只含新增、改动、修复的发版说明，创建 GitHub Release |
 
-### 专项技能（16）
+### 专项技能（17）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
@@ -184,6 +184,7 @@ Antigravity 另把每次提示词评估的结果写进 `~/.wukong/prompt-hook-lo
 | `technical-writing` | 点名 | README、文档、RFC、PR 说明的写作标准，附去 AI 腔清单 |
 | `wukong-proposal` | 自动 | 写中文方案：先问清目标和读者，列提纲，再起草打磨 |
 | `author-skill` | 点名 | 按规范写或大改 SKILL.md |
+| `project-skills` | 点名 | 从代码库提取项目专属高频工作流为本地 SKILL.md（`init`），并在代码演进后核对更新或淘汰过期项目技能（`sync`） |
 | `reflect` | 点名 | 把这次对话的教训改成对现有技能的修改（单条小改走轻量快路，多处教训走深度复盘）；`--add` 直接记一条个人规则，`--me` 把本机使用日志归纳成个人规则，`--show`、`--undo`、`--forget`、`--off`、`--on` 查看、撤销、删除、关闭、打开 |
 
 `docx` 需要 Python 3.12、Node.js（在技能目录里 `npm install` 一次）、LibreOffice 和 poppler；读 docx 要 pandoc，中文渲染检查要 Noto CJK。
