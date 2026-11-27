@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Antigravity。</p>
 
-<p align="center">当前版本 1.0.38，共 <strong>36</strong> 个技能：20 个按描述自动选用，16 个需点名调用。</p>
+<p align="center">当前版本 1.0.39，共 <strong>37</strong> 个技能：20 个按描述自动选用，17 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -136,13 +136,14 @@ Antigravity 另把每次提示词评估的结果写进 `~/.wukong/prompt-hook-lo
 | `wukong-router` | 自动 | 拿不准该用哪个技能、或任务跨模块时先查；同时定验证档位 |
 | `wukong-init` | 点名 | 同步全局技能规则，按宿主给四个子代理角色配模型和推理档位，写入前确认 |
 
-### 工作模式（3）
+### 工作模式（4）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
 | `architect` | 点名 | 写代码前定类型、函数签名和模块边界，实现中一直参与 |
 | `show-me-your-work` | 点名 | 长时间或无人值守的工作，每个决定记一行 |
 | `handoff` | 点名 | 把当前目标、分支与提交状态、已验证结论和踩坑压缩成跨会话交接文档与下一会话提示词 |
+| `wukong-swarm` | 点名 | 并行群体作战协调者：Antigravity 用原生群体留言板派工与校验，Claude Code / Codex 改用子代理与独立 worktree 并行协作 |
 
 ### 开发主流程（15）
 
@@ -152,7 +153,7 @@ Antigravity 另把每次提示词评估的结果写进 `~/.wukong/prompt-hook-lo
 | `project-memory` | 自动 | 建立并维护项目的架构、规范、决策记录，改动后按 diff 只更新受影响的部分 |
 | `brainstorming` | 自动 | 动手前摸清意图、需求和设计，取舍范围；含 4 条原则 |
 | `writing-plans` | 自动 | 把多步任务或迁移拆成每步都能验证的计划；含 2 条原则 |
-| `executing-plans` | 自动 | 按写好的计划做：主会话或子代理逐任务执行、隔离工作区、循环检查；点名 swarm 时按 Antigravity 原生群体协调者并行派工，其他宿主改用子代理派发；含 3 条原则 |
+| `executing-plans` | 自动 | 按写好的计划做：主会话或子代理逐任务执行、隔离工作区、循环检查；并行群体作战联动 `wukong-swarm`；含 3 条原则 |
 | `systematic-debugging` | 自动 | 先复现、查根因再改；含 4 条原则 |
 | `tdd` | 自动 | 修 bug 时有便宜的测试点就先写失败测试 |
 | `test-strategy` | 自动 | 定每个行为在哪一层测、用什么工具；覆盖 TS/React、Vue、Go、Java；含 1 条原则 |

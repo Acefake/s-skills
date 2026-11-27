@@ -59,7 +59,7 @@ T3 Code 中先读 [T3 编排参考](../wukong-router/references/t3-code-tools.md
 
 ## 并行群体作战
 
-用户点名 `swarm`、要「并行跑一遍」「让一群智能体做」，或任务能拆成多个互不冲突的子块并配校验者协作时，按[并行群体作战](references/swarm.md)作为协调者拉起并行工作者并通过共享留言板协作（非 Antigravity 宿主改用宿主实际可用的子代理派发）。
+用户点名 `wukong-swarm`、`swarm`、要「并行跑一遍」「让一群智能体做」，或任务能拆成多个互不冲突的子块并配校验者协作时，调用 [wukong-swarm](../wukong-swarm/SKILL.md) 作为协调者拉起并行工作者并通过共享留言板协作（非 Antigravity 宿主改用宿主实际可用的子代理派发）。
 
 ## 反复检查直到通过
 

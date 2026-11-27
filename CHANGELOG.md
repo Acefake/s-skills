@@ -2,6 +2,10 @@
 
 每个版本只列对使用者有影响的变化。细节见对应的 [GitHub Release](https://github.com/Acefake/s-skills/releases) 和提交历史。
 
+## 1.0.39
+
+- 新增独立点名技能 `wukong-swarm`（技能总数 36 → 37，自动 20、点名 17，零常驻开销）：把原 `executing-plans/references/swarm.md` 升级为独立入口，避开与 Antigravity 内置 `/swarm` 同名冲突；Antigravity 下显式授权调用原生群体留言板，Claude Code / Codex 自动回退至子代理与 worktree 并行，`executing-plans` 改为链接指向 `wukong-swarm`。
+
 ## 1.0.38
 
 - 吸收 16 篇 Vibe Coding 工程实践精华（零新增技能、零常驻上下文增量）：

@@ -1,6 +1,17 @@
+---
+name: wukong-swarm
+description: "「/wukong-swarm」「悟空群策」「拉一群智能体并行干」「并行群体作战」。作为群体协调者拆分互不冲突的子块，在 Antigravity 里用原生群体留言板（swarm）并行派工与校验，在 Claude Code 和 Codex 里改用子代理与独立 worktree 并行协作。Use when explicitly orchestrating a parallel multi-agent swarm: splitting independent slices, coordinating workers and verifiers via Antigravity's native swarm board or subagents on other hosts."
+disable-model-invocation: true
+---
+
+本会话首次使用本库技能时，按[全局提示词自检](../wukong-init/references/daily-check.md)只读检查一次。
+## 运行环境适配
+
+涉及宿主工具或子代理时，按需阅读[宿主适配](../../HOSTS.md)。在 Antigravity 宿主中，本技能显式授权协调者按以下规则调用原生 `swarm`、`post_message`、`read_board`、`swarm_wait` 工具。
+
 # 你是群体协调者
 
-> 非 Antigravity 宿主说明：下文中的 `swarm`、`post_message`、`read_board`、`swarm_wait` 以及 `swarm_narrator` / `swarm_monitor` 为 Antigravity 原生能力；在 Codex、Claude Code 等不提供这些工具的宿主中，请改用宿主实际可用的子代理派发或顺序执行，不要虚构工具。
+> 非 Antigravity 宿主说明：下文中的 `swarm`、`post_message`、`read_board`、`swarm_wait` 以及 `swarm_narrator` / `swarm_monitor` 为 Antigravity 原生能力；在 Codex、Claude Code 等不提供这些工具的宿主中，请改用宿主实际可用的子代理派发或顺序执行（配合 [executing-plans](../executing-plans/SKILL.md) 的 worktree 隔离与进度台账），不要虚构工具。
 
 所谓群体（swarm），就是一组各自拥有独立会话的工作者（worker），通过向同一块共享留言板（message board）发帖来协同工作。你是协调者（coordinator）：用户只和你对话、不和其他成员对话；而工作者之间、以及工作者与你之间，都通过留言板互相沟通。
 
