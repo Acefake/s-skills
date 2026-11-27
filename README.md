@@ -8,7 +8,7 @@
 
 <p align="center">先磨方案、再写计划、按计划做、审查后收尾；排错讲证据，改动要验证。<br />支持 Codex、Claude Code、Antigravity。</p>
 
-<p align="center">当前版本 1.0.34，共 <strong>34</strong> 个技能：20 个按描述自动选用，14 个需点名调用。</p>
+<p align="center">当前版本 1.0.35，共 <strong>35</strong> 个技能：20 个按描述自动选用，15 个需点名调用。</p>
 
 <p align="center">
   <a href="#安装">安装</a> ·
@@ -136,12 +136,13 @@ Antigravity 另把每次提示词评估的结果写进 `~/.wukong/prompt-hook-lo
 | `wukong-router` | 自动 | 拿不准该用哪个技能、或任务跨模块时先查；同时定验证档位 |
 | `wukong-init` | 点名 | 同步全局技能规则，按宿主给四个子代理角色配模型和推理档位，写入前确认 |
 
-### 工作模式（2）
+### 工作模式（3）
 
 | 技能 | 调用 | 用途 |
 |---|---|---|
 | `architect` | 点名 | 写代码前定类型、函数签名和模块边界，实现中一直参与 |
 | `show-me-your-work` | 点名 | 长时间或无人值守的工作，每个决定记一行 |
+| `handoff` | 点名 | 把当前目标、分支与提交状态、已验证结论和踩坑压缩成跨会话交接文档与下一会话提示词 |
 
 ### 开发主流程（15）
 
@@ -181,7 +182,7 @@ Antigravity 另把每次提示词评估的结果写进 `~/.wukong/prompt-hook-lo
 | `technical-writing` | 点名 | README、文档、RFC、PR 说明的写作标准，附去 AI 腔清单 |
 | `wukong-proposal` | 自动 | 写中文方案：先问清目标和读者，列提纲，再起草打磨 |
 | `author-skill` | 点名 | 按规范写或大改 SKILL.md |
-| `reflect` | 点名 | 把这次对话的教训改成对现有技能的修改；`--me` 把本机使用日志归纳成个人规则，`--show`、`--undo`、`--forget`、`--off`、`--on` 查看、撤销、删除、关闭、打开 |
+| `reflect` | 点名 | 把这次对话的教训改成对现有技能的修改（单条小改走轻量快路，多处教训走深度复盘）；`--add` 直接记一条个人规则，`--me` 把本机使用日志归纳成个人规则，`--show`、`--undo`、`--forget`、`--off`、`--on` 查看、撤销、删除、关闭、打开 |
 
 `docx` 需要 Python 3.12、Node.js（在技能目录里 `npm install` 一次）、LibreOffice 和 poppler；读 docx 要 pandoc，中文渲染检查要 Noto CJK。
 

@@ -1,6 +1,6 @@
 ---
 name: reflect
-description: "「/reflect」「把这次教训写进技能」「/reflect --me」「更新我的个人规则」。默认派三个审查者把经验改成对现有 skill 的修改；--me 等个人模式把本机使用日志归纳成个人规则。Use when a lesson should be written into an existing skill, or the user wants their personal rules learned from the local journal updated, shown, undone or removed."
+description: "「/reflect」「把这次教训写进技能」「把这条记成我的规则」「/reflect --me」「更新我的个人规则」。把对话教训沉淀到现有 skill（单条小改走快路，长会话复盘派三视角审查），或按个人模式即时记录/从日志归纳个人规则。Use when a lesson should be written into an existing skill, or the user wants to record a personal rule immediately or update, show, undo, or remove personal rules learned from the local journal."
 disable-model-invocation: true
 ---
 
@@ -11,27 +11,28 @@ disable-model-invocation: true
 
 # 反思
 
-从当前对话里挖出持久有用的经验，然后把它们落实成对 skill 的修改。
+从当前对话里挖出持久有用的经验，按范围落到个人规则或现有 skill。
 
-当用户说 “reflect” 或 “/reflect” 时调用。
+当用户说 “reflect” 或 “/reflect” 时调用。先按场景选路径：
 
-带 `--me`、`--show`、`--undo`、`--forget`、`--off`、`--on`，或用户说「更新 / 查看 / 撤销 / 删掉 / 关掉我的个人规则」「把这条记成我的规则」时，是个人模式：不派审查者、不改任何 skill，按 [个人模式](references/personal.md) 做，下面的第 1～6 步都不适用。
+1. **个人模式（即时记一条 / 跨会话归纳）**：带 `--add`、`--me`、`--show`、`--undo`、`--forget`、`--off`、`--on`，或用户说「把这条记成我的规则」「以后记住……」「更新 / 查看 / 撤销 / 删掉 / 关掉我的个人规则」时，不派子代理、不改任何 skill，直接按[个人模式](references/personal.md)执行（下面的第 1～6 步都不适用）。
+2. **小教训快路（对现有 skill 的单条小改）**：意图明确的单条教训、刚解决的环境/配置坑，且只涉及单个已知 skill 的小改动（约 10 行以内）时，跳过下面的 3 审查者 + 综合者流程，主会话直接起草改动并按第 5～6 步展示给用户批准后落实。
+3. **深度复盘（长会话 / 多问题 / 拿不准去向）**：按下面第 1～6 步派三视角审查者并综合。
 
 如果对话很琐碎、跑题了，或者已经被一个已有 skill 覆盖、而父智能体也正确地照着做了，就跳过。一次性的事情不算经验。
 
 ## 1. 找到当前的对话记录
 
-在分派之前，到系统提示词里写明的 `agent-transcripts/` 或当前会话记录目录里，找到这次对话的记录。只读当前工作区的记录，不要用通配符跨工作区扫描其他项目里的私密对话。
+在分派之前，定位本次对话的记录文件；只读当前会话或当前工作区的记录，不要用通配符跨工作区扫描其他项目的私密对话：
 
-```bash
-ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcripts>/*/subagents/*.jsonl 2>/dev/null | head -10
-```
+- **Antigravity**：直接使用当前会话的 `transcript.jsonl`（`<appDataDir>/brain/<conversation-id>/.system_generated/logs/transcript.jsonl`），按 `type: "USER_INPUT"` 与 `content` 核对开头提示词。
+- **Claude Code / Codex**：到系统提示词写明的 `agent-transcripts/` 或当前会话记录目录，按扁平（`<id>.jsonl`）、嵌套（`<id>/<id>.jsonl`）或子代理布局（`<parent>/subagents/<child>.jsonl`）找到最近文件（macOS/Linux 可用 `ls -t ... | head -10`，Windows 用 PowerShell `Get-ChildItem ... | Sort-Object LastWriteTime -Descending | Select-Object -First 10`），读首行核对开头用户提示词。
 
-这覆盖了旧的扁平布局（`<id>.jsonl`）、现在的嵌套布局（`<id>/<id>.jsonl`），以及子智能体的布局（`<parent>/subagents/<child>.jsonl`）。对每个候选文件，读 JSONL 的第一行。选那个 `message.content[0].text` 里包含这次对话开头那条用户提示词的文件。如果一个都对不上，就改为传入一份紧凑的会话摘要。
+如果都对不上或路径不可读，改为传入一份紧凑的会话摘要。
 
 ## 2. 同时派出三个审查者
 
-一条消息，三个子智能体，用能访问 MCP 的类型。会去掉 MCP 的只读模式不要用。审查者要去查对话记录里提到的工单、聊天线程和可观测性追踪记录。
+一条消息，三个子智能体。只有当对话记录里实际提到外部工单、聊天线程或可观测性追踪时，才选用能访问 MCP 的类型；纯本地代码、配置或技能复盘直接使用只读子代理类型即可。
 
 模型按[公共派发规则](../executing-plans/references/subagents.md#模型)：判断、发散和综合是「规划」角色，工具视角是「审查」角色。没有模型块时，判断和发散用更强的模型，工具视角用较快的写代码模型；软件不能指定模型就不设，继承父会话。软件拒绝了技能默认名，就换同一系列里它接受的最接近的名字并说一句；拒绝了模型块角色名或用户点名时按[公共派发规则](../executing-plans/references/subagents.md#模型)处理。
 
@@ -45,7 +46,7 @@ ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcrip
 
 ## 3. 综合
 
-再派一个子智能体，类型同样要能访问 MCP。模型同判断视角。把 `references/synthesizer.md` 原样传过去，在标明的地方内联每个审查者的完整输出。它返回一份 Accepted / Rejected / Backlog 列表。
+再派一个子智能体（按第 2 步同样的原则，仅在需要核查外部系统时选带 MCP 的类型）。模型同判断视角。把 `references/synthesizer.md` 原样传过去，在标明的地方内联每个审查者的完整输出。它返回一份 Accepted / Rejected / Backlog 列表。
 
 ## 4. 结构化强制检查
 
@@ -77,7 +78,7 @@ Backlog 默认输出为待办草稿。只有用户已授权写入指定跟踪系
 
 ## 宿主适配
 
-三个审查者一条消息里同时派，等齐再派综合者。类型要能访问 MCP。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Antigravity 按那份 skill 文末的目录说明放置。
+深度复盘时三个审查者一条消息里同时派，等齐再派综合者；纯本地复盘优先用只读子代理，需查外部系统时才选带 MCP 的类型。写 SKILL.md 用 `/author-skill`。Claude Code、Codex、Antigravity 按那份 skill 文末的目录说明放置。
 
 Codex、Claude Code、Antigravity 的工具和配置见[宿主适配](../../HOSTS.md)；按当前宿主读取对应参考。
 

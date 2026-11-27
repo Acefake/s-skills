@@ -35,6 +35,7 @@
 
 | 用户说 | 运行 |
 |---|---|
+| `--add`、「把这条记成我的规则」「以后记住……」 | 整理成一句可执行规则，展示并确认后运行 `profile.py add --id <id> --kind <类> --text "<规则>" [--project <项目名>] --host <宿主>`；只在用户本人在当前对话明确提出时使用 |
 | `--show`、「看看我的个人规则」 | `profile.py show`，按类列出规则、证据数和最后出现日期 |
 | `--undo`、「撤销上次更新」 | `profile.py undo --host <宿主>`，回到上一版 |
 | `--forget <id或描述>`、「删掉那条规则」 | 先 `show` 找到 `id`，确认后 `profile.py forget <id> --host <宿主>` |

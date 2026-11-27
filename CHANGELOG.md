@@ -2,6 +2,12 @@
 
 每个版本只列对使用者有影响的变化。细节见对应的 [GitHub Release](https://github.com/Acefake/s-skills/releases) 和提交历史。
 
+## 1.0.35
+
+- 新增点名技能 `handoff`（技能总数 34 → 35，自动 20、点名 15，常驻上下文预算不变）：把当前会话的目标、分支与精确提交状态、已验证证据、踩坑与下一步接续提示词压缩成紧凑交接文档。
+- 优化 `reflect`：补齐单条明确教训的轻量快路（≤10 行修改跳过 3+1 子代理），前台暴露 `--add` 直接记个人规则，并修复 Antigravity 与 Windows 下的会话日志定位。
+- 增强 `brainstorming`（先查代码再沿决策树前沿逐问澄清）与 `project-memory`（按需支持 `glossary.md` 领域术语表同步）。
+
 ## 1.0.34
 
 - 文档只描述当前版本：重写 README、架构说明和全景图，精简 CHANGELOG 与 RENAMES，删除 `docs/wukong/` 下的历史计划和规格。

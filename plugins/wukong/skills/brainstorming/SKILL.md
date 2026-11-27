@@ -22,7 +22,7 @@ description: "「做个新功能」「加个接口」「改一下行为」「先
 
 1. **探索上下文。** 阅读当前结构、文档、近期提交和已有模式。
 2. **判断范围。** 需求跨多个独立子系统、难以放进一份规格时，拆成独立子项目，先完成第一个的规格、计划与实现循环。
-3. **澄清目标与约束。** 围绕目的、限制和成功标准提问；每条消息只问一个问题。
+3. **澄清目标与约束。** 代码库和文档里能直接查到的事实先自己看，不拿来问用户；再沿当前决策树前沿逐个追问未决问题（每条消息只问一个问题，能给推荐项和选项时优先用选择题），直到没有会改变实现方向的歧义。
 4. **比较方案。** 提出 2–3 种做法，先说推荐项并解释取舍。没有先例的交互或架构决定，先做两三个便宜原型再选，见 [exhaust-the-design-space](references/principles/exhaust-the-design-space.md)。
 5. **呈现设计。** 按复杂度分节，简单部分几句话，复杂部分最多约 200–300 词。覆盖架构、组件、数据流、错误处理和测试，先定核心类型和数据结构再谈逻辑（[foundational-thinking](references/principles/foundational-thinking.md)），每节取得用户确认；发现不一致就回到澄清。
 6. **写规格。** 将确认的设计保存到 `docs/wukong/specs/YYYY-MM-DD-<topic>-design.md`，用户指定路径优先。只有用户已授权提交时，才按[commit-pr](../commit-pr/SKILL.md)提交规格。有 `elements-of-style:writing-clearly-and-concisely` 时使用它。
