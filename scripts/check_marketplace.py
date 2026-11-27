@@ -218,7 +218,23 @@ def check_plugin_manifests(problems: Problems) -> None:
         claude_path = plugin_dir(name) / ".claude-plugin" / "plugin.json"
         portable_path = plugin_dir(name) / "plugin.json"
         portable = read_json(portable_path)
-        validate_schema(problems, f"{name} portable plugin", agent_schema, portable)
+        if isinstance(portable, dict) and "logo" in portable:
+            logo = portable["logo"]
+            allowed_exts = (".png", ".svg", ".jpg", ".jpeg", ".webp")
+            if (
+                not isinstance(logo, str)
+                or not logo
+                or logo.startswith(("/", "\\", "http://", "https://"))
+                or ".." in Path(logo).parts
+                or not logo.lower().endswith(allowed_exts)
+            ):
+                problems.add(f"{name} portable plugin logo must be a relative image path: {logo!r}")
+            elif not (plugin_dir(name) / logo).is_file():
+                problems.add(f"{name} portable plugin logo file is missing: {logo!r}")
+            portable_for_schema = {k: v for k, v in portable.items() if k != "logo"}
+        else:
+            portable_for_schema = portable
+        validate_schema(problems, f"{name} portable plugin", agent_schema, portable_for_schema)
         for label, path in (
             ("claude", claude_path),
             ("portable", portable_path),
