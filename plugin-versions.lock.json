@@ -3,8 +3,8 @@
   "note": "contentSha256 covers every file in the plugin except the registered manifest JSON files. Bump version when it changes.",
   "plugins": {
     "wukong": {
-      "version": "1.0.37",
-      "contentSha256": "347a39010dce5b62ea5da2a17d90ae27d11069679ca521740d95f7d23c1ed0de"
+      "version": "1.0.38",
+      "contentSha256": "f53b9f5a22b616f48526f7830cecea5ef953b53f6555d1db52178d6b55874de0"
     }
   }
 }

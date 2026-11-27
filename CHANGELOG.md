@@ -2,6 +2,15 @@
 
 每个版本只列对使用者有影响的变化。细节见对应的 [GitHub Release](https://github.com/Acefake/s-skills/releases) 和提交历史。
 
+## 1.0.38
+
+- 吸收 16 篇 Vibe Coding 工程实践精华（零新增技能、零常驻上下文增量）：
+  - `control-ui`：新增「视觉验收极端条件」清单（超长文本、暗色对比度、窄屏溢出、空表单与弹层遮挡）。
+  - `author-skill`：新增「写作准则（省、准、稳）」，明确 500 行上限、三目录加载分工、具体自问/禁令/硬关卡写法与 description 防反吸经验。
+  - `deslop`：增加过度抽象与多余包装层的“跑通后减法自问”。
+  - `brainstorming`：在规格自检增加反向压力自问（失败条件、10 倍规模/多实例状态与隐性假设）。
+  - `requesting-code-review`、`handoff`、`reflect`：补齐独立评审上下文隔离（不传推理辩护）、`/compact`/`/clear` 前临时 `HANDOFF.md` 落盘即删用法、以及沉淀规则前的生效边界防误伤核对。
+
 ## 1.0.37
 
 - 新增点名技能 `db-migration`（技能总数 35 → 36，自动 20、点名 16，零常驻开销）：排查大表锁表、非空列默认值与并发索引风险，按 expand-contract 零停机拆步并核对回滚。
